@@ -1,0 +1,782 @@
+﻿<%layout("/yh/layout.html"){%>
+ <link href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css" rel="stylesheet">
+ <link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet"> 
+ <div id="page-wrapper">
+    
+    <div class="row">
+        <div class="col-lg-12 panel-body">
+             <%if(saveOK!''==true){%>  
+		    <div class="alert alert-success">
+              <button type="button" class="close" data-dismiss="alert">×</button>
+              保存成功
+            </div>
+		    <%}%>
+            <div class="btn-header">创建新客户</div>
+         
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+                <div class="col-lg-13">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            客户基本信息
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <form id="customerForm" role="form" action="/customer/save" method="post">
+                                    <input id="partyId" name="party_id" type="hidden" value="${party.id!''}">
+                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                    <div class="col-lg-6">
+                                       	<label>客户所在地</label>
+                                        <input id="location" type="hidden" name="location" value="${contact.location!''}">
+                                        <div class="form-group">
+                                            <label>省</label>
+                                            <input id="hideProvince" type="hidden" value="${location.province!''}" />
+                                            <select id="mbProvince" style="width:150px" name="mbProvince" value=""></select>
+                                            <label>市</label>
+                                            <input id="hideCity" type="hidden" value="${location.city!''}"/>
+                                            <select  id="cmbCity" style="width:150px" name="cmbCity" value=""></select>
+                                            <label>区(县)</label>
+                                            <input id="hideDistrict" type="hidden" value="${location.district!''}"/>
+                                            <select  id="cmbArea" style="width:150px" name="cmbArea" value=""></select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>邮政编码</label>
+                                                <input class="form-control" id="postal_code" type="text" name="postal_code" value="${contact.postal_code!''}">
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <%include("/yh/component/form/inputLocationField.html", 
+                                            {
+                                                id:'default_loc_from', 
+                                                label:'始发城市', 
+                                                value: party.default_loc_from!'',
+                                                display_value: default_loc_from!'',
+                                                vertical: true
+                                            }){} %>
+                                        </div>
+                                        <!-- /.col-lg-6 (even) 偶数列 -->
+                                    </div>
+                                    
+                                    
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                
+                                                <label>公司名称(必填)</label>
+                                                <input  class="form-control" id="company_name" name="company_name" type="text" value="${contact.company_name!''}">
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+
+                                                <label>简称(必填)</label>
+                                                <input  class="form-control" id="abbr" name="abbr" type="text" value="${contact.abbr!''}">
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>
+
+                                    <!-- /.col-lg-6 (even) 偶数列-->                                    
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>联系人(必填)</label>
+                                                <input class="form-control" id="contact_person" type="text" name="contact_person" value="${contact.contact_person!''}">
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                     <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>联系地址</label>
+                                                <input  class="form-control" id="address" type="text" name="address" value="${contact.address!''}">
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>                                    
+                                    
+                                    <!-- /.col-lg-6 (even) 偶数列 -->
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>联系人电话</label>
+                                                <input class="form-control" id="disabledInput" type="text" name="phone" value="${contact.phone!''}">
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    
+                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>email</label>
+                                                <input  class="form-control " id="email" type="text" name="email" value="${contact.email!''}">
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>
+
+									<div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>开票单位</label>
+                                                <input class="form-control" id="receipt" type="text" name="receipt" value="${party.receipt!''}">
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>收款方式</label>
+	                                           	<select class="form-control" id="payment" name="payment">
+	                                           		<option value="monthlyStatement" selected="selected">月结</option>
+	                                           		<option value="freightCollect">到付</option>
+	                                           		<option value="cashPayment">现付</option>
+	                                           	</select>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>计费方式</label>
+	                                         	<input type="hidden" value="${party.charge_type!''}" id="chargeTypeSelect">
+	                                           	<select class="form-control" id="chargeType" name="chargeType">
+	                                           		<option value="perUnit">计件</option>
+	                                           		<option value="perCar">整车</option>
+	                                           		<option value="perCargo">零担</option>
+	                                           	</select>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>保险费率</label>
+                                                <input class="form-control" id="insurance_rates" name="insurance_rates" type="text">
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>公司简介</label>
+												<textarea class="form-control" rows="2" name="introduction">${contact.introduction!''}</textarea>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>备注</label>
+												<textarea class="form-control" rows="2" name="remark">${contact.remark!''}</textarea>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <input type="hidden" name="AutoPS" id="AutoPS" value="${party.is_auto_ps!''}">
+                                                <label>单品入库生成配送单</label>
+                                                <input type="radio" name="isAutoPS" id="YAutoPS" value="Y" checked="checked">是
+                                                <input type="radio" name="isAutoPS" id="NAutoPS" value="N">否
+                                            </div>
+                                            <div class="form-group">
+                                                <input type="hidden" name="inventoryControl" id="inventoryControl" value="${is_inventory_control!''}">
+                                                <label>是否需要库存管理</label>
+                                                <input type="radio" name="isInventoryControl" id="isInventoryControlY" value="Y" checked="checked">是
+                                                <input type="radio" name="isInventoryControl" id="isInventoryControlN" value="N">否
+                                            </div>
+                                    </div>
+									
+                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                    <div class="col-lg-6" style="clear:both;">
+                                        <button type="submit" class="btn  btn-primary">保存</button>
+                                        <a class="btn  btn-primary" href="/customer">返回</a>
+                                    </div>
+								</form>       
+                            </div>
+                            <!-- /.row (nested) -->
+                            <hr>
+                            <div class="row">
+                                <button id="addRouteBtn" class="btn btn-primary" data-toggle="modal" data-backdrop="static" data-target="#myModal" style="margin-left: 15px;">
+                                                 新增线路供应商
+                                </button>
+                                <div class="col-lg-12" style="padding-top: 5px;clear:both;">
+                                    <%include("/yh/component/form/detailTable.html", 
+                                    {
+                                        id:'eeda-table', 
+                                        headers:['','始发城市', 
+                                            '目的城市', 
+                                            '默认供应商',
+                                            '时效（天）',
+                                            '默认计费方式']
+                                    }){} %>
+                                </div>
+                                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                      <div class="modal-dialog">
+                                        <div class="modal-content">
+                                          <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close">&times;</button>
+                                            <h4 class="modal-title" id="myModalLabel">线路-供应商</h4>
+                                          </div>
+                                          <div class="modal-body">
+                                                <form id="routeItemForm" action="" method="post">
+                                                    <input id="route_id" name="route_id" type="hidden" value ="">
+                                                    <!-- 根据 始发地 和 目的地 找到 干线id-->
+                                                    <div class="modal-body">
+                                                        <div class="form-group">
+                                                             <%include("/yh/component/form/inputField.html", 
+                                                            {   id:'customer_name', 
+                                                                label:'客户简称', 
+                                                                value: contact.abbr!'', 
+                                                                disabled: 'disabled'
+                                                            }){} %>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <%include("/yh/component/form/inputLocationField.html", 
+                                                            {
+                                                                id:'location_from', 
+                                                                label:'始发城市', 
+                                                                value: party.default_loc_from!'',
+                                                                display_value: default_loc_from!''
+                                                            }){} %>
+                                                        </div>
+                                                        
+                                                        <div class="form-group">
+                                                            <%include("/yh/component/form/inputLocationField.html", 
+                                                            {
+                                                                id:'location_to', 
+                                                                label:'目的城市', 
+                                                                value:order.sp_id!'',
+                                                                display_value: order.sp_name!''
+                                                            }){} %>
+                                                        </div>
+                                                        <div class="form-group">
+                                                             <%include("/yh/component/form/inputField.html", 
+				                                            {   id:'limitationFile', 
+				                                                label:'时效(天)', 
+				                                                value:order.limitation!'1'
+				                                            }){} %>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <%include("/yh/component/form/inputSpField.html", 
+                                                            {
+                                                                id:'sp_id', 
+                                                                label:'供应商', 
+                                                                value:order.sp_id!'',
+                                                                display_value: order.sp_name!''
+                                                            }){} %>
+                                                        </div>
+
+                                                        <div class="form-group">
+                                                            <label class="label-margin">应付计费方式: </label>
+                                                                <label class="radio-inline">
+                                                                    <input type="radio" name="charge_type" id="chargeType1" value="perUnit" checked="">计件
+                                                                </label>
+                                                                <label class="radio-inline">
+                                                                    <input type="radio" name="charge_type" id="chargeType2" value="perCar">整车
+                                                                </label>  
+                                                                <label class="radio-inline">
+                                                                    <input type="radio" name="charge_type" id="chargeType3" value="perCargo">零担
+                                                                </label>  
+                                                            </div>
+                                                            <div style="display: none;" class="form-group" id="car_type_div" >
+                                                              <lable>车辆规格(M),载重(T),集装箱(GP)</lable>
+                                                              <select class="form-control" id="car_type" name="car_type">
+                                                                  <option></option>
+                                                                  <option>40GP</option>
+                                                                  <option>20GP</option>
+                                                                  <option>40T</option>
+                                                                  <option>20T</option>
+                                                                  <option>10T</option>
+                                                                  <option>8T</option>
+                                                                  <option>5T</option>
+                                                                  <option>3T</option>
+                                                                  <option>21M</option>
+                                                                  <option>18.5M</option>
+                                                                  <option>18.0M</option>
+                                                                  <option>17.8M</option>
+                                                                  <option>17.5M</option>
+                                                                  <option>17.0M</option>
+                                                                  <option>16.0M</option>
+                                                                  <option>15.0M</option>
+                                                                  <option>14.5M</option>
+                                                                  <option>13.5M</option>
+                                                                  <option>13.0M</option>
+                                                                  <option>12.5M</option>
+                                                                  <option>9.6M</option>
+                                                                  <option>8.6M</option>
+                                                                  <option>8.0M</option>
+                                                                  <option>7.6M</option>
+                                                                  <option>7.2M</option>
+                                                                  <option>6.8M</option>
+                                                                  <option>6.5M</option>
+                                                                  <option>5.3M</option>
+                                                                  <option>4.3M</option>
+                                                                  <option>4.2M</option>
+                                                                  <option>2.6M</option>
+                                                              </select>
+                                                          </div>
+                                                          <div style="display: none;" class="form-group" id="ltl_price_type" >
+                                                              <lable>零担计费方式:  </lable>
+                                                              <label class="radio-inline">
+                                                                  <input type="radio" name="ltl_price_type" id="optionsRadiosIn1" value="perCBM" checked>按体积（每立方米）
+                                                              </label>
+                                                               <label class="radio-inline">
+                                                                  <input type="radio" name="ltl_price_type" id="optionsRadiosIn3" value="perKg">按重量（每公斤）
+                                                              </label>
+                                                              <label class="radio-inline">
+                                                                  <input type="radio" name="ltl_price_type" id="optionsRadiosIn2" value="perTon">按重量（每吨）
+                                                              </label>
+                                                          </div>
+
+                                                    </div>
+                                                    
+                                                </form> 
+                                          </div>
+                                          <div class="modal-footer">
+                                            <button type="button" class="btn  btn-primary" data-dismiss="modal" id="cancel">取消</button>
+                                            <button id="saveRouteBtn" type="button" class="btn  btn-primary">保存</button>
+                                          </div>
+                                        </div><!-- /.modal-content -->
+                                      </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+                            </div>
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->      
+</div>
+			
+	<!--/span-->
+
+
+<!--/row-->
+
+<!-- content ends -->
+<%}%>
+<!-- 引入校验的js 文件及其 中文 文件-->
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+<script src="/yh/js/jquery.validate.min.js"></script>
+<script src="/yh/js/jvalidate.messages_cn.js"></script>
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+
+
+<script>
+if('${contact.company_name!''}'){
+	document.title = '${contact.company_name!''}'+' | '+document.title;
+}
+$('#menu_profile').addClass('active').find('ul').addClass('in');
+
+    $(document).ready(function() {
+    	var province = '${location.province!''}';
+    	var city= '${location.city!''}';
+    	var district = '${location.district!''}';
+    	
+    	$("#mbProvince").val(province);
+    	$("#cmbCity").val(city);
+    	$("#cmbArea").val(district);
+    	
+    	var payment = '${party.payment!}';
+    	$("#payment").val(payment);
+    	
+    	var rate = '${party.insurance_rates!''}';
+    	var num = new Number(rate); 
+    	$("#insurance_rates").val(num);
+    	
+    	var cname = $("#company_name").val();
+    	var sname = $("#abbr").val();
+        $('#customerForm').validate({
+            rules: {
+            	mbProvince:{
+  	        	  digits:true 
+  	          },
+  	          cmbCity:{
+              	  digits:true 
+                },
+              company_name: {//form 中company_name为必填, 注意input 中定义的id, name都要为company_name
+                required: true,
+                remote:{
+                	url: "/customer/checkCustomerNameExist", //后台处理程序    
+                    type: "post",  //数据发送方式  
+                    data:  {                     //要传递的数据   
+                    	company_name: function() { 
+                    		// $("#company_name").val()
+                    		if($("#partyId").val()==null||$("#partyId").val()==""){
+                    			 return $("#company_name").val();
+                    		}else{
+                    			if(cname==$("#company_name").val()){
+                    				return true;
+                    			}else{
+                    				return $("#company_name").val();
+                    			}
+                    		}
+                              
+                          }   
+
+                    }
+                }
+              },
+              abbr:{//form 中 abbr为必填
+                  required: true,
+                  remote:{
+                  	url: "/customer/checkCustomerAbbrExist", //后台处理程序    
+                      type: "post",  //数据发送方式  
+                      data:  {                     //要传递的数据   
+                    	  abbr: function() { 
+                    		  if($("#partyId").val()==null||$("#partyId").val()==""){
+                    			  return $("#abbr").val();  
+                     		}else{
+                     			if(sname==$("#abbr").val()){
+                     				return true;
+                     			}else{
+                     				return $("#abbr").val();  
+                     			}
+                     		}
+                               
+                            }   
+                      }
+                    }
+                },
+              contact_person:{//form 中 name为必填
+                required: true
+              },
+              location:{
+                required: true
+              },
+              insurance_rates:{
+            	number:true 
+              },
+           	  email:{
+                email: true
+              }
+            },
+            messages:{
+            	company_name:{
+            		remote:"公司名称已存在"
+            	},
+            	abbr:{
+            		remote:"简称已存在"
+            	},
+            	mbProvince: {
+	           		digits: "请选择省份"
+	           	},
+	           	cmbCity: {
+	           		digits: "请选择城市"
+	           	},
+	           	insurance_rates: {
+	           		remote: "请输入数字"
+	           	}
+            },
+            highlight: function(element) {
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+            },
+            success: function(element) {
+                element.addClass('valid').closest('.form-group').removeClass('has-error').addClass('has-success');
+            }
+        });
+        
+        //获取全国省份
+       $(function(){
+        	var province = $("#mbProvince");
+        	$.post('/serviceProvider/province',function(data){
+        		province.append("<option>--请选择省份--</option>");
+				var hideProvince = $("#hideProvince").val();
+        		for(var i = 0; i < data.length; i++)
+				{
+					if(data[i].NAME == hideProvince){
+        				province.append("<option value= "+data[i].CODE+" selected='selected'>"+data[i].NAME+"</option>");
+        				
+        				
+					}else{
+        				province.append("<option value= "+data[i].CODE+">"+data[i].NAME+"</option>");						
+					}
+				}
+        		
+        	},'json');
+       });
+        //获取省份的城市
+        $('#mbProvince').on('change', function(){
+        	//var inputStr = $(this).parent("option").attr('id'); 
+			var inputStr = $(this).val();
+			$.get('/serviceProvider/city', {id:inputStr}, function(data){
+				var cmbCity =$("#cmbCity");
+				var cmbArea =$("#cmbArea");
+				cmbCity.empty();
+				cmbCity.append("<option>--请选择城市--</option>");
+				cmbArea.empty()
+				for(var i = 0; i < data.length; i++)
+				{
+					cmbCity.append("<option value= "+data[i].CODE+">"+data[i].NAME+"</option>");						
+				}
+				
+			},'json');
+		});
+        //获取城市的区县
+        $('#cmbCity').on('change', function(){
+        	//var inputStr = $(this).parent("option").attr('id'); 
+			var inputStr = $(this).val();
+			var code = $("#location").val(inputStr);
+			
+			$.get('/serviceProvider/area', {id:inputStr}, function(data){
+				var cmbArea =$("#cmbArea");
+				cmbArea.empty();
+				cmbArea.append("<option>--请选择区(县)--</option>");
+				for(var i = 0; i < data.length; i++)
+				{
+					cmbArea.append("<option value= "+data[i].CODE+">"+data[i].NAME+"</option>");	
+				}
+			},'json');
+		});
+
+        $('#cmbArea').on('change', function(){
+        	//var inputStr = $(this).parent("option").attr('id'); 
+			var inputStr = $(this).val();
+			var code = $("#location").val(inputStr);
+		});         
+
+        // 回显城市
+		var hideProvince = $("#hideProvince").val();
+        $.get('/serviceProvider/searchAllCity', {province:hideProvince}, function(data){
+			if(data.length > 0){
+				var cmbCity =$("#cmbCity");
+				cmbCity.empty();
+				cmbCity.append("<option>--请选择城市--</option>");
+				var hideCity = $("#hideCity").val();
+				for(var i = 0; i < data.length; i++)
+				{
+					if(data[i].NAME == hideCity){
+						cmbCity.append("<option value= "+data[i].CODE+" selected='selected'>"+data[i].NAME+"</option>");
+					}else{
+						cmbCity.append("<option value= "+data[i].CODE+">"+data[i].NAME+"</option>");
+					}
+				}
+			}
+		},'json');
+
+        // 回显区
+        var hideCity = $("#hideCity").val();
+        $.get('/serviceProvider/searchAllDistrict', {city:hideCity}, function(data){
+			if(data.length > 0){
+				var cmbArea =$("#cmbArea");
+				cmbArea.empty();
+				cmbArea.append("<option>--请选择区(县)--</option>");
+				var hideDistrict = $("#hideDistrict").val();
+				for(var i = 0; i < data.length; i++)
+				{
+					if(data[i].NAME == hideDistrict){
+						cmbArea.append("<option value= "+data[i].CODE+" selected='selected'>"+data[i].NAME+"</option>");
+					}else{
+						cmbArea.append("<option value= "+data[i].CODE+">"+data[i].NAME+"</option>");
+					}
+				}
+			}
+		},'json');
+     // 回显入库是否生成配送
+    	$("input[name='isAutoPS']").each(function(){
+    		if($("#AutoPS").val() == $(this).val()){
+    			$(this).attr('checked', true);
+    		}
+    	});
+        // 回显入库是否库存管理
+        $("input[name='isInventoryControl']").each(function(){
+            if($("#inventoryControl").val() == $(this).val()){
+                $(this).attr('checked', true);
+            }
+        });
+    // 回显车长
+    var chargeTypeOption=$("#chargeType>option");
+    var chargeTypeVal=$("#chargeTypeSelect").val();
+    for(var i=0;i<chargeTypeOption.length;i++){
+       var svalue=chargeTypeOption[i].value;
+       if(chargeTypeVal==svalue){
+    	   $("#chargeType option[value='"+svalue+"']").attr("selected","selected");
+       }
+    }
+
+    $("input[name='charge_type']").click(function(){
+         //等于零担的时候
+        if($('input[name="charge_type"]:checked').val()==='perCargo'){
+            $('#ltl_price_type').show();
+            $("#carInfomation").hide();
+            $("#car_type_div").hide();
+        }else if($('input[name="charge_type"]:checked').val()==='perCar'){
+            $("#carInfomation").show();
+            //显示车辆信息
+            $(this).prop('checked', true);
+            $("#car_type_div").show();
+            $('#ltl_price_type').hide();
+        }else{
+            $('#ltl_price_type').hide();
+            $("#car_type_div").hide();
+            //计费方式为计件的时候
+            if($('input[name="charge_type"]:checked').val()==='perUnit'){
+                $("#carInfomation").hide();
+            }else{
+                $("#carInfomation").show();
+            }
+        }
+     });
+
+    var chargeType = $("#chargeTypeRadio").val();
+    
+    $("input[name='chargeType']").each(function(){
+        if(chargeType == $(this).val()){
+            $(this).prop('checked', true);
+        }
+    });
+
+    $('#saveRouteBtn').click(function(){
+        $.post('/customer/saveCustomerRoute', $('#routeItemForm').serialize()+'&limitationFile='+$('#limitationFile').val()+'&customer_id='+$('#partyId').val(), function(data){
+            if(data.ID==-1){
+                $.scojs_message('保存失败，相同路线已存在', $.scojs_message.TYPE_ERROR);
+                return;
+            }
+            if(data.ID>0){
+                $('#myModal').modal('hide');
+                dataTable.ajax.reload();
+            }else{
+                $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
+            }
+        });
+    });
+
+    if($('#partyId').val() == ''){
+        $('#addRouteBtn').hide();
+    }
+
+    var dataTable = $('#eeda-table').DataTable({
+        "processing": true,
+        "searching": false,
+        "serverSide": true,
+        "scrollX": true,
+        "scrollY": "300px",
+        "scrollCollapse": true,
+        "autoWidth": false,
+        "language": {
+            "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
+        },
+        "ajax": "/customer/routeList?customer_id="+$('#partyId').val(),
+        "createdRow": function ( row, data, index ) {
+            $(row).attr('id', data.ID);
+        },
+        "columns": [
+            { "width": "20px", "orderable":false, 
+                "render": function ( data, type, full, meta ) {
+                  return '<a class="delete"  table_id="table_{{id}}" href="javascript:void(0)" title="删除"><i class="glyphicon glyphicon-remove"></i></a>&nbsp;&nbsp;&nbsp;<a class="edit"  target="_blank" href="javascript:void(0)" title="编辑"><i class="fa fa-edit"></i></a>';
+                }
+            },
+            { "data": "LOCATION_FROM_NAME"},
+            { "data": "LOCATION_TO_NAME"},
+            { "data": "SP_NAME"}, 
+            { "data": "LIMITATION"}, 
+            { "data": "CHARGE_TYPE", 
+                "render": function ( data, type, full, meta ) {
+                    var str = '';
+                    if('perUnit' == data){
+                        str = '计件';
+                    }else if('perCar' == data){
+                        str = '整车('+full.CAR_TYPE+')';
+                    }else{
+                        var price_type = '';
+                        if('perCBM'==full.LTL_PRICE_TYPE){
+                            price_type = '每立方米';
+                        }else if('perKg'==full.LTL_PRICE_TYPE){
+                            price_type = '每公斤';
+                        }else{
+                            price_type = '每吨';
+                        }
+                        str = '零担('+price_type+')';
+                    }
+                  return str;
+                }
+            }
+        ]
+    });
+
+    $('#eeda-table').on('click', 'a.edit', function(){
+        var id = $(this).closest('tr').attr('id');
+        $('#myModal #route_id').val(id);
+        $.post('/customer/getCustomerRoute', {route_id: id}, function(data){
+            $('#myModal #location_from').val(data.LOCATION_FROM);
+            $('#myModal #location_from_INPUT').val(data.LOCATION_FROM_NAME);
+            $('#myModal #location_to').val(data.LOCATION_TO);
+            $('#myModal #location_to_INPUT').val(data.LOCATION_TO_NAME);
+            $('#myModal #sp_id').val(data.SP_ID);
+            $('#myModal #sp_id_input').val(data.SP_NAME);
+            $('#myModal #limitationFile').val(data.LIMITATION);
+            if("perUnit"==data.CHARGE_TYPE){
+                $('[name=charge_type]:eq(0)').prop("checked", true);
+                $('#car_type_div').hide();
+                $('#ltl_price_type').hide();
+            }else if('perCar'==data.CHARGE_TYPE){
+                $('[name=charge_type]:eq(1)').prop("checked", true);
+                $('#car_type').val(data.CAR_TYPE);
+                $('#car_type_div').show();
+                $('#ltl_price_type').hide();
+            }else if('perCargo'==data.CHARGE_TYPE){
+                $('[name=charge_type]:eq(2)').prop("checked", true);
+                if('perCBM'==data.LTL_PRICE_TYPE){
+                    $('[name=ltl_price_type]:eq(0)').prop("checked", true);
+                }if('perKg'==data.LTL_PRICE_TYPE){
+                    $('[name=ltl_price_type]:eq(1)').prop("checked", true);
+                }else{
+                    $('[name=ltl_price_type]:eq(2)').prop("checked", true);
+                }
+                $('#ltl_price_type').show();
+                $('#car_type_div').hide();
+            }
+            $('#myModal').modal('show');
+        });
+    });
+
+    $('#eeda-table').on('click', 'a.delete', function(){
+        var id = $(this).closest('tr').attr('id');
+        $.post('/customer/deleteCustomerRoute', {route_id: id}, function(data){
+            if('ok' == data){
+                $.scojs_message('删除成功', $.scojs_message.TYPE_OK);
+            }else{
+                $.scojs_message('删除失败', $.scojs_message.TYPE_ERROR);
+            }
+            dataTable.ajax.reload();
+        });
+    });
+
+    $('#addRouteBtn').on('click', function (e) {
+        $('#myModal #route_id').val('');
+        $('#location_from').val($('#default_loc_from').val());
+        $('#location_from_INPUT').val($('#default_loc_from_INPUT').val());
+        $('#location_to').val('');
+        $('#location_to_INPUT').val('');
+        $('#sp_id').val('');
+        $('#sp_id_input').val('');
+    });
+
+    $('#myModal').on('show.bs.modal', function (e) {
+        var route_id = $('#myModal #route_id').val();
+        if(!route_id){
+            $('#location_from').val($('#default_loc_from').val());
+            $('#location_from_INPUT').val($('#default_loc_from_INPUT').val());
+            $('#location_to').val('');
+            $('#location_to_INPUT').val('');
+        }
+    });
+});
+</script>

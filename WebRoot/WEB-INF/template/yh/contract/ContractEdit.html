@@ -1,0 +1,519 @@
+﻿<%layout("/yh/layout.html"){%>
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<!-- <link href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.2.2/css/bootstrap-combined.min.css" rel="stylesheet"> -->
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+ <div id="page-wrapper">
+    
+    <div class="row">
+        <div class="col-lg-12 panel-body">
+            <% if(saveOK!''==true){%>
+            <div class="alert alert-success alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                保存成功。
+            </div>
+            <%}%>
+            <div class="btn-header"><lable id = "labeltext"></lable></div>
+           
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+
+    <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading"style="font-size: 32px">
+                            	合同基本信息								
+                        </div>
+                        
+                        <div class="panel-body">
+                            <div class="row">
+                                <form id="customerForm" name="customerForm" action="" method="post">                                
+                                    <input id="contractId" name="contractId" type="hidden" value="${ul.id!''}">
+                                    <input id="locationCode" type="hidden" value="${c.location!''}">
+                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                    <div class="col-lg-6">                                        <div class="form-group">
+                                        <label class="search-label">合同名称</label>
+                                        <input class="form-control search-control" id="contract_name" name="contract_name" type="text" value="${ul.name!''}">
+                                    </div>                                     
+                                                                         </div>
+                                    <div>
+                                        <!-- 下面input判断 customer和供应商sp -->
+                                        <input id="type2" name="type2" type="hidden" value="${contractType!}"/>
+                                        <!-- 下面用来编辑保存contract的type -->
+                                        <input id="type3" name="type3" type="hidden" value="${ul.type!''}" />
+                                    </div>
+                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                    <div class="col-lg-6">
+                                                                                 <div class="form-group">
+                                                <label class="search-label">公司名称</label>
+                                                   <input id="companyName" name="companyName" type="text" class="form-control search-control" value="${c.company_name!''}">
+                                                <ul id='companyList' tabindex="-1" class="pull-right dropdown-menu default dropdown-scroll" style="top: 77%; left: 2%;">
+                                                </ul>
+                                            </div>                                     
+                                    </div>
+                                    <!-- /.col-lg-6 (even) 偶数列-->                                    
+                                   <!--  <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>联系人(必填)</label>
+                                                <input class="form-control" id="name" type="text" name="name" value="${c.contact_person!''}" readonly>
+                                            </div>
+                                        </fieldset>
+                                    </div> -->
+                                                                         <!-- 客户id party id -->
+                                    <div><input id="partyid" type="hidden" name="partyid" value="${ul.party_id!''}"></div>
+                                   
+                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                     <!-- <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>联系地址</label>
+                                                <input class="form-control" id="address" type="text" name="address" value="${c.address!''}" readonly>
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>                                    
+                                    
+                                    /.col-lg-6 (even) 偶数列
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>联系人电话</label>
+                                                <input class="form-control" id="phone" type="text" name="phone" value="${c.phone!''}" readonly>
+                                            </div>
+                                        </fieldset>
+                                    </div>
+                                    
+                                    /.col-lg-6 (odd) 奇数列
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>email</label>
+                                                <input class="form-control" id="email" type="text" name="email" value="${c.email!''}" readonly>
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>
+                                     <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>邮政编码</label>
+                                                <input class="form-control" id="post_code" type="text" name="post_code" value="${c.postal_code!''}" readonly>
+                                            </div>
+                                        </fieldset>
+                                    </div> -->
+                                    
+                                <div class="col-lg-6">
+                                    <div class="form-group">                                        
+                                        <div id="datetimepicker" class="input-append date "> 
+                                            <label class="search-label">开始时间</label> 
+                                            <input id="period_from" name="period_from" class="form-control search-control  beginTime_filter" type="text" value="${ul.period_from!''}">
+                                            <span class="add-on">  
+                                                <i class="fa fa-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>  
+                                            </span>  
+                                        </div>
+                                    </div>    
+                                </div>
+                                <!-- end of col-lg-6-->
+                                <div class="col-lg-6">
+                                    <div class="form-group">                                                    
+                                        <span id="datetimepicker2" class="input-append date search-control "> 
+                                            <label class="search-label">结束时间</label> 
+                                            <input id="period_to" name ="period_to" class="form-control search-control endTime_filter" type="text" value="${ul.period_to!''}">
+                                            <span class="add-on">  
+                                                <i class="fa fa-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>  
+                                            </span>  
+                                        </span>
+                                    </div>
+                                                                     </div>
+                                <!-- end of col-lg-6-->
+                           
+                                     <div class="col-lg-6">
+                                            <div class="form-group">
+                                                <label class="search-label">备注</label>
+                                                <textarea class="form-control" id="remark" name="remark" rows="2">${ul.remark!''}</textarea>
+                                            </div>                                     
+                                    </div>
+                                    <!-- /.col-lg-6 (even) 偶数列 -->
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                               
+                                            </div>
+                                        </fieldset>
+                                    </div>
+    
+                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                   <div class="col-lg-7">
+                                        <a style="display:none" id ="style"><i class='fa fa-check'></i></a>
+                                        <button type="submit" class="btn  btn-primary" id="saveContract">保存</button>
+                                        <input type="button" class="btn  btn-primary" id="changePage" value="返回列表">
+                                    </div>
+                                </form>
+                                                                 </div>
+                            <!-- /.row (nested) -->
+
+                            
+                            <!-- <div class="col-lg-12">
+                                <h1 class="btn-header">
+                                
+                                <input type="button" id="btn" value="新增合同干线" class="btn  btn-primary">
+                                </h1>
+                            </div> -->
+                                     
+
+                        
+                            <div class="row">
+                                <hr>
+                                
+                            </div>
+                            <!-- /.row (nested) -->
+                    			<ul class="nav nav-tabs" id="routeTabs">
+    				                <li class="active" price-type="perUnit"><a href="#basic" data-toggle="tab">计件</a>
+    				                </li>
+    				                <li class="" price-type="perCar"><a href="#cargos" data-toggle="tab">整车</a>
+    				                </li>
+    				                <li class="" price-type="perCargo"><a href="#milestone" data-toggle="tab" id="transferOrderMilestoneList">零担</a>
+    			                     </li>
+                                     <button id="addPriceBtn" class="btn   btn-primary" data-toggle="modal" data-backdrop="static" data-target="#myModal" style="margin-left: 15px;">
+                                                 新增合同运价
+                                        </button>
+    			            	</ul>
+
+			            	<div class="tab-content">
+			            	 <div class="tab-pane fade active in" id="basic">
+									<div class="panel-body">
+                             	 <div class="table-responsive">
+                             	 	<table class="table table-striped table-bordered table-hover" id="dataTables-example" style="width: 1208spx;">
+	                                    <thead>
+	                                        <tr>
+	                                        	<th>计费方式</th>
+                                                <th>产品</th>
+	                                        	<th>单位</th>
+	                                            <th>始发地</th>
+	                                            <th>目的地</th>
+	                                            <th>费用名称</th>
+                                                <th>金额</th>
+	                                            <th>路程(KM)</th>
+	                                            <th>天数</th>	                                            
+	                                            <th></th>
+	                                        </tr>
+	                                    </thead>
+	                                    <tbody>
+	                                        <tr>
+	                                            
+	                                        </tr>
+	                                    </tbody>
+                               		 </table>
+	                            </div>
+	                          	</div>
+			            	 </div>
+			            	 
+			            	  <div class="tab-pane fade" id="cargos">
+								<div class="panel-body">
+                             	 <div class="table-responsive">
+                             	 	<table class="table table-striped table-bordered table-hover" id="dataTables-example2">
+	                                    <thead>
+	                                        <tr>
+	                                        	<th>计费方式</th>
+	                                        	<!-- <th>车型</th> -->
+	                                        	<th>长度(M),载重(T),集装箱(GP)</th>
+	                                            <th>始发地</th>
+	                                            <th>目的地</th>
+	                                            <th>费用名称</th>
+                                                <th>金额</th>
+	                                            <th>天数</th>
+	                                            <th>产品</th>
+	                                            <th></th>
+	                                        </tr>
+	                                    </thead>
+	                                    <tbody>
+	                                        <tr>
+	                                            
+	                                        </tr>
+	                                    </tbody>
+                               		 </table>
+                            </div>
+                          </div>
+							</div>
+			            	  <div class="tab-pane fade" id="milestone">
+									<div class="panel-body">
+                             	 <div class="table-responsive">
+                             	 	<table class="table table-striped table-bordered table-hover" id="dataTables-example3">
+	                                    <thead>
+	                                        <tr>
+	                                        	<th>计费方式</th>
+	                                        	<th>零担计费方式</th>
+	                                        	<th>计费区间</th>
+	                                            <th>始发地</th>
+	                                            <th>目的地</th>
+	                                            <th>费用名称</th>
+                                                <th>金额</th>
+	                                            <th>天数</th>
+	                                            <th>产品</th>
+	                                            <th></th>
+	                                        </tr>
+	                                    </thead>
+	                                    <tbody>
+	                                        <tr>
+	                                            
+	                                        </tr>
+	                                    </tbody>
+                               		 </table>
+                            </div>
+                          </div>
+							</div>
+							</div>
+                        	<div class="panel-heading">
+									<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+									  <div class="modal-dialog">
+									    <div class="modal-content">
+									      <div class="modal-header">
+									        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="close">&times;</button>
+									        <h4 class="modal-title" id="myModalLabel">合同运价</h4>
+									      </div>
+									      <div class="modal-body">
+										     	<form id="routeItemForm" action="" method="post">
+			                                        <input id="routeContractId" name="routeContractId" type="hidden" value="${ul.id!''}">
+			                             	 		<input id="routeItemId" name="routeItemId" type="hidden" value ="">
+			                                        <!-- 根据 始发地 和 目的地 找到 干线id-->
+			                                        <div class="modal-body">
+                                                        <div class="form-group">
+                                                            <label>计费方式:</label>
+                                                            <input type="hidden" name="priceType" id="priceTypeHidden" value="" >
+                                                            <span id='priceType'></span>
+                                                            
+                                                        </div>
+                                                       <!--  <div class="form-group" id="cargoNature">
+                                                            <lable>货品类型</lable>
+                                                            <select class="form-control" id="cargoNature2" name="cargoNature2">
+                                                                <option>ATM</option>
+                                                                <option>普通货品</option>
+                                                            </select>
+                                                        </div> -->
+                                                        <!-- <div class="form-group" id="carType">
+                                                            <lable>车型</lable>
+                                                            <select class="form-control" id="carType2" name="carType2">
+                                                                <option></option>
+                                                                <option>平板车</option>
+                                                                <option>高栏车</option>
+                                                                <option>集装车</option>
+                                                                <option>单桥车</option>
+                                                                <option>双桥车</option>
+                                                                <option>半挂车</option>
+                                                                <option>冷藏车</option>
+                                                                <option>特种车</option>
+                                                                <option>商品运输车</option>
+                                                                <option>危险品车</option>
+                                                                <option>挂车</option>
+                                                                <option>爬梯车</option>
+                                                                <option>可拼车</option>
+                                                                <option>低栏车</option>
+                                                                <option>半挂一拖二</option>
+                                                                <option>半挂一拖三</option>
+                                                                <option>半挂二拖二</option>
+                                                                <option>半挂二拖三</option>
+                                                                <option>前四后四</option>
+                                                                <option>前四后六</option>
+                                                                <option>前四后八</option>
+                                                                <option>前四后十</option>
+                                                                <option>五轮车</option>
+                                                                <option>后八轮</option>
+                                                                <option>半封闭</option>
+                                                                <option>封闭车</option>
+                                                                <option>罐式车</option>
+                                                                <option>厢式车</option>
+                                                                <option>自卸车</option>
+                                                                <option>棉被车</option>
+                                 								<option>厢式尾板车</option>
+                                                                <option>其他</option>
+                                                            </select>
+                                                        </div> -->
+                                                        <div class="form-group" id="carType">
+                                                            <lable>车辆规格(M),载重(T),集装箱(GP)</lable>
+                                                            <select class="form-control" id="carType2" name="carType2">
+                                                                <option></option>
+                                                                <option>40GP</option>
+                                                                <option>20GP</option>
+                                                                <option>40T</option>
+                                                                <option>20T</option>
+                                                                <option>10T</option>
+                                                                <option>8T</option>
+								                                <option>5T</option>
+								                                <option>3.5T</option>
+								                                <option>3T</option>
+								                                <option>1.5T</option>
+                                                                <option>21M</option>
+                                                                <option>18.5M</option>
+                                                                <option>18.0M</option>
+                                                                <option>17.8M</option>
+                                                                <option>17.5M</option>
+                                                                <option>17.0M</option>
+                                                                <option>16.0M</option>
+                                                                <option>15.0M</option>
+                                                                <option>14.5M</option>
+                                                                <option>13.5M</option>
+                                                                <option>13.0M</option>
+                                                                <option>12.5M</option>
+                                                                <option>9.6M</option>
+                                                                <option>8.6M</option>
+                                                                <option>8.0M</option>
+                                                                <option>7.6M</option>
+                                                                <option>7.2M</option>
+                                                                <option>6.8M</option>
+                                                                <option>6.5M</option>
+                                                                <option>5.3M</option>
+                                                                <option>4.3M</option>
+								                                <option>4.2M</option>
+								                                <option>2.6M</option>
+                                                            </select>
+                                                            <p id="tishi2" style="font-weight:bold;color:#ff0000;"></p>
+                                                        </div>
+                                                        <!-- <div class="form-group" id="load">
+                                                            <lable>载重(T)</lable>
+                                                            <select class="form-control" id="carload" name="carload">
+                                                                <option></option>
+                                                                <option>40T</option>
+                                                                <option>20T</option>
+                                                                <option>10T</option>
+                                                                <option>8T</option>
+								                                <option>5T</option>
+								                                <option>3T</option>
+                                                            </select>
+                                                        </div> -->
+                                                       <div class="form-group" id="unit">
+                                                            <lable>单位</lable>
+                                                            <select class="form-control" id="unit2" name="unit2">
+                                                                <option>台</option>
+                                                                <option>件</option>
+                                                            </select>
+                                                        </div>
+			                                            <div class="form-group">
+                                                            <label><h4>始发城市</h4></label>
+				                                            <input id="locationForm" type="hidden" name="route_from" value="${transferOrder.route_from!''}">
+				                                            <input id="hideLocationFrom" type="hidden"> 
+				                                            <div class="form-group">
+				                                                <label>省</label>
+				                                                <input id="hideProvinceFrom" type="hidden" value="${locationFrom.province!''}"/>
+				                                                <select id="mbProvinceFrom"  name="mbProvinceFrom" value=""></select>
+				                                                <label>市</label>
+				                                                <input id="hideCityFrom" type="hidden" value="${locationFrom.city!''}"/>
+				                                                <select  id="cmbCityFrom" name="cmbCityFrom" value=""></select>
+				                                                <label>区(县)</label>
+				                                                <input id="hideDistrictFrom" type="hidden" value="${locationFrom.district!''}"/>
+				                                                <select  id="cmbAreaFrom" name="cmbAreaFrom" value=""></select>
+				                                            </div> 
+                                                        </div>
+                                                        
+				                             	 		<div class="form-group">
+			                                               <input id="locationTo" type="hidden" name="route_to" value="${transferOrder.route_to!''}">
+			                                               <label><h4>目的地城市</h4></label>
+					                                       <div class="form-group">
+					                                           <label>省</label>
+					                                           <input id="hideProvinceTo" type="hidden" value="${locationTo.province!''}"/>
+					                                           <select id="mbProvinceTo" name="mbProvinceTo" value=""></select>
+					                                           <label>市</label>
+					                                           <input id="hideCityTo" type="hidden" value="${locationTo.city!''}"/>
+					                                           <select  id="cmbCityTo" name="cmbCityTo" value=""></select>
+					                                           <label>区(县)</label>
+					                                           <input id="hideDistrictTo" type="hidden" value="${locationTo.district!''}"/>
+					                                           <select  id="cmbAreaTo" name="cmbAreaTo" value=""></select>
+					                                       </div>
+			                                           </div>
+			                                           
+                                                        <div class="form-group" id="ltlUnitType">
+                                                            <label>零担计费方式</label>
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="ltlUnitType" id="optionsRadiosIn1" value="perCBM">按体积（每立方米）
+                                                            </label>
+                                                             <label class="radio-inline">
+                                                                <input type="radio" name="ltlUnitType" id="optionsRadiosIn3" value="perKg">按重量（每公斤）
+                                                            </label>
+                                                            <label class="radio-inline">
+                                                                <input type="radio" name="ltlUnitType" id="optionsRadiosIn2" value="perTon">按重量（每吨）
+                                                            </label>
+                                                           
+                                                            <div class="form-group">
+                                                                <lable>计费区间</lable>
+                                                                <input class="form-control search-control" id="amountFrom" name="amountFrom" type="text" style="width:20%"> ~ 
+                                                                <input class="form-control search-control" id="amountTo" name="amountTo" type="text" style="width:20%">
+                                                            </div>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <lable>费用名称</lable>
+                                                            <input class="form-control" id="fin_item_id" name="fin_item_id" type="hidden">
+                                                             <select class="form-control" id="fin_item_list" name=
+                                                             "fin_item">
+                                                                <%for(finItem in finItemList){%>
+                                                                    <option value="${finItem.id!''}">${finItem.name!''}</option>
+                                                                <%}%>
+                                                             </select>
+                                                        </div>
+                                                        <div class="form-group">
+                                                            <lable>金额</lable>
+                                                            <input class="form-control" id="price" name="price" type="text">
+                                                            <p id="tishi" style="font-weight:bold;color:#ff0000;"></p>
+                                                        </div>
+                                                         <div class="form-group">
+                                                            <lable>天数</lable>
+                                                            <input class="form-control search-control" id="day" name="day" type="text" style="width:20%"> ~ 
+                                                            <input class="form-control search-control" id="day2" name="day2" type="text" style="width:20%">
+                                                        </div>
+                                                        <div class="form-group ">
+                                                        	<input id="productId" type="hidden" name="productId" />
+															<label class="control-label" for="inputSuccess">货品名称</label>
+															<input id="itemNameMessage" class="form-control dropdown-toggle" placeholder="请输入货品名称" type="text" name="item_name" data-toggle="dropdown">
+			                                                <ul id='itemNameList' class="pull-right dropdown-menu default dropdown-scroll" tabindex="-1" style="top: 17%; left: 2%;" role="menu">
+			    											</ul>
+			    											<p id="tishi1" style="font-weight:bold;color:#ff0000;"></p>
+														</div>
+													</div>
+			    		             				<input id="reset" name="" type="reset"/>
+			                             	 	</form>	
+									      </div>
+									      <div class="modal-footer">
+									        <button type="button" class="btn  btn-primary" data-dismiss="modal" id="cancel">取消</button>
+									        <button id="saveRouteBtn" type="button" class="btn  btn-primary">保存</button>
+									      </div>
+									    </div><!-- /.modal-content -->
+									  </div><!-- /.modal-dialog -->
+									</div><!-- /.modal -->
+                    		</div>
+                        	
+                            <!-- /.row (nested) -->
+                       
+                            <!-- /.table-responsive -->
+
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->    
+</div>
+			
+	<!--/span-->
+
+
+<!--/row-->
+
+<!-- content ends -->
+<%}%>
+ <!-- 引入dataTables的js 文件- Tables -->
+<script src="/yh/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="/yh/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+<script src="/yh/js/bootstrap.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/yh/js/eeda-common.js"></script>
+
+<!-- 引入校验的js 文件及其 中文 文件-->
+<script src="/yh/js/jquery.validate.min.js"></script>
+<script src="/yh/js/jvalidate.messages_cn.js"></script>
+<script src="/yh/js/contract/contract.js"></script>
+<script>
+	if('${ul.name!''}'){
+		document.title = '${ul.name!''}'+' | '+document.title;
+	}
+</script>

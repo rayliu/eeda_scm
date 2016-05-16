@@ -1,0 +1,132 @@
+<%layout("/yh/layout.html"){%>
+
+
+<div id="page-wrapper">
+<div class="row">
+      <div class="col-lg-12">
+            <div class="btn-header">
+	            <% if(shiro.hasPermission("CarInfo.create")){%>
+					<a class="btn  btn-primary" href="/driverinfo/driveradd">
+					<span class="hidden-tablet">添加司机</span></a>
+				<%}%>
+			</div>
+		<div class="panel panel-default">
+				<div class="panel-heading">
+                 	<i class="fa fa-list fa-fw"></i>司机列表
+            	</div>
+            <div class="panel-body">
+            	<div class="row-fluid">
+		 			<table class="table table-striped table-bordered table-hover datatable" id="example" style="width: 1237px;">
+						<thead>
+							<tr>
+								<th><nobr>司机</nobr></th>
+								<th><nobr>联系电话</nobr></th>
+								<th><nobr>驾驶证类型</nobr></th>
+								<th><nobr>身份证</nobr></th>
+								<% 
+									var updatePermission = shiro.hasPermission("Driver.update");
+									var delPermission = shiro.hasPermission("Driver.delete");
+									if(updatePermission || delPermission){
+								%>
+									<th></th>
+								<%}%>
+							</tr>
+						</thead>
+						<tbody>
+							<tr class="odd gradeX">
+								<td colspan="5">Loading data from server</td>
+							</tr>
+						</tbody>
+						
+					</table>
+					
+				</div>
+      		</div>
+		</div>
+		
+			
+ 	</div>
+        <!-- /.col-lg-12 -->
+</div>
+    
+		
+</div>
+
+
+<%}%>
+
+<!-- Page-Level Plugin Scripts - Tables -->
+<script src="/yh/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="/yh/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script>
+$(document).ready(function() {
+	document.title = '司机信息查询 | '+document.title;
+	$('#menu_carmanage').addClass('active').find('ul').addClass('in');
+	var dataTable= $('#example').dataTable( {
+		 "sDom": "<'row-fluid'<'span6'l><'span6'f>r><'datatable-scroll't><'row-fluid'<'span12'i><'span12 center'p>>",
+	        //"sPaginationType": "bootstrap",
+	        "iDisplayLength": 10,
+	    	"oLanguage": {
+	            "sUrl": "/eeda/dataTables.ch.txt"
+	        },
+	        "bServerSide": true,
+	        "bRetrieve": true, 
+	        "sAjaxSource": "/driverinfo/driverlist",
+			"aoColumns": [
+				{ "mDataProp": "CONTACT_PERSON" ,
+					"fnRender": function(obj) {					
+						return "<a href='/driverinfo/driveredit/"+obj.aData.PID+"'target='_blank'>"+obj.aData.CONTACT_PERSON+"</a>";     			
+				}},
+				{ "mDataProp": "PHONE" },
+				{ "mDataProp": "LICENSE" },
+				{ "mDataProp": "IDENTIFICATION"}
+				<% 
+					var updatePermission = shiro.hasPermission("Driver.update");
+					var delPermission = shiro.hasPermission("Driver.delete");
+					if(updatePermission || delPermission){
+				%>
+				,{ 
+	                "mDataProp": null, 
+	                "sWidth": "15%",
+	                "fnRender": function(obj) { 
+	                	console.log(obj.aData.IS_STOP);
+	                	if(obj.aData.IS_STOP != true){
+	                		 return "<nobr><% if(shiro.hasPermission('Driver.update')){%><a class='btn  btn-primary btn-sm editbutton' href='/driverinfo/driveredit/"+obj.aData.PID+"' target='_blank'>"+
+			                             "<i class='fa fa-edit'> </i> "+
+			                             "编辑"+
+				                         "</a> <%}%>"+
+			                         "<% if(shiro.hasPermission('Driver.delete')){%><a class='btn  btn-sm btn-danger delete' code='"+obj.aData.PID+"'>"+
+			                             "<i class='fa fa-trash-o fa-fw'></i>"+ 
+			                             "停用"+
+			                         "</a><%}%></nobr>";
+	                	}else{
+	                		return "<nobr><% if(shiro.hasPermission('Driver.update')){%><a class='btn  btn-primary btn-sm editbutton' href='/driverinfo/driveredit/"+obj.aData.PID+"' target='_blank'>"+
+		                            "<i class='fa fa-edit'> </i> "+
+		                            "编辑"+
+			                         "</a> <%}%>"+
+			                         "<% if(shiro.hasPermission('Driver.delete')){%><a class='btn btn-success btn-sm delete' code='"+obj.aData.PID+"'>"+
+			                             "<i class='fa fa-trash-o fa-fw'></i>"+ 
+			                             "启用"+
+			                         "</a><%}%></nobr>";
+	                	}
+	                   
+	                }
+	            } 
+				<%}%>
+	            ]
+	} );
+	//gateInProduct删除
+	 $("#example").on('click', '.delete', function(){
+		 var id = $(this).attr('code');
+		 $.post('/driverinfo/driverdelect/'+id,function(data){
+             //保存成功后，刷新列表
+             console.log(data);
+             if(data.success){
+            	 dataTable.fnDraw();
+             }else{
+                 alert('取消失败');
+             }
+         },'json');
+		});
+});
+</script>

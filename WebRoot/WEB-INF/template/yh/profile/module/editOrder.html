@@ -1,0 +1,94 @@
+<%layout("/layout.html"){%>
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+<link href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css" rel="stylesheet">
+
+<div id="page-wrapper">
+	<div class="row">
+		<input type="hidden" id='module_structure' value="">
+		<input type="hidden" id='module_id' value="${module_id!}">
+		<input type="hidden" id='order_id' value="${order_id!}">
+		<h2><span id='module_name'></span> </h2>
+	    <section id='fields'  class="row">
+
+	    </section>
+	    <section id='list' class="row">
+
+	    </section>
+	    <section id='actions'  class="row">
+	    	<div class="col-lg-12">
+				<div class="form-group button-bar" >
+					<button id="saveBtn" type="button" class="btn btn-success">保存</button>
+					<div id ='button-bar' style="display: inline;">
+						
+				    </div>
+				    <div  style="display: inline;">
+					    <button id="addBtn" type="button" class="btn btn-default" style="border-style: dashed;"
+					    	data-toggle="tooltip" data-placement="right" title="添加按钮，仅管理员可见">
+					    	<i class="fa fa-fw fa-plus"></i>
+					    </button>
+					</div>
+			    </div>
+			</div>
+	    </section>
+	</div>
+	<!--end of row -->   
+
+</div>
+
+<%}%>
+
+
+<!-- Page-Level Plugin Scripts - Tables -->
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script>
+       
+       var Module={};
+</script>
+
+<link href="/yh/css/productTree.css" rel="stylesheet" />
+<style type="text/css">
+	.ztree li span.button.add {margin-left:2px; margin-right: -1px; background-position:-144px 0; vertical-align:top; *vertical-align:middle}
+</style>
+
+<link rel="stylesheet" href="/yh/js/plugins/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+<script type="text/javascript" src="/yh/js/plugins/zTree_v3/js/jquery.ztree.core-3.5.js"></script>
+<script type="text/javascript" src="/yh/js/plugins/zTree_v3/js/jquery.ztree.excheck-3.5.js"></script>
+<script type="text/javascript" src="/yh/js/plugins/zTree_v3/js/jquery.ztree.exedit-3.5.js"></script>
+
+<script>
+	template.helper('replaceReturn', function (content) {
+	    return content.replace(/\n/g, "$");
+	});
+
+	$('#side-menu li#${module_id!}').parent().parent().addClass('active').find('ul').addClass('in');
+</script>
+
+<%include("/yh/component/jsTemplate/inputField.js", {id:'input_field'}){} %>
+<%include("/yh/component/jsTemplate/inputHiddenField.js", {}){} %>
+<%include("/yh/component/jsTemplate/inputDateField.js",{}){} %>
+<%include("/yh/component/jsTemplate/inputDateQueryField.js",{}){} %>
+<%include("/yh/component/jsTemplate/inputCustomerField.js",{}){} %>
+<%include("/yh/component/jsTemplate/fieldSection.js", {}){} %>
+<%include("/yh/component/jsTemplate/inputSpField.js",{}){} %>
+<%include("/yh/component/jsTemplate/inputLocationField.js",{}){} %>
+<%include("/yh/component/jsTemplate/inputProductField.js",{}){} %>
+<%include("/yh/component/jsTemplate/inputCustomizeSelectField.js",{}){} %>
+<%include("/yh/component/jsTemplate/detailTable.js", { id:'table_template'}){} %>
+<%include("/yh/component/jsTemplate/button.js", { id:'button_template'}){} %>
+
+<!-- 模态框 -->
+<%include("/yh/profile/module/editOrder_search_list_modal.html", {}){} %>
+
+<script src="/yh/js/eeda-common.js"></script>
+<script src="/js/eeda/order/editOrder_btn.js"></script>
+<script src="/js/eeda/order/editOrder_table_add_btn.js"></script>
+<script src="/js/eeda/order/editOrder.js"></script>
+
+

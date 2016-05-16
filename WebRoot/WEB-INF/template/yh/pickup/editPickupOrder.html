@@ -1,0 +1,585 @@
+﻿<%layout("/yh/layout.html"){%>
+
+	<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+	<link rel="stylesheet" href="/yh/css/ui/jquery-ui.css">
+     <link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">  
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="btn-header"></div>                  
+                    <input type="hidden" id="pickupOrderId" value="${pickupOrder.id!''}">
+                    <input type="hidden" id="transferOrderType" value="${transferOrderAttr.order_type!''}">
+                    <input type="hidden" id="finishBtnVal" value="${transferOrderMilestone.status!''}">
+                    <input type="hidden" id="transferOrderFinItemId">
+                    <input type="hidden" id="warehouseIds">
+                    <input type="hidden" id="tstatus" value="${transferOrderAttr.status!''}">
+                    
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        
+                        <!-- /.panel-heading -->
+                        <div class="panel-body" id="total">
+                  
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#basic" data-toggle="tab" id = "chargeCheckOrderbasic">基本信息</a>
+                                </li>
+                                <li class=""><a href="#line" data-toggle="tab" id="addressList">线路</a>
+                                </li>
+                                <li class=""><a href="#cargos" data-toggle="tab" id="pickupOrderItemList">货品信息</a>
+                                </li>
+                                 <li class=""><a href="#milestone" data-toggle="tab" id="transferOrderMilestoneList">运输里程碑</a>
+                                </li>
+                                <li class=""><a href="#pickuparap" data-toggle="tab" id="pickupOrderPayment" style="display: none;">应收应付</a>
+                                </li>
+                            </ul>
+							<div class="btn-header"></div> 
+                            <!-- Tab panes -->
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="basic">
+                                 
+                                <div class="row">
+                                   <form id="pickupOrderForm" method="post" action="">
+                                        <input id="sp_id" type="hidden" name="sp_id" value="${spParty.id!''}${pickupOrder.sp_id!''}"/>
+                    			   		<input type="hidden" id="pickupId" name="pickupId" value="${pickupOrder.id!''}">
+                                        <input id="driver_id" type="hidden" name="driver_id" value="${pickupOrder.driver_id!''}"/>                                   	  
+                                       	<input type="hidden" name="order_no" value="${order_no!''}${pickupOrder.depart_no!''}"/>
+                                       	<input type="hidden" name="status" value="${status!''}${pickupOrder.status!''}"/>
+                                       	<input type="hidden" name="create_by" value="${create_by!''}${pickupOrder.create_by!''}"/>
+                                       	<input id="depart_id" value="${pickupOrder.depart_id!''}" type="hidden" name="depart_id" >
+		                                <input id="type" value="${type!''}" type="hidden" >
+		            				    <input id="message" value="${transferIds!''}" type="hidden" name="orderid" >
+		            				    <input id="tr_itemid_list" value="" type="hidden" name="tr_itemid_list">
+		            				    <input id="item_detail" value="" type="hidden" name="item_detail" >                                  	
+		                                <input id="carinfoId" type="hidden" name="carinfoId" value="${pickupOrder.carinfo_id!''}"/>                                    	
+		                                <input id="checkedDetail" type="hidden" name="checkedDetail"/>                                    	
+		                                <input id="uncheckedDetail" type="hidden" name="uncheckedDetail"/>   
+					                    <input id="driverAssistantIds" name="driverAssistantIds" type="hidden" value="">
+					                    <input id="driverAssistantNames" name="driverAssistantNames" type="hidden" value="">
+					                    <input id="driverAssistantPhones" name="driverAssistantPhones" type="hidden" value="">
+					                    <input id="strJson" name="strJson" type="hidden" value="${strJson!''}" >
+					                    <input id="flag" name="flag" type="hidden" value="${flag!''}">
+					                    <input id="receiverId" name="receiverId" type="hidden"/>
+                                        <input id="t_id" name="t_id" type="hidden" value="${transferIds!''}"/>
+                                        <input type="hidden" id="pickup_type" value="${pickupOrder.pickup_type!''}">
+                                        <input type="hidden" id="cargo_nature" value="${cargo_nature!''}">
+                                       	
+                                       	
+		                                <div class="col-lg-6">
+	                                       	<div id="pickupModes" class="form-group">
+	                                            <label>提货方式</label>
+	                                           	<input id="pickupModeRadio" type="hidden" value="${pickupOrder.pickup_mode!''}"/>
+	                                            <label class="radio-inline">
+	                                                <input type="radio" name="pickupMode" id="pickupMode1" value="own" checked="">${customizeField.EX_TYPE!'公司自提'}
+	                                            </label>
+	                                            <label class="radio-inline">
+	                                                <input type="radio" name="pickupMode" id="pickupMode2" value="routeSP">干线供应商自提
+	                                            </label>
+	                                            <label class="radio-inline">
+	                                                <input type="radio" name="pickupMode" id="pickupMode3" value="pickupSP">外包供应商提货
+	                                            </label>
+	                                        </div> 
+	                                        
+                                        <div id="spDiv" style="display: none;">    
+                                        <div>供应商信息</div>
+                                           <div class="form-group">
+                                               <!--label>供应商名称</label-->
+                                               <input id="spMessage" class="form-control" placeholder="选择供应商" type="text" name="spMessage"  value="${spContact.company_name!''}"/>
+                                               <ul id='spList' class="pull-right dropdown-menu default dropdown-scroll" tabindex="-1" style="top: 35%; left: 2%;">
+   											</ul>
+   											<span id="acc" style="display: none;color:red;font-weight:bold;">供应商为空或输入有误</span>
+                                           </div>
+                                           <div class="form-group">     
+                                           	   <h5 id="pageSpName">${spContact.contact_person!''} ${spContact.phone!''}</h5><h5 id="pageSpAddress">${spContact.address!''}</h5>     
+                                           </div>
+                                        </div>    
+                                 		<div style="font-size: 32px">车辆信息</div>                                         
+                                        <div class="form-group">
+											<label>司机<span style="color:red"> *</span></label>
+											<input type="hidden" id="carInfoDriverMessage" value="${carinfo.driver!''}">
+									        <input type="text" name="driver_name" class="form-control" id="driverMessage" value="${driverContact.contact_person!''}">
+									        <ul style="top: 17%; left: 2%;" tabindex="-1" class="pull-right dropdown-menu default" id="driverList">
+											</ul> 
+										</div>  
+										<div class="form-group">
+                                            <label>车牌<span style="color:red"> *</span></label>
+                                            <input type="text" name="car_no" class="form-control" id="carNoMessage" value="${carinfo.car_no!''}">
+									        <ul style="top: 17%; left: 2%;" tabindex="-1" class="pull-right dropdown-menu default" id="carNoList">
+											</ul>
+										</div>            
+                                        <div class="form-group">
+                                        	<label>电话<span style="color:red"> *</span></label>
+                                        	<input id="carInfoDriverPhone" value="${carinfo.phone!''}" type="hidden">
+                                        	<input type="text" class="form-control" id="driver_phone" value="${driverContact.phone!''}"  name="driver_phone">
+                                        </div>
+                                 		<div class="form-group">
+	                                	    <label class="form-label">运输去向</label>
+	                                	    <%
+										    	if(flag!='derect'){
+											%>
+	                                	    <div class="form-group">
+		                                        <select id="address_type" class="form-control pay_type" name="address_type">
+			                                       	<option value="yard">货场</option> 
+			                                       	<option value="warehouse">仓库</option>
+			                                        <option value="twice_pickup">二次调拨</option>                                            
+		                                        </select>
+	                                        </div>
+	                                        <div id="addressDiv" class="form-group" style="display: true;">
+		                                            <label>目的地</label>
+		                                            <input class="form-control" id="address" name="address" value="${pickupOrder.address!''}">
+	                                        </div>
+	                                       
+                                            <div id="warehouseDiv" class="form-group" style="display: none;">
+                                                    <label>仓库</label>
+													<input id="hideWarehouseId" type="hidden" value="${pickupOrder.warehouse_id!''}" />  
+													<input id="replenishmentOrderId" name="replenishmentOrderId" type="hidden" value="${transferOrderAttr.warehouse_id!''}" />  
+	                                                <select id="gateInSelect" class="form-control" name="gateInSelect"></select>
+                                            </div>
+                                            <% }else{ %>
+                                            <input class="form-control" id="direct_type" name="direct_type" value="直送收货人" disabled="disabled">
+                                            <div id="receiverDiv" class="form-group" style="display: true;">
+                                                    <label>收货人地址</label>
+                                                    <input class="form-control" id="con_address" name="con_address" value="${transferOrder.receiving_address!''}">
+                                            </div>
+                                            <% }%>
+                               			</div>
+                               			<div class="row">
+		                                    <div class="col-lg-6">
+		                                        <div class="form-group">                                        
+		                                            <div id="datetimepicker" class="input-append date "> 
+		                                                <label class="search-label">出车时间<span style="color:red"> *</span></label> 
+		                                                <input id="turnout_time" class="form-control search-control  beginTime_filter" type="text" name="turnout_time" value="${pickupOrder.turnout_time!''}">
+		                                                <span class="add-on">  
+		                                                    <i class="fa fa-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>  
+		                                                </span>  
+		                                            </div>
+		                                        </div>    
+		                                    </div>
+		                                    <!-- end of col-lg-6-->
+		                                    <div class="col-lg-6">
+		                                        <div class="form-group">                                                    
+		                                            <span id="datetimepicker2" class="input-append date search-control "> 
+		                                                <label class="search-label">返回时间</label> 
+		                                                <input id="return_time" class="form-control search-control endTime_filter" type="text" name="return_time" value="${pickupOrder.return_time!''}">
+		                                                <span class="add-on">  
+		                                                    <i class="fa fa-calendar" data-time-icon="icon-time" data-date-icon="icon-calendar"></i>  
+		                                                </span>  
+		                                            </span>
+		                                        </div>
+		                                    </div>
+		                                    <!-- end of col-lg-6-->
+		                                </div>
+                                        </div> 
+                                  
+	                                   <div class="col-lg-6">
+	                                  		<div style="font-size: 32px">提货调车单信息</div>                                           
+                                            <div class="form-group">
+	                                                <label>调车单号</label> <strong 	id="showOrderNo">${order_no!''} ${pickupOrder.depart_no!''}</strong>
+                                            </div>
+                                            <div class="form-group">
+	                                                <label>单据状态</label> <span id="orderStatus">${status!''}${pickupOrder.status!''}</span>
+                                            </div>
+                                            <div class="form-group">
+	                                            <label>创建人</label>  <%if(userLogin.c_name!''==''){ %>${userLogin.user_name!''}<%}else{%>${userLogin.c_name!''}<%}%>
+	                                            <%if(userLogin2.c_name!''==''){ %>${userLogin2.user_name!''}<%}else{%>${userLogin2.c_name!''}<%}%>                                       
+	                                        </div>
+		                                                                                                                         
+											<div class="form-group">
+	                                            <label>备注</label>
+	                                            <textarea class="form-control" rows="1" id="remark" name="remark">${pickupOrder.remark!''}</textarea>
+	                                        </div> 
+	                                        <div style="font-size: 32px">跟车人员信息 <button id ="addAssistant" type="button" class="btn  btn-primary btn-sm">添加</button></div> 
+	                                        <div class="form-group">
+					                          	<table class="table table-striped table-bordered table-hover" id="driverAssistantTable" >
+					                              <thead>
+					                                  <tr>
+					                                      <th>跟车人</th>
+					                                      <th>联系电话</th>
+					                                      <th></th>
+					                                  </tr>
+					                              </thead>
+					                              <tbody id="driverAssistantList">
+					                              </tbody>
+					                          </table>
+					                        </div>
+	                                   </div>
+                                    </div>   
+                                </form>
+                            </div>
+                            
+                            <div class="tab-pane fade" id="line">  
+                            	<div class="panel-body">
+                                <div class="row">
+	                                    <div class="col-lg-12">
+		                                    <div class="table-responsive"> 
+		                                    		
+		                                    	<!-- <form id="pickupAddressForm" action="">
+		                                    		
+		                                    		<input type="hidden" id="addressPickupOrderId" value="${pickupOrder.id!''}" name="pickupOrderId"> -->
+			                                        <table class="table table-striped table-bordered table-hover" id="route-table">
+			                                            <thead>
+			                                                <tr>
+			                                                    <th>运输单号</th>
+			                                                    <th>客户</th>
+			                                                    <th>提货地点</th>
+			                                                    <th>创建时间</th>
+			                                                    <th>发往类型</th>
+			                                                    <th>状态</th>
+			                                                    <th>备注</th>
+			                                                    <th>操作</th>
+			                                                </tr>
+			                                            </thead>
+			                                            <tbody>
+			                                            	
+			                                            </tbody>
+			                                        </table>
+		                                        <!-- </form> -->
+		                                    </div>
+		                                    <!-- /.table-responsive -->
+                                    	</div>
+<!-- 	                                    <div class="col-lg-12">
+	                                        <div class="panel-body">
+			                                    <div class="table-responsive"> 
+			                                    	<form id="pickupAddressForm" action="">
+			                                    		<input type="hidden" id="addressPickupOrderId" value="${pickupOrder.id!''}" name="pickupOrderId">
+				                                        <table class="table table-striped table-bordered table-hover">
+				                                            <thead>
+				                                                <tr>
+				                                                    <th>运输单号</th>
+				                                                    <th>客户</th>
+				                                                    <th>提货地点</th>
+				                                                    <th>创建时间</th>
+				                                                    <th>货场</th>
+				                                                    <th>仓库</th>
+				                                                    <th>状态</th>
+				                                                    <th>分摊金额</th>
+				                                                    <th>分摊比例</th>
+				                                                    <th>操作</th>
+				                                                </tr>
+				                                            </thead>
+				                                            <tbody id="pickupAddressTbody" >
+				                                            	
+				                                            </tbody>
+				                                        </table>
+			                                        </form>
+			                                    </div>
+			                                    /.table-responsive
+                                    		</div>
+                                    	</div> -->
+                                    </div>
+                                </div>
+                            </div>
+                            
+							<!-- 模态框 -->
+							<div class="modal fade bs-example-modal-lg" id="addExternalTransferOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+							  <div class="modal-dialog modal-lg">
+							    <div class="modal-content">
+							      <div class="modal-header">
+							        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+							        <div class="modal-title" id="myModalLabel">添加额外运输单</div>
+							      </div>
+							      <div class="modal-body">
+							      	<form id="addExternalTransferOrderForm" action="">
+							      		<input type="hidden" name="transferOrderIds" id="transferOrderIds"/>
+							      		<input type="hidden" name="pickupOrderId" id="addExternalPickupOrderId"/>
+							      		<div class="panel panel-default">
+					                        <!-- <div class="panel-heading">
+					                            <i class="fa fa-bar-chart-o fa-fw"></i> 配送单状态                            
+					                        </div> -->
+					                        <div class="panel-body">
+									      		<div class="table-responsive">
+					                                <table class="table table-bordered table-hover table-striped" id="external-table" style="width: 1100px;">
+					                                    <thead>
+					                                        <tr>
+					                                            <th></th>
+					                                            <th>运输单号</th>
+					                                            <th>订单类型</th>
+					                                            <th>货品</th>
+					                                            <th>提货地点</th>
+					                                            <th>提货方式</th>
+					                                            <th>状态</th>                                         
+					                                            <th>客户</th>                                         
+					                                            <th>始发城市</th>                                         
+					                                            <th>目的地城市</th>                                         
+					                                            <th>创建时间</th>                                         
+					                                         </tr>
+					                                    </thead>
+					                                    <tbody>                                        
+					                                    </tbody>
+					                                </table>
+					                          </div>
+					                        </div>
+					                  </div>
+								      <div class="modal-footer">
+								        <button type="button" class="btn  btn-primary" data-dismiss="modal">取消</button>
+								        <button id="addExternalTransferOrderFormBtn" type="button" class="btn  btn-primary">保存</button>
+								      </div>
+									</form>
+								  </div>
+							    </div><!-- /.modal-content -->
+							  </div><!-- /.modal-dialog -->
+							</div><!-- /.modal -->
+									
+                                <div class="tab-pane fade" id="cargos">  
+                                     <div class="panel-body" style="" id="ATMitem">
+                                     <div class="table-responsive">                                        
+		                                <table class="table table-striped table-bordered table-hover" id="pickupItem-table">                              
+		                                <thead>
+		                                        <tr>
+		                                        	<th>客户</th> 
+		                                        	<th>运输单号</th> 
+		                                        	<th>计划时间</th>
+		                                         	<th>型号</th> 
+		                                            <th>名称</th>
+		                                            <th>数量</th>                                   
+		                                            <th>体积</th> 
+		                                            <th>重量</th> 
+		                                            <th>备注</th>                                          
+		                                           <th>操作</th>
+		                                        </tr>
+		                                    </thead>                               
+		                                    <tbody>                                                                                                   
+		                                    </tbody>
+		                                </table>                                
+                                     </div>
+                                     
+                                     <!-- /.table-responsive -->
+                                     <div style="display: none" id="transferOrderItemDateil">
+                                         <div class="btn-header">单品列表</div>
+										 <input id="item_id" value=0 type="hidden" >
+                                         <div class="table-responsive">                                        
+                                         <table id="pickupDetail-table" class="table table-striped table-bordered table-hover dataTable">
+                                              <thead>
+                                                  <tr role="row">
+                                                  <th class="sorting"></th>
+                                                  <th class="sorting">名称</th>
+                                                  <th class="sorting">型号</th>
+                                                  <th class="sorting_asc">序列号</th>
+                                                  <th class="sorting">体积</th>
+                                                  <th class="sorting">重量</th>
+                                                  <th class="sorting">备注</th>	                                                  
+                                                  </tr>
+                                              </thead>
+                                           </table>
+                                        </div>
+                                        <div class="form-group">
+                                        	<a id="styleSave" style="display:none"><i class="fa fa-check"></i></a>
+                                        </div>
+                                    </div>
+                                 </div>                							
+                               </div>
+                                
+                                <!-- 模态框 -->
+								<div class="modal fade" id="transferOrderMilestone" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								  <div class="modal-dialog">
+								    <div class="modal-content">
+								      <div class="modal-header">
+								        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								        <h4 class="modal-title" id="myModalLabel">新里程碑</h4>
+								      </div>
+								      <div class="modal-body">
+								      	<form id="transferOrderMilestoneForm" action="">
+								      		<input id="milestonePickupId" type="hidden" name="milestonePickupId" />
+											<div class="form-group ">
+											<label class="control-label" for="inputSuccess">状态(不填默认为"在途")</label> <input
+												id="status" class="form-control" type="text"
+												name="status">
+											</div>
+											<div class="form-group ">
+											<label class="control-label" for="inputSuccess">地点</label> <input
+												id="location" class="form-control" type="text"
+												name="location">
+											</div>
+									      </div>
+									      <div class="modal-footer">
+									        <button type="button" class="btn  btn-primary" data-dismiss="modal">取消</button>
+									        <button id="transferOrderMilestoneFormBtn" type="button" class="btn  btn-primary">保存</button>
+									      </div>
+										</form>
+								    </div><!-- /.modal-content -->
+								  </div><!-- /.modal-dialog -->
+								</div><!-- /.modal -->
+									
+                                <div class="tab-pane fade" id="milestone">
+                                    <div class="panel-body">
+                                        <div class="table-responsive">               
+				                           <button class="btn  btn-primary" data-toggle="modal" data-target="#transferOrderMilestone">
+											  新里程碑
+											</button>
+											
+											<div class="form-group"></div>
+                                            <table class="table table-striped table-bordered table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th>状态</th>
+                                                        <th>地点</th>
+                                                        <th>更新用户</th>
+                                                        <th>更新时间</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="transferOrderMilestoneTbody" >
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <!-- /.table-responsive -->
+                                    </div>
+                                    <!-- /.panel-body -->
+                                </div>
+                                
+                                <div class="tab-pane fade" id="pickuparap">
+			                        <!-- <h2>应收</h2>
+									<button class="btn  btn-primary" id="addIncomeBtn">添加应收</button>
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover"  id ="table_fin3">
+                                                <thead>
+                                                    <tr>
+                                                        <th>运输单号</th>
+                                                        <th>客户</th>
+                                                        <th>金额</th>
+                                                        <th>费用条目</th>
+                                                        <th>备注</th>
+                                                        <th>结算状态</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                </tbody>
+                                            </table>
+                                            <div id="incomeItemList" style="display:none;">
+                                            	<%
+                      													for(incomeItem in incomeItemList){ %>
+                      														<option value='${incomeItem.ID!''}'>${incomeItem.NAME!''}</option>
+                      												<%		
+                      													}
+                      												%>
+                                            </div>
+                                        </div>
+                                        /.table-responsive
+                                    </div> -->
+                                    <h2>应付</h2>
+									 <button class="btn  btn-primary" id="addrow">添加应付</button>
+									 <button class="btn  btn-primary" id="wentDutchBtn">费用分摊</button>
+                                    <div class="panel-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-bordered table-hover"  id ="table_fin2">
+                                                <thead>
+                                                    <tr>
+                                                        <th>费用条目</th>
+                                                        <th>金额</th>
+                                                        <th>备注</th>
+                                                        <th>结算状态</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    
+                                                </tbody>
+                                            </table>
+                                            <div id="paymentItemList" style="display:none;">
+                                            	<%
+                      													for(paymentItem in paymentItemList){ %>
+                      														<option value='${paymentItem.ID!''}'>${paymentItem.NAME!''}</option>
+                      												<%		
+                      													}
+                      												%>
+                                            </div>
+                                        </div>
+                                        <!-- /.table-responsive -->
+                                    </div>
+                                    <!-- /.panel-body -->
+                                    <h2>分摊费用</h2>
+			                        <div class="panel-body">
+			                            <div class="table-responsive">
+			                                <table class="table table-striped table-bordered table-hover" id ="table_fin">
+			                                    <thead>
+			                                        <tr>
+			                                            <th>客户</th>
+			                                            <th>运输单号</th>
+			                                            <th>分摊金额</th>
+			                                        </tr>
+			                                    </thead>
+			                                    <tbody>
+			                                       
+			                                    </tbody>
+			                                </table>
+			                            </div>
+			                            <!-- /.table-responsive -->
+			                        </div>
+                            </div>
+                        </div>
+                        <div class="modal fade" id="detailDialog" tabindex="-1">
+							<div class="modal-dialog">
+                                <div class="col-lg-4" class="col-lg-4" style="border-top-width: 0px; margin-top: 100px; width: 350px; height: 200px; margin-left: 150px;">
+	                    			<div class="panel panel-default">
+		                       			<div class="panel-heading">
+		                            		温馨提示
+		                        		</div>
+		                       			<div class="panel-body">
+		                            		<p>单据创建完毕,是否继续创建？</p>
+		                        		</div>
+		                        		<form id="detailCheckBoxForm" method="post" action="/pickupOrder/createPickupOrder">
+		                        			<input type="hidden" name="localArr" value="${localArr!''}">
+			                       			<div class="panel-footer">
+			                          			<a class="btn  btn-primary" href="/pickupOrder">否</a>
+			                          			<button id="continueCreateBtn" type="button" class="btn  btn-primary" data-toggle="tooltip" title="" data-original-title="Default tooltip">是</button>
+			                        		</div>                        		
+		                        		</form>
+	                   				</div> 
+				                </div>
+			                </div>      
+			            </div> 
+                        
+                        <!-- /.panel-body --> 
+                        <div class=".tooltip-demo">
+                            <hr/>
+                        	<a style="display:none" id ="style"><i class='fa fa-check'></i></a>   
+                        	<%
+                        		if(shiro.hasPermission("PickupOrder.create") || shiro.hasPermission("PickupOrder.update")){
+                        	%>                         
+		               			<button id="saveTransferOrderBtn" disabled="disabled" type="button" class="btn  btn-primary" data-toggle="tooltip" title="" data-original-title="Default tooltip">保存</button>
+		               		<%}%>
+		               		<% 
+		               			if(shiro.hasPermission("PickupOrder.completed")){
+		               		%>
+		               			<button id="finishBtn" disabled="disabled" type="button" class="btn  btn-primary" data-toggle="tooltip" title="" data-original-title="Default tooltip">已完成</button>
+		               		<%}%>
+		               		<a class="btn  btn-primary" href="/pickupOrder">返回</a>
+		               		<button id="cancelBtn" type="button" class="btn  btn-danger">撤销</button>
+                        </div>                       
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+			</div> 
+            </div>
+        </div>
+        <!-- /#page-wrapper -->
+
+<%}%>
+<script src="/yh/css/ui/jquery-ui.js"></script>
+<script src="/yh/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="/yh/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="/yh/js/plugins/dataTables/jquery.dataTables.editable.js" type="text/javascript"></script>
+<script src="/yh/js/plugins/dataTables/jquery.jeditable.js" type="text/javascript"></script>
+<!-- 引入校验的js 文件及其 中文 文件-->
+<script src="/yh/js/jquery.validate.min.js"></script>
+<script src="/yh/js/jvalidate.messages_cn.js"></script>
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+<script src="/yh/js/eeda-common.js"></script>
+<script>
+ 	var pickupOrder = {};
+ 	pickupOrder.ex_type = "${customizeField.EX_TYPE!'公司自提'}";
+ 	pickupOrder.order_no = "${order_no!''}" ;
+ 	pickupOrder.depart_no = "${pickupOrder.depart_no!''}";
+</script>
+<script src="/yh/js/pickup/edit.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>

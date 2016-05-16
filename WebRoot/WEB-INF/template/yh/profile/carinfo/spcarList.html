@@ -1,0 +1,132 @@
+<%layout("/yh/layout.html"){%>
+
+
+<div id="page-wrapper">
+<div class="row">
+      <div class="col-lg-12">
+            <div class="btn-header">
+            	<% if(shiro.hasPermission("ProviderCar.create")){%>
+					<a class="btn   btn-primary" href="/carinfo/addSpCarInfo">
+					<span class="hidden-tablet">添加车辆</span></a>
+				<%}%>
+			</div>
+			<div class="panel panel-default">
+					<div class="panel-heading">
+	                 	<i class="fa fa-list fa-fw"></i>供应商车辆列表
+	            	</div>
+	            <div class="panel-body">
+	            	<div class="row-fluid">
+			 			<table class="table table-striped table-bordered table-hover datatable" id="example" style="width: 1237px;">
+							<thead>
+								<tr>
+									<th>车牌</th>
+									<th>司机</th>
+									<th>司机电话</th>
+									<th>车型</th>
+									<th>长度</th>
+									
+									<th></th>
+									
+								</tr>
+							</thead>
+							<tbody>
+								<tr class="odd gradeX">
+									<td colspan="5">Loading data from server</td>
+								</tr>
+							</tbody>
+							
+						</table>
+						
+					</div>
+	      		</div>
+			</div>
+	 	</div>
+	        <!-- /.col-lg-12 -->
+	</div>
+</div>
+
+
+<%}%>
+
+<!-- Page-Level Plugin Scripts - Tables -->
+<script src="/yh/js/plugins/dataTables/jquery.dataTables.js"></script>
+<script src="/yh/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+
+<script>
+<%
+	var updatePermission = shiro.hasPermission("ProviderCar.update");
+	var delPermission= shiro.hasPermission("ProviderCar.delete");
+
+%>
+var spCarInfo={};
+spCarInfo.update = ${updatePermission};
+spCarInfo.del = ${delPermission};
+
+$(document).ready(function() {
+	document.title = '供应商车辆信息查询 | '+document.title;
+	$('#menu_profile').addClass('active').find('ul').addClass('in');
+	var dataTable= $('#example').dataTable( {
+		 "sDom": "<'row-fluid'<'span6'l><'span6'f>r><'datatable-scroll't><'row-fluid'<'span12'i><'span12 center'p>>",
+	        //"sPaginationType": "bootstrap",
+	        "bProcessing": true, //table载入数据时，是否显示‘loading...’提示        
+	        "iDisplayLength": 10,
+	    	"oLanguage": {
+	            "sUrl": "/eeda/dataTables.ch.txt"
+	        },
+	        "bServerSide": true,
+	        "bRetrieve": true,
+	        "sAjaxSource": "/carinfo/spCarInfoList",
+			"aoColumns": [
+				{ "mDataProp": "CAR_NO",
+					"fnRender":function(obj){
+						if(spCarInfo.update){
+							return "<a href='/carinfo/editSpCarInfo/"+obj.aData.ID+"' target='_blank'>" + obj.aData.CAR_NO + "</a>";
+						}else{
+							return obj.aData.CAR_NO;	
+						}
+					}},
+				{ "mDataProp": "DRIVER" },
+				{ "mDataProp": "PHONE" },
+				{ "mDataProp": "CARTYPE" },
+				{ "mDataProp": "LENGTH" },
+				/* { "mDataProp": "DRIVER" },
+	            { "mDataProp": "PHONE" }, */
+	            { 
+	                "mDataProp": null, 
+	                "sWidth": "15%",
+	                "bVisible":(spCarInfo.update || spCarInfo.del),
+	                "fnRender": function(obj) { 
+	                	var str = "<nobr>";
+	                	if(spCarInfo.update){
+	                		str = str + "<a class='btn  btn-primary btn-sm editbutton' href='/carinfo/editSpCarInfo/"+obj.aData.ID+"' target='_blank'>"+
+                            		"<i class='fa fa-edit'> </i>编辑</a> ";
+	                	}
+	                	if(spCarInfo.del){
+		                	if(obj.aData.IS_STOP != true){
+		                		str = str + "<a class='btn  btn-sm btn-danger delete' code='"+obj.aData.ID+"'>"+
+				                            "<i class='fa fa-trash-o fa-fw'></i> 停用 </a>";
+		                	}else{
+		                		str = str + "<a class='btn btn-success  btn-sm delete' code='"+obj.aData.ID+"'>"+
+				                            "<i class='fa fa-trash-o fa-fw'></i> 启用 </a>";
+		                	}
+	                	}
+	                   return str + "</nobr>";
+	                }
+	            } 
+	            ]
+	} );
+	//gateInProduct删除
+	 $("#example").on('click', '.delete', function(){
+		 var id = $(this).attr('code');
+		 $.post('/carinfo/delect/'+id,function(data){
+             //保存成功后，刷新列表
+             console.log(data);
+             if(data.success){
+            	 dataTable.fnDraw();
+             }else{
+                 alert('取消失败');
+             }
+         },'json');
+		});
+});
+</script>
