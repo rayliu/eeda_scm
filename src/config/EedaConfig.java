@@ -139,6 +139,7 @@ import com.jfinal.weixin.sdk.api.ApiConfigKit;
 
 import controllers.HomeController;
 import controllers.eeda.ModuleController;
+import controllers.oms.custom.MockTgtInterfaceController;
 import controllers.profile.DriverAssistantController;
 import controllers.yh.returnTransfer.ReturnTransferController;
 
@@ -251,7 +252,8 @@ public class EedaConfig extends JFinalConfig {
         me.add("/account", controllers.profile.AccountController.class, contentPath);
         
         me.add("/salesOrder", controllers.oms.salesOrder.SalesOrderController.class);
-        
+        me.add("/tgt/interface", MockTgtInterfaceController.class);
+         
         
         //-------------
         me.add("/transferOrder", controllers.yh.order.TransferOrderController.class);
