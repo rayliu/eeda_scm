@@ -37,9 +37,9 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
 import controllers.profile.CarinfoController;
-import controllers.yh.util.OrderNoGenerator;
-import controllers.yh.util.ParentOffice;
-import controllers.yh.util.PermissionConstant;
+import controllers.util.OrderNoGenerator;
+import controllers.util.ParentOffice;
+import controllers.util.PermissionConstant;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)

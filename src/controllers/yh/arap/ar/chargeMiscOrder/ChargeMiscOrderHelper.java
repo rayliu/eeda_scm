@@ -11,7 +11,7 @@ import models.yh.arap.ArapMiscCostOrder;
 import models.yh.arap.ArapMiscCostOrderItem;
 import models.yh.arap.chargeMiscOrder.ArapMiscChargeOrder;
 import models.yh.arap.chargeMiscOrder.ArapMiscChargeOrderItem;
-import controllers.yh.util.OrderNoGenerator;
+import controllers.util.OrderNoGenerator;
 
 public class ChargeMiscOrderHelper {
 	private static ChargeMiscOrderHelper me = null;

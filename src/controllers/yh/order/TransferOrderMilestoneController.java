@@ -33,10 +33,10 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
 import controllers.profile.LoginUserController;
+import controllers.util.OrderNoGenerator;
+import controllers.util.PermissionConstant;
 import controllers.yh.departOrder.DepartOrderController;
 import controllers.yh.returnOrder.ReturnOrderController;
-import controllers.yh.util.OrderNoGenerator;
-import controllers.yh.util.PermissionConstant;
 
 @RequiresAuthentication
 public class TransferOrderMilestoneController extends Controller {

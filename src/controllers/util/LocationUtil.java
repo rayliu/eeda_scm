@@ -1,4 +1,4 @@
-package controllers.yh.util;
+package controllers.util;
 
 import java.util.List;
 

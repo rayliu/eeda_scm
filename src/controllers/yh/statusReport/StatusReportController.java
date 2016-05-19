@@ -26,8 +26,8 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
+import controllers.util.PermissionConstant;
 import controllers.yh.order.TransferOrderController;
-import controllers.yh.util.PermissionConstant;
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
 public class StatusReportController extends Controller{

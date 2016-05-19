@@ -23,8 +23,8 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
-import controllers.yh.util.ParentOffice;
-import controllers.yh.util.PermissionConstant;
+import controllers.util.ParentOffice;
+import controllers.util.PermissionConstant;
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
 public class ContentletController extends Controller {

@@ -28,8 +28,8 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
 import controllers.profile.LoginUserController;
-import controllers.yh.util.OrderNoGenerator;
-import controllers.yh.util.PermissionConstant;
+import controllers.util.OrderNoGenerator;
+import controllers.util.PermissionConstant;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)

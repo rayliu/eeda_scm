@@ -14,8 +14,8 @@ import models.yh.profile.Contact;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
-import controllers.yh.util.OrderNoGenerator;
-import controllers.yh.util.OrderNoUtil;
+import controllers.util.OrderNoGenerator;
+import controllers.util.OrderNoUtil;
 
 
 public class CreatReturnOrder{

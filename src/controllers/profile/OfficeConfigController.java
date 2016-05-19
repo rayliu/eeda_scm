@@ -30,8 +30,8 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.upload.UploadFile;
 
 import config.EedaConfig;
-import controllers.yh.util.ParentOffice;
-import controllers.yh.util.PermissionConstant;
+import controllers.util.ParentOffice;
+import controllers.util.PermissionConstant;
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
 public class OfficeConfigController extends Controller{

@@ -49,10 +49,10 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
 import controllers.profile.LoginUserController;
-import controllers.yh.util.LocationUtil;
-import controllers.yh.util.OrderNoGenerator;
-import controllers.yh.util.PermissionConstant;
-import controllers.yh.util.getCustomFile;
+import controllers.util.LocationUtil;
+import controllers.util.OrderNoGenerator;
+import controllers.util.PermissionConstant;
+import controllers.util.getCustomFile;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)

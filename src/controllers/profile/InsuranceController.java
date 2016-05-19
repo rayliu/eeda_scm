@@ -24,7 +24,7 @@ import com.jfinal.log.Logger;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
-import controllers.yh.util.ParentOffice;
+import controllers.util.ParentOffice;
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
 public class InsuranceController extends Controller{

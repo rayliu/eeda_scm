@@ -24,9 +24,9 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
+import controllers.util.PermissionConstant;
+import controllers.util.getCustomFile;
 import controllers.yh.order.TransferOrderController;
-import controllers.yh.util.PermissionConstant;
-import controllers.yh.util.getCustomFile;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)

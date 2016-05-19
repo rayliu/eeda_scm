@@ -18,7 +18,7 @@ import com.jfinal.log.Logger;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
-import controllers.yh.util.PermissionConstant;
+import controllers.util.PermissionConstant;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)

@@ -44,9 +44,9 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
 import controllers.eeda.ModuleController;
-import controllers.yh.util.EedaCommonHandler;
-import controllers.yh.util.ParentOffice;
-import controllers.yh.util.getCurrentPermission;
+import controllers.util.EedaCommonHandler;
+import controllers.util.ParentOffice;
+import controllers.util.getCurrentPermission;
 
 public class MainController extends Controller {
 	private Logger logger = Logger.getLogger(MainController.class);

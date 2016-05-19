@@ -33,7 +33,7 @@ import com.jfinal.plugin.activerecord.Model;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
-import controllers.yh.util.OrderNoGenerator;
+import controllers.util.OrderNoGenerator;
 
 public class TransferOrderExeclHandeln extends TransferOrderController {
 
