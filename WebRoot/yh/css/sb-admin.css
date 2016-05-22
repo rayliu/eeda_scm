@@ -588,5 +588,15 @@ section>a.remove {
     margin-left: -10px;
     color: red;
 }
-    
+
+.form-control-feedback {
+    position: absolute;
+    top: 25px;
+    right: 6%;
+    display: block;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    text-align: center;
+}
 /* ray added */
