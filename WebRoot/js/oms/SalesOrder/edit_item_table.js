@@ -12,7 +12,7 @@ $(document).ready(function() {
         cargoTable.row(tr).remove().draw();
     }); 
 
-    damageOrder.buildCargoDetail=function(){
+    salesOrder.buildCargoDetail=function(){
         var cargo_table_rows = $("#cargo_table tr");
         var cargo_items_array=[];
         for(var index=0; index<cargo_table_rows.length; index++){
@@ -27,10 +27,14 @@ $(document).ready(function() {
 
             var item={
                 id: id,
-                product_no: $(row.children[1]).find('input').val(), 
-                serial_no: $(row.children[2]).find('input').val(),
-                amount: $(row.children[3]).find('input').val(),
-                remark: $(row.children[4]).find('input').val(),
+                item_no: $(row.children[1]).find('input').val(), 
+                cus_item_no: $(row.children[2]).find('input').val(), 
+                qty: $(row.children[3]).find('input').val(),
+                unit: $(row.children[4]).find('input').val(),
+                price: $(row.children[5]).find('input').val(),
+                total: $(row.children[6]).find('input').val(),
+                gift_flag: $(row.children[7]).find('input').val(), 
+                currency: $(row.children[8]).find('input').val(), 
                 action: $('#order_id').val().length>0?'UPDATE':'CREATE'
             };
             cargo_items_array.push(item);
@@ -48,17 +52,21 @@ $(document).ready(function() {
         return cargo_items_array;
     };
 
-    damageOrder.reDrawCargoTable=function(order){
+    salesOrder.reDrawCargoTable=function(order){
         deletedTableIds=[];
         cargoTable.clear();
         for (var i = 0; i < order.ITEM_LIST.length; i++) {
             var item = order.ITEM_LIST[i];
             var item={
                 "ID": item.ID,
-                "PRODUCT_NO": item.PRODUCT_NO,
-                "SERIAL_NO": item.SERIAL_NO,
-                "AMOUNT": item.AMOUNT,
-                "REMARK": item.REMARK
+                "ITEM_NO": item.ITEM_NO,
+                "CUS_ITEM_NO": item.CUS_ITEM_NO,
+                "STY": item.STY,
+                "UNIT": item.UNIT,
+                "PRICE": item.PRICE,
+                "TOTAL": item.TOTAL,
+                "GIFT_FLAG": item.GIFT_FLAG,
+                "CURRENCY": item.CURRENCY
             };
     
             cargoTable.row.add(item).draw(false);
@@ -87,28 +95,56 @@ $(document).ready(function() {
                 		return '';
                 }
             },
-            { "data": "PRODUCT_NO", 
+            { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                  return '<input type="text" value="'+data+'" class="form-control"/>';
+                    return '<input type="text" value="'+data+'" class="form-control"/>';
                 }
             },
-            { "data": "SERIAL_NO" ,
+            { "data": "CUS_ITEM_NO", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" value="'+data+'" class="form-control"/>';
+                }
+            },
+            { "data": "STY" ,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
                    return '<input type="text" value="'+data+'" class="form-control"/>';
                 }
             },
-            { "data": "AMOUNT",
+            { "data": "UNIT",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
                    return '<input type="text" value="'+data+'" class="form-control"/>';
                 }
             },
-            { "data": "REMARK",
+            { "data": "PRICE",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" value="'+data+'" class="form-control"/>';
+                }
+            },
+            { "data": "TOTAL",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" value="'+data+'" class="form-control"/>';
+                }
+            },
+            { "data": "GIFT_FLAG",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" value="'+data+'" class="form-control"/>';
+                }
+            },
+            { "data": "CURRENCY",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
@@ -120,7 +156,7 @@ $(document).ready(function() {
 
     $('#add_cargo').on('click', function(){
         var item={};
-        cargoTable.row.add(item).draw(false);
+        cargoTable.row.add(item).draw(true);
     });
 
     

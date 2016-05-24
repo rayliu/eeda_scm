@@ -25,14 +25,6 @@
                                                                     value: ''
                                                                 }){}%>
                                         </div>                        
-                                        <div class="col-lg-4">
-                                            <%include("/yh/component/form/inputCustomerField.html", 
-                                                {
-                                                    id:'customer_id', 
-                                                    label:'客户名称', 
-                                                    value: ''
-                                                }){} %>
-                                        </div>
                                         <div class="col-lg-4"> 
                                             <%include("/yh/component/form/selectField.html", 
                                                     {   id:'process_status', 
@@ -40,26 +32,17 @@
                                                         value: '',
                                                         value_list:[
                                                             {code:'', value:''},
-                                                            {code:'新建', value:'新建'}, 
-                                                            {code:'已提交运单', value:'已提交运单'}, 
-                                                            {code:'清单已放行', value:'清单已放行'},
-                                                            {code:'清单放行失败', value:'清单放行失败'}
+                                                            {code:'未提交运单', value:'未提交运单'}, 
+                                          	  				{code:'已提交运单', value:'已提交运单'}, 
+                                            				{code:'清单放行', value:'清单放行'},
+                                            				{code:'清单放行失败', value:'清单放行失败'}
                                                         ]
                                                     }
                                                  ){} %>
                                         </div><!-- /.col-lg-4 -->
                                     </div>
 
-                                    <div class="row"><!--  第2行  -->
-                                        
-                                        <div class="col-lg-4">
-                                            <%include("/yh/component/form/inputField.html", 
-                                                            {   id:'biz_order_no', 
-                                                                label:'网络订单号', 
-                                                                value:''
-                                                                }){} %>
-                                        
-                                        </div>
+                                    <div class="row"><!--  第2行  -->                                     
                                         <div class="col-lg-4"> 
                                             <%include("/yh/component/form/selectField.html", 
                                                     {   id:'process_status', 
@@ -75,7 +58,7 @@
                                                  ){} %>
                                         </div><!-- /.col-lg-4 -->
                                         <div class="col-lg-4">        
-                                            <%include("/yh/component/form/inputDateQueryField.html", {id:'start_date', label:'创建时间', value:''}){} %>
+                                            <%include("/yh/component/form/inputDateQueryField.html", {id:'create_stamp', label:'创建时间', value:''}){} %>
                                         </div><!-- /.col-lg-4 -->
                                        
                                     </div><!-- /.row-->
@@ -100,13 +83,12 @@
                                 {
                                     id:'eeda-table', 
                                     headers:['订单号', 
-                                        '客户', 
-                                        '网络订单号', 
-                                        '处理进度', 
-                                        '单据状态', 
+                                        '报关企业',  
+                                        '支付人名称', 
+                                        '订单商品货款', 
                                         '创建人',
                                         '创建时间',
-                                        '备注']
+                                        '状态']
                                 }){} %>
                             
                         </div>

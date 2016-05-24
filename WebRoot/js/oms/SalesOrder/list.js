@@ -1,6 +1,6 @@
 
 $(document).ready(function() {
-	document.title = '货损单查询 | '+document.title;
+	document.title = '订单查询   | '+document.title;
 
     $('#menu_order').addClass('active').find('ul').addClass('in');
     
@@ -22,24 +22,15 @@ $(document).ready(function() {
         "columns": [
             { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/damageOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
+                    return "<a href='/salesOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
                 }
             },
-            { "data": "CUSTOMER_NAME"},
-            { "data": "SP_NAME"},
-            { "data": "ORDER_TYPE"}, 
-            { "data": "BIZ_ORDER_NO"}, 
-            { "data": "PROCESS_STATUS"}, 
-            { "data": "ACCIDENT_TYPE"}, 
-            { "data": "ACCIDENT_DESC"}, 
-            { "data": "ACCIDENT_DATE",
-                "render": function ( data, type, full, meta ) {
-                    if(data)
-                        return data.substr(0,10);
-                    return '';
-                }
-            }, 
-            { "data": "REMARK"}
+            { "data": "CUSTOM_ID"},
+            { "data": "PAYER_NAME"}, 
+            { "data": "GOODS_VALUE"}, 
+            { "data": "CREATOR_NAME"}, 
+            { "data": "CREATE_STAMP"}, 
+            { "data": "PROCESS_STATUS"}
         ]
     });
 
@@ -53,18 +44,10 @@ $(document).ready(function() {
     })
 
    var searchData=function(){
-        var orderNo = $("#order_no").val();
-        var customer_id=$("#customer_id").val();
-        var sp_id=$("#sp_id").val();
-        
-        var order_type = $("#order_type").val();
-        var biz_order_no = $('#biz_order_no').val();
+        var order_no = $("#order_no").val(); 
         var process_status = $('#process_status').val();
-
-        var accident_type = $('#accident_type').val();
-
-        var beginTime = $("#start_date").val();
-        var endTime = $("#end_date").val();
+        var start_date = $("#create_stamp_begin_time").val();
+        var end_date = $("#create_stamp_end_time").val();
         
         /*  
             查询规则：参数对应DB字段名
@@ -73,14 +56,10 @@ $(document).ready(function() {
             *_status =
             时间字段需成双定义  *_begin_time *_end_time   between
         */
-        var url = "/damageOrder/list?order_no="+orderNo
-             +"&customer_id="+customer_id
-             +"&sp_id="+sp_id
-             +"&biz_order_no="+biz_order_no
+        var url = "/salesOrder/list?order_no="+order_no
              +"&process_status="+process_status
-             +"&accident_type="+accident_type
-             +"&accident_date_begin_time="+beginTime
-             +"&accident_date_end_time="+endTime;
+             +"&create_stamp_begin_time="+start_date
+             +"&create_stamp_end_time="+end_date;
 
         dataTable.ajax.url(url).load();
     };

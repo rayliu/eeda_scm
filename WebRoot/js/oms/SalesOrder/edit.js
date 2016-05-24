@@ -8,6 +8,8 @@ $(document).ready(function() {
     $('#amount').blur(function(){
         $('#total_amount').text($(this).val());
     });
+    
+    
 
     //------------save
     $('#saveBtn').click(function(e){
@@ -20,53 +22,55 @@ $(document).ready(function() {
             return;
         }
 
-        var cargo_items_array=damageOrder.buildCargoDetail();
-        var charge_items_array=damageOrder.buildChargeDetail();
-        var cost_items_array=damageOrder.buildCostDetail();
-
+        var cargo_items_array = salesOrder.buildCargoDetail();
         var order = {
             id: $('#order_id').val(),
             order_no: $('#order_no').val(),  
-            customer_id: $('#customer_id').val(),  
-            sp_id: $('#sp_id').val(),
-            insurance_id: $('#insurance_id').val(),
-
-            order_type: $('#order_type').val(),  
-            biz_order_no: $('#biz_order_no').val(),  
-            process_status: $('#process_status').val(),
-
-            accident_type: $('#accident_type').val(), 
-            amount: $('#amount').val(),  
-            accident_desc: $('#accident_desc').val(),  
-            accident_date: $('#accident_date').val(),
-
+            custom_id: $('#custom_id').val(),  
+            order_time: $('#order_time').val(),  
+            goods_value: $('#goods_value').val(),
+            freight: $('#freight').val(),
+            currency: $('#currency').val(),  
+            consignee_id: $('#consignee_id').val(),  
+            consignee_type: $('#consignee_type').val(),
+            consignee: $('#consignee').val(), 
+            consignee_address: $('#consignee_address').val(),  
+            consignee_telephone: $('#consignee_telephone').val(),  
+            consignee_country: $('#consignee_country').val(),
+            province: $('#province').val(),
+            city: $('#city').val(), 
+            district: $('#district').val(), 
+            pro_amount: $('#pro_amount').val(),  
+            pro_remark: $('#pro_remark').val(),  
+            note: $('#note').val(),
+            pay_no: $('#pay_no').val(),
+            pay_platform: $('#pay_platform').val(), 
+            payer_account: $('#payer_account').val(),  
+            payer_name: $('#payer_name').val(),  
+            is_pay_pass: $('#is_pay_pass').val(),
+            pass_pay_no: $('#pass_pay_no').val(),
+            pay_code: $('#pay_code').val(),
+            pay_name: $('#pay_name').val(),
             status: $('#status').val(),
-            remark: $('#remark').val(), 
-            cargo_list: cargo_items_array,
-            charge_list: charge_items_array,
-            cost_list: cost_items_array
+            cargo_list: cargo_items_array
         };
 
-        console.log(order);
-
+        var status = $('#status').val();
         //异步向后台提交数据
-        $.post('/damageOrder/save', {params:JSON.stringify(order)}, function(data){
+        $.post('/salesOrder/save', {params:JSON.stringify(order)}, function(data){
             var order = data;
-            console.log(order);
             if(order.ID>0){
-                $("#order_no").val(order.ORDER_NO);
-                $("#creator_name").val(order.CREATOR_NAME);
-                $("#create_date").val(order.CREATE_DATE);
-                $("#status").val(order.STATUS);
+            	getUser(order.CREATE_BY);
+                $("#create_stamp").val(order.CREATE_STAMP);
                 $("#order_id").val(order.ID);
+                $("#order_no").val(order.ORDER_NO);
+                if(status=='') {
+                	$('#status').val('未上报');
+                }
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
-
+                
                 $('#saveBtn').attr('disabled', false);
-                $('#completeBtn').attr('disabled',false);
-                damageOrder.reDrawCargoTable(order);
-                damageOrder.reDrawChargeTable(order);
-                damageOrder.reDrawCostTable(order);         
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);
@@ -75,87 +79,74 @@ $(document).ready(function() {
             $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
             $('#saveBtn').attr('disabled', false);
           });
-    });
-
+    });  
     
-    $('#completeBtn').click(function(){
-    	$('#completeBtn').attr('disabled',true);
-    	$.post('/damageOrder/check',{id:$("#order_id").val()},function(data){
-    		var finish = function(){
-    			$.post('/damageOrder/complete',{id:$("#order_id").val()},function(data){
-    				if(data.ID>0){
-    					$.scojs_message('结案完成', $.scojs_message.TYPE_OK);	
-    					$("#status").val(data.STATUS);
-    					$('#saveBtn').attr('disabled',true);
-    					$('#add_cargo').attr('disabled',true);
-    			    	$('#add_cost').attr('disabled',true);
-    			    	$('#add_charge').attr('disabled',true);
-    				}else{
-    					$.scojs_message('后台报错', $.scojs_message.TYPE_OK);	
-    				}
-    			});
-    		};
-    		if(data.success){
-    			finish();
-    		}else{
-    			if(confirm('存在明细未确认，是否继续结案？')){
-    				finish();
+    
+    //上报订单
+    $('#submitDingDanBtn').click(function(){
+    	$('#submitDingDanBtn').attr('disabled',true);
+    	$.post('/salesOrder/submitDingDan', {order_id:$("#order_id").val()}, function(data){
+    		if(data!=null){
+    			var message = $(data.ceb_results).attr('message');
+    			if(message == '订单写入成功'){
+    				$.scojs_message(message , $.scojs_message.TYPE_OK);
+    				$('#status').val('订单写入成功');
     			}else{
-    				$('#completeBtn').attr('disabled',false);
-    			}
+    				$.scojs_message(message , $.scojs_message.TYPE_FALSE);
+    			}	
+    		}else{
+    			$.scojs_message('上报失败', $.scojs_message.TYPE_FALSE);
     		}
+    		
+    		
     	});
-    	
-    	
     });
     
-    $("#printBtn").on('click',function(){
-    	$("#muban").show();
-    	$("#pdf_type").show();
-    });
-    $("#btnOK").on('click',function(){
-    	var damageType = $("input[name='damageType']:checked").val();
-    	var unit=$("#customer_id_input").val();;
-    	if(damageType=="supplier"){
-    		unit=$("#sp_id_input").val();
-    	}else if(damageType=="insurance"){
-    		unit=$("#insurance_id_input").val();
-    	}
-    	var order_no=$("#order_no").val();
-    	if(order_no==""){
-    		$.scojs_message('没检测到单号，请确认是否保存', $.scojs_message.TYPE_ERROR);
+    
+    //获取用户信息
+    var getUser = function(user_id){
+    	if(user_id == '' || user_id == null)
     		return;
-    	}
-    	if(damageType=="insurance"){
-    		$.post('/report/printdamageCutomer', {order_no:order_no,damageType:damageType,unit:unit}, function(data){
-    			window.open(data);
-        	});
-    	}else if (damageType=="supplier"){
-    		$.post('/report/printdamageCutomer', {order_no:order_no,damageType:damageType,unit:unit}, function(data){
-    			window.open(data);
-        	});
-    	}else if (damageType=="customer"){
-    		$.post('/report/printdamageCutomer', {order_no:order_no,damageType:damageType,unit:unit}, function(data){
-    			window.open(data);
-        	});
-    	}else{
-    		$.scojs_message('选择有误', $.scojs_message.TYPE_ERROR);
-    		return;
-    	}
-    });
-    //按钮控制
-    if($("#status").val()==''){
-    	$('#completeBtn').attr('disabled',true);
-    }else if($("#status").val()=='已结案'){
-    	$('#saveBtn').attr('disabled',true);
-    	$('#completeBtn').attr('disabled',true);
-    	$('#add_cargo').attr('disabled',true);
-    	$('#add_cost').attr('disabled',true);
-    	$('#add_charge').attr('disabled',true);
+    	$.post('/customCompany/getUser', {params:user_id}, function(data){
+    		if(data!=null)
+    			 $("#creator_name").val(data.C_NAME);	
+    	})
     }
     
     
+    //通过报关企业获取内容
+    $('#custom_id_input').on('blur',function(){
+    	var custom_id = $('#custom_id').val();
+        if(custom_id!=null)
+        	showCustom(custom_id);
+    });
+    
+    //回显报关信息
+    var showCustom = function(custom_id){
+    	if(custom_id.trim()=="")
+    		return;
+    	$.post('/salesOrder/getCustomCompany', {params:custom_id}, function(data){
+    		if(data!=null){
+    			$("#org_code").val(data.ORG_CODE);	
+    			$("#warehouse_no").val(data.WAREHOUSE_NO);	
+    			$("#ebp_code_cus").val(data.EBP_CODE_CUS);	
+    			$("#ebp_code_ciq").val(data.EBP_CODE_CIQ);	
+    			$("#ebp_name").val(data.EBP_NAME);	
+    			$("#ebc_code_cus").val(data.EBC_CODE_CUS);	
+    			$("#ebc_code_ciq").val(data.EBC_CODE_CIQ);	
+    			$("#ebc_name").val(data.EBC_NAME);	
+    			$("#agent_code_cus").val(data.AGENT_CODE_CUS);	
+    			$("#agent_code_ciq").val(data.AGENT_CODE_CIQ);	
+    			$("#agent_name").val(data.AGENT_NAME);	
+    			$("#ciq_code").val(data.CIQ_CODE);	
+    		}
+    	})	
+    }
+    
+    //按钮控制
+    var order_id = $("#order_id").val()
+    if(order_id != ''){
+    	 $('#submitDingDanBtn').attr('disabled',false);
+    }
 
-    damageOrder.calcTotalCharge();
-    damageOrder.calcTotalCost();
 } );
