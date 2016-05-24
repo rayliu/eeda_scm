@@ -1,10 +1,14 @@
 <div class="form-group">
-    <label class="search-label">${label}</label>
+    <label class="search-label">${label}
+    <%if(is_require!'' =='Y'){%>
+        <span style='color:red; display:initial;'>*</span>
+    <%}%>
+    </label>
     <input type="text" 
     	id="${id}" 
 		class="form-control search-control" 
 		placeholder="${placeholder!''}" 
-		value="${value !''}"
+		value="${value !''}" 
 		${disabled!''}>
     <% var d=disabled!'';
         if(d!='disabled'){%>    
