@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            <i class="fa fa-list fa-fw"></i>订单列表                            
+                            <i class="fa fa-list fa-fw"></i>报关企业                           
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
@@ -20,69 +20,19 @@
                                     <div class="row"><!--  第1行  -->
                                         <div class="col-lg-4"><!--  三列排版  -->
                                             <%include("/yh/component/form/inputField.html", 
-                                                                {   id: 'order_no', 
-                                                                    label: '订单号', 
+                                                                {   id: 'shop_name', 
+                                                                    label: '商户名称', 
                                                                     value: ''
                                                                 }){}%>
-                                        </div>                        
-                                        <div class="col-lg-4">
-                                            <%include("/yh/component/form/inputCustomerField.html", 
-                                                {
-                                                    id:'customer_id', 
-                                                    label:'客户名称', 
-                                                    value: ''
-                                                }){} %>
-                                        </div>
-                                        <div class="col-lg-4"> 
-                                            <%include("/yh/component/form/selectField.html", 
-                                                    {   id:'process_status', 
-                                                        label:'处理进度', 
-                                                        value: '',
-                                                        value_list:[
-                                                            {code:'', value:''},
-                                                            {code:'新建', value:'新建'}, 
-                                                            {code:'已提交运单', value:'已提交运单'}, 
-                                                            {code:'清单已放行', value:'清单已放行'},
-                                                            {code:'清单放行失败', value:'清单放行失败'}
-                                                        ]
-                                                    }
-                                                 ){} %>
-                                        </div><!-- /.col-lg-4 -->
+                                        </div>       
+                                        <div class="col-lg-4">        
+                                            <%include("/yh/component/form/inputDateQueryField.html", {id:'create_stamp', label:'创建时间', value:''}){} %>
+                                        </div><!-- /.col-lg-4 -->                 
                                     </div>
 
                                     <div class="row"><!--  第2行  -->
                                         
-                                        <div class="col-lg-4">
-                                            <%include("/yh/component/form/inputField.html", 
-                                                            {   id:'biz_order_no', 
-                                                                label:'网络订单号', 
-                                                                value:''
-                                                                }){} %>
-                                        
-                                        </div>
-                                        <div class="col-lg-4"> 
-                                            <%include("/yh/component/form/selectField.html", 
-                                                    {   id:'process_status', 
-                                                        label:'状态', 
-                                                        value: '',
-                                                        value_list:[
-                                                            {code:'', value:''},
-                                                            {code:'新建', value:'新建'}, 
-                                                            {code:'处理中', value:'处理中'}, 
-                                                            {code:'已完成', value:'已完成'}
-                                                        ]
-                                                    }
-                                                 ){} %>
-                                        </div><!-- /.col-lg-4 -->
-                                        <div class="col-lg-4">        
-                                            <%include("/yh/component/form/inputDateQueryField.html", {id:'start_date', label:'创建时间', value:''}){} %>
-                                        </div><!-- /.col-lg-4 -->
-                                       
-                                    </div><!-- /.row-->
-
-                                   
-
-                                    
+                                    </div><!-- /.row-->    
                                 </form>
                             </div><!-- /.row -->
 
@@ -90,23 +40,24 @@
                                 <button id="searchBtn" class="btn btn-primary btn-sm" type="button">查询</button>
                                 <button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
                                 <% 
-                                    if(shiro.hasPermission("TransferOrder.create")){
+                                    if(true){
                                 %>
-                                    <a class="btn btn-success btn-sm" href="/salesOrder/create">新增订单</a>
+                                    <a class="btn btn-success btn-sm" href="/customCompany/create">新增订单</a>
                                 <%}%>
                             </div> 
 
                             <%include("/yh/component/form/detailTable.html", 
                                 {
                                     id:'eeda-table', 
-                                    headers:['订单号', 
-                                        '客户', 
-                                        '网络订单号', 
-                                        '处理进度', 
-                                        '单据状态', 
+                                    headers:['商户编号', 
+                                        '商户名称', 
+                                        '法人', 
+                                        '联系人', 
+                                        '联系电话',
+                                        '公司电话',
                                         '创建人',
-                                        '创建时间',
-                                        '备注']
+                                        '创建时间'
+								 		]
                                 }){} %>
                             
                         </div>
@@ -116,7 +67,6 @@
                 </div>
                 <!-- /.col-lg-12 -->
             </div>
-          
         </div><!-- end of  .page-wrapper-->
 
 <%}%>
@@ -131,5 +81,5 @@
 
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
 
-<script src="/js/oms/SalesOrder/list.js"></script>
+<script src="/js/profile/CustomCompany/list.js"></script>
 
