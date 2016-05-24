@@ -46,6 +46,9 @@ public class DbUtils {
             		valueMap.put("_end_time", filterValue);
             		dateFieldMap.put(key, valueMap);
             		continue;
+            	}else if(!"_".equals(key)){
+            		condition += " and " + key + " like '%" + filterValue + "%' ";
+            		continue;
             	}
             }	
         }

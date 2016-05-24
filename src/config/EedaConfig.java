@@ -72,7 +72,7 @@ import models.eeda.Leads;
 import models.eeda.Order;
 import models.eeda.OrderItem;
 import models.eeda.ServiceProvider;
-import models.eeda.oms.Goods;
+import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.profile.CustomCompany;
@@ -517,7 +517,7 @@ public class EedaConfig extends JFinalConfig {
         //cms
         arp.addMapping("custom_company", CustomCompany.class);
         arp.addMapping("sales_order", SalesOrder.class);
-        arp.addMapping("goods", Goods.class);
+        arp.addMapping("sales_order_goods", SalesOrderGoods.class);
         arp.addMapping("logistics_order", LogisticsOrder.class);
         
     }
