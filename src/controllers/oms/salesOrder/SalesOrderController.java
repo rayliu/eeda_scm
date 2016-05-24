@@ -1,59 +1,28 @@
 package controllers.oms.salesOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-
-import models.DepartOrder;
-import models.DepartTransferOrder;
-import models.FinItem;
-import models.Location;
-import models.Office;
-import models.ParentOfficeModel;
-import models.Party;
-import models.TransferOrder;
-import models.TransferOrderFinItem;
-import models.TransferOrderItem;
-import models.TransferOrderItemDetail;
-import models.TransferOrderMilestone;
 import models.UserLogin;
-import models.UserOffice;
-import models.Warehouse;
-import models.eeda.oms.Goods;
+import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
 import models.eeda.profile.CustomCompany;
-import models.yh.damageOrder.DamageOrderItem;
-import models.yh.profile.Contact;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
-
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.jfinal.kit.PathKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
-import com.jfinal.upload.UploadFile;
-
-import controllers.oms.custom.CustomManager;
 import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.custom.dto.DingDanGoodsDto;
 import controllers.profile.LoginUserController;
@@ -61,12 +30,6 @@ import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
-import controllers.util.ParentOffice;
-import controllers.util.PermissionConstant;
-import controllers.util.ReaderXLS;
-import controllers.util.ReaderXlSX;
-import controllers.util.getCustomFile;
-import controllers.yh.order.TransferOrderExeclHandeln;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -119,15 +82,15 @@ public class SalesOrderController extends Controller {
    		}
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
-		DbUtils.handleList(itemList, id, Goods.class, "order_id");
+		DbUtils.handleList(itemList, id, SalesOrderGoods.class, "order_id");
 
    		//return dto
    		renderJson(salesOrder);
    	}
     
     
-    private List<Record> getGoods(String orderId) {
-		String itemSql = "select * from goods where order_id=?";
+    private List<Record> getSalesOrderGoods(String orderId) {
+		String itemSql = "select * from sales_order_goods where order_id=?";
 		List<Record> itemList = Db.find(itemSql, orderId);
 		return itemList;
 	}
@@ -140,7 +103,7 @@ public class SalesOrderController extends Controller {
     	setAttr("order", salesOrder);
     	
     	//获取明细表信息
-    	setAttr("itemList", getGoods(id));
+    	setAttr("itemList", getSalesOrderGoods(id));
     	
     	//获取报关企业信息
     	CustomCompany custom = CustomCompany.dao.findById(salesOrder.getLong("custom_id"));
@@ -222,7 +185,7 @@ public class SalesOrderController extends Controller {
     	CustomCompany customCompany = CustomCompany.dao.findById(salesOrder.getLong("custom_id"));
     	
     	//对应的商品表
-    	List<Goods> goodsses = Goods.dao.find("select * from goods where order_id = ?",order_id);
+    	List<SalesOrderGoods> goodsses = SalesOrderGoods.dao.find("select * from sales_order_goods where order_id = ?",order_id);
     	
 		TreeMap<String, String> paramsMap = new TreeMap<String, String>();
 		paramsMap.put("orgcode", "950832756");
@@ -282,7 +245,7 @@ public class SalesOrderController extends Controller {
 		
 		
 		List<DingDanGoodsDto> goodsList=new ArrayList<DingDanGoodsDto>();
-		for(Goods item :goodsses){
+		for(SalesOrderGoods item :goodsses){
 			DingDanGoodsDto goods=new DingDanGoodsDto();
 			goods.setCurrency(item.getStr("currency"));//币制代码（标准代码，见参数表）
 			goods.setItem_no(item.getStr("item_no"));//企业商品货号

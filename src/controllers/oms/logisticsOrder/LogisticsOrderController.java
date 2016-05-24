@@ -1,68 +1,33 @@
 package controllers.oms.logisticsOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import models.DepartOrder;
-import models.DepartTransferOrder;
-import models.FinItem;
-import models.Location;
-import models.Office;
-import models.ParentOfficeModel;
-import models.Party;
-import models.TransferOrder;
-import models.TransferOrderFinItem;
-import models.TransferOrderItem;
-import models.TransferOrderItemDetail;
-import models.TransferOrderMilestone;
 import models.UserLogin;
-import models.UserOffice;
-import models.Warehouse;
-import models.eeda.oms.Goods;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.profile.CustomCompany;
-import models.yh.damageOrder.DamageOrderItem;
-import models.yh.profile.Contact;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.jfinal.kit.PathKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
-import com.jfinal.upload.UploadFile;
 
 import controllers.oms.custom.CustomManager;
 import controllers.oms.custom.dto.DingDanDto;
 import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.OrderNoGenerator;
-import controllers.util.ParentOffice;
-import controllers.util.PermissionConstant;
-import controllers.util.ReaderXLS;
-import controllers.util.ReaderXlSX;
-import controllers.util.getCustomFile;
-import controllers.yh.order.TransferOrderExeclHandeln;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -122,8 +87,8 @@ public class LogisticsOrderController extends Controller {
    	}
     
     
-    private List<Record> getGoods(long orderId) {
-		String itemSql = "select * from goods where order_id=?";
+    private List<Record> getSalesOrderGoods(long orderId) {
+		String itemSql = "select * from sales_order_goods where order_id=?";
 		List<Record> itemList = Db.find(itemSql, orderId);
 		return itemList;
 	}
@@ -142,7 +107,7 @@ public class LogisticsOrderController extends Controller {
     		long custom_id = salesOrder.getLong("custom_id");
     		
     		//获取明细表信息
-        	setAttr("itemList", getGoods(sales_order_id));
+        	setAttr("itemList", getSalesOrderGoods(sales_order_id));
         	
         	//获取报关企业信息
         	CustomCompany custom = CustomCompany.dao.findById(custom_id);

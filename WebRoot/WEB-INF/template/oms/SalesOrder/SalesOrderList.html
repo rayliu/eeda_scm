@@ -25,34 +25,18 @@
                                                                     value: ''
                                                                 }){}%>
                                         </div>                        
-                                        <div class="col-lg-4"> 
-                                            <%include("/yh/component/form/selectField.html", 
-                                                    {   id:'process_status', 
-                                                        label:'处理进度', 
-                                                        value: '',
-                                                        value_list:[
-                                                            {code:'', value:''},
-                                                            {code:'未提交运单', value:'未提交运单'}, 
-                                          	  				{code:'已提交运单', value:'已提交运单'}, 
-                                            				{code:'清单放行', value:'清单放行'},
-                                            				{code:'清单放行失败', value:'清单放行失败'}
-                                                        ]
-                                                    }
-                                                 ){} %>
-                                        </div><!-- /.col-lg-4 -->
                                     </div>
 
                                     <div class="row"><!--  第2行  -->                                     
                                         <div class="col-lg-4"> 
                                             <%include("/yh/component/form/selectField.html", 
-                                                    {   id:'process_status', 
+                                                    {   id:'status', 
                                                         label:'状态', 
                                                         value: '',
                                                         value_list:[
                                                             {code:'', value:''},
-                                                            {code:'新建', value:'新建'}, 
-                                                            {code:'处理中', value:'处理中'}, 
-                                                            {code:'已完成', value:'已完成'}
+                                                            {code:'未上报', value:'未上报'}, 
+                                                            {code:'已上报', value:'已上报'}
                                                         ]
                                                     }
                                                  ){} %>
