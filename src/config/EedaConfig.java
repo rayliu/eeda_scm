@@ -72,6 +72,10 @@ import models.eeda.Leads;
 import models.eeda.Order;
 import models.eeda.OrderItem;
 import models.eeda.ServiceProvider;
+import models.eeda.oms.Goods;
+import models.eeda.oms.LogisticsOrder;
+import models.eeda.oms.SalesOrder;
+import models.eeda.profile.CustomCompany;
 import models.yh.arap.ArapAccountAuditSummary;
 import models.yh.arap.BillingOrder;
 import models.yh.arap.BillingOrderItem;
@@ -140,6 +144,8 @@ import com.jfinal.weixin.sdk.api.ApiConfigKit;
 import controllers.HomeController;
 import controllers.eeda.ModuleController;
 import controllers.oms.custom.MockTgtInterfaceController;
+import controllers.oms.logisticsOrder.LogisticsOrderController;
+import controllers.profile.CustomCompanyController;
 import controllers.profile.DriverAssistantController;
 import controllers.yh.returnTransfer.ReturnTransferController;
 
@@ -336,6 +342,11 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/home", HomeController.class, contentPath);
 		me.add("/module", ModuleController.class, contentPath);
 		
+		//oms管理系统
+		me.add("/customCompany", CustomCompanyController.class, contentPath);
+		me.add("/logisticsOrder", LogisticsOrderController.class, contentPath);
+		
+		
 	}
 
     @Override
@@ -502,6 +513,12 @@ public class EedaConfig extends JFinalConfig {
         //common
         arp.addMapping("modules", Module.class);
         arp.addMapping("structure_action", Action.class);
+        
+        //cms
+        arp.addMapping("custom_company", CustomCompany.class);
+        arp.addMapping("sales_order", SalesOrder.class);
+        arp.addMapping("goods", Goods.class);
+        arp.addMapping("logistics_order", LogisticsOrder.class);
         
     }
 

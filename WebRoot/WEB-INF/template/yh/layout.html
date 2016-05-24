@@ -111,6 +111,9 @@
                                 <li>
                                     <a href="/salesOrder">销售订单</a>
                                 </li>
+                                <li>
+                                    <a href="/logisticsOrder">运输单</a>
+                                </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -476,10 +479,10 @@
 	                    <li id="menu_profile">
 	                        <a href="#"><i class="fa fa-cog fa-fw"></i> 基础数据设置<span class="fa arrow"></span></a>
 	                        <ul class="nav nav-second-level">
-		                         <% if(customerPermission != ''){%>
-                                    <li>
+	                        		<li>
                                         <a href="/customCompany">报关企业</a>
                                     </li>
+		                         <% if(customerPermission != ''){%>
 		                            <li>
 		                                <a href="/customer">客户</a>
 		                            </li>
