@@ -12,14 +12,22 @@
 		${disabled!''}>
     <% var d=disabled!'';
         if(d!='disabled'){%>    
-    <a id="${id}_remove" href="javascript:void(0);" class="remove">
-        <span class="glyphicon glyphicon-remove form-control-feedback" style="top: 0px;" aria-hidden="true"></span>
+    <a id="${id}_remove" href="#" class="remove">
+        <span id="${id}_remove_icon" class="glyphicon glyphicon-remove form-control-feedback" style="top: 0px; opacity: .5;" aria-hidden="true"></span>
     </a>
     <%}%>
 </div>
 <% if(d!='disabled'){%>    
     <script type="text/javascript">
-        $('#${id}_remove').on('click', function(){
+        /* $("#${id}").mouseenter(function(e){
+    	    $("#${id}_remove_icon").css("display","block");
+    	});
+        $("#${id}").mouseleave(function(e){
+            $("#${id}_remove_icon").css("display","none");
+        }); */
+        
+        $('#${id}_remove').on('click', function(e){
+        	e.preventDefault();
             $(this).parent().find('input').val('');
         });
     </script>
