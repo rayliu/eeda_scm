@@ -573,7 +573,7 @@ public class EedaConfig extends JFinalConfig {
         }
         //DataInitUtil.initData(cp);
         
-        me.add(new UrlSkipHandler("/apidoc/", false));
+        me.add(new UrlSkipHandler("/apidoc.*", false));
         me.add(new UrlHanlder());
         
     }
