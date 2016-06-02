@@ -131,6 +131,7 @@ import com.jfinal.config.Interceptors;
 import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
+import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.ext.plugin.shiro.ShiroInterceptor;
 import com.jfinal.ext.plugin.shiro.ShiroPlugin;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
@@ -219,6 +220,8 @@ public class EedaConfig extends JFinalConfig {
 
 	private void setErpRoute(Routes me) {
 		me.add("/", controllers.eeda.AppController.class);
+		
+		
         me.add("/case", controllers.eeda.CaseController.class);
         me.add("/user", controllers.eeda.UserProfileController.class);
         me.add("/salesOrder", controllers.eeda.SalesOrderController.class);
@@ -231,6 +234,7 @@ public class EedaConfig extends JFinalConfig {
 	private void setScmRoute(Routes me, String contentPath) {
 		// yh project controller
         me.add("/", controllers.profile.MainController.class, contentPath);
+        me.add("/apidoc", controllers.eeda.DocController.class);
         me.add("/debug", controllers.profile.LogController.class, contentPath);
         
         me.add("/loginUser", controllers.profile.LoginUserController.class, contentPath);
@@ -569,7 +573,7 @@ public class EedaConfig extends JFinalConfig {
         }
         //DataInitUtil.initData(cp);
         
-        
+        me.add(new UrlSkipHandler("/apidoc/", false));
         me.add(new UrlHanlder());
         
     }
