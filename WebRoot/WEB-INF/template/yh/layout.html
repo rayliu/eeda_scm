@@ -480,21 +480,14 @@
 	                        <a href="#"><i class="fa fa-cog fa-fw"></i> 基础数据设置<span class="fa arrow"></span></a>
 	                        <ul class="nav nav-second-level">
 	                        		<li>
-                                        <a href="/customCompany">报关企业</a>
+                                        <a href="/customCompany">物流报关企业</a>
                                     </li>
 		                         <% if(customerPermission != ''){%>
 		                            <li>
-		                                <a href="/customer">客户</a>
+		                                <a href="/customer">电商报关企业</a>
 		                            </li>
 	                             <%}%>
-		                         <% if(spListPermission != ''){%>
-		                            <li>
-		                                <a href="/serviceProvider">供应商</a>
-		                            </li>
-	                             <%}%>
-	                            
-		                         
-		                         <% if(officeListPermission != ''){%>
+                                 <% if(officeListPermission != ''){%>
 		                            <li>
 		                                <a href="/office">网点[分公司]</a>
 		                            </li>
