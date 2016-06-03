@@ -48,6 +48,6 @@ public class MD5Util {
     public static void main(String[] args) {
         System.out.println("111111 MD5  :" + MD5Util.encodeByMD5("111111"));
         System.out.println("111111 MD5  :" + MD5Util.encode("MD5", "111111"));
-        System.out.println("111111 SHA1 :" + MD5Util.encode("SHA1", "111111"));
+        System.out.println("111111 SHA1 :" + MD5Util.encode("SHA1", "123456"));
     }
 }

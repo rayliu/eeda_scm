@@ -45,6 +45,7 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 
 import controllers.eeda.ModuleController;
 import controllers.util.EedaCommonHandler;
+import controllers.util.MD5Util;
 import controllers.util.ParentOffice;
 import controllers.util.getCurrentPermission;
 
@@ -160,7 +161,8 @@ public class MainController extends Controller {
             render("/yh/login.html");
             return;
         }
-        UsernamePasswordToken token = new UsernamePasswordToken(getPara("username"), getPara("password"));
+        String sha1Pwd = MD5Util.encode("SHA1", getPara("password"));
+        UsernamePasswordToken token = new UsernamePasswordToken(username, sha1Pwd );
 
         if (getPara("remember") != null && "Y".equals(getPara("remember")))
             token.setRememberMe(true);
