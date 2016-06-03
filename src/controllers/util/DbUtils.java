@@ -12,7 +12,6 @@ import com.jfinal.log.Logger;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 
-import controllers.yh.damageOrder.DamageOrderController;
 import models.Location;
 
 public class DbUtils {

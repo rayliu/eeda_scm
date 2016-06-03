@@ -5,121 +5,38 @@ import handler.UrlHanlder;
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
 
+
+
+
+
+
+
+
+
 import models.Account;
 import models.ArapAccountAuditLog;
-import models.ArapChargeApplicationInvoiceNo;
-import models.ArapChargeInvoice;
-import models.ArapChargeInvoiceApplication;
-import models.ArapChargeInvoiceApplicationItem;
-import models.ArapChargeInvoiceItemInvoiceNo;
-import models.ArapChargeItem;
-import models.ArapChargeOrder;
-import models.ArapChargeReceiveConfirmOrder;
-import models.ArapChargeReceiveConfirmOrderDtail;
-import models.ArapChargeReceiveConfirmOrderDtailLog;
-import models.ArapChargeReceiveConfirmOrderLog;
-import models.ArapCostInvoice;
-import models.ArapCostInvoiceApplication;
-import models.ArapCostInvoiceItemInvoiceNo;
-import models.ArapCostItem;
-import models.ArapCostOrder;
-import models.ArapCostOrderInvoiceNo;
-import models.ArapCostPayConfirmOrder;
-import models.ArapCostPayConfirmOrderDtail;
-import models.ArapCostPayConfirmOrderDtailLog;
-import models.ArapCostPayConfirmOrderLog;
 import models.Category;
-import models.ChargeApplicationOrderRel;
-import models.CostApplicationOrderRel;
-import models.DeliveryOrderFinItem;
-import models.DeliveryOrderItem;
-import models.DeliveryOrderMilestone;
-import models.DepartOrder;
-import models.DepartOrderFinItem;
-import models.DepartPickupOrder;
-import models.DepartTransferOrder;
-import models.FinItem;
-import models.InsuranceFinItem;
-import models.InsuranceOrder;
-import models.InventoryItem;
 import models.Location;
 import models.Office;
-import models.OrderAttachmentFile;
-import models.OrderStatus;
 import models.Party;
-import models.PartyAttribute;
 import models.Permission;
-import models.PickupOrderFinItem;
 import models.Product;
-import models.ReturnOrder;
 import models.Role;
 import models.RolePermission;
-import models.Toll;
-import models.TransferOrder;
-import models.TransferOrderFinItem;
-import models.TransferOrderItem;
-import models.TransferOrderItemDetail;
-import models.TransferOrderMilestone;
 import models.UserCustomer;
 import models.UserLogin;
 import models.UserOffice;
 import models.UserRole;
-import models.Warehouse;
-import models.WarehouseOrder;
-import models.WarehouseOrderItem;
-import models.eeda.Case;
-import models.eeda.Leads;
-import models.eeda.Order;
-import models.eeda.OrderItem;
-import models.eeda.ServiceProvider;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.profile.CustomCompany;
-import models.yh.arap.ArapAccountAuditSummary;
-import models.yh.arap.BillingOrder;
-import models.yh.arap.BillingOrderItem;
-import models.yh.arap.ReimbursementOrder;
-import models.yh.arap.ReimbursementOrderFinItem;
-import models.yh.arap.TransferAccountsOrder;
-import models.yh.arap.chargeMiscOrder.ArapMiscChargeOrder;
-import models.yh.arap.chargeMiscOrder.ArapMiscChargeOrderItem;
-import models.yh.arap.inoutorder.ArapInOutMiscOrder;
-import models.yh.arap.prePayOrder.ArapPrePayOrder;
-import models.yh.arap.prePayOrder.ArapPrePayOrderItem;
-import models.yh.carmanage.CarSummaryDetail;
-import models.yh.carmanage.CarSummaryDetailOilFee;
-import models.yh.carmanage.CarSummaryDetailOtherFee;
-import models.yh.carmanage.CarSummaryDetailRouteFee;
-import models.yh.carmanage.CarSummaryDetailSalary;
-import models.yh.carmanage.CarSummaryOrder;
-import models.yh.contract.Contract;
-import models.yh.contract.ContractItem;
-import models.yh.damageOrder.DamageOrder;
-import models.yh.damageOrder.DamageOrderFinItem;
-import models.yh.damageOrder.DamageOrderItem;
-import models.yh.delivery.DeliveryOrder;
-import models.yh.delivery.DeliveryPlanOrder;
-import models.yh.delivery.DeliveryPlanOrderCarinfo;
-import models.yh.delivery.DeliveryPlanOrderDetail;
-import models.yh.delivery.DeliveryPlanOrderMilestone;
-import models.yh.pickup.PickupDriverAssistant;
-import models.yh.profile.Action;
-import models.yh.profile.Carinfo;
+import models.eeda.profile.LogisticsCustomCompany;
 import models.yh.profile.Contact;
-import models.yh.profile.CustomerRoute;
 import models.yh.profile.CustomizeField;
-import models.yh.profile.DriverAssistant;
-import models.yh.profile.Module;
 import models.yh.profile.OfficeCofig;
-import models.yh.profile.PartyInsuranceItem;
-import models.yh.profile.ProviderChargeType;
 import models.yh.profile.Route;
-import models.yh.returnOrder.ReturnOrderFinItem;
-import models.yh.structure.Contentlet;
-import models.yh.structure.Field;
-import models.yh.structure.Structure;
-import models.yh.wx.WechatLocation;
+import models.yh.profile.Warehouse;
 
 import org.apache.log4j.Logger;
 import org.bee.tl.ext.jfinal.BeetlRenderFactory;
@@ -139,16 +56,16 @@ import com.jfinal.plugin.activerecord.CaseInsensitiveContainerFactory;
 import com.jfinal.plugin.activerecord.SqlReporter;
 import com.jfinal.plugin.activerecord.dialect.MysqlDialect;
 import com.jfinal.plugin.c3p0.C3p0Plugin;
-import com.jfinal.plugin.scheduler.SchedulerPlugin;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
 
 import controllers.HomeController;
-import controllers.eeda.ModuleController;
-import controllers.oms.custom.MockTgtInterfaceController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
+import controllers.oms.salesOrder.SalesOrderController;
+import controllers.profile.AccountController;
 import controllers.profile.CustomCompanyController;
-import controllers.profile.DriverAssistantController;
-import controllers.yh.returnTransfer.ReturnTransferController;
+import controllers.profile.LogisticsCustomCompanyController;
+import controllers.profile.PrivilegeController;
+import controllers.yh.arap.AccountAuditLogController;
 
 public class EedaConfig extends JFinalConfig {
     private Logger logger = Logger.getLogger(EedaConfig.class);
@@ -217,140 +134,34 @@ public class EedaConfig extends JFinalConfig {
         setScmRoute(me, contentPath);
         
     }
-
-	private void setErpRoute(Routes me) {
-		me.add("/", controllers.eeda.AppController.class);
-		
-		
-        me.add("/case", controllers.eeda.CaseController.class);
-        me.add("/user", controllers.eeda.UserProfileController.class);
-        me.add("/salesOrder", controllers.eeda.SalesOrderController.class);
-        me.add("/loan", controllers.eeda.LoanController.class);
-        me.add("/propertyClient", controllers.eeda.PropertyClientController.class);
-        me.add("/sp", controllers.eeda.ServiceProviderController.class);
-        //me.add("/au", AdminUserController.class);
-	}
+    
 
 	private void setScmRoute(Routes me, String contentPath) {
 		// yh project controller
         me.add("/", controllers.profile.MainController.class, contentPath);
         me.add("/apidoc", controllers.eeda.DocController.class);
         me.add("/debug", controllers.profile.LogController.class, contentPath);
-        
+        me.add("/warehouse",controllers.profile.WarehouseController.class,contentPath);
         me.add("/loginUser", controllers.profile.LoginUserController.class, contentPath);
         //register loginUser
         me.add("/register",controllers.profile.RegisterUserController.class,contentPath);
         me.add("/reset",controllers.profile.ResetPassWordController.class,contentPath);
-        
         me.add("/role", controllers.profile.RoleController.class, contentPath);
         me.add("/userRole",controllers.profile.UserRoleController.class,contentPath);
-        me.add("/toll", controllers.profile.TollController.class, contentPath);
-        me.add("/privilege", controllers.profile.PrivilegeController.class, contentPath);
-        me.add("/pay", controllers.profile.PayController.class, contentPath);
-        me.add("/ownCarPay", controllers.profile.PayController.class, contentPath);
         me.add("/customer", controllers.profile.CustomerController.class, contentPath);
         me.add("/serviceProvider", controllers.profile.ServiceProviderController.class, contentPath);
         me.add("/location", controllers.profile.LocationController.class, contentPath);
-        me.add("/customerContract", controllers.yh.contract.ContractController.class, contentPath);
-        me.add("/spContract", controllers.yh.contract.ContractController.class, contentPath);
-        me.add("/route", controllers.profile.RouteController.class, contentPath);
         me.add("/office", controllers.profile.OfficeController.class, contentPath);
-        me.add("/officeConfig", controllers.profile.OfficeConfigController.class, contentPath);
         me.add("/product", controllers.profile.ProductController.class, contentPath);
-        me.add("/warehouse", controllers.profile.WarehouseController.class, contentPath);
-        me.add("/orderStatus", controllers.profile.OrderStatusController.class, contentPath);
-        me.add("/account", controllers.profile.AccountController.class, contentPath);
-        
-        me.add("/salesOrder", controllers.oms.salesOrder.SalesOrderController.class);
-        me.add("/tgt/interface", MockTgtInterfaceController.class);
-         
-        
-        //-------------
-        me.add("/transferOrder", controllers.yh.order.TransferOrderController.class);
-        me.add("/transferOrderItem", controllers.yh.order.TransferOrderItemController.class, contentPath);
-        me.add("/transferOrderItemDetail", controllers.yh.order.TransferOrderItemDetailController.class, contentPath);
-        me.add("/transferOrderMilestone", controllers.yh.order.TransferOrderMilestoneController.class, contentPath);
-        me.add("/returnOrder", controllers.yh.returnOrder.ReturnOrderController.class, contentPath);
-        me.add("/delivery", controllers.yh.delivery.DeliveryController.class, contentPath);
-        me.add("/damageOrder", controllers.yh.damageOrder.DamageOrderController.class, contentPath);
-        me.add("/deliverySpContract", controllers.yh.contract.ContractController.class, contentPath);
-
-        me.add("/deliveryOrderMilestone", controllers.yh.delivery.DeliveryOrderMilestoneController.class, contentPath);
-        me.add("/pickupOrder", controllers.yh.pickup.PickupOrderController.class, contentPath);
-
-        me.add("/paymentCheckOrder", controllers.yh.arap.PaymentCheckOrderController.class, contentPath);
-
-        me.add("/copeCheckOrder", controllers.yh.arap.CopeCheckOrderController.class, contentPath);
-        me.add("/departOrder", controllers.yh.departOrder.DepartOrderController.class, contentPath);
-        me.add("/gateIn", controllers.yh.inventory.InventoryController.class, contentPath);
-        me.add("/gateOut", controllers.yh.inventory.InventoryController.class, contentPath);
-        me.add("/stock", controllers.yh.inventory.InventoryController.class, contentPath);
-        me.add("/carinfo", controllers.profile.CarinfoController.class, contentPath);
-        me.add("/carmanage", controllers.profile.CarinfoController.class, contentPath);
-        me.add("/carsummary", controllers.yh.carmanage.CarSummaryController.class, contentPath);
-        me.add("/carreimbursement", controllers.yh.carmanage.CarReimbursementController.class, contentPath);
-        me.add("/driverinfo", controllers.profile.CarinfoController.class, contentPath);
-        me.add("/spdriverinfo", controllers.profile.CarinfoController.class, contentPath);
-        me.add("/spcarinfo", controllers.profile.CarinfoController.class, contentPath);
-        me.add("/deliveryMilestone", controllers.yh.delivery.DeliveryController.class, contentPath);
-        
-        //保险单
-        me.add("/insurance",controllers.profile.InsuranceController.class);
-        //配送调车单
-        me.add("/deliveryPlanOrder", controllers.yh.delivery.DeliveryPlanOrderController.class, contentPath);
-        
-        //ar= account revenue  应收条目处理
-        me.add("/chargeConfiremList", controllers.yh.arap.ar.ChargeItemConfirmController.class, contentPath);
-        me.add("/chargeCheckOrder", controllers.yh.arap.ar.ChargeCheckOrderController.class, contentPath);
-        me.add("/chargePreInvoiceOrder", controllers.yh.arap.ar.ChargePreInvoiceOrderController.class, contentPath);
-        me.add("/chargeInvoiceOrder", controllers.yh.arap.ar.ChargeInvoiceOrderController.class, contentPath);
-        me.add("/chargeAdjustOrder", controllers.yh.arap.ar.ChargeAdjustOrderController.class, contentPath);
-        me.add("/chargeMiscOrder", controllers.yh.arap.ar.chargeMiscOrder.ChargeMiscOrderController.class, contentPath);
-        me.add("/chargeAcceptOrder", controllers.yh.arap.ar.ChargeAcceptOrderController.class, contentPath);
-        me.add("/chargeConfirm", controllers.yh.arap.ar.ChargeConfirmController.class, contentPath);
-        //ap 应付条目处理
-        me.add("/costConfirmList", controllers.yh.arap.ap.CostItemConfirmController.class, contentPath);
-        me.add("/costCheckOrder", controllers.yh.arap.ap.CostCheckOrderController.class, contentPath);
-        me.add("/costPreInvoiceOrder", controllers.yh.arap.ap.CostPreInvoiceOrderController.class, contentPath);
-        me.add("/costAdjustOrder", controllers.yh.arap.ap.CostAdjustOrderController.class, contentPath);
-        me.add("/costAcceptOrder", controllers.yh.arap.ap.CostAcceptOrderController.class, contentPath);
-        me.add("/costConfirm", controllers.yh.arap.ap.CostConfirmController.class, contentPath);
-        //应付报销单
-        me.add("/costReimbursement", controllers.yh.arap.ap.CostReimbursementOrder.class, contentPath);
-        //财务转账单
-        me.add("/transferAccountsOrder", controllers.yh.arap.ap.TransferAccountsController.class, contentPath);
-        me.add("/reimbursementItem", controllers.profile.ReimbursementItemController.class, contentPath);
-        //手工成本单
-        me.add("/costMiscOrder", controllers.yh.arap.ap.costMiscOrder.CostMiscOrderController.class, contentPath);
-        
-        me.add("/inOutMiscOrder", controllers.yh.arap.financial.inOutOrder.InOutMiscOrderController.class, contentPath);
-        
-        //预付单
-        me.add("/costPrePayOrder", controllers.yh.arap.ap.PrePayOrderController.class, contentPath);
-        //audit log
-        me.add("/accountAuditLog", controllers.yh.arap.AccountAuditLogController.class, contentPath);
-        //insuranceOrder
-        me.add("/insuranceOrder", controllers.yh.insurance.InsuranceOrderController.class, contentPath);
-        me.add("/report", controllers.yh.report.ReportController.class, contentPath);
-        me.add("/statusReport", controllers.yh.statusReport.StatusReportController.class, contentPath);
-        
-        me.add("/doc", controllers.yh.doc.DocController.class, contentPath);
-
-		//跟车人员
-		me.add("/driverAssistant", DriverAssistantController.class, contentPath);
-		//退货单
-		me.add("/returnTransfer",ReturnTransferController.class,contentPath);
-		//app 
-		me.add("/m", controllers.yh.app.AppController.class, contentPath);
-		
 		me.add("/home", HomeController.class, contentPath);
-		me.add("/module", ModuleController.class, contentPath);
-		
+		me.add("/accountAuditLog", AccountAuditLogController.class, contentPath);
+		me.add("/account", AccountController.class, contentPath);
+		me.add("/privilege", PrivilegeController.class, contentPath);
 		//oms管理系统
 		me.add("/customCompany", CustomCompanyController.class, contentPath);
+		me.add("/logisticsCustomCompany", LogisticsCustomCompanyController.class, contentPath);
 		me.add("/logisticsOrder", LogisticsOrderController.class, contentPath);
-		
-		
+		me.add("/salesOrder", SalesOrderController.class, contentPath);
 	}
 
     @Override
@@ -384,142 +195,30 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("permission", Permission.class);
         arp.addMapping("user_role", UserRole.class);
         arp.addMapping("role_permission", RolePermission.class);
-        
-        arp.addMapping("leads", Leads.class);
-        arp.addMapping("support_case", Case.class);
-        
-        arp.addMapping("order_header", Order.class);
-        arp.addMapping("order_item", OrderItem.class);
-        arp.addMapping("party", Party.class);
-        arp.addMapping("party_attribute", PartyAttribute.class);
-        arp.addMapping("dp_prof_provider_info", ServiceProvider.class);
 
-        arp.addMapping("contact", Contact.class);        
-        arp.addMapping("fin_account", Account.class);
-        
-        arp.addMapping("fin_item", Toll.class);        
+        arp.addMapping("party", Party.class);
+        arp.addMapping("contact", Contact.class);       
         arp.addMapping("route", Route.class);
         arp.addMapping("product", Product.class);
         arp.addMapping("category", Category.class);
-        arp.addMapping("warehouse", Warehouse.class);
-        arp.addMapping("contract_item", ContractItem.class);
-        arp.addMapping("order_status", OrderStatus.class);
-        arp.addMapping("contract", Contract.class);
-        arp.addMapping("transfer_order", TransferOrder.class);
-        arp.addMapping("transfer_order_item", TransferOrderItem.class);
-        arp.addMapping("transfer_order_item_detail", TransferOrderItemDetail.class);
-        arp.addMapping("return_order", ReturnOrder.class);
-        arp.addMapping("return_order_fin_item", ReturnOrderFinItem.class);
-        arp.addMapping("delivery_order", DeliveryOrder.class);
-        arp.addMapping("transfer_order_milestone", TransferOrderMilestone.class);
-        arp.addMapping("billing_order", BillingOrder.class);
-        arp.addMapping("billing_order_item", BillingOrderItem.class);
-        arp.addMapping("delivery_order_milestone", DeliveryOrderMilestone.class);
         arp.addMapping("location", Location.class);
-        //配送调车单
-        arp.addMapping("delivery_plan_order", DeliveryPlanOrder.class);
-        arp.addMapping("delivery_plan_order_detail", DeliveryPlanOrderDetail.class);
-        arp.addMapping("delivery_plan_order_milestone", DeliveryPlanOrderMilestone.class);
-        arp.addMapping("delivery_plan_order_carinfo", DeliveryPlanOrderCarinfo.class);
-        //arp.addMapping("fin_account_item", AccountItem.class);
-        arp.addMapping("delivery_order_item", DeliveryOrderItem.class);
-        arp.addMapping("depart_order", DepartOrder.class);
-        arp.addMapping("depart_transfer", DepartTransferOrder.class);
-        arp.addMapping("depart_pickup", DepartPickupOrder.class);
-        arp.addMapping("warehouse_order", WarehouseOrder.class);
-        arp.addMapping("warehouse_order_item", WarehouseOrderItem.class);
-        arp.addMapping("inventory_item", InventoryItem.class);
-        arp.addMapping("carinfo", Carinfo.class);
-        arp.addMapping("fin_item", FinItem.class);
-        arp.addMapping("delivery_order_fin_item", DeliveryOrderFinItem.class);
-        arp.addMapping("transfer_order_fin_item", TransferOrderFinItem.class);
-        arp.addMapping("depart_order_fin_item", DepartOrderFinItem.class);//提货拼车单、发车单的应付表
-        arp.addMapping("pickup_order_fin_item", PickupOrderFinItem.class);//提货拼车单、发车单的应付表
-        arp.addMapping("arap_charge_order", ArapChargeOrder.class);
-        arp.addMapping("arap_charge_item", ArapChargeItem.class);
-        arp.addMapping("arap_charge_invoice", ArapChargeInvoice.class);
-        arp.addMapping("insurance_order", InsuranceOrder.class);
-        arp.addMapping("insurance_fin_item", InsuranceFinItem.class);
-        
-        arp.addMapping("arap_charge_invoice_application_order", ArapChargeInvoiceApplication.class);
-        arp.addMapping("arap_charge_invoice_application_item", ArapChargeInvoiceApplicationItem.class);
-        arp.addMapping("arap_charge_invoice_item_invoice_no", ArapChargeInvoiceItemInvoiceNo.class);
-        arp.addMapping("arap_charge_application_invoice_no", ArapChargeApplicationInvoiceNo.class);
-        arp.addMapping("charge_application_order_rel", ChargeApplicationOrderRel.class);
-        arp.addMapping("arap_charge_receive_confirm_order_detail", ArapChargeReceiveConfirmOrderDtail.class);
-        arp.addMapping("arap_charge_receive_confirm_order_detail_log", ArapChargeReceiveConfirmOrderDtailLog.class);
-        arp.addMapping("arap_charge_receive_confirm_order", ArapChargeReceiveConfirmOrder.class);
-        arp.addMapping("arap_charge_receive_confirm_order_log", ArapChargeReceiveConfirmOrderLog.class);
-        
-        arp.addMapping("arap_misc_charge_order", ArapMiscChargeOrder.class);
-        arp.addMapping("arap_misc_charge_order_item", ArapMiscChargeOrderItem.class);
-        arp.addMapping("arap_account_audit_log", ArapAccountAuditLog.class);
-        arp.addMapping("arap_account_audit_summary", ArapAccountAuditSummary.class);
-        // 应付对账单
-        arp.addMapping("arap_cost_order", ArapCostOrder.class);
-        arp.addMapping("arap_cost_item", ArapCostItem.class);
-        arp.addMapping("arap_cost_invoice_application_order", ArapCostInvoiceApplication.class);
-        arp.addMapping("arap_cost_invoice", ArapCostInvoice.class);
-        arp.addMapping("arap_cost_invoice_item_invoice_no", ArapCostInvoiceItemInvoiceNo.class);
-        arp.addMapping("arap_cost_order_invoice_no", ArapCostOrderInvoiceNo.class);
-        arp.addMapping("arap_misc_cost_order", models.yh.arap.ArapMiscCostOrder.class);
-        arp.addMapping("arap_misc_cost_order_item", models.yh.arap.ArapMiscCostOrderItem.class);
-        arp.addMapping("cost_application_order_rel", CostApplicationOrderRel.class);
-        arp.addMapping("arap_cost_pay_confirm_order_detail", ArapCostPayConfirmOrderDtail.class);
-        arp.addMapping("arap_cost_pay_confirm_order_detail_log", ArapCostPayConfirmOrderDtailLog.class);
-        arp.addMapping("arap_cost_pay_confirm_order", ArapCostPayConfirmOrder.class);
-        arp.addMapping("arap_cost_pay_confirm_order_log", ArapCostPayConfirmOrderLog.class);
-        arp.addMapping("arap_in_out_misc_order", ArapInOutMiscOrder.class);
-        //财务转账单
-        arp.addMapping("transfer_accounts_order", TransferAccountsOrder.class);
-        //应付报销单
-        arp.addMapping("reimbursement_order", ReimbursementOrder.class);
-        arp.addMapping("reimbursement_order_fin_item", ReimbursementOrderFinItem.class);
-        //预付单
-        arp.addMapping("arap_pre_pay_order", ArapPrePayOrder.class);
-        arp.addMapping("arap_pre_pay_order_item", ArapPrePayOrderItem.class);
-        // yh mapping
-        //行车单
-        arp.addMapping("car_summary_order", CarSummaryOrder.class);
-        arp.addMapping("car_summary_detail", CarSummaryDetail.class);
-        arp.addMapping("car_summary_detail_route_fee", CarSummaryDetailRouteFee.class);
-        arp.addMapping("car_summary_detail_oil_fee", CarSummaryDetailOilFee.class);
-        arp.addMapping("car_summary_detail_salary", CarSummaryDetailSalary.class);
-        arp.addMapping("car_summary_detail_other_fee", CarSummaryDetailOtherFee.class);
-        
-        arp.addMapping("damage_order", DamageOrder.class);
-        arp.addMapping("damage_order_item", DamageOrderItem.class);
-        arp.addMapping("damage_order_fin_item", DamageOrderFinItem.class);
-        
+
         //基本数据用户网点
         arp.addMapping("user_office", UserOffice.class);
         arp.addMapping("user_customer", UserCustomer.class);
         
         arp.addMapping("customize_field", CustomizeField.class);
         arp.addMapping("office_config", OfficeCofig.class);
-        //单据附件上传
-        arp.addMapping("order_attachment_file", OrderAttachmentFile.class);
-        //跟车人员 
-        arp.addMapping("driver_assistant", DriverAssistant.class);
-        arp.addMapping("pickup_driver_assistant", PickupDriverAssistant.class);
-        //跟车人员 
-        arp.addMapping("party_insurance_item", PartyInsuranceItem.class);
-        //供应商客户计费方式
-        arp.addMapping("charge_type", ProviderChargeType.class);
-        //微信位置信息
-        arp.addMapping("wechat_location", WechatLocation.class);
-        arp.addMapping("customer_route_provider", CustomerRoute.class);
         
-        arp.addMapping("structure", Structure.class);
-        arp.addMapping("field", Field.class);
-        arp.addMapping("contentlet", Contentlet.class);
+        //中转仓
+        arp.addMapping("warehouse",Warehouse.class);
+        arp.addMapping("fin_account",Account.class);
+        arp.addMapping("arap_account_audit_log",ArapAccountAuditLog.class);
         
-        //common
-        arp.addMapping("modules", Module.class);
-        arp.addMapping("structure_action", Action.class);
-        
+
         //cms
         arp.addMapping("custom_company", CustomCompany.class);
+        arp.addMapping("logistics_custom_company", LogisticsCustomCompany.class);
         arp.addMapping("sales_order", SalesOrder.class);
         arp.addMapping("sales_order_goods", SalesOrderGoods.class);
         arp.addMapping("logistics_order", LogisticsOrder.class);
