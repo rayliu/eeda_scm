@@ -12,8 +12,6 @@ import com.jfinal.log.Logger;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Model;
 
-import models.Location;
-
 public class DbUtils {
 	private static Logger logger = Logger.getLogger(DbUtils.class);
 	
