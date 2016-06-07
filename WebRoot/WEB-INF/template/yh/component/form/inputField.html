@@ -1,15 +1,19 @@
 <div class="form-group">
     <label class="search-label">${label}
-    <%if(is_require!'' =='Y'){%>
+    <%if(required!'' =='required'){%>
         <span style='color:red; display:initial;'>*</span>
     <%}%>
     </label>
-    <input type="text" 
+    <input type="${type!'text'}" 
     	id="${id}" 
+    	name="${id}_name" 
 		class="form-control search-control" 
 		placeholder="${placeholder!''}" 
 		value="${value !''}" 
-		${disabled!''}>
+		autocomplete="${autocomplete!'off'}" 
+		${required!''} 
+		${disabled!''}
+		>
     <% var d=disabled!'';
         if(d!='disabled'){%>    
     <a id="${id}_remove" href="#" class="remove">
