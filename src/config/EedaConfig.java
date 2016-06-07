@@ -139,7 +139,7 @@ public class EedaConfig extends JFinalConfig {
 	private void setScmRoute(Routes me, String contentPath) {
 		// yh project controller
         me.add("/", controllers.profile.MainController.class, contentPath);
-        me.add("/apidoc", controllers.eeda.DocController.class);
+       // me.add("/apidoc", controllers.eeda.DocController.class);
         me.add("/debug", controllers.profile.LogController.class, contentPath);
         me.add("/warehouse",controllers.profile.WarehouseController.class,contentPath);
         me.add("/loginUser", controllers.profile.LoginUserController.class, contentPath);

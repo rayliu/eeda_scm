@@ -11,6 +11,16 @@ $(document).ready(function() {
     
     
 
+	 $("#orderForm").validate({
+	        rules: {
+	        	freight_name:{
+	        		required: true,
+	                minlength: 6
+	        	}
+	        }
+	 });
+    
+
     //------------save
     $('#saveBtn').click(function(e){
         $(this).attr('disabled', true);

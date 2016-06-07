@@ -1,0 +1,1 @@
+package models.eeda.profile;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class LogisticsCustomCompany extends Model<LogisticsCustomCompany> {	public static final LogisticsCustomCompany dao = new LogisticsCustomCompany();}

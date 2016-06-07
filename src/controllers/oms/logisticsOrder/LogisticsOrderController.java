@@ -39,11 +39,11 @@ public class LogisticsOrderController extends Controller {
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
 	public void index() {
 		render("/oms/LogisticsOrder/LogisticsOrderList.html");
-	}
+	} 
 	
     public void create() {
         render("/oms/LogisticsOrder/LogisticsOrderEdit.html");
-    }
+    } 
     
     @Before(Tx.class)
    	public void save() throws Exception {		
