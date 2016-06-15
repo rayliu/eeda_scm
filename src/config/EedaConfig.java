@@ -13,6 +13,7 @@ import java.sql.SQLException;
 
 
 
+
 import models.Account;
 import models.ArapAccountAuditLog;
 import models.Category;
@@ -27,6 +28,7 @@ import models.UserCustomer;
 import models.UserLogin;
 import models.UserOffice;
 import models.UserRole;
+import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
@@ -222,6 +224,7 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("sales_order", SalesOrder.class);
         arp.addMapping("sales_order_goods", SalesOrderGoods.class);
         arp.addMapping("logistics_order", LogisticsOrder.class);
+        arp.addMapping("sales_order_count", SalesOrderCount.class);
         
     }
 

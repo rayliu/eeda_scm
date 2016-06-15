@@ -1,0 +1,1 @@
+package models.eeda.oms;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class SalesOrderCount extends Model<SalesOrderCount> {	public static final SalesOrderCount dao = new SalesOrderCount();}

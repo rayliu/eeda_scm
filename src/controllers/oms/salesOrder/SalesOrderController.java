@@ -1,6 +1,7 @@
 package controllers.oms.salesOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -8,21 +9,26 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
 import models.UserLogin;
+import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
 import models.eeda.profile.CustomCompany;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.subject.Subject;
+
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
+
 import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.custom.dto.DingDanGoodsDto;
 import controllers.profile.LoginUserController;
@@ -83,6 +89,9 @@ public class SalesOrderController extends Controller {
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
 		DbUtils.handleList(itemList, id, SalesOrderGoods.class, "order_id");
+		
+		List<Map<String, String>> countList = (ArrayList<Map<String, String>>)dto.get("count_list");
+		DbUtils.handleList(countList, id, SalesOrderCount.class, "order_id");
 
    		//return dto
    		renderJson(salesOrder);
@@ -95,6 +104,12 @@ public class SalesOrderController extends Controller {
 		return itemList;
 	}
     
+    private List<Record> getSalesOrderCount(String orderId) {
+		String countSql = "select * from sales_order_count where order_id=?";
+		List<Record> countList = Db.find(countSql, orderId);
+		return countList;
+	}
+    
     
     @Before(Tx.class)
     public void edit() {
@@ -104,6 +119,9 @@ public class SalesOrderController extends Controller {
     	
     	//获取明细表信息
     	setAttr("itemList", getSalesOrderGoods(id));
+    	
+    	//获取费用明细表信息
+    	setAttr("countList", getSalesOrderCount(id));
     	
     	//获取报关企业信息
     	CustomCompany custom = CustomCompany.dao.findById(salesOrder.getLong("custom_id"));
@@ -259,10 +277,7 @@ public class SalesOrderController extends Controller {
 			goodsList.add(goods);
 		}
 		order.setGoodsList(goodsList);
-		
-		DingDanDto order1 = new DingDanDto();
-		order1.setOrder_no("bbbbbbbbb");
-		
+	
 		List<DingDanDto> orderList=new ArrayList<DingDanDto>();
 		orderList.add(order);
 //		orderList.add(order1);

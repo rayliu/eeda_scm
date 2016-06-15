@@ -10,27 +10,50 @@ $(document).ready(function() {
     });
     
     
-
+    //form表单校验
 	 $("#orderForm").validate({
 	        rules: {
-	        	freight_name:{
+	        	consignee_id_name:{
 	        		required: true,
-	                minlength: 6
-	        	}
+	        		digits:true,
+	        		rangelength: [15,18]
+	        	},
+				currency_name:{
+			 		required: true,
+			 		minlength: 3				//输入长度最小是 10 的字符串
+			 	},
+			 	consignee_country_name:{
+			 		rangelength:[3,3]
+			 	},
+			 	province_name:{
+			 		rangelength:[6,6]
+			 	},
+			 	city_name:{
+			 		rangelength:[6,6]
+			 	},
+			 	district_name:{
+			 		rangelength:[6,6]
+			 	},
+			 	pay_no_name:{
+			 		minlength: 5
+		        }
+	        },
+	        messages: {
+	        	consignee_id_name: "身份证号码长度为15位或18位"
 	        }
 	 });
-    
+
 
     //------------save
     $('#saveBtn').click(function(e){
-        $(this).attr('disabled', true);
-
         //阻止a 的默认响应行为，不需要跳转
         e.preventDefault();
         //提交前，校验数据
         if(!$("#orderForm").valid()){
             return;
         }
+        
+        $(this).attr('disabled', true);
 
         var cargo_items_array = salesOrder.buildCargoDetail();
         var order = {
@@ -62,7 +85,8 @@ $(document).ready(function() {
             pay_code: $('#pay_code').val(),
             pay_name: $('#pay_name').val(),
             status: $('#status').val(),
-            cargo_list: cargo_items_array
+            cargo_list: cargo_items_array,
+            count_list:salesOrder.buildCountDetail()
         };
 
         var status = $('#status').val();
@@ -79,8 +103,8 @@ $(document).ready(function() {
                 }
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
-                
                 $('#saveBtn').attr('disabled', false);
+                $('#submitDingDanBtn').attr('disabled', false);
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);
@@ -107,8 +131,6 @@ $(document).ready(function() {
     		}else{
     			$.scojs_message('上报失败', $.scojs_message.TYPE_FALSE);
     		}
-    		
-    		
     	});
     });
     
