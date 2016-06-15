@@ -10,6 +10,8 @@ import com.google.gson.Gson;
 
 import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.custom.dto.DingDanGoodsDto;
+import controllers.oms.custom.dto.QueryBillDto;
+import controllers.oms.custom.dto.QueryDingDanDto;
 import controllers.oms.custom.dto.YunDanDto;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
@@ -22,9 +24,10 @@ import controllers.util.MD5Util;
 //import com.phy.core.common.util.MD5Util;
 
 public class Test {
+    private static String orgCode="349779838";
 	public static String setOrderMsg() {
 		TreeMap<String, String> paramsMap = new TreeMap<String, String>();
-		paramsMap.put("orgcode", "950832756");
+		paramsMap.put("orgcode", orgCode);
 		paramsMap.put("appkey", "defeng");
 		String appsecret = MD5Util.encodeByMD5("888888");
 		paramsMap.put("appsecret", appsecret);
@@ -43,8 +46,8 @@ public class Test {
 
 		//order业务数据
 		DingDanDto order = new DingDanDto();
-		order.setOrg_code("950832756");
-		order.setOrder_no("defengorder002");
+		order.setOrg_code(orgCode);
+		order.setOrder_no("df_order_001");
 		order.setPay_no("defengpay001");
 
 		order.setGoods_value(120.3);
@@ -69,14 +72,18 @@ public class Test {
 		order.setEbp_code_cus("4403660001");
 		order.setEbp_code_ciq("4718000001");
 		order.setEbp_name("德丰");
+		
+		order.setEbc_code_cus("4403660065");//企业在海关的备案号码
+        order.setEbc_code_ciq("4700651300");//企业在国检的备案号码
+        order.setEbc_name("深圳前海德丰投资发展有限公司");
 
-		order.setAgent_code_cus("4403660001");
-		order.setAgent_code_ciq("4718000001");
-		order.setAgent_name("德丰");
+		order.setAgent_code_cus("4403660065");
+		order.setAgent_code_ciq("4700651300");
+		order.setAgent_name("深圳前海德丰投资发展有限公司");
 		
 		DingDanGoodsDto goods=new DingDanGoodsDto();
 		goods.setCurrency("142");
-		goods.setItem_no("ISHNGJ9312146008460");
+		goods.setItem_no("ISQHDF9312146008460");
 		goods.setCus_item_no("aaa1");
 		goods.setGift_flag("0");
 		goods.setPrice(12.7);
@@ -106,7 +113,7 @@ public class Test {
 	//YunDan
 	public static String setLogMsg() {
 		TreeMap<String, String> paramsMap = new TreeMap<String, String>();
-		paramsMap.put("orgcode", "950832756");
+		paramsMap.put("orgcode", orgCode);
 		paramsMap.put("appkey", "defeng");
 		String appsecret = MD5Util.encodeByMD5("888888");
 		paramsMap.put("appsecret", appsecret);
@@ -125,7 +132,7 @@ public class Test {
 
 		//YunDan  order 业务数据
 		YunDanDto log = new YunDanDto();
-		log.setOrg_code("950832756");
+		log.setOrg_code(orgCode);
 		log.setOrder_no("defengorder002");
 		log.setReport_pay_no("serviceRPN001");
 
@@ -176,12 +183,68 @@ public class Test {
 		System.out.println("参数:"+ jsonMsg);
 		return jsonMsg;
 	}
+	
+	//YunDan
+    public static String setQueryMsg() {
+        TreeMap<String, String> paramsMap = new TreeMap<String, String>();
+        paramsMap.put("orgcode", orgCode);
+        paramsMap.put("appkey", "defeng");
+        String appsecret = MD5Util.encodeByMD5("888888");
+        paramsMap.put("appsecret", appsecret);
+        String timestamp = "" + (System.currentTimeMillis() / 1000);
+        paramsMap.put("timestamp", timestamp);
+
+        String sign = MD5Util.encodeByMD5(paramsMap + appsecret);// 888888
+
+        System.out.println("参数:" + paramsMap + appsecret);
+        paramsMap.put("sign", sign);
+
+        Map<Object, Object> requestMap = new LinkedHashMap<Object, Object>();
+
+        Gson gson = new Gson();
+        requestMap.put("postHead", gson.toJson(paramsMap));
+
+        //QueryDto
+        QueryDingDanDto dto = new QueryDingDanDto();
+        dto.setTotalCount(1);
+        
+        QueryBillDto bill = new QueryBillDto();
+        bill.setOrderNo("df_order_001");
+        bill.setLogistics_no("");
+        List bList= new ArrayList<QueryBillDto>();
+        bList.add(bill);
+        
+        dto.setBills(bList);
+        
+        requestMap.put("total_count", bList.size());
+        requestMap.put("bills", bList);
+        
+        Gson gson1 = new Gson();
+        String jsonMsg = gson1.toJson(requestMap);
+        
+        System.out.println("参数:"+ jsonMsg);
+        return jsonMsg;
+    }
+    
+	private static void queryOrder(){ 
+	    String jsonMsg=setQueryMsg();
+
+        TreeMap<String, String> paramsMap = new TreeMap<String, String>();
+        String urlStr="http://test.szedi.cn:8088/phy-ceb-web/tgt/service/order_queryCustomsStatus.action";
+        paramsMap.put("jsonMsg", jsonMsg);
+        String PostData = "";
+        PostData = paramsMap.toString().substring(1);
+        System.out.println("参数"+PostData);
+        String returnMsg = EedaHttpKit.post(urlStr, PostData);
+        //String returnMsg = InUtil.getResult(urlStr, PostData);
+        System.out.println("结果"+returnMsg);
+	}
 
 	public static void main(String[] args) {
-		//createOrder();
-		createLogOrder();
+//		createOrder();
+		//createLogOrder();
 		
-		
+		queryOrder();
 	}
 
 	private static void createLogOrder() {
