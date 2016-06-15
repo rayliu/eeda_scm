@@ -186,6 +186,7 @@ public class SalesOrderController extends Controller {
     	String jsonMsg=setOrderMsg(order_id);
     	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
 		String urlStr="http://test.szedi.cn:8088/phy-ceb-web/tgt/service/order_create.action";
+		
 		paramsMap.put("jsonMsg", jsonMsg);
 		String PostData = "";
 		PostData = paramsMap.toString().substring(1);
@@ -197,6 +198,7 @@ public class SalesOrderController extends Controller {
     }
     
     public static String setOrderMsg(String order_id) {
+    	String orgCode="349779838";
     	SalesOrder salesOrder = SalesOrder.dao.findById(order_id);
     	
     	//报关企业
@@ -205,15 +207,15 @@ public class SalesOrderController extends Controller {
     	//对应的商品表
     	List<SalesOrderGoods> goodsses = SalesOrderGoods.dao.find("select * from sales_order_goods where order_id = ?",order_id);
     	
-		TreeMap<String, String> paramsMap = new TreeMap<String, String>();
-		paramsMap.put("orgcode", "950832756");
-		paramsMap.put("appkey", "defeng");
-		String appsecret = MD5Util.encodeByMD5("888888");
-		paramsMap.put("appsecret", appsecret);
-		String timestamp = "" + (System.currentTimeMillis() / 1000);
-		paramsMap.put("timestamp", timestamp);
-		
-		String sign = MD5Util.encodeByMD5(paramsMap+appsecret);// 888888
+    	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
+        paramsMap.put("orgcode", orgCode);
+        paramsMap.put("appkey", "defeng");
+        String appsecret = MD5Util.encodeByMD5("888888");
+        paramsMap.put("appsecret", appsecret);
+        String timestamp = "" + (System.currentTimeMillis() / 1000);
+        paramsMap.put("timestamp", timestamp);
+
+        String sign = MD5Util.encodeByMD5(paramsMap + appsecret);// 888888
 		
 		System.out.println("参数:"+ paramsMap+appsecret);
 		paramsMap.put("sign", sign);
@@ -225,7 +227,7 @@ public class SalesOrderController extends Controller {
 
 		//order业务数据
 		DingDanDto order = new DingDanDto();
-		order.setOrg_code("950832756");
+		order.setOrg_code(orgCode);
 		order.setOrder_no(salesOrder.getStr("order_no"));
 		order.setPay_no(salesOrder.getStr("pay_no"));//原始支付单交易编号
 
@@ -253,13 +255,17 @@ public class SalesOrderController extends Controller {
 		order.setEbp_code_cus(customCompany.getStr("ebp_code_cus")); //电商平台的海关备案编码
 		order.setEbp_code_ciq(customCompany.getStr("ebp_code_ciq"));  //电商平台的国检备案编码
 		order.setEbp_name(customCompany.getStr("ebp_name"));//电商平台名称
+		
+		order.setEbc_code_cus(customCompany.getStr("ebc_code_cus")); //电商平台的海关备案编码
+		order.setEbc_code_ciq(customCompany.getStr("ebc_code_ciq"));  //电商平台的国检备案编码
+		order.setEbc_name(customCompany.getStr("ebc_name"));//电商平台名称
 
 		order.setAgent_code_cus(customCompany.getStr("agent_code_cus"));//代理清单报关企业（仓储）的海关备案编码(10位)
 		order.setAgent_code_ciq(customCompany.getStr("agent_code_ciq"));//代理清单报关企业的国检备案编码(10位)
 		order.setAgent_name(customCompany.getStr("agent_name"));//代理清单报关企业的海关备案名称
 		
-		order.setPay_code(salesOrder.getStr("pay_code"));//支付企业的海关备案编码（10位)
-		order.setPay_name(salesOrder.getStr("pay_name"));//支付企业的海关备案名称
+//		order.setPay_code(salesOrder.getStr("pay_code"));//支付企业的海关备案编码（10位)
+//		order.setPay_name(salesOrder.getStr("pay_name"));//支付企业的海关备案名称
 		
 		
 		List<DingDanGoodsDto> goodsList=new ArrayList<DingDanGoodsDto>();

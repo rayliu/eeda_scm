@@ -98,7 +98,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<select class="form-control search-control"'
+                    return '<select class="form-control search-control">'
 		                    + '<option  value ="charge">应收</option>'
 		                    + '<option  value ="cost">应付</option>'
 		                    + '</select>';

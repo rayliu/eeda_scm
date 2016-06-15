@@ -14,13 +14,12 @@ $(document).ready(function() {
 	 $("#orderForm").validate({
 	        rules: {
 	        	consignee_id_name:{
-	        		required: true,
-	        		digits:true,
-	        		rangelength: [15,18]
+	        		rangelength:[15,18],
+	        		
 	        	},
 				currency_name:{
 			 		required: true,
-			 		minlength: 3				//输入长度最小是 10 的字符串
+			 		rangelength:[3,3]				//输入长度最小是 10 的字符串
 			 	},
 			 	consignee_country_name:{
 			 		rangelength:[3,3]
@@ -36,11 +35,22 @@ $(document).ready(function() {
 			 	},
 			 	pay_no_name:{
 			 		minlength: 5
+		        },
+		        consignee_type_name:{
+		        	rangelength:[1,1]
 		        }
 	        },
 	        messages: {
-	        	consignee_id_name: "身份证号码长度为15位或18位"
+	        	consignee_id_name: "身份证号码长度为15位或18位",
+	        	currency_name: "长度必须为3位字符",
+	        	consignee_country_name: "长度必须为3位字符",
+	        	province_name: "长度必须为6位字符",
+	        	city_name: "长度必须为6位字符",
+	        	district_name: "长度必须为6位字符",
+	        	pay_no_name: "长度不能小于5位字符",
+	        	consignee_type_name: "长度必须为1位字符"
 	        }
+	       
 	 });
 
 
@@ -121,10 +131,10 @@ $(document).ready(function() {
     	$('#submitDingDanBtn').attr('disabled',true);
     	$.post('/salesOrder/submitDingDan', {order_id:$("#order_id").val()}, function(data){
     		if(data!=null){
-    			var message = $(data.ceb_results).attr('message');
+    			var message = $(data.orders).attr('message');
     			if(message == '订单写入成功'){
     				$.scojs_message(message , $.scojs_message.TYPE_OK);
-    				$('#status').val('订单写入成功');
+    				$('#status').val(message);
     			}else{
     				$.scojs_message(message , $.scojs_message.TYPE_FALSE);
     			}	
