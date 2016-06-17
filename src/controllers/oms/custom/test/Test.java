@@ -25,7 +25,7 @@ import controllers.util.MD5Util;
 
 public class Test {
     private static String orgCode="349779838";
-	public static String setOrderMsg() {
+	public static String setOrderMsg(String orderNo) {
 		TreeMap<String, String> paramsMap = new TreeMap<String, String>();
 		paramsMap.put("orgcode", orgCode);
 		paramsMap.put("appkey", "defeng");
@@ -47,7 +47,7 @@ public class Test {
 		//order业务数据
 		DingDanDto order = new DingDanDto();
 		order.setOrg_code(orgCode);
-		order.setOrder_no("df_order_001");
+		order.setOrder_no(orderNo);
 		order.setPay_no("defengpay001");
 
 		order.setGoods_value(120.3);
@@ -111,7 +111,7 @@ public class Test {
 	}
 	
 	//YunDan
-	public static String setLogMsg() {
+	public static String setLogMsg(String orderNo, String logOrderNo) {
 		TreeMap<String, String> paramsMap = new TreeMap<String, String>();
 		paramsMap.put("orgcode", orgCode);
 		paramsMap.put("appkey", "defeng");
@@ -133,7 +133,9 @@ public class Test {
 		//YunDan  order 业务数据
 		YunDanDto log = new YunDanDto();
 		log.setOrg_code(orgCode);
-		log.setOrder_no("defengorder002");
+		log.setOrder_no(orderNo);
+		
+		
 		log.setReport_pay_no("serviceRPN001");
 
 		log.setWeight(20.39);
@@ -148,7 +150,7 @@ public class Test {
 		log.setCity("440300");
 		log.setDistrict("440000");
 		
-		log.setLog_no("serviceLog001");
+		log.setLog_no(logOrderNo);
 		log.setCountry_code("142");
 		log.setShipper("aibi");
 		log.setShipper_country("215");
@@ -185,7 +187,7 @@ public class Test {
 	}
 	
 	//YunDan
-    public static String setQueryMsg() {
+    public static String setQueryMsg(String orderNo) {
         TreeMap<String, String> paramsMap = new TreeMap<String, String>();
         paramsMap.put("orgcode", orgCode);
         paramsMap.put("appkey", "defeng");
@@ -209,8 +211,8 @@ public class Test {
         dto.setTotalCount(1);
         
         QueryBillDto bill = new QueryBillDto();
-        bill.setOrderNo("df_order_001");
-        bill.setLogistics_no("");
+        bill.setOrder_no(orderNo);
+        bill.setLogistics_no("");//df_log_order_001
         List bList= new ArrayList<QueryBillDto>();
         bList.add(bill);
         
@@ -226,8 +228,8 @@ public class Test {
         return jsonMsg;
     }
     
-	private static void queryOrder(){ 
-	    String jsonMsg=setQueryMsg();
+	private static void queryOrder(String orderNo){ 
+	    String jsonMsg=setQueryMsg(orderNo);
 
         TreeMap<String, String> paramsMap = new TreeMap<String, String>();
         String urlStr="http://test.szedi.cn:8088/phy-ceb-web/tgt/service/order_queryCustomsStatus.action";
@@ -241,14 +243,14 @@ public class Test {
 	}
 
 	public static void main(String[] args) {
-//		createOrder();
-		//createLogOrder();
+//		createOrder("df_order_002");
+		createLogOrder("df_order_002", "df_log_order_002");
 		
-		queryOrder();
+		queryOrder("df_order_002");
 	}
 
-	private static void createLogOrder() {
-        String jsonMsg=setLogMsg();
+	private static void createLogOrder(String orderNo, String logOrderNo) {
+        String jsonMsg=setLogMsg(orderNo, logOrderNo);
 
         TreeMap<String, String> paramsMap = new TreeMap<String, String>();
         String urlStr="http://test.szedi.cn:8088/phy-ceb-web/tgt/service/logistics_create.action";
@@ -261,8 +263,8 @@ public class Test {
         System.out.println("结果"+returnMsg);
     }
 	
-    private static void createOrder() {
-        String jsonMsg=setOrderMsg();
+    private static void createOrder(String orderNo) {
+        String jsonMsg=setOrderMsg(orderNo);
 
 		TreeMap<String, String> paramsMap = new TreeMap<String, String>();
 		String urlStr="http://test.szedi.cn:8088/phy-ceb-web/tgt/service/order_create.action";

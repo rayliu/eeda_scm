@@ -1,13 +1,13 @@
 package controllers.oms.custom.dto;
 
 public class QueryBillDto {
-    private String orderNo;
+    private String order_no;
     private String logistics_no;
-    public String getOrderNo() {
-        return orderNo;
+    public String getOrder_no() {
+        return order_no;
     }
-    public void setOrderNo(String orderNo) {
-        this.orderNo = orderNo;
+    public void setOrder_no(String orderNo) {
+        this.order_no = orderNo;
     }
     public String getLogistics_no() {
         return logistics_no;
