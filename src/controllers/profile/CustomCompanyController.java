@@ -35,11 +35,11 @@ public class CustomCompanyController extends Controller {
 
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
 	public void index() {
-		render("/profile/customCompany/CustomCompanyList.html");
+		render("/profile/customCompany/customCompanyList.html");
 	}
 	
     public void create() {
-        render("/profile/customCompany/CustomCompanyEdit.html");
+        render("/profile/customCompany/customCompanyEdit.html");
     }
     
     @Before(Tx.class)
@@ -89,7 +89,7 @@ public class CustomCompanyController extends Controller {
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
-        render("/profile/customCompany/CustomCompanyEdit.html");
+        render("/profile/customCompany/customCompanyEdit.html");
     }
     
     
