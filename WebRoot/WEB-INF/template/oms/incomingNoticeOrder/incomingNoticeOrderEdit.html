@@ -1,0 +1,405 @@
+<%layout("/yh/layout.html"){%>
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/yh/css/ui/jquery-ui.css">
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+<link
+	href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css"
+	rel="stylesheet">
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="btn-header" style="font-size: 32px">入库通知单</div>
+		</div>
+	</div>
+	<input id="order_id" type="hidden" name="order_id"
+		value="${order.id!''}" />
+	<div class="row">
+		<form id="orderForm">
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'order_no',
+					label:'单号', value:order.ORDER_NO!'', disabled: 'disabled'
+					}){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputCustomCompanyField.html", {
+					id:'warehouse_id', label:'仓库', required:'required',
+					value:order.CUSTOM_ID!'', display_value: custom.shop_name!'' }){}
+					%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'consignor',
+					label:'货主', required:'required', value:order.consignor!'' }){}%>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					<label class="search-label">业务类型 <span style="color:red;">*</span></label>
+					<select class="form-control search-control order_type" name="order_type" required>
+						<option>b2c</option>
+						<option>b2b</option>
+					</select>
+				</div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputDateQueryField.html", { id:'pre_storage_date',
+					label:'预计入库日期', value:order.pre_storage_date!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'goods_type', label:'货品类型',
+					value:order.goods_type!'' }){}%></div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'storage_type', label:'入库类型', required:'required',
+					value:order.storage_type!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'service_detail', label:'服务明细', required:'required',
+					value:order.service_detail!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'status',
+					label:'状态', required:'required', value:order.status!'' }){}%>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>参考号</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'so_no', label:'SO号',
+					value:order.so_no!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'po_no', label:'PO号', required:'required',
+					value:order.po_no!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'customer_refer_no', label:'客户参考号', required:'required',
+					value:order.customer_refer_no!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'asn_no',
+					label:'ASN参考号', required:'required', value:order.asn_no!''
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'pickup_no',
+					label:'提单号', required:'required', value:order.pickup_no!''
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'send_no',
+					label:'发货编号', required:'required', value:order.send_no!''
+					}){}%></div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>运输信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'carrier',
+					label:'承运人', required:'required', value:order.carrier!'' }){}%>
+				</div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'carrier_no',
+					label:'承运编号', required:'required', value:order.carrier_no!''
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'transport_clause',
+					label:'运输条款', required:'required', value:order.transport_clause!''
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'transport_type',
+					label:'运输类型', required:'required', value:order.transport_type!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputLocationField.html", {
+					id:'route_from', label:'起始地',value: order.route_from!'',
+					display_value:fromRoute!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputLocationField.html", { id:'route_to',
+					label:'目的地',value: order.route_to!'',
+					display_value:toRoute!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'loading_port',
+					label:'装货港', required:'required', value:order.loading_port!''
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'discharge_port',
+					label:'卸货港', required:'required', value:order.discharge_port!''
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'etd',
+					label:'ETD', value:order.etd!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'eta', label:'ETA', value:order.eta!''
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>包装信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'pre_packing_no', label:'预计包装数', value:order.pre_packing_no!'5'}){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'packing_unit', label:'包装单位', value:order.packing_unit!'箱'}){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'pre_number', label:'预计件数', value:order.pre_number!''}){}%></div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'pre_number', label:'预计件数', value:order.pre_number!''}){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'batch_no', label:'批号', value:order.batch_no!''}){}%></div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>基础信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'creator_name', label:'创建人', value:user.c_name!'', disabled:
+					'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'create_stamp', label:'创建时间', value:order.create_stamp!'',
+					disabled: 'disabled' }){}%></div>
+				<!-- <div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'status',
+					label:'状态', value:order.status!'', disabled: 'disabled' }){}%></div>
+				/.col-lg-4 -->
+			</div>
+
+		</form>
+	</div>
+	<!-- /.row -->
+
+	<div class="row">
+		<div class="form-group">
+			<label>备注</label>
+			<textarea id='remark' class="form-control" rows="3" name="note">${order.remark!''}</textarea>
+		</div>
+	</div>
+
+	<div class="row" style="margin-top: 15px">
+		<ul id="orderTabs" class="nav nav-tabs">
+			<li class="active"><a href="#itemDetail" data-toggle="tab">货品列表</a>
+			</li>
+			<!-- <li><a href="#countDetail" data-toggle="tab">费用明细</a></li>
+			<li><a href="#custom" data-toggle="tab" data-src="create">报关信息</a>
+			</li> -->
+		</ul>
+
+		<div class="tab-content">
+			<div class="tab-pane fade active in" id="itemDetail">
+				<div class="form-group">
+					<div class="col-lg-12">
+						<button class="btn btn-success btn-xs" id="add_cargo">添加</button>
+						<%include("/yh/component/form/detailTable.html", {
+						id:'cargo_table', 
+						headers:['', 
+						'行号', 
+						'纸箱编号<span style="color: red";>*</span>',
+						'上游SKU<span style="color: red";>*</span>',
+						'海关编码<span style="color: red";>*</span>', 
+						'货品代码<span style="color: red";>*</span>',
+						'货名及规格<span style="color: red";>*</span>',
+						'颜色<span style="color: red";>*</span>',
+						'尺寸<span style="color: red";>*</span>',
+						'货币<span style="color: red";>*</span>',
+						'单位货值<span style="color: red";>*</span>',
+						'包装单位<span style="color: red";>*</span>',
+						'包装数量<span style="color: red";>*</span>',
+						'实收数量<span style="color: red";>*</span>',
+						'货损数量<span style="color: red";>*</span>'],
+						field_list:['','number', 'carton_no', 'upstream_sku', 'custom_code',
+						'item_code', 'name_specifications', 'color', 'size', 'currency',
+						'unit_value','packing_unit','packing_amount','received_amount','damage_amount'], 
+						value_list: itemList![] }){} %>
+					</div>
+				</div>
+			</div>
+<!-- 
+			<div class="tab-pane fade" id="countDetail">
+				<div class="form_group">
+					<div class="col-lg-12">
+						<button class="btn btn-success btn-xs" id="add_count">添加</button>
+						<%include("/yh/component/form/detailTable.html", {
+						id:'count_table', headers:['', '费用名称', '费用类型', '金额', '备注'],
+						field_list:['', 'name', 'type', 'amount', 'remark'], value_list:
+						countList![] }){} %>
+					</div>
+				</div>
+			</div>
+
+			<div class="tab-pane fade" id="custom">
+				<div class="form_group">
+					.
+					<div class="row">
+						 第行 
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'ebp_code_cus', label:'电商平台的海关备案编码',
+							value:custom.ebp_code_cus!'', required:'required', disabled:
+							'disabled' }){}%></div>
+						/.col-lg-4
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'ebp_code_ciq', label:'电商平台的国检备案编码',
+							value:custom.ebp_code_ciq!'', required:'required', disabled:
+							'disabled' }){}%></div>
+						/.col-lg-4
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'ebp_name',
+							label:'电商平台名称', value:custom.ebp_name!'', required:'required',
+							disabled: 'disabled' }){}%></div>
+					</div>
+
+					<div class="row">
+						 第行 
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'ebc_code_cus', label:'电商企业的海关备案编码',
+							value:custom.ebc_code_cus!'', required:'required', disabled:
+							'disabled' }){}%></div>
+						/.col-lg-4
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'ebc_code_ciq', label:'电商企业的国检备案编码',
+							value:custom.ebc_code_ciq!'', required:'required', disabled:
+							'disabled' }){}%></div>
+						/.col-lg-4
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'ebc_name',
+							label:'电商企业名称', value:custom.ebc_name!'', required:'required',
+							disabled: 'disabled' }){}%></div>
+					</div>
+
+					<div class="row">
+						 第行 
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'agent_code_cus', label:'代理清单报关企业的海关备案编码',
+							value:custom.agent_code_cus!'', required:'required', disabled:
+							'disabled' }){}%></div>
+						/.col-lg-4
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'agent_code_ciq', label:'代理清单报关企业的国检备案编码',
+							value:custom.agent_code_ciq!'', required:'required', disabled:
+							'disabled' }){}%></div>
+						/.col-lg-4
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'agent_name', label:'代理清单报关企业的海关备案名称',
+							value:custom.agent_name!'', required:'required', disabled:
+							'disabled' }){}%></div>
+					</div>
+
+					<div class="row">
+						 第行 
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'org_code',
+							label:'企业组织机构代码', value:custom.org_code!'', disabled: 'disabled'
+							}){}%></div>
+						/.col-lg-4
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'order_no',
+							label:'电商平台的原始订单编号', value:custom.order_no!'', disabled:
+							'disabled' }){}%></div>
+						/.col-lg-4
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'warehouse_no', label:'仓库编号', value:custom.warehouse_no!'',
+							disabled: 'disabled' }){}%></div>
+						/.col-lg-4
+					</div>
+
+					<div class="row">
+						 第4行 
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'ciq_code',
+							label:'国检备案号', value:custom.ciq_code!'', disabled: 'disabled'
+							}){}%></div>
+					</div>
+				</div>
+			</div> -->
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-lg-12">
+			<a id='saveBtn' class="btn  btn-primary" href="#">保存</a> <a
+				id='submitDingDanBtn' class="btn  btn-primary" disabled>上报订单</a> <a
+				id='submitYunDanBtn' class="btn  btn-primary" disabled>上报运单</a>
+			<button id="printBtn" type="button" class="btn  btn-primary"
+				data-toggle="modal" data-target=".bs-example-modal-sm">打印</button>
+			<a class="btn  btn-default" href="/salesOrder">返回</a>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+
+
+</div>
+<!--  form row  -->
+<!-- /#page-wrapper -->
+<%}%>
+
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script
+	src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+
+<!-- 引入校验的js 文件及其 中文 文件-->
+<script src="/yh/js/jquery.validate.min.js"></script>
+<script src="/yh/js/jvalidate.messages_cn.js"></script>
+
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+
+<script src="/yh/js/eeda-common.js"></script>
+<script>
+    var order_no = '${order.order_no!'入库通知单编辑'}'; 
+    var salesOrder = {};
+</script>
+<!-- <script src="/js/oms/incomingNoticeOrder/edit_count_table.js"></script> -->
+<script src="/js/oms/incomingNoticeOrder/edit_item_table.js"></script>
+<script src="/js/oms/incomingNoticeOrder/edit.js"></script>

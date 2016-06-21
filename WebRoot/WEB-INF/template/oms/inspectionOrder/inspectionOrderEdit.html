@@ -1,0 +1,152 @@
+<%layout("/yh/layout.html"){%>
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/yh/css/ui/jquery-ui.css">
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+<link
+	href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css"
+	rel="stylesheet">
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="btn-header" style="font-size: 32px">验货操作</div>
+		</div>
+	</div>
+	<input id="order_id" type="hidden" name="order_id"
+		value="${order.id!''}" />
+	<div class="form-group">
+		<form id="orderForm">
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'in_notice_order_no',
+					label:'入库通知单号', value:order.in_notice_order_no!'', disabled: 'disabled'
+					}){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputCustomCompanyField.html", {
+					id:'warehouse_id', label:'仓库', required:'required',
+					value:order.CUSTOM_ID!'', display_value: custom.shop_name!'' }){}
+					%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'warehouse_area',
+					label:'库区', required:'required', value:order.warehouse_area!'' }){}%>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+					<label class="search-label">验货包装单位 <span style="color:red;">*</span></label>
+					<select class="form-control search-control order_type" name="order_type" required>
+						<option>散件</option>
+						<option>整箱</option>
+					</select>
+				</div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'consignor', label:'货主',
+					value:order.consignor!'' }){}%></div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>基础信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'creator_name', label:'创建人', value:user.c_name!'', disabled:
+					'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'create_stamp', label:'创建时间', value:order.create_stamp!'',
+					disabled: 'disabled' }){}%></div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>核对信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'can_check', label:'可验', value:user.can_check!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'have_check', label:'已验', value:user.c_name!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'difference', label:'差额', value:user.difference!'', disabled:
+					'disabled' }){}%></div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<label>备注</label>
+					<textarea id='remark' class="form-control" rows="3" name="note">${order.remark!''}</textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+
+	<div class="row" style="margin-top: 15px">
+		<ul id="orderTabs" class="nav nav-tabs">
+			<li class="active"><a href="#itemDetail" data-toggle="tab">扫描信息</a>
+			</li>
+		</ul>
+
+		<div class="tab-content">
+			<div class="tab-pane fade active in" id="itemDetail">
+				<div class="form-group">
+					<div class="col-lg-12">
+						<button class="btn btn-success btn-xs" id="add_cargo">添加</button>
+						<%include("/yh/component/form/detailTable.html", {
+						id:'cargo_table', 
+						headers:['', 
+						'条码', '货品代码','保质日期','库位'],
+						field_list:['','bar_code', 'item_code', 'guarantee_date'], 
+						value_list: itemList![] }){} %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-lg-12">
+			<a id='saveBtn' class="btn  btn-primary" href="#">保存</a> <a
+				id='submitDingDanBtn' class="btn  btn-primary" disabled>上报订单</a> <a
+				id='submitYunDanBtn' class="btn  btn-primary" disabled>上报运单</a>
+			<button id="printBtn" type="button" class="btn  btn-primary"
+				data-toggle="modal" data-target=".bs-example-modal-sm">打印</button>
+			<a class="btn  btn-default" href="/salesOrder">返回</a>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+
+
+</div>
+<!--  form row  -->
+<!-- /#page-wrapper -->
+<%}%>
+
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script
+	src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+
+<!-- 引入校验的js 文件及其 中文 文件-->
+<script src="/yh/js/jquery.validate.min.js"></script>
+<script src="/yh/js/jvalidate.messages_cn.js"></script>
+
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+
+<script src="/yh/js/eeda-common.js"></script>
+<script>
+    var order_no = '${order.order_no!'入库通知单编辑'}'; 
+    var salesOrder = {};
+</script>
+<script src="/js/oms/inspectionOrder/edit_item_table.js"></script>
+<script src="/js/oms/inspectionOrder/edit.js"></script>
