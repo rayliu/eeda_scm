@@ -14,6 +14,11 @@ import java.sql.SQLException;
 
 
 
+
+
+
+
+
 import models.Account;
 import models.ArapAccountAuditLog;
 import models.Category;
@@ -28,6 +33,8 @@ import models.UserCustomer;
 import models.UserLogin;
 import models.UserOffice;
 import models.UserRole;
+import models.eeda.oms.IncomingNoticeOrder;
+import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.LogisticsOrder;
@@ -61,6 +68,8 @@ import com.jfinal.plugin.c3p0.C3p0Plugin;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
 
 import controllers.HomeController;
+import controllers.oms.incomingNoticeOrder.IncomingNoticeOrderController;
+import controllers.oms.inspectionOrder.InspectionOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
 import controllers.oms.salesOrder.SalesOrderController;
 import controllers.profile.AccountController;
@@ -164,6 +173,8 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/logisticsCustomCompany", LogisticsCustomCompanyController.class, contentPath);
 		me.add("/logisticsOrder", LogisticsOrderController.class, contentPath);
 		me.add("/salesOrder", SalesOrderController.class, contentPath);
+		me.add("/incomingNoticeOrder", IncomingNoticeOrderController.class, contentPath);
+		me.add("/inspectionOrder", InspectionOrderController.class, contentPath);
 	}
 
     @Override
@@ -225,6 +236,8 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("sales_order_goods", SalesOrderGoods.class);
         arp.addMapping("logistics_order", LogisticsOrder.class);
         arp.addMapping("sales_order_count", SalesOrderCount.class);
+        arp.addMapping("incoming_notice_order", IncomingNoticeOrder.class);
+        arp.addMapping("inspection_order", InspectionOrder.class);
         
     }
 

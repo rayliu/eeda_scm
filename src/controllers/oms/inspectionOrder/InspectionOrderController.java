@@ -1,4 +1,4 @@
-package controllers.oms.salesOrder;
+package controllers.oms.inspectionOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
 
@@ -39,18 +39,18 @@ import controllers.util.OrderNoGenerator;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
-public class SalesOrderController extends Controller {
+public class InspectionOrderController extends Controller {
 
-	private Logger logger = Logger.getLogger(SalesOrderController.class);
+	private Logger logger = Logger.getLogger(InspectionOrderController.class);
 	Subject currentUser = SecurityUtils.getSubject();
 
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
 	public void index() {
-		render("/oms/salesOrder/salesOrderList.html");
+		render("/oms/inspectionOrder/inspectionOrderList.html");
 	}
 	
     public void create() {
-        render("/oms/salesOrder/salesOrderEdit.html");
+        render("/oms/inspectionOrder/inspectionOrderEdit.html");
     }
     
     @Before(Tx.class)
@@ -132,7 +132,7 @@ public class SalesOrderController extends Controller {
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
-        render("/oms/salesOrder/salesOrderEdit.html");
+        render("/oms/inspectionOrder/inspectionOrderEdit.html");
     }
     
     

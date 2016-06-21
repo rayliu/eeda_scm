@@ -1,4 +1,4 @@
-package controllers.oms.salesOrder;
+package controllers.oms.incomingNoticeOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
 
@@ -39,18 +39,18 @@ import controllers.util.OrderNoGenerator;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
-public class SalesOrderController extends Controller {
+public class IncomingNoticeOrderController extends Controller {
 
-	private Logger logger = Logger.getLogger(SalesOrderController.class);
+	private Logger logger = Logger.getLogger(IncomingNoticeOrderController.class);
 	Subject currentUser = SecurityUtils.getSubject();
 
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
 	public void index() {
-		render("/oms/salesOrder/salesOrderList.html");
+		render("/oms/incomingNoticeOrder/incomingNoticeOrderList.html");
 	}
 	
     public void create() {
-        render("/oms/salesOrder/salesOrderEdit.html");
+        render("/oms/incomingNoticeOrder/incomingNoticeOrderEdit.html");
     }
     
     @Before(Tx.class)

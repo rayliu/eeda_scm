@@ -38,11 +38,11 @@ public class LogisticsOrderController extends Controller {
 
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
 	public void index() {
-		render("/oms/LogisticsOrder/LogisticsOrderList.html");
+		render("/oms/logisticsOrder/logisticsOrderList.html");
 	} 
 	
     public void create() {
-        render("/oms/LogisticsOrder/LogisticsOrderEdit.html");
+        render("/oms/logisticsOrder/logisticsOrderEdit.html");
     } 
     
     @Before(Tx.class)
@@ -122,7 +122,7 @@ public class LogisticsOrderController extends Controller {
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
-        render("/oms/LogisticsOrder/LogisticsOrderEdit.html");
+        render("/oms/logisticsOrder/logisticsOrderEdit.html");
     }
     
     

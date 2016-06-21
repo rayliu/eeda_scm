@@ -1,0 +1,1 @@
+package models.eeda.oms;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class InspectionOrder extends Model<InspectionOrder> {	public static final InspectionOrder dao = new InspectionOrder();}
