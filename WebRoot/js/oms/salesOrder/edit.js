@@ -14,7 +14,7 @@ $(document).ready(function() {
 	 $("#orderForm").validate({
 	        rules: {
 	        	consignee_id_name:{
-	        		rangelength:[15,18],
+	        		rangelength:[15,18]
 	        		
 	        	},
 				currency_name:{
@@ -104,7 +104,7 @@ $(document).ready(function() {
         $.post('/salesOrder/save', {params:JSON.stringify(order)}, function(data){
             var order = data;
             if(order.ID>0){
-            	getUser(order.CREATE_BY);
+            	$("#creator_name").val(data.CREATE_BY_NAME);	
                 $("#create_stamp").val(order.CREATE_STAMP);
                 $("#order_id").val(order.ID);
                 $("#order_no").val(order.ORDER_NO);
@@ -143,18 +143,7 @@ $(document).ready(function() {
     		}
     	});
     });
-    
-    
-    //获取用户信息
-    var getUser = function(user_id){
-    	if(user_id == '' || user_id == null)
-    		return;
-    	$.post('/customCompany/getUser', {params:user_id}, function(data){
-    		if(data!=null)
-    			 $("#creator_name").val(data.C_NAME);	
-    	})
-    }
-    
+
     
     //通过报关企业获取内容
     $('#custom_id_input').on('blur',function(){

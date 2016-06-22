@@ -93,8 +93,12 @@ public class SalesOrderController extends Controller {
 		List<Map<String, String>> countList = (ArrayList<Map<String, String>>)dto.get("count_list");
 		DbUtils.handleList(countList, id, SalesOrderCount.class, "order_id");
 
-   		//return dto
-   		renderJson(salesOrder);
+		long create_by = salesOrder.getLong("create_by");
+   		String user_name = LoginUserController.getUserNameById(create_by);
+
+   		Record r = salesOrder.toRecord();
+   		r.set("create_by_name", user_name);
+   		renderJson(r);
    	}
     
     
@@ -134,15 +138,6 @@ public class SalesOrderController extends Controller {
     	
         render("/oms/salesOrder/salesOrderEdit.html");
     }
-    
-    
-    @Before(Tx.class)
-    public void getUser() {
-    	String id = getPara("params");
-    	UserLogin user = UserLogin.dao.findById(id);
-    	renderJson(user);
-    }
-    
     
     public void list() {
     	String sLimit = "";
