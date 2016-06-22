@@ -74,8 +74,13 @@ public class CustomCompanyController extends Controller {
    			customCompany.save();
    		}
 
-   		//return dto
-   		renderJson(customCompany);
+   		long create_by = customCompany.getLong("create_by");
+   		String user_name = LoginUserController.getUserNameById(create_by);
+
+   		Record r = customCompany.toRecord();
+   		r.set("create_by_name", user_name);
+   		
+   		renderJson(r);
    	}
     
     @Before(Tx.class)
@@ -92,15 +97,7 @@ public class CustomCompanyController extends Controller {
         render("/profile/customCompany/customCompanyEdit.html");
     }
     
-    
-    @Before(Tx.class)
-    public void getUser() {
-    	String id = getPara("params");
-    	UserLogin user = UserLogin.dao.findById(id);
-    	renderJson(user);
-    }
-    
-    
+
     public void list() {
     	String sLimit = "";
         String pageIndex = getPara("sEcho");
