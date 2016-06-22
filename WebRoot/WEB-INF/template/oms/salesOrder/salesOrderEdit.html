@@ -20,11 +20,19 @@
                         <div class="col-lg-4"><!--  三列排版  -->
                             <%include("/yh/component/form/inputField.html", 
                                                 {   id:'order_no', 
-                                                    label:'电商平台的原始订单编号', 
+                                                    label:'订单号', 
                                                     value:order.ORDER_NO!'',
                                                     disabled: 'disabled'
                                                 }){}%>
-                        </div>                        
+                        </div>
+                        <div class="col-lg-4"><!--  三列排版  -->
+                            <%include("/yh/component/form/inputField.html", 
+                                                {   id:'order_no', 
+                                                    label:'外部电商订单号', 
+                                                    value:order.ORDER_NO!'',
+                                                    disabled: 'disabled'
+                                                }){}%>
+                        </div>
                         <div class="col-lg-4">
                             <%include("/yh/component/form/inputCustomCompanyField.html", 
                                 {
@@ -449,6 +457,7 @@
             <div class="row">
                 <div class="col-lg-12">
                     <a id='saveBtn' class="btn  btn-primary" href="#">保存</a>
+                    <a id='payBtn' class="btn  btn-primary">支付</a>
                     <a id='submitDingDanBtn' class="btn  btn-primary" disabled >上报订单</a>
                     <a id='submitYunDanBtn' class="btn  btn-primary" disabled >上报运单</a>
                      <button id="printBtn" type="button" class="btn  btn-primary" data-toggle="modal"  data-target=".bs-example-modal-sm">打印</button>
@@ -457,8 +466,39 @@
                 <!-- /.col-lg-12 -->
             </div>
 
-
-        </div><!--  form row  -->
+            <form id='payForm' target="_blank" action="/allinpay/payOrder" method="post">
+                <input type="hidden" name="serverUrl" value=""/>
+                <input type="hidden" name="inputCharset" value=""/>
+                <input type="hidden" name="pickupUrl" value=""/>
+                <input type="hidden" name="receiveUrl" value="" />
+                <input type="hidden" name="version" value=""/>
+                <input type="hidden" name="language" value="" />
+                <input type="hidden" name="signType" value=""/>
+                <input type="hidden" name="merchantId" value="" />
+                <input type="hidden" name="payerName" value=""/>
+                <input type="hidden" name="payerEmail" value="" />
+                <input type="hidden" name="payerTelephone" value="" />
+                <input type="hidden" name="payerIDCard" value="" />
+                <input type="hidden" name="pid" value=""/>
+                <input type="hidden" name="orderNo" value="" />
+                <input type="hidden" name="orderAmount" value=""/>
+                <input type="hidden" name="orderCurrency" value="" />
+                <input type="hidden" name="orderDatetime" value="" />
+                <input type="hidden" name="orderExpireDatetime" value=""/>
+                <input type="hidden" name="productName" value="" />
+                <input type="hidden" name="productPrice" value="" />
+                <input type="hidden" name="productNum" value=""/>
+                <input type="hidden" name="productId" value="" />
+                <input type="hidden" name="productDesc" value="" />
+                <input type="hidden" name="ext1" value="" />
+                <input type="hidden" name="ext2" value="" />
+                <input type="hidden" name="payType" value="" />
+                <input type="hidden" name="issuerId" value="" />
+                <input type="hidden" name="pan" value="" />
+                <input type="hidden" name="tradeNature" value="" />
+                <input type="hidden" name="key" value="" />
+            </form>
+        </div>
         <!-- /#page-wrapper -->
 <%}%>
 
@@ -482,3 +522,4 @@
 <script src="/js/oms/salesOrder/edit_count_table.js"></script>
 <script src="/js/oms/salesOrder/edit_item_table.js"></script>
 <script src="/js/oms/salesOrder/edit.js"></script>
+<script src="/js/oms/salesOrder/pay.js"></script>

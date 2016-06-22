@@ -1,0 +1,147 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="Content-Language" content="zh-CN"/>
+<title>网上支付平台-商户接支付请求</title>
+<script src="/yh/js/jquery-1.10.2.js" type="text/javascript"></script>
+</head>
+<body BGCOLOR='#FFFFFF' TEXT='#000000' LINK='#0000FF' VLINK='#0000FF' ALINK='#FF0000'>
+<center> <h4>正在跳转到支付提交页面...</h4></center>
+<center>
+	<form id='payForm' name="form" action="${serverUrl!''}" method="post" style="display: block;">
+		<table border="1" cellpadding="1" cellspacing="1" align="center">
+			<!-- 报文参数 -->
+			<tr>
+				<td width="40%">1. 编码:</td>
+				<td> <input type="text" name="inputCharset" value="${order.inputCharset!''}"/></td>
+			</tr>
+			<tr>
+				<td>2. 取货地址:</td>
+				<td> <input type="text" name="pickupUrl" value="${order.pickupUrl!''}"/></td>
+			</tr>
+			<tr>
+				<td>3. 商户系统通知地址:</td>
+				<td> <input type="text" name="receiveUrl" value="${order.receiveUrl!''}" /></td>
+			</tr>
+			<tr>
+				<td>4. 报文版本号:</td>
+				<td> <input type="text" name="version" value="${order.version !''}"/></td>
+			</tr>
+			<tr>
+				<td>5. 语言:</td>
+				<td><input type="text" name="language" value="${order.language !''}" /></td>
+			</tr>
+			<tr>
+				<td>6. 签名方式:</td>
+				<td><input type="text" name="signType" value="${order.signType!''}"/></td>
+			</tr>
+			<!-- 买卖双方信息参数 -->
+			<tr>
+				<td>7. 商户号:</td>
+				<td> <input type="text" name="merchantId" value="${order.merchantId!''}" /></td>
+			</tr>
+			<tr>
+				<td>8. 付款人名称:</td>
+				<td> <input type="text" name="payerName" value="${order.payerName!''}"/></td>
+			</tr>
+			<tr>
+				<td>9. 付款人联系email:</td>
+				<td> <input type="text" name="payerEmail" value="${order.payerEmail!''}" /></td>
+			</tr>
+			<tr>
+				<td>10. 付款人电话:</td>
+				<td> <input type="text" name="payerTelephone" value="${order.payerTelephone !''}" /></td>
+			</tr>
+			<tr>
+				<td>11. 付款人证件号:</td>
+				<td><input type="text" name="payerIDCard" value="${order.payerIDCard !''}" /></td>
+			</tr>
+			<tr>
+				<td>12. 合作伙伴的商户号:</td>
+				<td> <input type="text" name="pid" value="${order.pid!''}"/></td>
+			</tr>
+			<!-- 业务参数 -->
+			<tr>
+				<td>13. 商户系统订单号:</td>
+				<td> <input type="text" name="orderNo" value="${order.orderNo!''}" /></td>
+			</tr>
+			<tr>
+				<td>14. 订单金额(单位分):</td>
+				<td> <input type="text" name="orderAmount" value="${order.orderAmount !''}"/></td>
+			</tr>
+			<tr>
+				<td>15. 金额币种:</td>
+				<td> <input type="text" name="orderCurrency" value="${order.orderCurrency!''}" /></td>
+			</tr>
+			<tr>
+				<td>16. 商户的订单创建时间:</td>
+				<td> <input type="text" name="orderDatetime" value="${order.orderDatetime!''}" /></td>
+			</tr>
+			<tr>
+				<td>17. 订单过期时间:</td>
+				<td> <input type="text" name="orderExpireDatetime" value="${order.orderExpireDatetime !''}"/></td>
+			</tr>
+			<tr>
+				<td>18. 商品名称:</td>
+				<td> <input type="text" name="productName" value="${order.productName!''}" /></td>
+			</tr>
+			<tr>
+				<td>19. 商品单价:</td>
+				<td> <input type="text" name="productPrice" value="${order.productPrice!''}" /></td>
+			</tr>
+			<tr>
+				<td>20. 商品数量:</td>
+				<td> <input type="text" name="productNum" value="${order.productNum !''}"/></td>
+			</tr>
+			<tr>
+				<td>21. 商品标识:</td>
+				<td> <input type="text" name="productId" value="${order.productId!''}" /></td>
+			</tr>
+			<tr>
+				<td>22. 商品描述:</td>
+				<td> <input type="text" name="productDesc" value="${order.productDesc!''}" /></td>
+			</tr>
+			<tr>
+				<td>23. 附加参数1:</td>
+				<td> <input type="text" name="ext1" value="${order.ext1!''}" /></td>
+			</tr>
+			<tr>
+				<td>24. 附加参数2:</td>
+				<td> <input type="text" name="ext2" value="${order.ext2!''}" /></td>
+			</tr>			
+			<tr>
+				<td>25. 支付方式:</td>
+				<td> <input type="text" name="payType" value="${order.payType!''}" /></td>
+			</tr>
+			<tr>
+				<td>26. 发卡行机构号:</td>
+				<td> <input type="text" name="issuerId" value="${order.issuerId!''}" /></td>
+			</tr>
+			<tr>
+				<td>27. 付款人支付卡号:</td>
+				<td> <input type="text" name="pan" value="${order.pan !''}" /></td>
+			</tr>
+			<tr>
+				<td>28. 贸易类型:</td>
+				<td><input type="text" name="tradeNature" value="${order.tradeNature!''}" /></td>
+			</tr>
+			<tr>
+				<td>29. 报文签名后内容:</td>
+				<td> <input style="width: 100%;" type="text" name="signMsg" value="${strSignMsg !''}" /></td>
+				<input type="submit" value="确认付款，前去支付"/>
+			</tr>
+			
+	</table>
+	签名原串:<textarea cols="100" rows="7">${strSrcMsg !''}</textarea>
+	</form>
+	<!--================= post 方式提交支付请求 end =====================-->
+	</center>
+<script type="text/javascript">
+	$(document).ready(function() {
+		// $('#payForm').submit();
+	});
+</script>
+</BODY>
+</HTML>

@@ -19,6 +19,7 @@ import java.sql.SQLException;
 
 
 
+
 import models.Account;
 import models.ArapAccountAuditLog;
 import models.Category;
@@ -68,6 +69,7 @@ import com.jfinal.plugin.c3p0.C3p0Plugin;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
 
 import controllers.HomeController;
+import controllers.oms.allinpay.AllinpayController;
 import controllers.oms.incomingNoticeOrder.IncomingNoticeOrderController;
 import controllers.oms.inspectionOrder.InspectionOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
@@ -175,6 +177,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/salesOrder", SalesOrderController.class, contentPath);
 		me.add("/incomingNoticeOrder", IncomingNoticeOrderController.class, contentPath);
 		me.add("/inspectionOrder", InspectionOrderController.class, contentPath);
+		me.add("/allinpay", AllinpayController.class, contentPath);
 	}
 
     @Override
