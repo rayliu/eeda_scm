@@ -1,10 +1,15 @@
 package controllers.oms.logisticsOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+
 import models.UserLogin;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
@@ -25,8 +30,12 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 
 import controllers.oms.custom.CustomManager;
 import controllers.oms.custom.dto.DingDanDto;
+import controllers.oms.custom.dto.YunDanDto;
+import controllers.oms.salesOrder.SalesOrderController;
 import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
+import controllers.util.EedaHttpKit;
+import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
 
 @RequiresAuthentication
@@ -35,7 +44,7 @@ public class LogisticsOrderController extends Controller {
 
 	private Logger logger = Logger.getLogger(LogisticsOrderController.class);
 	Subject currentUser = SecurityUtils.getSubject();
-
+	private static String orgCode="349779838";
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
 	public void index() {
 		render("/oms/logisticsOrder/logisticsOrderList.html");
@@ -79,15 +88,19 @@ public class LogisticsOrderController extends Controller {
    			id = logisticsOrder.getLong("id").toString();
    		}
    		
-   		//List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
-		//DbUtils.handleList(itemList, id, Goods.class, "order_id");
+   		long create_by = logisticsOrder.getLong("create_by");
+   		String user_name = LoginUserController.getUserNameById(create_by);
 
-   		//return dto
-   		renderJson(logisticsOrder);
+//   	List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
+//		DbUtils.handleList(itemList, id, Goods.class, "order_id");
+   		Record r = logisticsOrder.toRecord();
+   		r.set("create_by_name", user_name);
+
+   		renderJson(r);
    	}
+   
     
-    
-    private List<Record> getSalesOrderGoods(long orderId) {
+    public List<Record> getSalesOrderGoods(long orderId) {
 		String itemSql = "select * from sales_order_goods where order_id=?";
 		List<Record> itemList = Db.find(itemSql, orderId);
 		return itemList;
@@ -102,6 +115,7 @@ public class LogisticsOrderController extends Controller {
     	
     	//订单ID
     	SalesOrder salesOrder = SalesOrder.dao.findById(logisticsOrder.getLong("sales_order_id"));
+    	setAttr("salesOrder", salesOrder);
     	if(salesOrder != null){
     		long sales_order_id = logisticsOrder.getLong("sales_order_id");
     		long custom_id = salesOrder.getLong("custom_id");
@@ -115,8 +129,6 @@ public class LogisticsOrderController extends Controller {
     		
     	}
     	
-    	
-    	
     	//用户信息
     	long create_by = logisticsOrder.getLong("create_by");
     	UserLogin user = UserLogin.dao.findById(create_by);
@@ -124,16 +136,7 @@ public class LogisticsOrderController extends Controller {
     	
         render("/oms/logisticsOrder/logisticsOrderEdit.html");
     }
-    
-    
-    @Before(Tx.class)
-    public void getUser() {
-    	String id = getPara("params");
-    	UserLogin user = UserLogin.dao.findById(id);
-    	renderJson(user);
-    }
-    
-    
+ 
     public void list() {
     	String sLimit = "";
         String pageIndex = getPara("sEcho");
@@ -141,9 +144,11 @@ public class LogisticsOrderController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT sor.*, ifnull(u.c_name, u.user_name) creator_name "
-    			+ "  from sales_order sor "
-    			+ "  left join user_login u on u.id = sor.create_by"
+        String sql = "SELECT lor.*,ccy.shop_name custom_name, ifnull(u.c_name, u.user_name) creator_name "
+    			+ "  from logistics_order lor "
+    			+ "  left join sales_order sor on sor.id = lor.sales_order_id "
+    			+ "  left join custom_company ccy on ccy.id = sor.custom_id "
+    			+ "  left join user_login u on u.id = lor.create_by"
     			+ "   where 1 =1 ";
         
         String condition = DbUtils.buildConditions(getParaMap());
@@ -169,10 +174,92 @@ public class LogisticsOrderController extends Controller {
     	renderJson(customCompany);
     }
 
-    public void submitDingDan(){
-    	DingDanDto dto = new DingDanDto();
-    	
-    	CustomManager.getInstance().sendDingDan(dto);
+    public void submitYunDan(){
+    	 String order_id = getPara("order_id");
+    	 String jsonMsg=setLogMsg(order_id);
+         TreeMap<String, String> paramsMap = new TreeMap<String, String>();
+         String urlStr="http://test.szedi.cn:8088/phy-ceb-web/tgt/service/logistics_create.action";
+         paramsMap.put("jsonMsg", jsonMsg);
+         String PostData = "";
+         PostData = paramsMap.toString().substring(1);
+         System.out.println("参数"+PostData);
+         String returnMsg = EedaHttpKit.post(urlStr, PostData);
+         //String returnMsg = InUtil.getResult(urlStr, PostData);
+         System.out.println("结果"+returnMsg);
+         renderJson(returnMsg);
     }
+    
+  //YunDan
+  	public static String setLogMsg(String order_id) {
+  		TreeMap<String, String> paramsMap = new TreeMap<String, String>();
+  		paramsMap.put("orgcode", orgCode);
+  		paramsMap.put("appkey", "defeng");
+  		String appsecret = MD5Util.encodeByMD5("888888");
+  		paramsMap.put("appsecret", appsecret);
+  		String timestamp = "" + (System.currentTimeMillis() / 1000);
+  		paramsMap.put("timestamp", timestamp);
+
+  		String sign = MD5Util.encodeByMD5(paramsMap + appsecret);// 888888
+
+  		System.out.println("参数:" + paramsMap + appsecret);
+  		paramsMap.put("sign", sign);
+
+  		Map<Object, Object> requestMap = new LinkedHashMap<Object, Object>();
+
+  		Gson gson = new Gson();
+  		requestMap.put("postHead", gson.toJson(paramsMap));
+
+  		
+  		LogisticsOrder logisticsOrder = LogisticsOrder.dao.findById(order_id);
+  		long sales_order_id = logisticsOrder.getLong("sales_order_id");
+  		SalesOrder salesOrder = SalesOrder.dao.findById(sales_order_id);
+  		//YunDan  order 业务数据
+  		YunDanDto log = new YunDanDto();
+  		log.setOrg_code(orgCode);
+  		log.setOrder_no(salesOrder.getStr("order_no"));
+  		log.setCurrency(salesOrder.getStr("currency"));// 默认人民币
+  		log.setConsignee(salesOrder.getStr("consignee"));
+  		log.setConsignee_address(salesOrder.getStr("consignee_address"));
+  		log.setConsignee_telephone(salesOrder.getStr("consignee_telephone"));
+  		log.setConsignee_country(salesOrder.getStr("consignee_country"));
+  		log.setConsignee_type(salesOrder.getStr("consignee_type"));
+  		log.setConsignee_id(salesOrder.getStr("consignee_id"));
+  		log.setProvince(salesOrder.getStr("province"));
+  		log.setCity(salesOrder.getStr("city"));
+  		log.setDistrict(salesOrder.getStr("district"));
+  		
+  		log.setReport_pay_no(logisticsOrder.getStr("report_pay_no"));
+  		log.setWeight(logisticsOrder.getDouble("weight"));
+  		log.setLog_no(logisticsOrder.getStr("log_no"));
+  		log.setCountry_code(logisticsOrder.getStr("country_code"));
+  		log.setShipper(logisticsOrder.getStr("shipper"));
+  		log.setShipper_country(logisticsOrder.getStr("shipper_country"));
+  		log.setShipper_city(logisticsOrder.getStr("shipper_city"));
+  		log.setShipper_telephone(logisticsOrder.getStr("shipper_telephone"));
+  		log.setShipper_address(logisticsOrder.getStr("shipper_address"));
+  		log.setTraf_mode(logisticsOrder.getStr("traf_mode"));
+  		log.setShip_name(logisticsOrder.getStr("ship_name"));
+  		log.setPack_no(logisticsOrder.getInt("pack_no"));
+  		log.setGoods_info(logisticsOrder.getStr("goods_info"));
+  		log.setCustoms_code(logisticsOrder.getStr("customs_code"));
+  		log.setCiq_code(logisticsOrder.getStr("ciq_code"));
+  		log.setParcel_info(logisticsOrder.getStr("parcel_info"));
+  		String ie_date = logisticsOrder.getDate("ie_date").toString();
+  		log.setIe_date(ie_date.substring(0, ie_date.length()-2));
+
+  		
+  		List<YunDanDto> orderList=new ArrayList<YunDanDto>();
+  		orderList.add(log);
+//  	orderList.add(log1);
+
+  		requestMap.put("total_count", orderList.size());
+  		requestMap.put("logistics", orderList);
+  		
+  		Gson gson1 = new Gson();
+  		String jsonMsg = gson1.toJson(requestMap);
+  		
+  		System.out.println("参数:"+ jsonMsg);
+  		return jsonMsg;
+  	}
 
 }

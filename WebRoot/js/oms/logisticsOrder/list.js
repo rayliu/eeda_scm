@@ -1,6 +1,6 @@
 
 $(document).ready(function() {
-	document.title = '货损单查询 | '+document.title;
+	document.title = '运单查询 | '+document.title;
 
     $('#menu_order').addClass('active').find('ul').addClass('in');
     
@@ -20,17 +20,15 @@ $(document).ready(function() {
         },
         //"ajax": "/damageOrder/list",
         "columns": [
-            { "data": "ORDER_NO", 
+            { "data": "LOG_NO", 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/salesOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
+                    return "<a href='/logisticsOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
                 }
             },
-            { "data": "CUSTOM_ID"},
-            { "data": "PAYER_NAME"}, 
-            { "data": "GOODS_VALUE"}, 
+            { "data": "CUSTOM_NAME"},
             { "data": "CREATOR_NAME"}, 
             { "data": "CREATE_STAMP"}, 
-            { "data": "PROCESS_STATUS"}
+            { "data": "STATUS"}
         ]
     });
 
@@ -56,7 +54,7 @@ $(document).ready(function() {
             *_status =
             时间字段需成双定义  *_begin_time *_end_time   between
         */
-        var url = "/salesOrder/list?order_no="+order_no
+        var url = "/logisticsOrder/list?order_no="+order_no
              +"&process_status="+process_status
              +"&create_stamp_begin_time="+start_date
              +"&create_stamp_end_time="+end_date;

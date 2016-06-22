@@ -9,24 +9,78 @@ $(document).ready(function() {
         $('#total_amount').text($(this).val());
     });
     
+    //非空校验
+    $("#orderForm").validate({
+    	rules:{
+    		country_code_name:{
+    			rangelength:[3,3]
+    		},
+    		shipper_country_name:{
+    			rangelength:[3,3]
+    		},
+    		shipper_city_name:{
+    			rangelength:[6,6]
+    		},
+    		customs_code_name:{
+    			rangelength:[4,4]
+    		},
+    		ciq_code_name:{
+    			rangelength:[6,6]
+    		},
+    		ie_date_name:{
+    			dateISO:true
+    		},
+    		freight_name:{
+    			number:true
+    		},
+    		insure_fee_name:{
+    			number:true
+    		},
+    		weight_name:{
+    			number:true
+    		},
+    		netwt_name:{
+    			number:true
+    		},
+    		pack_no_name:{
+    			digits:true
+    		},
+    	}
+    	
+    	/*messages: {
+    		rangelength: $.validator.format("长度必须为{0}位字符"),
+    		country_code_name: "长度必须为3位字符",
+    		shipper_country_name: "长度必须为3位字符",
+    		shipper_city_name: "长度必须为6位字符",
+    		customs_code_name: "长度必须为4位字符"
+    	}*/
+    });
     
+    $.extend($.validator.messages, {
+		rangelength: $.validator.format("长度必须为{0}位字符")
+	})
 
     //------------save
     $('#saveBtn').click(function(e){
-        $(this).attr('disabled', true);
-
+    	//提交前，校验数据
+        if(!$("#orderForm").valid()){
+            return;
+        }
+        
         //阻止a 的默认响应行为，不需要跳转
         e.preventDefault();
         //提交前，校验数据
         if(!$("#orderForm").valid()){
             return;
         }
-
+        
+        $(this).attr('disabled', true);
         var cargo_items_array = salesOrder.buildCargoDetail();
         var order = {
             id: $('#order_id').val(),
             log_no: $('#log_no').val(),  
             country_code: $('#country_code').val(),  
+            shipper_country: $('#shipper_country').val(),
             shipper_country: $('#shipper_country').val(),  
             shipper_city: $('#shipper_city').val(),
             shipper: $('#shipper').val(),
@@ -64,10 +118,10 @@ $(document).ready(function() {
         $.post('/logisticsOrder/save', {params:JSON.stringify(order)}, function(data){
             var order = data;
             if(order.ID>0){
-            	getUser(order.CREATE_BY);
+            	$("#creator_name").val(data.CREATE_BY_NAME);	
                 $("#create_stamp").val(order.CREATE_STAMP);
                 $("#order_id").val(order.ID);
-                $("#order_no").val(order.ORDER_NO);
+                $("#log_no").val(order.LOG_NO);
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 
@@ -83,25 +137,23 @@ $(document).ready(function() {
     });  
     
     
-    //上报订单
-    $('#submitDingDanBtn').click(function(){
-    	 $.post('/salesOrder/submitDingDan', {order_id:$("#order_id").val()}, function(data){
-    		 
+    //上报运单
+    $('#submitBtn').click(function(){
+    	 $.post('/logisticsOrder/submitYunDan', {order_id:$("#order_id").val()}, function(data){
+    		 if(data!=null){
+     			var message = $(data.logistics).attr('message');
+     			if(message == '运单写入成功'){
+     				$.scojs_message(message , $.scojs_message.TYPE_OK);
+     				$('#status').val(message);
+     			}else{
+     				$.scojs_message(message , $.scojs_message.TYPE_FALSE);
+     			}	
+     		}else{
+     			$.scojs_message('上报失败', $.scojs_message.TYPE_FALSE);
+     		}
     	 })
     });
-    
-    
-    //获取用户信息
-    var getUser = function(user_id){
-    	if(user_id == '' || user_id == null)
-    		return;
-    	$.post('/customCompany/getUser', {params:user_id}, function(data){
-    		if(data!=null)
-    			 $("#creator_name").val(data.C_NAME);	
-    	})
-    }
-    
-    
+     
     //通过报关企业获取内容
     $('#custom_id_input').on('blur',function(){
     	var custom_id = $('#custom_id').val();
