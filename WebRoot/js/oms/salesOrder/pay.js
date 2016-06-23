@@ -1,7 +1,15 @@
 
 $(document).ready(function() {
     $('#payBtn').click(function(){
-
+    	var datetime = $('#create_stamp').val();
+    	if(datetime.indexOf('.') != -1){
+    		datetime = datetime.substring(0,datetime.indexOf('.')).replace(/\:/g,"").replace(/\-/g,'').replace(' ','');
+    	}else{
+    		datetime = datetime.replace(/\:/g,"").replace(/\-/g,'').replace(' ','');
+    	}
+    	
+    	var item = salesOrder.buildCargoDetail();
+    	
         var serverIp = 'ceshi.allinpay.com';
         var receiveServer = 'yd2demo.eeda123.com'
         var formObj = {
@@ -13,20 +21,30 @@ $(document).ready(function() {
             language: '1', //语言,  1代表utf-8
             signType: '1',//签名类型
             merchantId: '100020091218001', //商户号
-            payerName: '飞龙',//付款人姓名
+            //payerName: '飞龙',//付款人姓名
+            payerName: $('#payer_name').val(),//付款人姓名
             payerEmail: '123@163.com', //付款人联系email
             payerTelephone: '13123456789', //付款人电话
-            payerIDCard: '', //付款人证件号
+            
+            //payerIDCard: '', //付款人证件号
+            payerIDCard: $('#payer_account').val(),
             pid: '', //合作伙伴商户号
             orderNo: $('#order_no').val(),//商户系统订单号
             orderAmount: '1',//订单金额(单位分)
-            orderCurrency: '0', //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
-            orderDatetime: '20160622103144',//商户的订单提交时间
+            //orderCurrency: '0', //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
+            orderCurrency: $('#currency').val(), //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
+            //orderDatetime: '20160622103144',//商户的订单提交时间
+            orderDatetime: datetime,//商户的订单提交时间
             orderExpireDatetime: '60', //订单过期时间
-            productName: '火星人', //商品名称
+            //productName: '火星人', //商品名称
+            productName: item[0].item_name, //商品名称
             productPrice: '9999',//商品单价
+            //productPrice: item[0].price,//商品单价
             productNum: '1', //商品数量
-            productId: 'Mars man', //商品标识
+            //productNum: item[0].qty, //商品数量
+            //productId: 'Mars man', //商品标识
+            //productId: 'Mars man', //商品标识
+            productId: item[0].item_no, //商品标识
             productDesc: '火星人',//商品描述
             ext1: '123',//扩展字段1
             ext2: '123',//扩展字段2
