@@ -38,11 +38,10 @@ $(document).ready(function() {
             orderExpireDatetime: '60', //订单过期时间
             //productName: '火星人', //商品名称
             productName: item[0].item_name, //商品名称
-            productPrice: '9999',//商品单价
-            //productPrice: item[0].price,//商品单价
-            productNum: '1', //商品数量
-            //productNum: item[0].qty, //商品数量
-            //productId: 'Mars man', //商品标识
+            //productPrice: '9999',//商品单价
+            productPrice: item[0].price*100,//商品单价
+            //productNum: '1', //商品数量
+            productNum: item[0].qty, //商品数量
             //productId: 'Mars man', //商品标识
             productId: item[0].item_no, //商品标识
             productDesc: '火星人',//商品描述

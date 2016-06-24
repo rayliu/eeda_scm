@@ -10,48 +10,36 @@ $(document).ready(function() {
     });
     
     
-    //form表单校验
-	 $("#orderForm").validate({
-	        rules: {
-	        	consignee_id_name:{
-	        		rangelength:[15,18]
-	        		
-	        	},
-				currency_name:{
-			 		required: true,
-			 		rangelength:[3,3]				//输入长度最小是 10 的字符串
-			 	},
-			 	consignee_country_name:{
-			 		rangelength:[3,3]
-			 	},
-			 	province_name:{
-			 		rangelength:[6,6]
-			 	},
-			 	city_name:{
-			 		rangelength:[6,6]
-			 	},
-			 	district_name:{
-			 		rangelength:[6,6]
-			 	},
-			 	pay_no_name:{
-			 		minlength: 5
-		        },
-		        consignee_type_name:{
-		        	rangelength:[1,1]
-		        }
+	$("#orderForm").validate({
+        rules: {//身份证
+        	consignee_id_name:{
+        		isIdCardNo:true
+        		
+        	},
+			currency_name:{
+		 		rangelength:[3,3]				//输入长度最小是 10 的字符串
+		 	},
+		 	consignee_country_name:{
+		 		rangelength:[3,3]
+		 	},
+		 	pay_no_name:{
+		 		minlength: 5
 	        },
-	        messages: {
-	        	consignee_id_name: "身份证号码长度为15位或18位",
-	        	currency_name: "长度必须为3位字符",
-	        	consignee_country_name: "长度必须为3位字符",
-	        	province_name: "长度必须为6位字符",
-	        	city_name: "长度必须为6位字符",
-	        	district_name: "长度必须为6位字符",
-	        	pay_no_name: "长度不能小于5位字符",
-	        	consignee_type_name: "长度必须为1位字符"
+	        consignee_type_name:{
+	        	rangelength:[1,1]
+	        },
+	        consignee_telephone_name:{
+	        	isPhone:true
 	        }
-	       
-	 });
+        },
+        messages: {
+        	currency_name: "长度必须为3位字符",
+        	consignee_country_name: "长度必须为3位字符",
+        	pay_no_name: "长度不能小于5位字符",
+        	consignee_type_name: "长度必须为1位字符"
+        }
+       
+	});
 
 
     //------------save
@@ -64,6 +52,12 @@ $(document).ready(function() {
         }
         
         $(this).attr('disabled', true);
+        
+        //分解收货人省市区的地址编码
+        var pro_ci_dis = $('#pro_ci_dis').val();
+        var province = pro_ci_dis.substring(0,6);
+        var city = pro_ci_dis.substring(7,13);
+        var district = pro_ci_dis.substring(14,21);
 
         var cargo_items_array = salesOrder.buildCargoDetail();
         var order = {

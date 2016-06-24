@@ -109,17 +109,21 @@
 					</div>
 		
 					<div class="row">
-						<div class="col-lg-4">
+						<!-- <div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'province',
 							label:'收件人地址(省)', required:'required', value:order.province!''
-							}){}%></div>
+							}){}%></div> -->
 						<div class="col-lg-4">
+						<%include("/yh/component/form/inputAllLocationField.html", {
+							id:'pro_ci_dis', label:'收件人(省-市-区)',value: order.pro_ci_dis!'',
+							display_value:fromRoute!'' ,required:'required' }){}%></div>
+						<!-- <div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'city',
 							label:'收件人地址(市)', required:'required', value:order.city!'' }){}%></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'district',
 							label:'收货人地址（区）', required:'required', value:order.district!''
-							}){}%></div>
+							}){}%></div> -->
 					</div>
 					
 					<div class="row">
@@ -476,6 +480,7 @@
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
 
 <script src="/yh/js/eeda-common.js"></script>
+<script src="/js/checkUtil.js"></script>
 <script>
     var order_no = '${order.order_no!'订单编辑'}'; 
     var salesOrder = {};
