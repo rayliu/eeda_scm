@@ -1,5 +1,7 @@
 package controllers.oms.allinpay;
 
+import models.eeda.oms.SalesOrder;
+
 import com.allinpay.ets.client.SecurityUtil;
 import com.jfinal.core.Controller;
 import com.jfinal.log.Logger;
@@ -144,5 +146,14 @@ public class AllinpayController extends Controller {
 	    //orderNo=DD2016052600004  德丰-销售订单号 
 	    //paymentOrderId=201606221614261038 通联支付流水号 
 	    //payResult=1  支付成功
+	    String orderNo=getPara("orderNo");
+	    String payResult = getPara("payResult");
+	    if(!"1".equals(payResult))
+	        return;
+	    
+	    SalesOrder so = SalesOrder.dao.findFirst("select * from sales_order where order_no=?", orderNo);
+	    if(so!=null){
+	        so.set("pay_no", getPara("paymentOrderId")).update();
+	    }
     }
 }
