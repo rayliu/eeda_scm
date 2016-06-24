@@ -35,9 +35,6 @@
 				
 			</div>
 		</div>
-			
-		<ul id='${id}}_list——1' class="pull-right dropdown-menu default dropdown-scroll" tabindex="-1" style="top: 35%; left: 2%;">
-		</ul>
 	</div>
 
 
@@ -73,6 +70,9 @@
 		var searchLocation = function(level, code){
 			var locLevel = "province";
 			level = level | 0;
+			if(level == 0){
+				locLevel = "province";
+			}
 			if(level == 1){
 				locLevel = "city";
 			}
@@ -109,33 +109,38 @@
 	    	var code = $(this).attr('code');
 	    	var name = $(this).attr('name');
 	    	var oldValue = inputField.val();
+	    	var oldCode = hiddenField.val();
+	    	var this_code = code;
 	    	if(dataLevel == 1){
 	    		hiddenProvinceField.val(code);
 	    	}
 	    	
 	    	if(dataLevel>1){
 	    		name = oldValue+'-'+name;
+	    		code = oldCode+'-'+code;
 	    	}
 	    	inputField.val(name);
 	    	hiddenField.val(code);
-
+	    	
+	    	
 	    	if(dataLevel == 3){
 	    		spList.hide();
 	    		return;
 	    	}
-	    	searchLocation(dataLevel, code);
+	    	searchLocation(dataLevel, this_code);
 
 	    	spList.find('input').removeClass('this');
 	    	spList.find('input[data-level='+dataLevel+']').addClass('this');
 	    });
 	    
-	    // 没选中，焦点离开，隐藏列表
+	 // 没选中，焦点离开，隐藏列表
 		inputField.on('blur', function(){
-			if (inputField.val().trim().length ==0 || inputField.val().split('-').length==1) {
+			if (inputField.val().trim().length ==0) {
 				inputField.val('');
 				hiddenField.val('');
+				spList.hide();
 			};
-			spList.hide();
+			
 	 	});
 
 		//当用户只点击了滚动条，没选，再点击页面别的地方时，隐藏列表
@@ -146,7 +151,6 @@
 		spList.on('mousedown', function(){
 			return false;//阻止事件回流，不触发 $('#spMessage').on('blur'
 		});
-
 	
 	});
 </script>
