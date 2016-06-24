@@ -130,7 +130,16 @@ public class SalesOrderController extends Controller {
     	//获取报关企业信息
     	CustomCompany custom = CustomCompany.dao.findById(salesOrder.getLong("custom_id"));
     	setAttr("custom", custom);
-
+    	
+    	//收货人地址
+    	String district = salesOrder.getStr("district");
+    	String province = salesOrder.getStr("province");
+    	String city = salesOrder.getStr("city");
+    	Record re = Db.findFirst("select get_loc_full_name(?) address",district);
+    	setAttr("pro_ci_dis", re.get("address"));
+    	String pro_ci_dis_id = province+"-"+city+"-"+district;
+    	setAttr("pro_ci_dis_id", pro_ci_dis_id);
+    	
     	//用户信息
     	long create_by = salesOrder.getLong("create_by");
     	UserLogin user = UserLogin.dao.findById(create_by);
