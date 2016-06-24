@@ -37,6 +37,10 @@ public class DingDanDto {
     private String pro_remark;
     private String note;
     private String pay_no;
+    
+    //支付渠道(01：网关支付；02：手机WAP支付；03：线下POS支付；04：手机APP支付；05：预付卡支付；06：便捷付POS支付；07：其他支付渠道；08：新版预付卡支付) 
+    private String pay_channel; //通联的支付方式
+    
     private String pay_platform;
     private String payer_account;
     private String payer_name;
@@ -226,6 +230,12 @@ public class DingDanDto {
     }
     public void setPay_no(String pay_no) {
         this.pay_no = pay_no;
+    }
+    public String getPay_channel() {
+        return pay_channel;
+    }
+    public void setPay_channel(String pay_channel) {
+        this.pay_channel = pay_channel;
     }
     public String getPay_platform() {
         return pay_platform;

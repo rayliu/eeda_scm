@@ -239,7 +239,7 @@ public class LogisticsOrderController extends Controller {
   		log.setShipper_address(logisticsOrder.getStr("shipper_address"));
   		log.setTraf_mode(logisticsOrder.getStr("traf_mode"));
   		log.setShip_name(logisticsOrder.getStr("ship_name"));
-  		log.setPack_no(logisticsOrder.getInt("pack_no"));
+  		log.setPack_no(logisticsOrder.getLong("pack_no"));
   		log.setGoods_info(logisticsOrder.getStr("goods_info"));
   		log.setCustoms_code(logisticsOrder.getStr("customs_code"));
   		log.setCiq_code(logisticsOrder.getStr("ciq_code"));

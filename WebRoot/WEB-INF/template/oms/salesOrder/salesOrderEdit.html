@@ -146,7 +146,7 @@
 					<div class="row">
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'pay_no',
-								label:'原始支付单交易编号', value:order.pay_no!'', disabled:'disabled' 
+								label:'原始支付单交易编号', value:order.pay_no!'' 
 							}){}%></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", {
@@ -166,7 +166,25 @@
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'pay_name',
 							label:'支付企业的海关备案名称', value:order.pay_name!''
-							}){}%></div>
+							}){}%>
+						</div>
+						<div class="col-lg-4">
+							<div class="form-group">
+							    <label class="search-label">支付方式</label>
+							    <select id="pay_channel" name="pay_channel" 
+							    	field_type='list'
+							    	class="form-control search-control" >
+					                    <option value='01' <%if(order.pay_channel=='01'){ %>selected<%}%>>网上支付</option>
+					                    <option value='02' <%if(order.pay_channel=='02'){ %>selected<%}%>>手机WAP支付</option>
+					                    <option value='03' <%if(order.pay_channel=='03'){ %>selected<%}%>>线下POS支付</option>
+					                    <option value='04' <%if(order.pay_channel=='04'){ %>selected<%}%>>手机APP支付</option>
+					                    <option value='05' <%if(order.pay_channel=='05'){ %>selected<%}%>>预付卡支付</option>
+					                    <option value='06' <%if(order.pay_channel=='06'){ %>selected<%}%>>便捷付POS支付</option>
+					                    <option value='07' <%if(order.pay_channel=='07'){ %>selected<%}%>>其他支付渠道</option>
+					                    <option value='08' <%if(order.pay_channel=='08'){ %>selected<%}%>>新版预付卡支付</option>
+							    </select>
+							</div>
+						</div>
 					</div>
 					
 					<div class="row">

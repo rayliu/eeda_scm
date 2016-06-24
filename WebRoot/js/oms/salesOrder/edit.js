@@ -87,6 +87,7 @@ $(document).ready(function() {
             pro_remark: $('#pro_remark').val(),  
             note: $('#note').val(),
             pay_no: $('#pay_no').val(),
+            pay_channel: $('#pay_channel').val(),
             pay_platform: $('#pay_platform').val(), 
             payer_account: $('#payer_account').val(),  
             payer_name: $('#payer_name').val(),  

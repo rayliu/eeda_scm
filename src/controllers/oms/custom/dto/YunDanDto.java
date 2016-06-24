@@ -26,7 +26,7 @@ public class YunDanDto {
     private double insure_fee;
     private double weight;
     private double netwt;
-    private int pack_no;
+    private long pack_no;
     private String parcel_info;
     
     private String goods_info;
@@ -198,10 +198,10 @@ public class YunDanDto {
     public void setNetwt(double netwt) {
         this.netwt = netwt;
     }
-    public int getPack_no() {
+    public long getPack_no() {
         return pack_no;
     }
-    public void setPack_no(int pack_no) {
+    public void setPack_no(long pack_no) {
         this.pack_no = pack_no;
     }
     public String getParcel_info() {

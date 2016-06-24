@@ -271,7 +271,7 @@ public class SalesOrderController extends Controller {
 			goods.setCus_item_no(item.getStr("cus_item_no"));//海关正面清单货号（新规则时必填）
 			goods.setGift_flag(item.getStr("gift_flag"));//是否赠品(1:是，0：否)
 			goods.setPrice(item.getDouble("price"));//单价
-			goods.setQty(item.getDouble("qty"));//数量
+			goods.setQty(item.getLong("qty"));//数量
 			goods.setTotal(item.getDouble("total"));//总价
 			goods.setUnit(item.getStr("unit"));//计量单位
 			
