@@ -109,7 +109,8 @@ public class AllinpayController extends Controller {
 	    requestOrder.setPid(pid);
 	    requestOrder.setOrderNo(orderNo);
 	    requestOrder.setOrderAmount(Long.parseLong(orderAmount));
-	    requestOrder.setOrderCurrency(orderCurrency);
+	    if("142".equals(orderCurrency))//彭海运   142: 人民币
+	        requestOrder.setOrderCurrency("0");//通联:   默认为人民币; 0,156表示人民币;344表示港币;840表示美元
 	    requestOrder.setOrderDatetime(orderDatetime);
 	    requestOrder.setOrderExpireDatetime(orderExpireDatetime);
 	    requestOrder.setProductName(productName);
