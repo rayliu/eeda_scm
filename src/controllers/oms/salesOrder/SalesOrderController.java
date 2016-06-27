@@ -234,7 +234,9 @@ public class SalesOrderController extends Controller {
 		order.setOrg_code(orgCode);
 		order.setOrder_no(salesOrder.getStr("order_no"));
 		order.setPay_no(salesOrder.getStr("pay_no"));//原始支付单交易编号
-
+		order.setPay_type("PTL");//默认是通联
+		order.setPay_channel(salesOrder.getStr("pay_channel"));
+		
 		order.setGoods_value(salesOrder.getDouble("goods_value"));//订单商品货款
 		order.setFreight(salesOrder.getDouble("freight"));//订单商品运费
 		order.setCurrency(salesOrder.getStr("currency"));// 币制代码

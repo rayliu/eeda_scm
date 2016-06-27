@@ -38,6 +38,7 @@ public class DingDanDto {
     private String note;
     private String pay_no;
     
+    private String pay_type; //支付通关模式(PQB：钱宝；PYJF：易极付；PTL：通联) 
     //支付渠道(01：网关支付；02：手机WAP支付；03：线下POS支付；04：手机APP支付；05：预付卡支付；06：便捷付POS支付；07：其他支付渠道；08：新版预付卡支付) 
     private String pay_channel; //通联的支付方式
     
@@ -236,6 +237,12 @@ public class DingDanDto {
     }
     public void setPay_channel(String pay_channel) {
         this.pay_channel = pay_channel;
+    }
+    public String getPay_type() {
+        return pay_type;
+    }
+    public void setPay_type(String pay_type) {
+        this.pay_type = pay_type;
     }
     public String getPay_platform() {
         return pay_platform;

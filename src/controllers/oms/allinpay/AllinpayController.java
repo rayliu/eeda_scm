@@ -155,5 +155,6 @@ public class AllinpayController extends Controller {
 	    if(so!=null){
 	        so.set("pay_no", getPara("paymentOrderId")).update();
 	    }
+	    renderJson();
     }
 }
