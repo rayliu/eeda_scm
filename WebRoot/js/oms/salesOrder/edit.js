@@ -40,6 +40,32 @@ $(document).ready(function() {
         }
        
 	});
+	
+	
+	$("#itemForm").validate({
+        rules: {//身份证
+        	sty:{
+        		number:true
+        	},
+        	unit:{
+		 		rangelength:[3,3]				//输入长度最小是 10 的字符串
+		 	},
+		 	price:{
+		 		number:true
+		 	},
+		 	total:{
+		 		number:true
+	        },
+	        gift_flag:{
+	        	rangelength:[1,1],
+	        	digits:true
+	        }
+        }
+	});
+	
+    $.extend($.validator.messages, {
+		rangelength: $.validator.format("长度必须为{0}位字符")
+	})
 
 
     //------------save
@@ -51,8 +77,11 @@ $(document).ready(function() {
             return;
         }
         
-        $(this).attr('disabled', true);
+        if(!$("#itemForm").valid()){
+            return;
+        }
         
+        $(this).attr('disabled', true);
         //分解收货人省市区的地址编码
         var pro_ci_dis = $('#pro_ci_dis').val();
         var province = pro_ci_dis.substring(0,6);

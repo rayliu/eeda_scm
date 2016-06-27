@@ -103,70 +103,70 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" name="item_name" value="'+data+'" class="form-control"/>';
                 }
             },
             { "data": "ITEM_DESC", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" name="item_desc" value="'+data+'" class="form-control"/>';
                 }
             },
             { "data": "ITEM_NO", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" name="item_no" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "CUS_ITEM_NO", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control"/>';
+                    return '<input type="text" name="cus_item_no" value="'+data+'" class="form-control"/>';
                 }
             },
             { "data": "STY" ,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="sty" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "UNIT",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="unit" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "PRICE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="price" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "TOTAL",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="total" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "GIFT_FLAG",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="gift_flag" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "CURRENCY",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="item_currency" value="'+data+'" class="form-control" required/>';
                 }
             }
         ]

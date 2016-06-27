@@ -32,7 +32,7 @@ $(document).ready(function() {
             orderNo: $('#order_no').val(),//商户系统订单号
             orderAmount: '1',//订单金额(单位分)
             //orderCurrency: '0', //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
-            orderCurrency: '0', //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
+            orderCurrency: $('#currency').val(), //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
             //orderDatetime: '20160622103144',//商户的订单提交时间
             orderDatetime: datetime,//商户的订单提交时间
             orderExpireDatetime: '60', //订单过期时间
@@ -44,7 +44,9 @@ $(document).ready(function() {
             productNum: item[0].qty, //商品数量
             //productId: 'Mars man', //商品标识
             productId: item[0].item_no, //商品标识
+            //productId: item[0].item_no, //商品标识
             productDesc: '火星人',//商品描述
+            productDesc: item[0].item_desc,//商品描述
             ext1: '123',//扩展字段1
             ext2: '123',//扩展字段2
             extTL: '',//业务扩展字段
