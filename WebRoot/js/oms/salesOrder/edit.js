@@ -139,6 +139,7 @@ $(document).ready(function() {
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
+                $('#goYunDanBtn').attr('disabled', false);
                 $('#submitDingDanBtn').attr('disabled', false);
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
