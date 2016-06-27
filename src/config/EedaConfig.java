@@ -240,7 +240,7 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("sales_order_goods", SalesOrderGoods.class);
         arp.addMapping("logistics_order", LogisticsOrder.class);
         arp.addMapping("sales_order_count", SalesOrderCount.class);
-        arp.addMapping("gate_In_order", GateInOrder.class);
+        arp.addMapping("gate_in_order", GateInOrder.class);
         arp.addMapping("inspection_order", InspectionOrder.class);
         
     }
