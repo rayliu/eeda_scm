@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import models.UserLogin;
+import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
@@ -56,7 +57,7 @@ public class SalesOrderController extends Controller {
     @Before(Tx.class)
    	public void save() throws Exception {		
    		String jsonStr=getPara("params");
-       	
+   		Long log_id = null;
        	Gson gson = new Gson();  
         Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
             
@@ -85,6 +86,7 @@ public class SalesOrderController extends Controller {
    			salesOrder.save();
    			
    			id = salesOrder.getLong("id").toString();
+   			log_id = createLogOrder(id);
    		}
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
@@ -98,8 +100,23 @@ public class SalesOrderController extends Controller {
 
    		Record r = salesOrder.toRecord();
    		r.set("create_by_name", user_name);
+   		r.set("log_id",log_id);
    		renderJson(r);
    	}
+    
+    
+    //自动生成运输单
+    @Before(Tx.class)
+    public Long createLogOrder(String sales_order_id){
+    	LogisticsOrder logisticsOrder = new LogisticsOrder();
+    	logisticsOrder.set("log_no", OrderNoGenerator.getNextOrderNo("YD"));
+    	logisticsOrder.set("sales_order_id",sales_order_id);
+    	logisticsOrder.set("status","新建");
+		logisticsOrder.set("create_by", LoginUserController.getLoginUserId(this));
+		logisticsOrder.set("create_stamp", new Date());
+		logisticsOrder.save();
+		return logisticsOrder.getLong("id");
+    }
     
     
     private List<Record> getSalesOrderGoods(String orderId) {
@@ -139,6 +156,10 @@ public class SalesOrderController extends Controller {
     	setAttr("pro_ci_dis", re.get("address"));
     	String pro_ci_dis_id = province+"-"+city+"-"+district;
     	setAttr("pro_ci_dis_id", pro_ci_dis_id);
+    	
+    	//对应的运输单信息
+    	Record log = Db.findFirst("select * from logistics_order where sales_order_id = ?",id);
+    	setAttr("logOrder",log);
     	
     	//用户信息
     	long create_by = salesOrder.getLong("create_by");
@@ -198,6 +219,15 @@ public class SalesOrderController extends Controller {
 		String returnMsg = EedaHttpKit.post(urlStr, PostData);
 		//String returnMsg = InUtil.getResult(urlStr, PostData);
 		System.out.println("结果"+returnMsg);
+		Gson gson = new Gson();  
+        Map<String, ?> dto= gson.fromJson(returnMsg, HashMap.class);  
+        List<Map<String, String>> orders = (ArrayList<Map<String, String>>)dto.get("orders");
+        String status = orders.get(0).get("message");
+        if("订单写入成功".equals(status)){
+        	SalesOrder salesOrder = SalesOrder.dao.findById(order_id);
+        	salesOrder.set("status", status).update();
+        }
+        
 		renderJson(returnMsg);
     }
     
@@ -254,7 +284,7 @@ public class SalesOrderController extends Controller {
 		order.setNote(salesOrder.getStr("note"));//备注
 		order.setPayer_account(salesOrder.getStr("payer_account"));//支付人帐号ID
 		order.setPayer_name(salesOrder.getStr("payer_name"));//支付人名称
-		String order_time = salesOrder.getDate("order_time").toString();
+		String order_time = salesOrder.getDate("create_stamp").toString();
 		order.setOrder_time(order_time.substring(0, order_time.length()-2));//
 		//order.setOrder_time("2016-05-13 13:49:50");
 		

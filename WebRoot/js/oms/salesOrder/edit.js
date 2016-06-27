@@ -118,7 +118,7 @@ $(document).ready(function() {
             pass_pay_no: $('#pass_pay_no').val(),
             pay_code: $('#pay_code').val(),
             pay_name: $('#pay_name').val(),
-            status: $('#status').val(),
+            status: $('#status').val()==''?'未上报':$('#status').val(),
             cargo_list: cargo_items_array,
             count_list:salesOrder.buildCountDetail()
         };
@@ -131,9 +131,10 @@ $(document).ready(function() {
             	$("#creator_name").val(data.CREATE_BY_NAME);	
                 $("#create_stamp").val(order.CREATE_STAMP);
                 $("#order_id").val(order.ID);
+                $("#log_id").val(order.LOG_ID);
                 $("#order_no").val(order.ORDER_NO);
                 if(status=='') {
-                	$('#status').val('未上报');
+                	$('#status').val(order.STATUS);
                 }
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
@@ -166,6 +167,12 @@ $(document).ready(function() {
     			$.scojs_message('上报失败', $.scojs_message.TYPE_FALSE);
     		}
     	});
+    });
+    
+    //前往相对于的运输单
+    $('#goYunDanBtn').click(function(){
+    	var log_id = $("#log_id").val();
+    	window.open("/logisticsOrder/edit?id="+log_id);
     });
 
     
@@ -202,6 +209,7 @@ $(document).ready(function() {
     var order_id = $("#order_id").val()
     if(order_id != ''){
     	 $('#submitDingDanBtn').attr('disabled',false);
+    	 $('#goYunDanBtn').attr('disabled',false);
     }
 
 } );

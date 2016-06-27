@@ -116,7 +116,7 @@ $(document).ready(function() {
             { "data": "ITEM_NO", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='';
+                        data='ISQHDF9312146008460';
                     return '<input type="text" name="item_no" value="'+data+'" class="form-control" required/>';
                 }
             },
