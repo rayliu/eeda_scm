@@ -1,1 +1,0 @@
-package models.eeda.oms;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class IncomingNoticeOrder extends Model<IncomingNoticeOrder> {	public static final IncomingNoticeOrder dao = new IncomingNoticeOrder();}

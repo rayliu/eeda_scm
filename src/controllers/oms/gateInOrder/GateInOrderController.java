@@ -1,4 +1,4 @@
-package controllers.oms.incomingNoticeOrder;
+package controllers.oms.gateInOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
 
@@ -39,18 +39,18 @@ import controllers.util.OrderNoGenerator;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
-public class IncomingNoticeOrderController extends Controller {
+public class GateInOrderController extends Controller {
 
-	private Logger logger = Logger.getLogger(IncomingNoticeOrderController.class);
+	private Logger logger = Logger.getLogger(GateInOrderController.class);
 	Subject currentUser = SecurityUtils.getSubject();
 
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
 	public void index() {
-		render("/oms/incomingNoticeOrder/incomingNoticeOrderList.html");
+		render("/oms/gateInOrder/gateInOrderList.html");
 	}
 	
     public void create() {
-        render("/oms/incomingNoticeOrder/incomingNoticeOrderEdit.html");
+        render("/oms/gateInOrder/gateInOrderEdit.html");
     }
     
     @Before(Tx.class)
@@ -132,7 +132,7 @@ public class IncomingNoticeOrderController extends Controller {
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
-        render("/oms/salesOrder/salesOrderEdit.html");
+        render("/oms/gateInOrder/gateInOrderEdit.html");
     }
     
     
