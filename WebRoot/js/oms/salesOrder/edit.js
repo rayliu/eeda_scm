@@ -143,8 +143,9 @@ $(document).ready(function() {
                 $('#submitDingDanBtn').attr('disabled', false);
                 
                 //刷新明细表
-                salesOrder.refleshTable(order.ID); 
-                //清空3数据
+                salesOrder.refleshItemTable(order.ID); 
+                salesOrder.refleshCountTable(order.ID); 
+
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);

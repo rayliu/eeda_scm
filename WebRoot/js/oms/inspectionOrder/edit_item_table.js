@@ -48,7 +48,7 @@ $(document).ready(function() {
             };
             cargo_items_array.push(item);
         }
-        deletedTableIds = '';
+        deletedTableIds = [];
         return cargo_items_array;
     };
     

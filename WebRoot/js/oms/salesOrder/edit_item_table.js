@@ -187,7 +187,7 @@ $(document).ready(function() {
     });
     
   //刷新明细表
-    salesOrder.refleshTable = function(order_id){
+    salesOrder.refleshItemTable = function(order_id){
     	var url = "/salesOrder/tableList?order_id="+order_id
         +"&table_type=item";
     	cargoTable.ajax.url(url).load();

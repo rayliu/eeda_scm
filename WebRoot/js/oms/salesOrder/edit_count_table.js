@@ -49,6 +49,7 @@ $(document).ready(function() {
             };
             count_items_array.push(item);
         }
+        deletedTableIds = [];
         return count_items_array;
     };
 
@@ -126,6 +127,13 @@ $(document).ready(function() {
         var item={};
         countTable.row.add(item).draw(true);
     });
+    
+    //刷新明细表
+    salesOrder.refleshCountTable = function(order_id){
+    	var url = "/salesOrder/tableList?order_id="+order_id
+        +"&table_type=count";
+    	countTable.ajax.url(url).load();
+    }
 
     
 } );
