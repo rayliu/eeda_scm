@@ -78,13 +78,13 @@ $(document).ready(function() {
         }
         
         $(this).attr('disabled', true);
+        //分解收货人省市区的地址编码
         var cargo_items_array = salesOrder.buildCargoDetail();
         var order = {
             id: $('#order_id').val(),
             log_no: $('#log_no').val(),  
             country_code: $('#country_code').val(),  
             shipper_country: $('#shipper_country').val(),
-            shipper_country: $('#shipper_country').val(),  
             shipper_city: $('#shipper_city').val(),
             shipper: $('#shipper').val(),
             shipper_address: $('#shipper_address').val(),  

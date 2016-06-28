@@ -75,6 +75,8 @@ public class SalesOrderController extends Controller {
    			salesOrder.set("update_by", user.getLong("id"));
    			salesOrder.set("update_stamp", new Date());
    			salesOrder.update();
+   			
+   			log_id = createLogOrder(id,"update");
    		} else {
    			//create 
    			DbUtils.setModelValues(dto, salesOrder);
@@ -85,8 +87,9 @@ public class SalesOrderController extends Controller {
    			salesOrder.set("create_stamp", new Date());
    			salesOrder.save();
    			
+   			//生成对应的运输单
    			id = salesOrder.getLong("id").toString();
-   			log_id = createLogOrder(id);
+   			log_id = createLogOrder(id,"create");
    		}
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
@@ -107,14 +110,19 @@ public class SalesOrderController extends Controller {
     
     //自动生成运输单
     @Before(Tx.class)
-    public Long createLogOrder(String sales_order_id){
-    	LogisticsOrder logisticsOrder = new LogisticsOrder();
-    	logisticsOrder.set("log_no", OrderNoGenerator.getNextOrderNo("YD"));
-    	logisticsOrder.set("sales_order_id",sales_order_id);
-    	logisticsOrder.set("status","新建");
-		logisticsOrder.set("create_by", LoginUserController.getLoginUserId(this));
-		logisticsOrder.set("create_stamp", new Date());
-		logisticsOrder.save();
+    public Long createLogOrder(String sales_order_id,String action){
+    	LogisticsOrder logisticsOrder = null;
+    	if("create".equals(action)){
+    		logisticsOrder = new LogisticsOrder();
+        	logisticsOrder.set("log_no", OrderNoGenerator.getNextOrderNo("YD"));
+        	logisticsOrder.set("sales_order_id",sales_order_id);
+        	logisticsOrder.set("status","新建");
+    		logisticsOrder.set("create_by", LoginUserController.getLoginUserId(this));
+    		logisticsOrder.set("create_stamp", new Date());
+    		logisticsOrder.save();
+    	}else{
+    		logisticsOrder = LogisticsOrder.dao.findFirst("select * from logistics_order where sales_order_id = ?",sales_order_id);
+    	}
 		return logisticsOrder.getLong("id");
     }
     

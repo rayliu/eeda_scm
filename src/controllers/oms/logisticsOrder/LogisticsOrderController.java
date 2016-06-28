@@ -137,6 +137,11 @@ public class LogisticsOrderController extends Controller {
         	setAttr("sales_pro_ci_dis", sales_pro_ci_dis);
     	}
     	
+    	//收货城市
+    	String shipper_city = logisticsOrder.getStr("shipper_city");
+    	Record re = Db.findFirst("select get_loc_full_name(?) address",shipper_city);
+    	setAttr("shipper_city_name", re.get("address"));
+    	
     	//用户信息
     	long create_by = logisticsOrder.getLong("create_by");
     	UserLogin user = UserLogin.dao.findById(create_by);
@@ -247,7 +252,7 @@ public class LogisticsOrderController extends Controller {
   		log.setShipper_address(logisticsOrder.getStr("shipper_address"));
   		log.setTraf_mode(logisticsOrder.getStr("traf_mode"));
   		log.setShip_name(logisticsOrder.getStr("ship_name"));
-  		log.setPack_no(logisticsOrder.getLong("pack_no"));
+  		log.setPack_no(logisticsOrder.getInt("pack_no"));
   		log.setGoods_info(logisticsOrder.getStr("goods_info"));
   		log.setCustoms_code(logisticsOrder.getStr("customs_code"));
   		log.setCiq_code(logisticsOrder.getStr("ciq_code"));
