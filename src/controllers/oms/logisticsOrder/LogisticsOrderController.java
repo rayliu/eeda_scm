@@ -126,7 +126,15 @@ public class LogisticsOrderController extends Controller {
         	//获取报关企业信息
         	CustomCompany custom = CustomCompany.dao.findById(custom_id);
         	setAttr("custom", custom);
-    		
+
+        	//收货人地址
+        	String district = salesOrder.getStr("district");
+        	String province = salesOrder.getStr("province");
+        	String city = salesOrder.getStr("city");
+        	Record re = Db.findFirst("select get_loc_full_name(?) address",district);
+        	setAttr("sales_pro_ci_dis_name", re.get("address"));
+        	String sales_pro_ci_dis = province+"-"+city+"-"+district;
+        	setAttr("sales_pro_ci_dis", sales_pro_ci_dis);
     	}
     	
     	//用户信息

@@ -45,6 +45,9 @@ $(document).ready(function() {
     		pack_no_name:{
     			digits:true
     		},
+    		shipper_telephone_name:{
+    			isPhone:true
+    		}
     	}
     	
     	/*messages: {

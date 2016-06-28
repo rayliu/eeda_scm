@@ -42,7 +42,7 @@ $(document).ready(function() {
 	});
 	
 	
-	$("#itemForm").validate({
+/*    $("#itemsForm").validate({
         rules: {//身份证
         	sty:{
         		number:true
@@ -61,7 +61,7 @@ $(document).ready(function() {
 	        	digits:true
 	        }
         }
-	});
+	});*/
 	
     $.extend($.validator.messages, {
 		rangelength: $.validator.format("长度必须为{0}位字符")
@@ -77,9 +77,9 @@ $(document).ready(function() {
             return;
         }
         
-        if(!$("#itemForm").valid()){
-            return;
-        }
+//        if(!$("#itemsForm").valid()){
+//            return;
+//        }
         
         $(this).attr('disabled', true);
         //分解收货人省市区的地址编码
@@ -141,6 +141,10 @@ $(document).ready(function() {
                 $('#saveBtn').attr('disabled', false);
                 $('#goYunDanBtn').attr('disabled', false);
                 $('#submitDingDanBtn').attr('disabled', false);
+                
+                //刷新明细表
+                salesOrder.refleshTable(order.ID); 
+                //清空3数据
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);
@@ -150,6 +154,14 @@ $(document).ready(function() {
             $('#saveBtn').attr('disabled', false);
           });
     });  
+    
+    
+/*    //刷新明细表
+    var refleshTable = function(order_id){
+    	var url = "/salesOrder/tableList?order_id="+order_id
+        +"&table_type=item";
+    	salesOrder.cargoTable.ajax.url(url).load();
+    }*/
     
     
     //上报订单

@@ -20,11 +20,15 @@ $(document).ready(function() {
                 continue;
 
             var row = cargo_table_rows[index];
+            var empty = $(row).find('.dataTables_empty').text();
+            if(empty)
+            	continue;
+            
             var id = $(row).attr('id');
             if(!id){
                 id='';
             }
-
+            
             var item={
                 id: id,
                 item_name: $(row.children[1]).find('input').val(), 
@@ -37,7 +41,7 @@ $(document).ready(function() {
                 total: $(row.children[8]).find('input').val(),
                 gift_flag: $(row.children[9]).find('input').val(), 
                 currency: $(row.children[10]).find('input').val(), 
-                action: $('#order_id').val().length>0?'UPDATE':'CREATE'
+                action: id!=''?'UPDATE':'CREATE'
             };
             cargo_items_array.push(item);
         }
@@ -51,6 +55,7 @@ $(document).ready(function() {
             };
             cargo_items_array.push(item);
         }
+        deletedTableIds = [];
         return cargo_items_array;
     };
 
@@ -93,10 +98,7 @@ $(document).ready(function() {
         "columns": [
             { "width": "30px",
                 "render": function ( data, type, full, meta ) {
-                	if($('#status').val()!='已结案')
-                		return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
-                	else
-                		return '';
+                	return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
                 }
             },
             { "data": "ITEM_NAME", 
@@ -127,55 +129,69 @@ $(document).ready(function() {
                     return '<input type="text" name="cus_item_no" value="'+data+'" class="form-control"/>';
                 }
             },
-            { "data": "STY" ,
+            { "data": "QTY" ,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='';
-                   return '<input type="text" name="sty" value="'+data+'" class="form-control" required/>';
+                        data='1';
+                   return '<input type="number" name="qty" value="'+data+'" class="form-control calculate" required/>';
                 }
             },
             { "data": "UNIT",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='';
+                        data='001';
                    return '<input type="text" name="unit" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "PRICE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='';
-                   return '<input type="text" name="price" value="'+data+'" class="form-control" required/>';
+                        data='0';
+                   return '<input type="text" name="price" value="'+data+'" class="form-control calculate" required/>';
                 }
             },
             { "data": "TOTAL",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='';
-                   return '<input type="text" name="total" value="'+data+'" class="form-control" required/>';
+                        data='0';
+                   return '<input type="text" name="total" value="'+data+'" class="form-control calculate" required/>';
                 }
             },
             { "data": "GIFT_FLAG",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='';
+                        data='1';
                    return '<input type="text" name="gift_flag" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "CURRENCY",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='';
+                        data='142';
                    return '<input type="text" name="item_currency" value="'+data+'" class="form-control" required/>';
                 }
             }
         ]
     });
+    
+    $('#cargo_table').on('input','.calculate',function(){
+    	var row = $(this).parent().parent();
+    	var sty = $(row.find('.calculate')[0]).val();
+    	var price = $(row.find('.calculate')[1]).val();
+    	var total = $(row.find('.calculate')[2]).val(parseFloat(sty)*parseFloat(price));
+    })
 
     $('#add_cargo').on('click', function(){
         var item={};
-        cargoTable.row.add(item).draw(true);
+        cargoTable.row.add(item).draw(false);
     });
+    
+  //刷新明细表
+    salesOrder.refleshTable = function(order_id){
+    	var url = "/salesOrder/tableList?order_id="+order_id
+        +"&table_type=item";
+    	cargoTable.ajax.url(url).load();
+    }
 
     
 } );

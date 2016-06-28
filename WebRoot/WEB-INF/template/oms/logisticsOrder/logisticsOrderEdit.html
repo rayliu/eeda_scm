@@ -65,33 +65,29 @@
 					<%include("/yh/component/form/inputField.html", {
 					id:'consignee_address', label:'收件人地址',
 					value:salesOrder.consignee_address!'' , disabled: 'disabled'}){}%></div>
-				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'consignee_country', label:'收货人地址（国）',
-					value:salesOrder.consignee_country!'' , disabled: 'disabled'}){}%></div>
-				<!-- /.col-lg-4 -->
+					<div class="form-group">
+					    <label class="search-label">收货人地址（国）</label>
+					    <select id="consignee_country" name="consignee_country" disabled
+					    	class="form-control search-control" >
+			                    <option value='142'>中国</option>
+					    </select>
+					</div>
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'province',
-					label:'收件人地址(省)', value:salesOrder.province!'', disabled: 'disabled' }){}%></div>
-				<!-- /.col-lg-4 -->
-				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'city',
-					label:'收件人地址(市)', value:salesOrder.city!'', disabled: 'disabled' }){}%></div>
-				<!-- /.col-lg-4 -->
-				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'district',
-					label:'收货人地址（区）', value:salesOrder.district!'', disabled: 'disabled' }){}%></div>
-				<!-- /.col-lg-4 -->
-			</div>
-			<div class="row">
+					<%include("/yh/component/form/inputAllLocationField.html", {
+						id:'sales_pro_ci_dis', label:'收件人(省-市-区)',value: sales_pro_ci_dis!'',
+						display_value:sales_pro_ci_dis_name!'' ,disabled:'disabled' }){}%></div>
 				<!--  第2行  -->
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'currency',
-					label:'币制', value:salesOrder.currency!'', disabled: 'disabled' }){}%></div>
-				<!-- /.col-lg-4 -->
+				    <label class="search-label">币制</label>
+				    <select id="currency" name="currency" disabled
+				    	class="form-control search-control" >
+		                    <option value='142'>人民币</option>
+				    </select>
+				</div>
 			</div>
 
 			<div class="row">
@@ -111,12 +107,19 @@
 					    </select>
 					</div>
 				</div>
-
-				<!-- /.col-lg-4 -->
-				<div class="col-lg-4">
+				<!-- <div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
 					id:'shipper_country', label:'发货人所在国',
-					value:order.shipper_country!'',required:'required' }){}%></div>
+					value:order.shipper_country!'',required:'required' }){}%></div> -->
+				<div class="col-lg-4">
+					<div class="form-group">
+					    <label class="search-label">发货人所在国</label>
+					    <select id="shipper_country" name="shipper_country" 
+					    	class="form-control search-control" >
+			                    <option value='142'>中国</option>
+					    </select>
+					</div>
+				</div>
 				<!-- /.col-lg-4 -->
 				<!-- <div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
@@ -325,8 +328,8 @@
 					<div class="col-lg-12">
 						<!-- <button class="btn btn-success btn-xs" id="add_cargo">添加</button> -->
 						<%include("/yh/component/form/detailTable.html", {
-						id:'cargo_table', headers:['', '企业商品货号', '数量', '计量单位', '单价',
-						'总价'], field_list:['', 'item_no', 'qty', 'unit', 'price',
+						id:'cargo_table', headers:[ '企业商品货号', '数量', '计量单位', '单价',
+						'总价'], field_list:[ 'item_no', 'qty', 'unit', 'price',
 						'total'], value_list: itemList![] }){} %>
 					</div>
 				</div>
@@ -447,6 +450,7 @@
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
 
 <script src="/yh/js/eeda-common.js"></script>
+<script src="/js/checkUtil.js"></script>
 <script>
     var order_no = '${order.order_no!'新建销售订单'}'; 
     var salesOrder = {};

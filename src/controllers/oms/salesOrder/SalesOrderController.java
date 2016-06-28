@@ -333,4 +333,24 @@ public class SalesOrderController extends Controller {
 		return jsonMsg;
 	}
 
+    public void tableList(){
+    	String order_id = getPara("order_id");
+    	String table_type = getPara("table_type");
+    	List<Record> list = null;
+    	if("item".equals(table_type)){
+    		list = getSalesOrderGoods(order_id);
+    	}else if("count".equals(table_type)){
+    		list = getSalesOrderCount(order_id);
+    	}
+    	
+    	Map BillingOrderListMap = new HashMap();
+        BillingOrderListMap.put("sEcho", 1);
+        BillingOrderListMap.put("iTotalRecords", list.size());
+        BillingOrderListMap.put("iTotalDisplayRecords", list.size());
+
+        BillingOrderListMap.put("aaData", list);
+
+        renderJson(BillingOrderListMap); 
+    }
+
 }

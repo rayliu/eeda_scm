@@ -20,6 +20,10 @@ $(document).ready(function() {
                 continue;
 
             var row = count_table_rows[index];
+            var empty = $(row).find('.dataTables_empty').text();
+            if(empty)
+            	continue;
+            
             var id = $(row).attr('id');
             if(!id){
                 id='';
@@ -31,7 +35,7 @@ $(document).ready(function() {
                 type: $(row.children[2]).find('select').val(), 
                 amount: $(row.children[3]).find('input').val(), 
                 remark: $(row.children[4]).find('input').val(), 
-                action: $('#order_id').val().length>0?'UPDATE':'CREATE'
+                action: id.length>0?'UPDATE':'CREATE'
             };
             count_items_array.push(item);
         }
@@ -81,17 +85,14 @@ $(document).ready(function() {
         "columns": [
             { "width": "30px",
                 "render": function ( data, type, full, meta ) {
-                	if($('#status').val()!='已结案')
                 		return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
-                	else
-                		return '';
                 }
             },
             { "data": "NAME", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" value="'+data+'" class="form-control"/>';
                 }
             },
             { "data": "TYPE", 
@@ -108,14 +109,14 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             }, 
             { "data": "REMARK" ,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             }
         ]

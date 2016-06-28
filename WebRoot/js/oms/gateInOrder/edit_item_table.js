@@ -20,6 +20,10 @@ $(document).ready(function() {
                 continue;
 
             var row = cargo_table_rows[index];
+            var empty = $(row).find('.dataTables_empty').text();
+            if(empty)
+            	continue;
+            
             var id = $(row).attr('id');
             if(!id){
                 id='';
@@ -40,7 +44,7 @@ $(document).ready(function() {
                 packing_amount: $(row.children[12]).find('input').val(), 
                 received_amount: $(row.children[13]).find('input').val(), 
                 damage_amount: $(row.children[14]).find('input').val(), 
-                action: $('#order_id').val().length>0?'UPDATE':'CREATE'
+                action: id.length>0?'UPDATE':'CREATE'
             };
             cargo_items_array.push(item);
         }
@@ -54,6 +58,7 @@ $(document).ready(function() {
             };
             cargo_items_array.push(item);
         }
+        deletedTableIds = '';
         return cargo_items_array;
     };
     
@@ -208,6 +213,13 @@ $(document).ready(function() {
         var item={};
         cargoTable.row.add(item).draw(true);
     });
+    
+    //刷新明细表
+    salesOrder.refleshTable = function(order_id){
+    	var url = "/salesOrder/tableList?order_id="+order_id
+        +"&table_type=item";
+    	cargoTable.ajax.url(url).load();
+    }
 
     
 } );

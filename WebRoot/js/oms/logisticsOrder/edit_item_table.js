@@ -81,47 +81,39 @@ $(document).ready(function() {
             $(row).attr('id', data.ID);
         },
         "columns": [
-            { "width": "30px",
-                "render": function ( data, type, full, meta ) {
-                	if($('#status').val()!='已结案')
-                		return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
-                	else
-                		return '';
-                }
-            },
             { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control"/>';
+                    return '<input type="text" disabled value="'+data+'" class="form-control"/>';
                 }
             },
             { "data": "STY" ,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control"/>';
+                   return '<input type="text" disabled value="'+data+'" class="form-control"/>';
                 }
             },
             { "data": "UNIT",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control"/>';
+                   return '<input type="text" disabled value="'+data+'" class="form-control"/>';
                 }
             },
             { "data": "PRICE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control"/>';
+                   return '<input type="text" disabled value="'+data+'" class="form-control"/>';
                 }
             },
             { "data": "TOTAL",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control"/>';
+                   return '<input type="text" disabled value="'+data+'" class="form-control"/>';
                 }
             }
         ]
