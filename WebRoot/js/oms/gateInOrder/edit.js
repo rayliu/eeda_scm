@@ -19,7 +19,7 @@ $(document).ready(function() {
 	        	},
 				currency_name:{
 			 		required: true,
-			 		rangelength:[3,3]				//输入长度最小是 10 的字符串
+			 		rangelength:[3,3]
 			 	},
 			 	consignee_country_name:{
 			 		rangelength:[3,3]
@@ -65,47 +65,51 @@ $(document).ready(function() {
         
         $(this).attr('disabled', true);
 
-        var cargo_items_array = salesOrder.buildCargoDetail();
+        var items_array = gateInOrder.buildCargoDetail();
         var order = {
             id: $('#order_id').val(),
-            order_no: $('#order_no').val(),  
-            custom_id: $('#custom_id').val(),  
-            order_time: $('#order_time').val(),  
-            goods_value: $('#goods_value').val(),
-            freight: $('#freight').val(),
-            currency: $('#currency').val(),  
-            consignee_id: $('#consignee_id').val(),  
-            consignee_type: $('#consignee_type').val(),
-            consignee: $('#consignee').val(), 
-            consignee_address: $('#consignee_address').val(),  
-            consignee_telephone: $('#consignee_telephone').val(),  
-            consignee_country: $('#consignee_country').val(),
-            province: $('#province').val(),
-            city: $('#city').val(), 
-            district: $('#district').val(), 
-            pro_amount: $('#pro_amount').val(),  
-            pro_remark: $('#pro_remark').val(),  
-            note: $('#note').val(),
-            pay_no: $('#pay_no').val(),
-            pay_platform: $('#pay_platform').val(), 
-            payer_account: $('#payer_account').val(),  
-            payer_name: $('#payer_name').val(),  
-            is_pay_pass: $('#is_pay_pass').val(),
-            pass_pay_no: $('#pass_pay_no').val(),
-            pay_code: $('#pay_code').val(),
-            pay_name: $('#pay_name').val(),
-            status: $('#status').val(),
-            cargo_list: cargo_items_array,
-            count_list:salesOrder.buildCountDetail()
+            order_no: $('#order_no').val(),
+            warehouse_id: $('#warehouse_id').val(),  
+            consignor: $('#consignor').val(),  
+            order_type: $('#order_type').val(),  
+            pre_storage_begin_date: $('#pre_storage_date_begin').val(),
+            pre_storage_end_date: $('#pre_storage_date_end').val(),
+            goods_type: $('#goods_type').val(),  
+            storage_type: $('#storage_type').val(),  
+            service_detail: $('#service_detail').val(),
+            status: $('#status').val(), 
+            so_no: $('#so_no').val(),  
+            po_no: $('#po_no').val(),  
+            customer_refer_no: $('#customer_refer_no').val(),
+            asn_no: $('#asn_no').val(),
+            pickup_no: $('#pickup_no').val(), 
+            send_no: $('#send_no').val(), 
+            carrier: $('#carrier').val(),  
+            carrier_no: $('#carrier_no').val(),  
+            transport_clause: $('#transport_clause').val(),
+            transport_type: $('#transport_type').val(),
+            route_from: $('#route_from').val(), 
+            route_to: $('#route_to').val(),  
+            loading_port: $('#loading_port').val(),  
+            discharge_port: $('#discharge_port').val(),
+            etd: $('#etd').val(),
+            eta: $('#eta').val(),
+            pre_packing_no: $('#pre_packing_no').val(),
+            packing_unit: $('#packing_unit').val(),
+            pre_number: $('#pre_number').val(),
+            batch_no: $('#batch_no').val(),
+            item_list: items_array
         };
 
         var status = $('#status').val();
+        var order_id = $('#order_id').val();
         //异步向后台提交数据
-        $.post('/salesOrder/save', {params:JSON.stringify(order)}, function(data){
+        $.post('/gateInOrder/save', {params:JSON.stringify(order)}, function(data){
             var order = data;
             if(order.ID>0){
-            	getUser(order.CREATE_BY);
-                $("#create_stamp").val(order.CREATE_STAMP);
+            	$("#creator_name").val(data.CREATE_BY_NAME);
+            	if(order_id=='')
+            		$("#create_stamp").val(eeda.getDate());
                 $("#order_id").val(order.ID);
                 $("#order_no").val(order.ORDER_NO);
                 if(status=='') {
@@ -114,7 +118,9 @@ $(document).ready(function() {
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
-                $('#submitDingDanBtn').attr('disabled', false);
+                
+                //异步刷新字表
+                gateInOrder.refleshTable(order.ID);
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);
@@ -143,18 +149,6 @@ $(document).ready(function() {
     		}
     	});
     });
-    
-    
-    //获取用户信息
-    var getUser = function(user_id){
-    	if(user_id == '' || user_id == null)
-    		return;
-    	$.post('/customCompany/getUser', {params:user_id}, function(data){
-    		if(data!=null)
-    			 $("#creator_name").val(data.C_NAME);	
-    	})
-    }
-    
     
     //通过报关企业获取内容
     $('#custom_id_input').on('blur',function(){

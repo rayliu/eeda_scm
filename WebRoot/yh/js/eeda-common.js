@@ -159,6 +159,55 @@ var refreshUrl=function(url){
    function isString(number) {
       return Object.prototype.toString.apply(number) === ['object String'];
    }
+   
+    eeda.getDate =  function() {
+//	    var date = new Date();
+//	    var seperator1 = "-";
+//	    var seperator2 = ":";
+//	    var month = date.getMonth() + 1;
+//	    var strDate = date.getDate();
+//	    if (month >= 1 && month <= 9) {
+//	        month = "0" + month;
+//	    }
+//	    if (strDate >= 0 && strDate <= 9) {
+//	        strDate = "0" + strDate;
+//	    }
+//	    var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+//	            + " " + date.getHours() + seperator2 + date.getMinutes()
+//	            + seperator2 + date.getSeconds();
+//	    return currentdate;
+    	var d = new Date(); 
+    	var year = d.getFullYear(); 
+    	var month = d.getMonth()+1; 
+    	var date = d.getDate(); 
+    	var day = d.getDay(); 
+    	var hours = d.getHours(); 
+    	var minutes = d.getMinutes(); 
+    	var seconds = d.getSeconds(); 
+    	var ms = d.getMilliseconds(); 
+    	var curDateTime= year;
+    	if(month>9)
+    		curDateTime = curDateTime +"-"+month;
+    	else
+    		curDateTime = curDateTime +"-0"+month;
+    	if(date>9)
+    		curDateTime = curDateTime +"-"+date;
+    	else
+    		curDateTime = curDateTime +"-0"+date;
+    	if(hours>9)
+    		curDateTime = curDateTime +" "+hours;
+    	else
+    		curDateTime = curDateTime +"0"+hours;
+    	if(minutes>9)
+    		curDateTime = curDateTime +":"+minutes;
+    	else
+    		curDateTime = curDateTime +":0"+minutes;
+    	if(seconds>9)
+    		curDateTime = curDateTime +":"+seconds;
+    	else
+    		curDateTime = curDateTime +":0"+seconds;
+    	return curDateTime; 
+	}
  
 
 

@@ -12,7 +12,7 @@ $(document).ready(function() {
         cargoTable.row(tr).remove().draw();
     }); 
 
-    salesOrder.buildCargoDetail=function(){
+    gateInOrder.buildCargoDetail=function(){
         var cargo_table_rows = $("#cargo_table tr");
         var cargo_items_array=[];
         for(var index=0; index<cargo_table_rows.length; index++){
@@ -62,7 +62,7 @@ $(document).ready(function() {
         return cargo_items_array;
     };
     
-    salesOrder.reDrawCargoTable=function(order){
+    gateInOrder.reDrawCargoTable=function(order){
         deletedTableIds=[];
         cargoTable.clear();
         for (var i = 0; i < order.ITEM_LIST.length; i++) {
@@ -215,9 +215,8 @@ $(document).ready(function() {
     });
     
     //刷新明细表
-    salesOrder.refleshTable = function(order_id){
-    	var url = "/salesOrder/tableList?order_id="+order_id
-        +"&table_type=item";
+    gateInOrder.refleshTable = function(order_id){
+    	var url = "/gateInOrder/tableList?order_id="+order_id;
     	cargoTable.ajax.url(url).load();
     }
 

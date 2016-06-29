@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import models.UserLogin;
+import models.eeda.oms.GateInOrder;
+import models.eeda.oms.GateInOrderItem;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
@@ -55,80 +57,70 @@ public class GateInOrderController extends Controller {
     
     @Before(Tx.class)
    	public void save() throws Exception {		
-   		String jsonStr=getPara("params");
+   		String jsonStr = getPara("params");
        	
        	Gson gson = new Gson();  
         Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
             
-        SalesOrder salesOrder = new SalesOrder();
+        GateInOrder gateInOrder = new GateInOrder();
    		String id = (String) dto.get("id");
    		
    		UserLogin user = LoginUserController.getLoginUser(this);
    		
    		if (StringUtils.isNotEmpty(id)) {
    			//update
-   			salesOrder = SalesOrder.dao.findById(id);
-   			DbUtils.setModelValues(dto, salesOrder);
+   			gateInOrder = GateInOrder.dao.findById(id);
+   			DbUtils.setModelValues(dto, gateInOrder);
    			
    			//需后台处理的字段
-   			salesOrder.set("update_by", user.getLong("id"));
-   			salesOrder.set("update_stamp", new Date());
-   			salesOrder.update();
+   			gateInOrder.set("update_by", user.getLong("id"));
+   			gateInOrder.set("update_stamp", new Date());
+   			gateInOrder.update();
    		} else {
    			//create 
-   			DbUtils.setModelValues(dto, salesOrder);
+   			DbUtils.setModelValues(dto, gateInOrder);
    			
    			//需后台处理的字段
-   			salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
-   			salesOrder.set("create_by", user.getLong("id"));
-   			salesOrder.set("create_stamp", new Date());
-   			salesOrder.save();
+   			gateInOrder.set("order_no", OrderNoGenerator.getNextOrderNo("RKTZ"));
+   			gateInOrder.set("create_by", user.getLong("id"));
+   			gateInOrder.set("create_stamp", new Date());
+   			gateInOrder.save();
    			
-   			id = salesOrder.getLong("id").toString();
+   			id = gateInOrder.getLong("id").toString();
    		}
    		
-   		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
-		DbUtils.handleList(itemList, id, SalesOrderGoods.class, "order_id");
-		
-		List<Map<String, String>> countList = (ArrayList<Map<String, String>>)dto.get("count_list");
-		DbUtils.handleList(countList, id, SalesOrderCount.class, "order_id");
-
-   		//return dto
-   		renderJson(salesOrder);
+   		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
+		DbUtils.handleList(itemList, id, GateInOrderItem.class, "order_id");
+//		
+//		List<Map<String, String>> countList = (ArrayList<Map<String, String>>)dto.get("count_list");
+//		DbUtils.handleList(countList, id, SalesOrderCount.class, "order_id");
+		long create_by = gateInOrder.getLong("create_by");
+   		String user_name = LoginUserController.getUserNameById(create_by);
+		Record r = gateInOrder.toRecord();
+   		r.set("create_by_name", user_name);
+   		renderJson(r);
    	}
     
     
-    private List<Record> getSalesOrderGoods(String orderId) {
-		String itemSql = "select * from sales_order_goods where order_id=?";
+    private List<Record> getGateInItems(String orderId) {
+		String itemSql = "select * from gate_in_order_item where order_id=?";
 		List<Record> itemList = Db.find(itemSql, orderId);
 		return itemList;
 	}
-    
-    private List<Record> getSalesOrderCount(String orderId) {
-		String countSql = "select * from sales_order_count where order_id=?";
-		List<Record> countList = Db.find(countSql, orderId);
-		return countList;
-	}
+
     
     
     @Before(Tx.class)
     public void edit() {
     	String id = getPara("id");
-    	SalesOrder salesOrder = SalesOrder.dao.findById(id);
-    	setAttr("order", salesOrder);
+    	GateInOrder gateInOrder = GateInOrder.dao.findById(id);
+    	setAttr("order", gateInOrder);
     	
     	//获取明细表信息
-    	setAttr("itemList", getSalesOrderGoods(id));
-    	
-    	//获取费用明细表信息
-    	setAttr("countList", getSalesOrderCount(id));
-    	
-    	//获取报关企业信息
-    	CustomCompany custom = CustomCompany.dao.findById(salesOrder.getLong("custom_id"));
-    	setAttr("custom", custom);
+    	setAttr("itemList", getGateInItems(id));
 
     	//用户信息
-    	long create_by = salesOrder.getLong("create_by");
+    	long create_by = gateInOrder.getLong("create_by");
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
@@ -296,5 +288,21 @@ public class GateInOrderController extends Controller {
 		System.out.println("参数:"+ jsonMsg);
 		return jsonMsg;
 	}
+    
+    //异步刷新字表
+    public void tableList(){
+    	String order_id = getPara("order_id");
+    	List<Record> list = null;
+    	list = getGateInItems(order_id);
+
+    	Map BillingOrderListMap = new HashMap();
+        BillingOrderListMap.put("sEcho", 1);
+        BillingOrderListMap.put("iTotalRecords", list.size());
+        BillingOrderListMap.put("iTotalDisplayRecords", list.size());
+
+        BillingOrderListMap.put("aaData", list);
+
+        renderJson(BillingOrderListMap); 
+    }
 
 }

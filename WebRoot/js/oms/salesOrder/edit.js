@@ -128,10 +128,9 @@ $(document).ready(function() {
         $.post('/salesOrder/save', {params:JSON.stringify(order)}, function(data){
             var order = data;
             if(order.ID>0){
-            	$("#creator_name").val(data.CREATE_BY_NAME);	
+            	$("#creator_name").val(order.CREATE_BY_NAME);	
                 $("#create_stamp").val(order.CREATE_STAMP);
                 $("#order_id").val(order.ID);
-                $("#log_id").val(order.LOG_ID);
                 $("#order_no").val(order.ORDER_NO);
                 if(status=='') {
                 	$('#status').val(order.STATUS);
@@ -139,12 +138,9 @@ $(document).ready(function() {
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
-                $('#goYunDanBtn').attr('disabled', false);
-                $('#submitDingDanBtn').attr('disabled', false);
                 
                 //刷新明细表
-                salesOrder.refleshItemTable(order.ID); 
-                salesOrder.refleshCountTable(order.ID); 
+                salesOrder.refleshItemTable(order.ID);
 
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);

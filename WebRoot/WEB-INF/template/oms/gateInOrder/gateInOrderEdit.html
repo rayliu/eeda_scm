@@ -34,7 +34,7 @@
 			<div class="row">
 				<div class="col-lg-4">
 					<label class="search-label">业务类型 <span style="color:red;">*</span></label>
-					<select class="form-control search-control order_type" name="order_type" required>
+					<select class="form-control search-control order_type" id="order_type" name="order_type" required>
 						<option>b2c</option>
 						<option>b2b</option>
 					</select>
@@ -179,9 +179,6 @@
 					id:'pre_number', label:'预计件数', value:order.pre_number!''}){}%></div>
 			</div>
 			<div class="row">
-				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'pre_number', label:'预计件数', value:order.pre_number!''}){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
 					id:'batch_no', label:'批号', value:order.batch_no!''}){}%></div>
@@ -398,8 +395,7 @@
 <script src="/yh/js/eeda-common.js"></script>
 <script>
     var order_no = '${order.order_no!'入库通知单编辑'}'; 
-    var salesOrder = {};
+    var gateInOrder = {};
 </script>
-<!-- <script src="/js/oms/incomingNoticeOrder/edit_count_table.js"></script> -->
 <script src="/js/oms/gateInOrder/edit_item_table.js"></script>
 <script src="/js/oms/gateInOrder/edit.js"></script>
