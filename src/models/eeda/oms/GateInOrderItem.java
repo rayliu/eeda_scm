@@ -1,0 +1,1 @@
+package models.eeda.oms;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class GateInOrderItem extends Model<GateInOrderItem> {	public static final GateInOrderItem dao = new GateInOrderItem();}
