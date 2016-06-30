@@ -22,6 +22,7 @@ import java.sql.SQLException;
 
 
 
+
 import models.Account;
 import models.ArapAccountAuditLog;
 import models.Category;
@@ -39,6 +40,7 @@ import models.UserRole;
 import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateInOrderItem;
 import models.eeda.oms.InspectionOrder;
+import models.eeda.oms.InspectionOrderItem;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.LogisticsOrder;
@@ -245,6 +247,7 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("gate_in_order", GateInOrder.class);
         arp.addMapping("gate_in_order_item", GateInOrderItem.class);
         arp.addMapping("inspection_order", InspectionOrder.class);
+        arp.addMapping("inspection_order_item", InspectionOrderItem.class);
         
     }
 

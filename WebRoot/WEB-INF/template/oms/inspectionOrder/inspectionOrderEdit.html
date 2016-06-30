@@ -13,36 +13,38 @@
 	</div>
 	<input id="order_id" type="hidden" name="order_id"
 		value="${order.id!''}" />
+	<input id="gate_in_id" type="hidden" name="order_id"
+		value="${order.gate_in_id!''}" />
 	<div class="form-group">
 		<form id="orderForm">
 			<div class="row">
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'in_notice_order_no',
-					label:'入库通知单号', value:order.in_notice_order_no!'', disabled: 'disabled'
+					<%include("/yh/component/form/inputField.html", { id:'gate_in_no',
+					label:'入库通知单号', value:gate_in_no!'', disabled: 'disabled'
 					}){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputCustomCompanyField.html", {
-					id:'warehouse_id', label:'仓库', required:'required',
+					id:'warehouse_id', label:'仓库', 
 					value:order.CUSTOM_ID!'', display_value: custom.shop_name!'' }){}
 					%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'warehouse_area',
-					label:'库区', required:'required', value:order.warehouse_area!'' }){}%>
+					label:'库区', value:order.warehouse_area!'' }){}%>
 				</div>
 			</div>
 
 			<div class="row">
 				<div class="col-lg-4">
 					<label class="search-label">验货包装单位 <span style="color:red;">*</span></label>
-					<select class="form-control search-control order_type" name="order_type" required>
+					<select class="form-control search-control inspection_packing_unit" name="inspection_packing_unit" required>
 						<option>散件</option>
 						<option>整箱</option>
 					</select>
 				</div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'consignor', label:'货主',
-					value:order.consignor!'' }){}%></div>
+					id:'shipper', label:'货主',
+					value:order.shipper!'' }){}%></div>
 			</div>
 			
 			<div class="row">
@@ -59,6 +61,10 @@
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
 					id:'create_stamp', label:'创建时间', value:order.create_stamp!'',
+					disabled: 'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'status', label:'状态', value:order.status!'',
 					disabled: 'disabled' }){}%></div>
 			</div>
 			<div class="row">
@@ -146,7 +152,7 @@
 <script src="/yh/js/eeda-common.js"></script>
 <script>
     var order_no = '${order.order_no!'入库通知单编辑'}'; 
-    var salesOrder = {};
+    var inspectionOrder = {};
 </script>
 <script src="/js/oms/inspectionOrder/edit_item_table.js"></script>
 <script src="/js/oms/inspectionOrder/edit.js"></script>

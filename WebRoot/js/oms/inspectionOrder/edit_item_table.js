@@ -9,17 +9,17 @@ $(document).ready(function() {
         var tr = $(this).parent().parent();
         deletedTableIds.push(tr.attr('id'))
         
-        cargoTable.row(tr).remove().draw();
+        itemTable.row(tr).remove().draw();
     }); 
 
-    salesOrder.buildCargoDetail=function(){
-        var cargo_table_rows = $("#cargo_table tr");
-        var cargo_items_array=[];
-        for(var index=0; index<cargo_table_rows.length; index++){
+    inspectionOrder.buildCargoDetail=function(){
+        var item_table_rows = $("#cargo_table tr");
+        var items_array=[];
+        for(var index=0; index<item_table_rows.length; index++){
             if(index==0)
                 continue;
 
-            var row = cargo_table_rows[index];
+            var row = item_table_rows[index];
             var empty = $(row).find('.dataTables_empty').text();
             if(empty)
             	continue;
@@ -36,7 +36,7 @@ $(document).ready(function() {
                 shelves: $(row.children[4]).find('input').val(),
                 action: id.length>0?'UPDATE':'CREATE'
             };
-            cargo_items_array.push(item);
+            items_array.push(item);
         }
 
         //add deleted items
@@ -46,13 +46,13 @@ $(document).ready(function() {
                 id: id,
                 action: 'DELETE'
             };
-            cargo_items_array.push(item);
+            items_array.push(item);
         }
         deletedTableIds = [];
-        return cargo_items_array;
+        return items_array;
     };
     
-    salesOrder.reDrawCargoTable=function(order){
+    inspectionOrder.reDrawCargoTable=function(order){
         deletedTableIds=[];
         cargoTable.clear();
         for (var i = 0; i < order.ITEM_LIST.length; i++) {
@@ -70,7 +70,7 @@ $(document).ready(function() {
     };
 
     //------------事件处理
-    var cargoTable = $('#cargo_table').DataTable({
+    var itemTable = $('#cargo_table').DataTable({
         "processing": true,
         "searching": false,
         "paging": false,
@@ -121,14 +121,14 @@ $(document).ready(function() {
 
     $('#add_cargo').on('click', function(){
         var item={};
-        cargoTable.row.add(item).draw(true);
+        itemTable.row.add(item).draw(true);
     });
     
     //刷新明细表
-    salesOrder.refleshTable = function(order_id){
-    	var url = "/salesOrder/tableList?order_id="+order_id
+    inspectionOrder.refleshTable = function(order_id){
+    	var url = "/inspectionOrder/tableList?order_id="+order_id
         +"&table_type=item";
-    	cargoTable.ajax.url(url).load();
+    	itemTable.ajax.url(url).load();
     }
 
     

@@ -11,6 +11,8 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import models.UserLogin;
+import models.eeda.oms.InspectionOrder;
+import models.eeda.oms.InspectionOrderItem;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
@@ -60,41 +62,41 @@ public class InspectionOrderController extends Controller {
        	Gson gson = new Gson();  
         Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
             
-        SalesOrder salesOrder = new SalesOrder();
+        InspectionOrder inspectionOrder = new InspectionOrder();
    		String id = (String) dto.get("id");
    		
    		UserLogin user = LoginUserController.getLoginUser(this);
    		
    		if (StringUtils.isNotEmpty(id)) {
    			//update
-   			salesOrder = SalesOrder.dao.findById(id);
-   			DbUtils.setModelValues(dto, salesOrder);
+   			inspectionOrder = InspectionOrder.dao.findById(id);
+   			DbUtils.setModelValues(dto, inspectionOrder);
    			
    			//需后台处理的字段
-   			salesOrder.set("update_by", user.getLong("id"));
-   			salesOrder.set("update_stamp", new Date());
-   			salesOrder.update();
+   			inspectionOrder.set("update_by", user.getLong("id"));
+   			inspectionOrder.set("update_stamp", new Date());
+   			inspectionOrder.update();
    		} else {
    			//create 
-   			DbUtils.setModelValues(dto, salesOrder);
+   			DbUtils.setModelValues(dto, inspectionOrder);
    			
    			//需后台处理的字段
-   			salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
-   			salesOrder.set("create_by", user.getLong("id"));
-   			salesOrder.set("create_stamp", new Date());
-   			salesOrder.save();
+   			//inspectionOrder.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
+   			inspectionOrder.set("create_by", user.getLong("id"));
+   			inspectionOrder.set("create_stamp", new Date());
+   			inspectionOrder.save();
    			
-   			id = salesOrder.getLong("id").toString();
+   			id = inspectionOrder.getLong("id").toString();
    		}
    		
-   		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
-		DbUtils.handleList(itemList, id, SalesOrderGoods.class, "order_id");
+   		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
+		DbUtils.handleList(itemList, id, InspectionOrderItem.class, "order_id");
 		
-		List<Map<String, String>> countList = (ArrayList<Map<String, String>>)dto.get("count_list");
-		DbUtils.handleList(countList, id, SalesOrderCount.class, "order_id");
-
-   		//return dto
-   		renderJson(salesOrder);
+		long create_by = inspectionOrder.getLong("create_by");
+   		String user_name = LoginUserController.getUserNameById(create_by);
+		Record r = inspectionOrder.toRecord();
+   		r.set("creator_name", user_name);
+   		renderJson(r);
    	}
     
     
