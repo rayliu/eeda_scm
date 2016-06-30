@@ -41,7 +41,9 @@
 				</div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputDateQueryField.html", { id:'pre_storage_date',
-					label:'预计入库日期', value:order.pre_storage_date!'' }){}%></div>
+					label:'预计入库日期', 
+					begin_value:order.pre_storage_begin_time!'' ,
+					end_value:order.pre_storage_end_time!''}){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
 					id:'goods_type', label:'货品类型',
@@ -59,7 +61,7 @@
 					value:order.service_detail!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'status',
-					label:'状态', required:'required', value:order.status!'' }){}%>
+					label:'状态', required:'required', value:order.status!'',disabled:'disabled' }){}%>
 				</div>
 			</div>
 			<div class="row">
@@ -130,12 +132,12 @@
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputLocationField.html", {
 					id:'route_from', label:'起始地',value: order.route_from!'',
-					display_value:fromRoute!'' }){}%></div>
+					display_value:route_from_input!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputLocationField.html", { id:'route_to',
 					label:'目的地',value: order.route_to!'',
-					display_value:toRoute!'' }){}%></div>
+					display_value:route_to_input!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 			</div>
 			<div class="row">
