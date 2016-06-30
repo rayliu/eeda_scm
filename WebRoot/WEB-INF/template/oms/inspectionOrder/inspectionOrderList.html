@@ -23,7 +23,7 @@
 							<div class="col-lg-4">
 								<%include("/yh/component/form/selectField.html", { id:'status',
 								label:'状态', value: '', value_list:[ {code:'', value:''},
-								{code:'未上报', value:'未上报'}, {code:'已上报', value:'已上报'} ] } ){} %>
+								{code:'新建', value:'新建'}, {code:'已完成', value:'已完成'} ] } ){} %>
 							</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputDateQueryField.html",
@@ -45,7 +45,7 @@
 					<!-- table list -->
 					<div class="form-group">
 						<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
-						headers:['订单号', '报关企业', '支付人名称', '订单商品货款', '创建人', '创建时间', '状态']
+						headers:['入库通知单号', '仓库', '创建人', '创建时间','状态']
 						}){} %>
 					</div>
 				</div>

@@ -20,14 +20,12 @@ $(document).ready(function() {
         },
         //"ajax": "/damageOrder/list",
         "columns": [
-            { "data": "ORDER_NO", 
+            { "data": null, 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/salesOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
+                    return "<a href='/inspectionOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
                 }
             },
-            { "data": "CUSTOM_ID"},
-            { "data": "PAYER_NAME"}, 
-            { "data": "GOODS_VALUE"}, 
+            { "data": "WAREHOUSE_ID"},
             { "data": "CREATOR_NAME"}, 
             { "data": "CREATE_STAMP"}, 
             { "data": "STATUS"}
@@ -56,7 +54,7 @@ $(document).ready(function() {
             *_status =
             时间字段需成双定义  *_begin_time *_end_time   between
         */
-        var url = "/salesOrder/list?order_no="+order_no
+        var url = "/inspectionOrder/list?order_no="+order_no
              +"&status="+status
              +"&create_stamp_begin_time="+start_date
              +"&create_stamp_end_time="+end_date;

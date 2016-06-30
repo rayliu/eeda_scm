@@ -13,9 +13,8 @@ import java.util.TreeMap;
 import models.UserLogin;
 import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.InspectionOrderItem;
-import models.eeda.oms.SalesOrderCount;
-import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
+import models.eeda.oms.SalesOrderGoods;
 import models.eeda.profile.CustomCompany;
 
 import org.apache.commons.lang.StringUtils;
@@ -37,7 +36,6 @@ import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
-import controllers.util.OrderNoGenerator;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -100,8 +98,8 @@ public class InspectionOrderController extends Controller {
    	}
     
     
-    private List<Record> getSalesOrderGoods(String orderId) {
-		String itemSql = "select * from sales_order_goods where order_id=?";
+    private List<Record> getInspectionItem(String orderId) {
+		String itemSql = "select * from  inspection_order_item where order_id=?";
 		List<Record> itemList = Db.find(itemSql, orderId);
 		return itemList;
 	}
@@ -116,21 +114,18 @@ public class InspectionOrderController extends Controller {
     @Before(Tx.class)
     public void edit() {
     	String id = getPara("id");
-    	SalesOrder salesOrder = SalesOrder.dao.findById(id);
-    	setAttr("order", salesOrder);
+    	InspectionOrder inspectionOrder = InspectionOrder.dao.findById(id);
+    	setAttr("order", inspectionOrder);
     	
     	//获取明细表信息
-    	setAttr("itemList", getSalesOrderGoods(id));
-    	
-    	//获取费用明细表信息
-    	setAttr("countList", getSalesOrderCount(id));
+    	setAttr("itemList", getInspectionItem(id));
     	
     	//获取报关企业信息
-    	CustomCompany custom = CustomCompany.dao.findById(salesOrder.getLong("custom_id"));
+    	CustomCompany custom = CustomCompany.dao.findById(inspectionOrder.getLong("custom_id"));
     	setAttr("custom", custom);
 
     	//用户信息
-    	long create_by = salesOrder.getLong("create_by");
+    	long create_by = inspectionOrder.getLong("create_by");
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
@@ -153,9 +148,9 @@ public class InspectionOrderController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT sor.*, ifnull(u.c_name, u.user_name) creator_name "
-    			+ "  from sales_order sor "
-    			+ "  left join user_login u on u.id = sor.create_by"
+        String sql = "SELECT inso.*, ifnull(u.c_name, u.user_name) creator_name "
+    			+ "  from inspection_order inso "
+    			+ "  left join user_login u on u.id = inso.create_by"
     			+ "   where 1 =1 ";
         
         String condition = DbUtils.buildConditions(getParaMap());
@@ -298,5 +293,5 @@ public class InspectionOrderController extends Controller {
 		System.out.println("参数:"+ jsonMsg);
 		return jsonMsg;
 	}
-
+    
 }
