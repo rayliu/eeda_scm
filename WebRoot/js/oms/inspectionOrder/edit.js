@@ -111,5 +111,21 @@ $(document).ready(function() {
     if(order_id != ''){
     	 $('#submitDingDanBtn').attr('disabled',false);
     }
+    
+    
+ 
+
+    $("#can_check,#have_check").on("input",function(){
+    	var can_check = $("#can_check").val()==''?'0':$("#can_check").val();
+		var have_check =  $("#have_check").val()==''?'0':$("#have_check").val();
+		if(can_check < have_check){
+			$.scojs_message('抱歉！已验数量不可以大于可验数量！！！', $.scojs_message.TYPE_ERROR);
+			$("#have_check").val('0');
+		}else{
+			$("#difference").val(parseFloat(can_check) - parseFloat(have_check));
+		}   	
+	 });
+		
+	
 
 } );
