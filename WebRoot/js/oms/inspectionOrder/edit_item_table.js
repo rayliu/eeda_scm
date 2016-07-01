@@ -4,7 +4,7 @@ $(document).ready(function() {
     var deletedTableIds=[];
 
     //删除一行
-    $("#cargo_table").on('click', '.delete', function(e){
+    $("#item_table").on('click', '.delete', function(e){
         e.preventDefault();
         var tr = $(this).parent().parent();
         deletedTableIds.push(tr.attr('id'))
@@ -70,7 +70,7 @@ $(document).ready(function() {
     };
 
     //------------事件处理
-    var itemTable = $('#cargo_table').DataTable({
+    var itemTable = $('#item_table').DataTable({
         "processing": true,
         "searching": false,
         "paging": false,
@@ -92,7 +92,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" value="'+data+'" class="form-control bar_code" required/>';
                 }
             },
             { "data": "ITEM_CODE", 
@@ -119,9 +119,18 @@ $(document).ready(function() {
         ]
     });
 
-    $('#add_cargo').on('click', function(){
+    $('#add_item').on('click', function(){
         var item={};
         itemTable.row.add(item).draw(true);
+    });
+    
+    //回车自动添加一行
+    $("#item_table").on('keydown', '.bar_code', function(e){
+        var key = e.which;
+        if (key == 13) {
+        	$('#add_item').click();
+            $(this).parent().parent().next().find('.bar_code').focus();
+        }
     });
     
     //刷新明细表

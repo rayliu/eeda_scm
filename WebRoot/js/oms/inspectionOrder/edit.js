@@ -102,33 +102,6 @@ $(document).ready(function() {
             $('#saveBtn').attr('disabled', false);
           });
     });  
-    
-    
-    //上报订单
-    $('#submitDingDanBtn').click(function(){
-    	$('#submitDingDanBtn').attr('disabled',true);
-    	$.post('/inspectionOrder/submitDingDan', {order_id:$("#order_id").val()}, function(data){
-    		if(data!=null){
-    			var message = $(data.orders).attr('message');
-    			if(message == '订单写入成功'){
-    				$.scojs_message(message , $.scojs_message.TYPE_OK);
-    				$('#status').val(message);
-    			}else{
-    				$.scojs_message(message , $.scojs_message.TYPE_FALSE);
-    			}	
-    		}else{
-    			$.scojs_message('上报失败', $.scojs_message.TYPE_FALSE);
-    		}
-    	});
-    });
-    
-    
-    //通过报关企业获取内容
-    $('#custom_id_input').on('blur',function(){
-    	var custom_id = $('#custom_id').val();
-        if(custom_id!=null)
-        	showCustom(custom_id);
-    });
  
     //按钮控制
     var order_id = $("#order_id").val()

@@ -105,9 +105,9 @@
 			<div class="tab-pane fade active in" id="itemDetail">
 				<div class="form-group">
 					<div class="col-lg-12">
-						<button class="btn btn-success btn-xs" id="add_cargo">添加</button>
+						<button class="btn btn-success btn-xs" id="add_item">添加</button>
 						<%include("/yh/component/form/detailTable.html", {
-						id:'cargo_table', 
+						id:'item_table', 
 						headers:['', 
 						'条码', '货品代码','保质日期','库位'],
 						field_list:['','bar_code', 'item_code', 'guarantee_date','shelves'], 
@@ -120,9 +120,9 @@
 	<br>
 	<div class="row">
 		<div class="col-lg-12">
-			<a id='saveBtn' class="btn  btn-primary" href="#">保存</a> <a
-				id='submitDingDanBtn' class="btn  btn-primary" disabled>上报订单</a> <a
-				id='submitYunDanBtn' class="btn  btn-primary" disabled>上报运单</a>
+			<a id='saveBtn' class="btn  btn-primary" href="#">保存</a> 
+			<!-- <a id='submitDingDanBtn' class="btn  btn-primary" disabled>上报订单</a> 
+			<a id='submitYunDanBtn' class="btn  btn-primary" disabled>上报运单</a> -->
 			<button id="printBtn" type="button" class="btn  btn-primary"
 				data-toggle="modal" data-target=".bs-example-modal-sm">打印</button>
 			<a class="btn  btn-default" href="/salesOrder">返回</a>
