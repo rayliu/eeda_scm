@@ -65,7 +65,7 @@ $(document).ready(function() {
         
         $(this).attr('disabled', true);
 
-        var items_array = inspectionOrder.buildCargoDetail();
+        var items_array = inspectionOrder.buildItemDetail();
         var order = {
             id: $('#order_id').val(),
             gate_in_id: $('#gate_in_id').val(),
@@ -93,6 +93,9 @@ $(document).ready(function() {
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
+                
+                //异步刷新明细表
+                inspectionOrder.refleshTable(order.ID);
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);

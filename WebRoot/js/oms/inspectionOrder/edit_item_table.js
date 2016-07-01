@@ -12,8 +12,8 @@ $(document).ready(function() {
         itemTable.row(tr).remove().draw();
     }); 
 
-    inspectionOrder.buildCargoDetail=function(){
-        var item_table_rows = $("#cargo_table tr");
+    inspectionOrder.buildItemDetail=function(){
+        var item_table_rows = $("#item_table tr");
         var items_array=[];
         for(var index=0; index<item_table_rows.length; index++){
             if(index==0)
