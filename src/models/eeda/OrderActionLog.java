@@ -1,0 +1,1 @@
+package models.eeda;import com.jfinal.plugin.activerecord.Model;public class OrderActionLog extends Model<OrderActionLog> {	public static final OrderActionLog dao = new OrderActionLog();}

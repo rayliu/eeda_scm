@@ -162,6 +162,9 @@ public class DbUtils {
             	//忽略  action 字段
             	if(StringUtils.isNotEmpty(value) && !"action".equals(key)){
             		logger.debug(key+":"+value);
+            		if("null".equals(value)){
+                        value=null;
+                    }
             		try {
                         model.set(key, value);
                         if("Field".equals(modelName) && "field_display_name".equals(key)){//对field 的特殊处理

@@ -12,7 +12,7 @@ import java.util.Map;
 import models.Location;
 import models.ParentOfficeModel;
 import models.Party;
-import models.Product;
+import models.eeda.profile.Product;
 import models.yh.profile.Contact;
 import models.yh.profile.ProviderChargeType;
 

@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 import models.Category;
 import models.ParentOfficeModel;
 import models.Party;
-import models.Product;
+import models.eeda.profile.Product;
 import models.yh.profile.Contact;
 
 import org.apache.commons.lang.StringUtils;

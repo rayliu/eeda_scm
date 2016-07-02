@@ -2,22 +2,24 @@
     "swagger": "2.0",
     "info": {
         "title": "前海德丰电子商务-电商系统 API",
-        "description": "前海德丰电子商务提供给第三方电商的销售订单接口, 基本路径为:/api<br/><span style='color:red;'>认证</span>: 必须通过app_key(放在header)进行认证后才能调用相关接口, 第三方电商的app_key值需向德丰IT人员索取",
+        "description": "前海德丰电子商务提供给第三方电商的销售订单接口, 基本路径为/api <br/><span style='color:red;'>签名认证:</span> 必须通过appkey生成的sign(放在请求中)进行认证后才能调用相关接口, 第三方电商的appkey值需向德丰IT人员索取<br/><br/><br/> 数字签名计算方法: <ul> <li>1. appkey: 由德丰信息系统分配给电商用户企业的appkey, 测试系统appkey=123456</li> <li>2. salt: 调用接口时的时间戳,秒级的10位int值, 即timestamp.</li> <li>3. sign: 数字签名,计算方法如下: <ol> <li>先把get/post请求参数(参数只要求是ref_order_no), 构成一个字符串, <br/>示例如下: stringA = “ref_order_no=123456” </li> <li>把求得的字符串和appkey, salt(即timestamp)进行拼接 stringSignTemp = “stringA &appkey=123456&salt=1467182687” </li> <li>然后求其md5值 sign=MD5 (stringSignTemp).toUpperCase()=”1DBF882F565E422EAA38686D93CBAB51” </li> <li> 最终向服务器发送数据 <br/>get 数据示例:<br/> /api/salesOrder?ref_order_no=test2&appkey=123456&salt=2312313&sign=1DBF882F565E422EAA38686D93CBAB51<br/> <br/>post 数据示例:<br/> order:{<br/> &nbsp;&nbsp;ref_order_no:123456, <br/>..., <br/> &nbsp;&nbsp;appkey: '123456',<br/> &nbsp;&nbsp;salt: 1467182687,<br/> &nbsp;&nbsp;sign: '1DBF882F565E422EAA38686D93CBAB51'<br/> } <br/> </li> </ol> </li> <br/><br/> 参考文档 <ul> <li><a href='#'>计量单位代码</a></li> <li>币制</li> <li>国家代码</li> <li>计量单位代码:</li> </ul> ",
         "version": "1.0.0"
     },
-    "host": "yd2demo.eeda123.com",
+    "host": "localhost:8080",
     "schemes": [
         "http"
     ],
     "basePath": "/api",
-    "securityDefinitions": {
-        "key": {
-            "type": "apiKey",
-            "in": "header",
-            "name": "app_key",
-            "description": "必须通过app_key进行认证后才能调用相关接口, 第三方电商的app_key值需向德丰IT人员索取"
+    "tags": [
+        {
+            "name": "销售订单",
+            "description": "销售订单的创建与查询"
+        },
+        {
+            "name": "基础数据_商品",
+            "description": "基础数据_商品的创建与查询"
         }
-    },
+    ],
     "produces": [
         "application/json"
     ],
@@ -25,24 +27,46 @@
         "/salesOrder": {
             "get": {
                 "summary": "获取销售订单",
-                "description": "此接口通过提供订单号码,返回一个订单的数据结构.",
+                "description": "此接口通过提供订单号码,返回一个订单的数据结构<br/>参与签名参数:ref_order_no <br/>返回值不包括appkey, salt, sign.",
                 "parameters": [
                     {
-                        "name": "orderNo",
+                        "name": "ref_order_no",
                         "in": "query",
-                        "description": "订单号码",
+                        "description": "电商订单号码",
                         "required": true,
                         "type": "string",
-                        "format": "string"
+                        "format": "string",
+                        "default": "test1"
+                    },
+                    {
+                        "name": "appkey",
+                        "in": "query",
+                        "description": "电商appkey",
+                        "required": true,
+                        "type": "string",
+                        "format": "string",
+                        "default": "123456"
+                    },
+                    {
+                        "name": "salt",
+                        "in": "query",
+                        "description": "调用接口时的时间戳,秒级的10位int值, 即timestamp",
+                        "required": true,
+                        "type": "integer",
+                        "default": 1467182687
+                    },
+                    {
+                        "name": "sign",
+                        "in": "query",
+                        "description": "MD5签名",
+                        "required": true,
+                        "type": "string",
+                        "format": "string",
+                        "default": "417D585DECCF4A16708F1B040257774F"
                     }
                 ],
                 "tags": [
                     "销售订单"
-                ],
-                "security": [
-                    {
-                        "key": []
-                    }
                 ],
                 "responses": {
                     "200": {
@@ -54,14 +78,14 @@
                     "default": {
                         "description": "出错",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "$ref": "#/definitions/msg"
                         }
                     }
                 }
             },
             "post": {
                 "summary": "创建销售订单",
-                "description": "此接口创建销售订单,返回一个订单的数据结构.\n",
+                "description": "此接口创建销售订单,返回一个订单的数据结构<br/>参与签名参数:ref_order_no <br/>返回值不包括appkey, salt, sign.\n",
                 "parameters": [
                     {
                         "name": "order",
@@ -76,14 +100,9 @@
                 "tags": [
                     "销售订单"
                 ],
-                "security": [
-                    {
-                        "key": []
-                    }
-                ],
                 "responses": {
                     "200": {
-                        "description": "正确执行后返回一个订单的数据结构,包含新的id,orderNo",
+                        "description": "正确执行后返回一个订单的数据结构",
                         "schema": {
                             "$ref": "#/definitions/SalesOrder"
                         }
@@ -91,7 +110,99 @@
                     "default": {
                         "description": "出错",
                         "schema": {
-                            "$ref": "#/definitions/Error"
+                            "$ref": "#/definitions/msg"
+                        }
+                    }
+                }
+            }
+        },
+        "/baseItem": {
+            "get": {
+                "summary": "获取商品信息",
+                "description": "此接口通过提供商品号码,返回一个商品单的数据结构<br/>参与签名参数:ref_item_no <br/>返回值不包括appkey, salt, sign.",
+                "parameters": [
+                    {
+                        "name": "ref_item_no",
+                        "in": "query",
+                        "description": "第三方电商平台已备案的item_no",
+                        "required": true,
+                        "type": "string",
+                        "format": "string",
+                        "default": "DF_SKU_001"
+                    },
+                    {
+                        "name": "appkey",
+                        "in": "query",
+                        "description": "电商appkey",
+                        "required": true,
+                        "type": "string",
+                        "format": "string",
+                        "default": "123456"
+                    },
+                    {
+                        "name": "salt",
+                        "in": "query",
+                        "description": "调用接口时的时间戳,秒级的10位int值, 即timestamp",
+                        "required": true,
+                        "type": "integer",
+                        "default": 1467182687
+                    },
+                    {
+                        "name": "sign",
+                        "in": "query",
+                        "description": "MD5签名",
+                        "required": true,
+                        "type": "string",
+                        "format": "string",
+                        "default": "279A8433CFBAB037B1615616E3162A8B"
+                    }
+                ],
+                "tags": [
+                    "基础数据_商品"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "正确执行后返回一个item的数据结构",
+                        "schema": {
+                            "$ref": "#/definitions/GoodItem"
+                        }
+                    },
+                    "default": {
+                        "description": "出错",
+                        "schema": {
+                            "$ref": "#/definitions/msg"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "创建商品item",
+                "description": "此接口创建商品item,返回一个商品item的数据结构<br/>参与签名参数:ref_item_no <br/>返回值不包括appkey, salt, sign.\n",
+                "parameters": [
+                    {
+                        "name": "order",
+                        "in": "body",
+                        "description": "传入一个item的数据结构",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GoodItem"
+                        }
+                    }
+                ],
+                "tags": [
+                    "基础数据_商品"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "正确执行后返回一个item的数据结构",
+                        "schema": {
+                            "$ref": "#/definitions/GoodItem"
+                        }
+                    },
+                    "default": {
+                        "description": "出错",
+                        "schema": {
+                            "$ref": "#/definitions/msg"
                         }
                     }
                 }
@@ -102,165 +213,334 @@
         "SalesOrder": {
             "type": "object",
             "properties": {
-                "id": {
-                    "type": "integer",
-                    "description": "系统内产生的唯一ID."
-                },
-                "orderNo": {
+                "order_no": {
                     "type": "string",
-                    "description": "粤迪系统内产生的唯一订单号码."
+                    "description": "德丰系统内产生的唯一订单号码.",
+                    "example": "DD2016061500006"
                 },
-                "orgCode": {
+                "org_code": {
                     "type": "string",
-                    "description": "企业组织机构代码（电商商户）"
+                    "description": "企业组织机构代码（电商商户）",
+                    "example": "123456"
                 },
-                "refOrderNo": {
+                "ref_order_no": {
                     "type": "string",
-                    "description": "电商平台的原始订单编号."
+                    "description": "电商平台的原始订单编号.",
+                    "example": "Ref201606250001"
                 },
-                "orderTime": {
+                "order_time": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "订单创建时间(yyyyMMddHHmmss)."
+                    "description": "订单创建时间(yyyy-MM-dd HH:mm:ss)",
+                    "example": "2016-06-25 10:10:10"
                 },
-                "goodsChargeAmount": {
-                    "type": "number",
-                    "description": "订单商品货款."
+                "ebp_cust_code": {
+                    "type": "string",
+                    "description": "电商平台的海关备案编码",
+                    "example": "123456"
                 },
-                "freightAmount": {
+                "ebp_ciq_code": {
+                    "type": "string",
+                    "description": "电商平台的国检备案编码",
+                    "example": "123456"
+                },
+                "ebp_name": {
+                    "type": "string",
+                    "description": "电商平台名称",
+                    "example": "前海德丰电子商务"
+                },
+                "ebc_cust_code": {
+                    "type": "string",
+                    "description": "电商企业的海关备案编码",
+                    "example": "123456"
+                },
+                "ebc_ciq_code": {
+                    "type": "string",
+                    "description": "电商企业的国检备案编码",
+                    "example": "123456"
+                },
+                "ebc_name": {
+                    "type": "string",
+                    "description": "电商企业名称",
+                    "example": "前海德丰电子商务"
+                },
+                "goods_charge_amount": {
                     "type": "number",
-                    "description": "订单商品运费."
+                    "description": "订单商品货款(元).",
+                    "example": "1"
+                },
+                "freight_amount": {
+                    "type": "number",
+                    "description": "订单商品运费(元).",
+                    "example": "1"
                 },
                 "currency": {
                     "type": "string",
-                    "description": "币制(标准代码，见参数表, 默认：人民币:142)"
+                    "description": "币制(标准代码，见参数表, 默认：人民币:142)",
+                    "example": "142"
                 },
-                "consigneeId": {
+                "consignee_id": {
                     "type": "string",
-                    "description": "收件人身份证号码或其它号码"
+                    "description": "收件人身份证号码或其它号码",
+                    "example": "35012819911215493X"
                 },
-                "consigneeType": {
+                "consignee_type": {
                     "type": "string",
-                    "description": "收货人证件类型 1-身份证，2-其它"
+                    "description": "收货人证件类型 1-身份证，2-其它",
+                    "example": "1"
                 },
                 "consignee": {
                     "type": "string",
-                    "description": "收货人名称(100 max)"
+                    "maximum": 100,
+                    "description": "收货人名称",
+                    "example": "张三"
                 },
-                "consigneeAddress": {
+                "consignee_address": {
                     "type": "string",
-                    "description": "收货人地址(200 max)"
+                    "maximum": 200,
+                    "description": "收货人地址",
+                    "example": "北京-北京市-东城区茂业大厦1120"
                 },
-                "consigneeTelephone": {
+                "consignee_telephone": {
                     "type": "string",
-                    "description": "收货人电话(50 max)"
+                    "maximum": 50,
+                    "description": "收货人电话",
+                    "example": "12345678901"
                 },
-                "consigneeCountry": {
+                "consignee_country": {
                     "type": "string",
-                    "description": "收货人所在国（标准代码，见参数表, 默认：中国:142）(varchar 3)"
+                    "description": "收货人所在国（标准代码，见参数表, 默认：中国:142）",
+                    "example": "142"
                 },
                 "province": {
                     "type": "string",
-                    "description": "收货人地址（省）（标准代码，见参数表）(varchar 3)"
+                    "description": "收货人地址（省）（标准代码，见参数表）",
+                    "example": "110000"
                 },
                 "city": {
                     "type": "string",
-                    "description": "收货人地址（市）（标准代码，见参数表）(varchar 3)"
+                    "description": "收货人地址（市）（标准代码，见参数表）",
+                    "example": "110100"
                 },
                 "district": {
                     "type": "string",
-                    "description": "收货人地址（区）（标准代码，见参数表）(varchar 3)"
+                    "description": "收货人地址（区）（标准代码，见参数表）",
+                    "example": "110101"
                 },
-                "promotionAmount": {
+                "promotion_amount": {
                     "type": "number",
-                    "description": "优惠金额 NUMBER(19,5)"
+                    "description": "优惠金额(元)",
+                    "example": "0"
                 },
-                "promotionRemark": {
+                "promotion_remark": {
                     "type": "string",
                     "maximum": 1000,
-                    "description": "优惠信息说明"
+                    "description": "优惠信息说明",
+                    "example": "优惠信息说明"
                 },
                 "note": {
                     "type": "string",
                     "maximum": 1000,
-                    "description": "备注"
+                    "description": "备注",
+                    "example": "备注"
                 },
-                "payOrgCode": {
+                "pay_org_code": {
                     "type": "string",
-                    "description": "支付企业代码(需对接双方讨论定义, 非海关代码) VARCHAR(24)"
+                    "description": "支付企业代码(需对接双方讨论定义, 非海关代码), 默认是通联 PTL",
+                    "example": "PTL"
                 },
-                "payTransactionNo": {
+                "pay_transaction_no": {
                     "type": "string",
-                    "description": "原始支付单交易编号 VARCHAR(24)"
+                    "description": "原始支付单交易编号",
+                    "example": "1234567890"
                 },
-                "payerName": {
+                "payer_name": {
                     "type": "string",
                     "maximum": 50,
-                    "description": "支付人名称"
+                    "description": "支付人名称",
+                    "example": "支付人名称"
                 },
-                "payerAccountNo": {
+                "payer_account_no": {
                     "type": "string",
-                    "description": "支付人帐号 VARCHAR(50)"
+                    "description": "支付人帐号",
+                    "example": "支付人帐号"
                 },
                 "goods": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/Good"
+                        "$ref": "#/definitions/SalesOrderGood"
                     }
+                },
+                "appkey": {
+                    "type": "string",
+                    "description": "第三方电商的appkey值, 需向德丰IT人员索取",
+                    "example": "123456"
+                },
+                "salt": {
+                    "type": "string",
+                    "description": "调用接口时的时间戳,秒级的10位int值, 即timestamp",
+                    "example": 1467182687
+                },
+                "sign": {
+                    "type": "string",
+                    "description": "MD5",
+                    "example": "4A14822655C6A179235A4A152B4F9FB1"
                 }
             }
         },
-        "Good": {
+        "SalesOrderGood": {
             "type": "object",
             "properties": {
-                "id": {
+                "item_no": {
                     "type": "string",
-                    "description": "系统内产生的唯一ID"
+                    "description": "企业商品货号",
+                    "example": "DF_SKU_001"
                 },
-                "itemNo": {
+                "item_name": {
                     "type": "string",
-                    "description": "企业商品货号"
+                    "description": "企业商品名称",
+                    "example": "XX奶粉"
                 },
-                "customItemNo": {
+                "custom_item_no": {
                     "type": "string",
-                    "description": "海关商品货号, 可与企业商品货号一致"
+                    "description": "海关商品货号, 可与企业商品货号一致",
+                    "example": "海关商品货号"
                 },
-                "customListItemNo": {
+                "custom_list_item_no": {
                     "type": "string",
-                    "description": "海关正面清单货号（新规则时必填）"
+                    "description": "海关正面清单货号（新规则时必填）",
+                    "example": ""
                 },
                 "unit": {
                     "type": "string",
-                    "description": "计量单位（标准代码，见参数表）"
+                    "description": "计量单位（标准代码，见参数表）1 =台",
+                    "example": "1"
                 },
                 "currency": {
                     "type": "string",
-                    "description": "币制代码（标准代码，见参数表）"
+                    "description": "币制代码（标准代码，见参数表）",
+                    "example": "142"
                 },
                 "qty": {
                     "type": "number",
-                    "description": "成交数量 NUMBER(19,5)"
+                    "description": "成交数量",
+                    "example": "1"
                 },
                 "price": {
                     "type": "number",
-                    "description": "单价 NUMBER(19,5)"
+                    "description": "单价(元)",
+                    "example": "1"
                 },
-                "totalChareAmount": {
-                    "type": "number",
-                    "description": "总价 NUMBER(19,5)"
-                },
-                "isGift": {
-                    "type": "number",
-                    "description": "总价 NUMBER(19,5)"
+                "gift_flag": {
+                    "type": "string",
+                    "description": "是否赠品 Y:N",
+                    "example": "N"
                 }
             }
         },
-        "Error": {
+        "GoodItem": {
+            "type": "object",
+            "properties": {
+                "item_no": {
+                    "type": "string",
+                    "description": "德丰系统商品货号",
+                    "example": "DF_SKU_001"
+                },
+                "item_name": {
+                    "type": "string",
+                    "description": "商品名称",
+                    "example": "XX奶粉"
+                },
+                "ref_item_no": {
+                    "type": "string",
+                    "description": "外部电商商品货号",
+                    "example": "DF_SKU_001"
+                },
+                "org_cod": {
+                    "type": "string",
+                    "description": "外部电商企业代码",
+                    "example": "REF_001"
+                },
+                "custom_item_no": {
+                    "type": "string",
+                    "description": "海关商品货号, 可与企业商品货号一致",
+                    "example": "DF_SKU_001"
+                },
+                "custom_list_item_no": {
+                    "type": "string",
+                    "description": "海关正面清单货号（新规则时必填）",
+                    "example": ""
+                },
+                "unit": {
+                    "type": "string",
+                    "description": "计量单位（标准代码，见参数表）1 =台",
+                    "example": "1"
+                },
+                "currency": {
+                    "type": "string",
+                    "description": "币制代码（标准代码，见参数表）",
+                    "example": "142"
+                },
+                "price": {
+                    "type": "number",
+                    "description": "单价(元)",
+                    "example": "1"
+                },
+                "length": {
+                    "type": "number",
+                    "description": "长度(mm)",
+                    "example": "1"
+                },
+                "width": {
+                    "type": "number",
+                    "description": "宽度(mm)",
+                    "example": "1"
+                },
+                "height": {
+                    "type": "number",
+                    "description": "高度(mm)",
+                    "example": "1"
+                },
+                "volume": {
+                    "type": "number",
+                    "description": "体积(立方米)",
+                    "example": "1"
+                },
+                "weight": {
+                    "type": "number",
+                    "description": "重量(kg)",
+                    "example": "1"
+                },
+                "appkey": {
+                    "type": "string",
+                    "description": "第三方电商的appkey值, 需向德丰IT人员索取",
+                    "example": "123456"
+                },
+                "salt": {
+                    "type": "string",
+                    "description": "调用接口时的时间戳,秒级的10位int值, 即timestamp",
+                    "example": 1467182687
+                },
+                "sign": {
+                    "type": "string",
+                    "description": "MD5",
+                    "example": "4C23F5A2CA98A42F57C51C26B704D374"
+                }
+            }
+        },
+        "msg": {
             "type": "object",
             "properties": {
                 "code": {
-                    "type": "integer",
-                    "format": "int32"
+                    "type": "string",
+                    "enum": [
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5
+                    ]
                 },
                 "message": {
                     "type": "string"

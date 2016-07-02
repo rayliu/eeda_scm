@@ -14,7 +14,7 @@ import models.Office;
 import models.Party;
 import models.PartyAttribute;
 import models.Permission;
-import models.Product;
+import models.eeda.profile.Product;
 import models.Role;
 import models.RolePermission;
 import models.UserCustomer;

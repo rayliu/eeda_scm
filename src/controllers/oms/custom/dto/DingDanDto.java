@@ -19,10 +19,10 @@ public class DingDanDto {
     private String agent_code_ciq;
     private String agent_name;
     
-    //在《Effective Java》这本书中提到这个原则，float和double只能用来做科学计算或者是工程计算，
+    //在《Effective Java》这本书中提到这个原则，float和Double只能用来做科学计算或者是工程计算，
     //在商业计算中我们要用 java.math.BigDecimal。
-    private double goods_value;
-    private double freight;
+    private Double goods_value;
+    private Double freight;
     private String currency;
     private String consignee_id;
     private String consignee_type;
@@ -33,7 +33,7 @@ public class DingDanDto {
     private String province;
     private String city;
     private String district;
-    private double pro_amount;
+    private Double pro_amount;
     private String pro_remark;
     private String note;
     private String pay_no;
@@ -142,16 +142,16 @@ public class DingDanDto {
     public void setAgent_name(String agent_name) {
         this.agent_name = agent_name;
     }
-    public double getGoods_value() {
+    public Double getGoods_value() {
         return goods_value;
     }
-    public void setGoods_value(double goods_value) {
+    public void setGoods_value(Double goods_value) {
         this.goods_value = goods_value;
     }
-    public double getFreight() {
+    public Double getFreight() {
         return freight;
     }
-    public void setFreight(double freight) {
+    public void setFreight(Double freight) {
         this.freight = freight;
     }
     public String getCurrency() {
@@ -214,10 +214,10 @@ public class DingDanDto {
     public void setDistrict(String district) {
         this.district = district;
     }
-    public double getPro_amount() {
+    public Double getPro_amount() {
         return pro_amount;
     }
-    public void setPro_amount(double pro_amount) {
+    public void setPro_amount(Double pro_amount) {
         this.pro_amount = pro_amount;
     }
     public String getPro_remark() {

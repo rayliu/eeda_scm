@@ -11,7 +11,7 @@ import models.Location;
 import models.Office;
 import models.Party;
 import models.Permission;
-import models.Product;
+import models.eeda.profile.Product;
 import models.Role;
 import models.RolePermission;
 import models.UserCustomer;
@@ -19,6 +19,7 @@ import models.UserLogin;
 import models.UserOffice;
 import models.UserRole;
 import models.WarehouseOrder;
+import models.eeda.OrderActionLog;
 import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateInOrderItem;
 import models.eeda.oms.InspectionOrder;
@@ -29,6 +30,7 @@ import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.LogisticsCustomCompany;
+import models.eeda.profile.Unit;
 import models.yh.profile.Contact;
 import models.yh.profile.CustomizeField;
 import models.yh.profile.OfficeCofig;
@@ -56,6 +58,7 @@ import com.jfinal.plugin.c3p0.C3p0Plugin;
 import com.jfinal.weixin.sdk.api.ApiConfigKit;
 
 import controllers.HomeController;
+import controllers.api.ApiController;
 import controllers.oms.allinpay.AllinpayController;
 import controllers.oms.gateInOrder.GateInOrderController;
 import controllers.oms.inspectionOrder.InspectionOrderController;
@@ -66,6 +69,7 @@ import controllers.profile.CustomCompanyController;
 import controllers.profile.LogisticsCustomCompanyController;
 import controllers.profile.PrivilegeController;
 import controllers.profile.WarehouseController;
+import controllers.profile.UnitController;
 import controllers.yh.arap.AccountAuditLogController;
 
 public class EedaConfig extends JFinalConfig {
@@ -158,6 +162,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/accountAuditLog", AccountAuditLogController.class, contentPath);
 		me.add("/account", AccountController.class, contentPath);
 		me.add("/privilege", PrivilegeController.class, contentPath);
+		me.add("/unit", UnitController.class, contentPath);
 		//oms管理系统
 		me.add("/customCompany", CustomCompanyController.class, contentPath);
 		me.add("/logisticsCustomCompany", LogisticsCustomCompanyController.class, contentPath);
@@ -166,6 +171,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/gateInOrder", GateInOrderController.class, contentPath);
 		me.add("/inspectionOrder", InspectionOrderController.class, contentPath);
 		me.add("/allinpay", AllinpayController.class, contentPath);
+		me.add("/api", ApiController.class, contentPath);
 	}
 
     @Override
@@ -232,6 +238,8 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("inspection_order", InspectionOrder.class);
         arp.addMapping("inspection_order_item", InspectionOrderItem.class);
         
+        arp.addMapping("order_action_log", OrderActionLog.class);
+        arp.addMapping("unit", Unit.class);
     }
 
     private void initDBconnector() {
