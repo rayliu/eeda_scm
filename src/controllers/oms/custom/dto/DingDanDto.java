@@ -1,11 +1,11 @@
 package controllers.oms.custom.dto;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 public class DingDanDto {
     private String org_code;
     private String order_no;
+    private String ref_order_no;
     private String order_time;
     private String shop_no;
     private String warehouse_no;
@@ -63,6 +63,12 @@ public class DingDanDto {
     }
     public void setOrder_no(String order_no) {
         this.order_no = order_no;
+    }
+    public String getRef_order_no() {
+        return ref_order_no;
+    }
+    public void setRef_order_no(String ref_order_no) {
+        this.ref_order_no = ref_order_no;
     }
     public String getOrder_time() {
         return order_time;
