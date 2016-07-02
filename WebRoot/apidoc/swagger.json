@@ -5,7 +5,7 @@
         "description": "前海德丰电子商务提供给第三方电商的销售订单接口, 基本路径为/api <br/><span style='color:red;'>签名认证:</span> 必须通过appkey生成的sign(放在请求中)进行认证后才能调用相关接口, 第三方电商的appkey值需向德丰IT人员索取<br/><br/><br/> 数字签名计算方法: <ul> <li>1. appkey: 由德丰信息系统分配给电商用户企业的appkey, 测试系统appkey=123456</li> <li>2. salt: 调用接口时的时间戳,秒级的10位int值, 即timestamp.</li> <li>3. sign: 数字签名,计算方法如下: <ol> <li>先把get/post请求参数(参数只要求是ref_order_no), 构成一个字符串, <br/>示例如下: stringA = “ref_order_no=123456” </li> <li>把求得的字符串和appkey, salt(即timestamp)进行拼接 stringSignTemp = “stringA &appkey=123456&salt=1467182687” </li> <li>然后求其md5值 sign=MD5 (stringSignTemp).toUpperCase()=”1DBF882F565E422EAA38686D93CBAB51” </li> <li> 最终向服务器发送数据 <br/>get 数据示例:<br/> /api/salesOrder?ref_order_no=test2&appkey=123456&salt=2312313&sign=1DBF882F565E422EAA38686D93CBAB51<br/> <br/>post 数据示例:<br/> order:{<br/> &nbsp;&nbsp;ref_order_no:123456, <br/>..., <br/> &nbsp;&nbsp;appkey: '123456',<br/> &nbsp;&nbsp;salt: 1467182687,<br/> &nbsp;&nbsp;sign: '1DBF882F565E422EAA38686D93CBAB51'<br/> } <br/> </li> </ol> </li> <br/><br/> 参考文档 <ul> <li><a href='#'>计量单位代码</a></li> <li>币制</li> <li>国家代码</li> <li>计量单位代码:</li> </ul> ",
         "version": "1.0.0"
     },
-    "host": "localhost:8080",
+    "host": "yd2demo.eeda123.com",
     "schemes": [
         "http"
     ],
