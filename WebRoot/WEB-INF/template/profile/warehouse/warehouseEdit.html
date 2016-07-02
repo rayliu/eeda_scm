@@ -1,0 +1,120 @@
+<%layout("/yh/layout.html"){%>
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12 panel-body">
+			<div class="btn-header" style="font-size: 32px">创建新仓库</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">仓库基本信息</div>
+				<div class="panel-body">
+					<form id="warehouseForm" >
+						<input id="order_id" name="warehouse_id" type="hidden" value="${warehouse.id!''}"> 
+
+						<input id="notifyPartyId" type="hidden" name="notifyPartyId" value="${warehouse.notify_party_id!''}" />
+						<div class="form-group">
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:'warehouse_name',
+								label:'仓库名称', required:'required', value:warehouse.warehouse_name!'' }){}%>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputLocationField.html", {
+									id:'location', label:'仓库所在地',value: location!'',
+									display_value:pro_ci_dis!'' }){}%>
+								</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:'warehouse_address',
+								label:'详细地址', required:'required', value:warehouse.warehouse_address!'' }){}%>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:'warehouse_area',
+								label:'仓库面积', required:'required', value:warehouse.warehouse_area!'' }){}%>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:'notify_name',
+								label:'联系人', value:warehouse.notify_name!'' }){}%>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:'notify_mobile',
+								label:'联系人电话', value:warehouse.notify_mobile!'' }){}%>
+							</div>
+						</div>
+						
+						<div class="form-group">
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:'warehouse_desc',
+								label:'仓库描述', value:warehouse.warehouse_desc!'' }){}%>
+							</div>
+						</div>
+						<div class="col-lg-12">
+								<div id="arrivalModes" class="form-group">
+									<label>仓库状态</label> 
+									<input type="hidden" id="warehouseStatusHide" value="${warehouse.status!''}" /> 
+										<label class="radio-inline"> <input type="radio" name="warehouseStatus" id="warehouseStatus1" value="active"checked="">在用
+									</label> 
+									<label class="radio-inline"> 
+										<input type="radio"name="warehouseStatus" id="warehouseStatus2" value="inactive">停用
+									</label>
+								</div>
+								<!-- <div id="arrivalModes" class="form-group">
+									<label>仓库类型</label> <input type="hidden"
+										id="warehouseTypeHide" value="${warehouse.warehouse_type!''}" />
+									<label class="radio-inline"> <input type="radio"
+										name="warehouseType" id="warehouseType1" value="ownWarehouse"
+										checked="">自营仓库
+									</label> <label class="radio-inline"> <input type="radio"
+										name="warehouseType" id="warehouseType2"
+										value="deliverySpWarehouse">配送供应商仓库
+									</label>
+								</div>
+								<div id="officeDiv" style="display: none;">
+									<input id="hideOfficeId" type="hidden"
+										value="${warehouse.office_id!''}" /> <label
+										class="control-label" for="inputSuccess">请选择网点(必填)</label> <select
+										id="officeSelect" class="form-control" name="officeSelect"></select>
+								</div>
+								<div id="spDiv">
+									<h2>供应商信息</h2>
+									<div class="form-group">
+										label>供应商名称</label
+										<input id="spMessage" class="form-control"
+											placeholder="选择供应商" type="text" name="spMessage"
+											value="${sp.company_name!''}" />
+										<ul id='spList' class="pull-right dropdown-menu default"
+											tabindex="-1" style="top: 35%; left: 2%;">
+										</ul>
+									</div>
+									<div class="form-group">
+										<h5 id="pageSpName">${sp.contact_person!''}
+											${sp.phone!''}</h5>
+										<h5 id="pageSpAddress">${sp.address!''}</h5>
+									</div>
+								</div>
+							</fieldset> -->
+						</div>
+
+						<div class="col-lg-12" style="clear: both;">
+							<a id='saveBtn' class="btn  btn-primary" href="#">保存</a>
+							<a class="btn  btn-primary" href="/warehouse">返回</a>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<%}%>
+<!-- 引入校验的js 文件及其 中文 文件-->
+<script src="/yh/js/jquery.validate.min.js"></script>
+<script src="/yh/js/jvalidate.messages_cn.js"></script>
+<script src="/js/profile/warehouse/edit.js"></script>
+<script>
+	var warehouse_name = '${warehouse.warehouse_name!''}';
+</script>

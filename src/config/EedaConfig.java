@@ -4,25 +4,6 @@ import handler.UrlHanlder;
 
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 import models.Account;
 import models.ArapAccountAuditLog;
 import models.Category;
@@ -37,6 +18,7 @@ import models.UserCustomer;
 import models.UserLogin;
 import models.UserOffice;
 import models.UserRole;
+import models.WarehouseOrder;
 import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateInOrderItem;
 import models.eeda.oms.InspectionOrder;
@@ -83,6 +65,7 @@ import controllers.profile.AccountController;
 import controllers.profile.CustomCompanyController;
 import controllers.profile.LogisticsCustomCompanyController;
 import controllers.profile.PrivilegeController;
+import controllers.profile.WarehouseController;
 import controllers.yh.arap.AccountAuditLogController;
 
 public class EedaConfig extends JFinalConfig {
@@ -159,7 +142,7 @@ public class EedaConfig extends JFinalConfig {
         me.add("/", controllers.profile.MainController.class, contentPath);
        // me.add("/apidoc", controllers.eeda.DocController.class);
         me.add("/debug", controllers.profile.LogController.class, contentPath);
-        me.add("/warehouse",controllers.profile.WarehouseController.class,contentPath);
+        me.add("/warehouse",WarehouseController.class,contentPath);
         me.add("/loginUser", controllers.profile.LoginUserController.class, contentPath);
         //register loginUser
         me.add("/register",controllers.profile.RegisterUserController.class,contentPath);
