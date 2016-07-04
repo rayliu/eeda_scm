@@ -35,7 +35,7 @@ import models.yh.profile.Contact;
 import models.yh.profile.CustomizeField;
 import models.yh.profile.OfficeCofig;
 import models.yh.profile.Route;
-import models.Warehouse;
+import models.yh.profile.Warehouse;
 
 import org.apache.log4j.Logger;
 import org.bee.tl.ext.jfinal.BeetlRenderFactory;
