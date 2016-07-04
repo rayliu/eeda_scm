@@ -95,19 +95,10 @@ public class WarehouseController extends Controller{
 				sLimit = " LIMIT " + getPara("iDisplayStart") + ", "
 						+ getPara("iDisplayLength");
 			}
-			//String sqlTotal = "select count(1) total from warehouse w left join office o on o.id = w.office_id where w.warehouse_name like '%"+warehouseName+"%' and w.warehouse_address like '%"+warehouseAddress+"%' and (o.id = " + parentID + " or o.belong_office = " + parentID +")";
 			String sqlTotal = "	SELECT count(1) total FROM warehouse WHERE warehouse_name LIKE '%"+warehouseName+"%' AND warehouse_address LIKE '%"+warehouseAddress+"%'";
 			Record rec = Db.findFirst(sqlTotal);
 			logger.debug("total records:" + rec.getLong("total"));
-	
-//			String sql = "select w.*,(select trim(concat(l2.name, ' ', l1.name,' ',l.name)) from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code=w.location) dname,lc.name from warehouse w"
-//							+ " left join location lc on w.location = lc.code"
-//							+ "  left join office o on o.id = w.office_id"
-//							+ "  where w.warehouse_name like '%"+warehouseName+"%' and w.warehouse_address like '%"+warehouseAddress+"%' "
-//							+ "  and (o.id = " + parentID + " or o.belong_office = " + parentID +")"
-//							+ "order by w.id desc "
-//							+ sLimit;
-			
+
 			String sql = "SELECT * FROM warehouse WHERE warehouse_name LIKE '%"+warehouseName+"%' AND warehouse_address LIKE '%"+warehouseAddress+"%' ORDER BY id DESC"
 					+ sLimit ;
 	
@@ -127,23 +118,28 @@ public class WarehouseController extends Controller{
 		List<Contact> contactjson = Contact.dao.find("select * from contact");			
         renderJson(contactjson);
 	}
+	
 	@RequiresPermissions(value = {PermissionConstant.PERMSSION_W_CREATE})
 	public void add() {
 		setAttr("saveOK", false);
 		render("/profile/warehouse/warehouseEdit.html");
 	}
+	
 	@RequiresPermissions(value = {PermissionConstant.PERMSSION_W_UPDATE})
 	public void edit() {
-		long id = getParaToLong();
+		String id = getPara("id");
 
 		Warehouse warehouse = Warehouse.dao.findById(id);
 		setAttr("warehouse", warehouse);
-
-		Contact sp = Contact.dao.findFirst("select * from contact where id = (select contact_id from party where id="+warehouse.get("sp_id")+")");
-		setAttr("sp", sp);
+		
+		String city = warehouse.getStr("location");
+		if(StringUtils.isNotEmpty(city)){
+			Record re = Db.findFirst("select get_loc_full_name(?) address",city);
+	    	setAttr("location_name", re.get("address"));
+		}
+    	
 		render("/profile/warehouse/warehouseEdit.html");
 	}
-	
 	
 	@RequiresPermissions(value = {PermissionConstant.PERMSSION_W_DELETE})
 	public void delete() {
@@ -185,7 +181,6 @@ public class WarehouseController extends Controller{
    			DbUtils.setModelValues(dto, warehouse);
    			
    			//需后台处理的字段
-   			warehouse.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
    			warehouse.set("create_by", user.getLong("id"));
    			warehouse.set("create_stamp", new Date());
    			warehouse.save();
@@ -199,16 +194,5 @@ public class WarehouseController extends Controller{
    		renderJson(r);
    	}
 
-	public void findDocaltion(){
-		String officeId = getPara("officeId");
-		Office office = Office.dao.findById(officeId);
-		String code = null;
-		if(office.get("location") != null && !"".equals(office.get("location"))){
-			code = office.get("location");
-		}
-		logger.debug("所在地："+code);
-        renderJson(code);
-	}
-	
-	
+
 }

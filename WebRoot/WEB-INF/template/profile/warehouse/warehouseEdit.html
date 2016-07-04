@@ -1,4 +1,8 @@
 <%layout("/yh/layout.html"){%>
+	<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/yh/css/ui/jquery-ui.css">
+    <link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet"> 
+    <link href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css" rel="stylesheet">
 <div id="page-wrapper">
 	<div class="row">
 		<div class="col-lg-12 panel-body">
@@ -23,7 +27,7 @@
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputLocationField.html", {
 									id:'location', label:'仓库所在地',value: location!'',
-									display_value:pro_ci_dis!'' }){}%>
+									display_value:location_name!'' }){}%>
 								</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputField.html", { id:'warehouse_address',
@@ -111,9 +115,19 @@
 </div>
 
 <%}%>
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+
 <!-- 引入校验的js 文件及其 中文 文件-->
 <script src="/yh/js/jquery.validate.min.js"></script>
 <script src="/yh/js/jvalidate.messages_cn.js"></script>
+
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+
+<script src="/yh/js/eeda-common.js"></script>
 <script src="/js/profile/warehouse/edit.js"></script>
 <script>
 	var warehouse_name = '${warehouse.warehouse_name!''}';
