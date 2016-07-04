@@ -129,7 +129,8 @@ $(document).ready(function() {
             var order = data;
             if(order.ID>0){
             	$("#creator_name").val(order.CREATE_BY_NAME);	
-                $("#create_stamp").val(order.CREATE_STAMP);
+            	if($("#order_id").val()=='')
+            		$("#create_stamp").val(eeda.getDate());
                 $("#order_id").val(order.ID);
                 $("#order_no").val(order.ORDER_NO);
                 if(status=='') {
