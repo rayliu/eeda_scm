@@ -2,22 +2,15 @@ package controllers.profile;
 
 import interceptor.SetAttrLoginUserInterceptor;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.Location;
 import models.Office;
 import models.ParentOfficeModel;
 import models.UserLogin;
 import models.Warehouse;
-import models.WarehouseOrder;
-import models.eeda.oms.SalesOrder;
-import models.eeda.oms.SalesOrderCount;
-import models.eeda.oms.SalesOrderGoods;
 import models.yh.profile.Contact;
 
 import org.apache.commons.lang.StringUtils;
@@ -34,10 +27,8 @@ import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
-import com.jfinal.upload.UploadFile;
 
 import controllers.util.DbUtils;
-import controllers.util.OrderNoGenerator;
 import controllers.util.ParentOffice;
 import controllers.util.PermissionConstant;
 @RequiresAuthentication
@@ -55,88 +46,58 @@ public class WarehouseController extends Controller{
 	public void index() {
 		render("/profile/warehouse/warehouseList.html");
 	}
+    
+    
     @RequiresPermissions(value = {PermissionConstant.PERMSSION_W_LIST})
-	public void list() {
-		Map warehouseListMap = null;
-		String warehouseName = getPara("warehouseName");
-		String warehouseAddress = getPara("warehouseAddress");
-		
-		if(warehouseName == null && warehouseAddress == null){
-			String sLimit = "";
-			String pageIndex = getPara("sEcho");
-			if (getPara("iDisplayStart") != null
-					&& getPara("iDisplayLength") != null) {
-				sLimit = " LIMIT " + getPara("iDisplayStart") + ", "
-						+ getPara("iDisplayLength");
-			}			
-			String sqlTotal = "select count(1) total from warehouse w left join office o on o.id = w.office_id where (o.id = " + parentID + " or o.belong_office = " + parentID +")";
-			Record rec = Db.findFirst(sqlTotal);
-			logger.debug("total records:" + rec.getLong("total"));
+    public void list() {
+    	String sLimit = "";
+        String pageIndex = getPara("sEcho");
+        if (getPara("iDisplayStart") != null && getPara("iDisplayLength") != null) {
+            sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
+        }
+
+        String sql = "SELECT sor.*, ifnull(u.c_name, u.user_name) creator_name "
+    			+ "  from sales_order sor "
+    			+ "  left join user_login u on u.id = sor.create_by"
+    			+ "   where 1 =1 ";
+        
+        String condition = DbUtils.buildConditions(getParaMap());
+
+        String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
+        Record rec = Db.findFirst(sqlTotal);
+        logger.debug("total records:" + rec.getLong("total"));
+        
+        List<Record> BillingOrders = Db.find(sql+ condition + " order by create_stamp desc " +sLimit);
+        Map BillingOrderListMap = new HashMap();
+        BillingOrderListMap.put("sEcho", pageIndex);
+        BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
+        BillingOrderListMap.put("iTotalDisplayRecords", rec.getLong("total"));
+
+        BillingOrderListMap.put("aaData", BillingOrders);
+
+        renderJson(BillingOrderListMap); 
+    }
+
 	
-			String sql = "select w.*, lc.name dname from warehouse w"
-							+ " left join location lc on w.location = lc.code "
-							+ " left join office o on o.id = w.office_id where (o.id = " + parentID + " or o.belong_office = " + parentID +")"
-							+ " order by w.id desc "
-							+ sLimit;
 	
-			List<Record> warehouses = Db.find(sql);
-	
-			warehouseListMap = new HashMap();
-			warehouseListMap.put("sEcho", pageIndex);
-			warehouseListMap.put("iTotalRecords", rec.getLong("total"));
-			warehouseListMap.put("iTotalDisplayRecords", rec.getLong("total"));
-	
-			warehouseListMap.put("aaData", warehouses);
-		}else{
-			String sLimit = "";
-			String pageIndex = getPara("sEcho");
-			if (getPara("iDisplayStart") != null
-					&& getPara("iDisplayLength") != null) {
-				sLimit = " LIMIT " + getPara("iDisplayStart") + ", "
-						+ getPara("iDisplayLength");
-			}
-			String sqlTotal = "select count(1) total from warehouse w left join office o on o.id = w.office_id where w.warehouse_name like '%"+warehouseName+"%' and w.warehouse_address like '%"+warehouseAddress+"%' and (o.id = " + parentID + " or o.belong_office = " + parentID +")";
-			Record rec = Db.findFirst(sqlTotal);
-			logger.debug("total records:" + rec.getLong("total"));
-	
-			String sql = "select w.*,(select trim(concat(l2.name, ' ', l1.name,' ',l.name)) from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code=w.location) dname,lc.name from warehouse w"
-							+ " left join location lc on w.location = lc.code"
-							+ "  left join office o on o.id = w.office_id"
-							+ "  where w.warehouse_name like '%"+warehouseName+"%' and w.warehouse_address like '%"+warehouseAddress+"%' "
-							+ "  and (o.id = " + parentID + " or o.belong_office = " + parentID +")"
-							+ "order by w.id desc "
-							+ sLimit;
-	
-			List<Record> warehouses = Db.find(sql);
-	
-			warehouseListMap = new HashMap();
-			warehouseListMap.put("sEcho", pageIndex);
-			warehouseListMap.put("iTotalRecords", rec.getLong("total"));
-			warehouseListMap.put("iTotalDisplayRecords", rec.getLong("total"));
-	
-			warehouseListMap.put("aaData", warehouses);
-		}
-		renderJson(warehouseListMap);
-	}
-	
-	public void listContact(){
-		List<Contact> contactjson = Contact.dao.find("select * from contact");			
-        renderJson(contactjson);
-	}
-	@RequiresPermissions(value = {PermissionConstant.PERMSSION_W_CREATE})
-	public void add() {
-		setAttr("saveOK", false);
+	public void create() {
 		render("/profile/warehouse/warehouseEdit.html");
 	}
 	@RequiresPermissions(value = {PermissionConstant.PERMSSION_W_UPDATE})
 	public void edit() {
-		long id = getParaToLong();
+		String id = getPara("id");
 
 		Warehouse warehouse = Warehouse.dao.findById(id);
 		setAttr("warehouse", warehouse);
 
-		Contact sp = Contact.dao.findFirst("select * from contact where id = (select contact_id from party where id="+warehouse.get("sp_id")+")");
-		setAttr("sp", sp);
+		//收货人地址
+    	String location = warehouse.getStr("location");
+    	
+    	if(StringUtils.isNotEmpty(location)){
+    		Record re = Db.findFirst("select get_loc_full_name(?) address",location);
+        	setAttr("location_name", re.get("address"));
+    	}
+
 		render("/profile/warehouse/warehouseEdit.html");
 	}
 	
@@ -181,7 +142,7 @@ public class WarehouseController extends Controller{
    			DbUtils.setModelValues(dto, warehouse);
    			
    			//需后台处理的字段
-   			warehouse.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
+   			//warehouse.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
    			warehouse.set("create_by", user.getLong("id"));
    			warehouse.set("create_stamp", new Date());
    			warehouse.save();
