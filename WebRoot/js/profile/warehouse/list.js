@@ -26,11 +26,11 @@ $(document).ready(function() {
             		}
             		
             	}}, 
+//            {"mDataProp":"NOTIFY_NAME"},        	
+//            {"mDataProp":"NOTIFY_MOBILE"},
+            {"mDataProp":"WAREHOUSE_ADDRESS"},       	
             {"mDataProp":"NOTIFY_NAME"},        	
-            {"mDataProp":"NOTIFY_MOBILE"},
-            {"mDataProp":"DNAME"},       	
-            {"mDataProp":"WAREHOUSE_ADDRESS"},        	
-            {"mDataProp":"WAREHOUSE_DESC"},
+//            {"mDataProp":"WAREHOUSE_DESC"},
             { 
                 "mDataProp": null, 
                 "sWidth": "8%",
@@ -64,17 +64,21 @@ $(document).ready(function() {
 	      ],      
     });	
     
-    $('#warehouseName_filter').on( 'keyup click', function () {
-    	var warehouseName = $("#warehouseName_filter").val();
-    	var warehouseAddress = $("#warehouseAddress_filter").val();
-    	warehouseTab.fnSettings().sAjaxSource = "/warehouse/list?warehouseName="+warehouseName+"&warehouseAddress="+warehouseAddress;
-    	warehouseTab.fnDraw(); 
-    });
+    $('#searchBtn').click(function(){
+    	
+		    $('#warehouseName_filter', function () {
+		    	var warehouseName = $("#warehouseName_filter").val();
+		    	var warehouseAddress = $("#warehouseAddress_filter").val();
+		    	warehouseTab.fnSettings().sAjaxSource = "/warehouse/list?warehouseName="+warehouseName+"&warehouseAddress="+warehouseAddress;
+		    	warehouseTab.fnDraw(); 
+		    });
+		    
+		    $('#warehouseAddress_filter',function () {
+		    	var warehouseName = $("#warehouseName_filter").val();
+		    	var warehouseAddress = $("#warehouseAddress_filter").val();
+		    	warehouseTab.fnSettings().sAjaxSource = "/warehouse/list?warehouseName="+warehouseName+"&warehouseAddress="+warehouseAddress;
+		    	warehouseTab.fnDraw(); 
+		    }); 
     
-    $('#warehouseAddress_filter').on( 'keyup click', function () {
-    	var warehouseName = $("#warehouseName_filter").val();
-    	var warehouseAddress = $("#warehouseAddress_filter").val();
-    	warehouseTab.fnSettings().sAjaxSource = "/warehouse/list?warehouseName="+warehouseName+"&warehouseAddress="+warehouseAddress;
-    	warehouseTab.fnDraw(); 
-    }); 
+   });
 } );

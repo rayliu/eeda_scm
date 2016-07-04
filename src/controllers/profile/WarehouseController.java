@@ -95,17 +95,21 @@ public class WarehouseController extends Controller{
 				sLimit = " LIMIT " + getPara("iDisplayStart") + ", "
 						+ getPara("iDisplayLength");
 			}
-			String sqlTotal = "select count(1) total from warehouse w left join office o on o.id = w.office_id where w.warehouse_name like '%"+warehouseName+"%' and w.warehouse_address like '%"+warehouseAddress+"%' and (o.id = " + parentID + " or o.belong_office = " + parentID +")";
+			//String sqlTotal = "select count(1) total from warehouse w left join office o on o.id = w.office_id where w.warehouse_name like '%"+warehouseName+"%' and w.warehouse_address like '%"+warehouseAddress+"%' and (o.id = " + parentID + " or o.belong_office = " + parentID +")";
+			String sqlTotal = "	SELECT count(1) total FROM warehouse WHERE warehouse_name LIKE '%"+warehouseName+"%' AND warehouse_address LIKE '%"+warehouseAddress+"%'";
 			Record rec = Db.findFirst(sqlTotal);
 			logger.debug("total records:" + rec.getLong("total"));
 	
-			String sql = "select w.*,(select trim(concat(l2.name, ' ', l1.name,' ',l.name)) from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code=w.location) dname,lc.name from warehouse w"
-							+ " left join location lc on w.location = lc.code"
-							+ "  left join office o on o.id = w.office_id"
-							+ "  where w.warehouse_name like '%"+warehouseName+"%' and w.warehouse_address like '%"+warehouseAddress+"%' "
-							+ "  and (o.id = " + parentID + " or o.belong_office = " + parentID +")"
-							+ "order by w.id desc "
-							+ sLimit;
+//			String sql = "select w.*,(select trim(concat(l2.name, ' ', l1.name,' ',l.name)) from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code=w.location) dname,lc.name from warehouse w"
+//							+ " left join location lc on w.location = lc.code"
+//							+ "  left join office o on o.id = w.office_id"
+//							+ "  where w.warehouse_name like '%"+warehouseName+"%' and w.warehouse_address like '%"+warehouseAddress+"%' "
+//							+ "  and (o.id = " + parentID + " or o.belong_office = " + parentID +")"
+//							+ "order by w.id desc "
+//							+ sLimit;
+			
+			String sql = "SELECT * FROM warehouse WHERE warehouse_name LIKE '%"+warehouseName+"%' AND warehouse_address LIKE '%"+warehouseAddress+"%' ORDER BY id DESC"
+					+ sLimit ;
 	
 			List<Record> warehouses = Db.find(sql);
 	
