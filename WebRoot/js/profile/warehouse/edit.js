@@ -15,10 +15,12 @@ $(document).ready(function() {
     	            warehouse_area: $('#warehouse_area').val(),
     	            warehouse_desc: $('#warehouse_desc').val()
     	        };
+    	 
     	$('#saveBtn').attr('disabled',true);
     	$.post('/warehouse/save',{params:JSON.stringify(order)},function(data){
-    		if(data){
+    		if(data.ID>0){
     			$.scojs_message('保存成功', $.scojs_message.TYPE_OK);
+    			$('#order_id').val(data.ID);
     			contactUrl("edit?id",data.ID);
     		}else{
     			$.scojs_message('保存失败', $.scojs_message.TYPE_FALSE);
