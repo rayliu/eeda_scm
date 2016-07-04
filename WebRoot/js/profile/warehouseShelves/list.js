@@ -20,16 +20,12 @@ $(document).ready(function() {
         },
         //"ajax": "/damageOrder/list",
         "columns": [
-            { "data": "SHOP_NO"},
-            { "data": "SHOP_NAME", 
+            { "data": "WAREHOUSE_NAME"},
+            { "data": "POSITION", 
                 "render": function ( data, type, full, meta ) {
                     return "<a href='/customCompany/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
                 }
             },
-            { "data": "LEGAL_PERSON"},
-            { "data": "CONTACT_PERSON"}, 
-            { "data": "CONTACT_PHONE"}, 
-            { "data": "COMPANY_PHONE"},
             { "data": "CREATOR_NAME"}, 
             { "data": "CREATE_STAMP"}
         ]
@@ -45,7 +41,7 @@ $(document).ready(function() {
     })
 
    var searchData=function(){
-        var shop_name = $("#shop_name").val();
+        var warehouse_id = $("#warehouse_id").val();
         var start_date = $("#create_stamp_begin_time").val();
         var end_date = $("#create_stamp_end_time").val();
         
@@ -56,7 +52,7 @@ $(document).ready(function() {
             *_status =
             时间字段需成双定义  *_begin_time *_end_time   between
         */
-        var url = "/customCompany/list?shop_name="+shop_name
+        var url = "/warehouseShelves/list?warehouse_id="+warehouse_id
              +"&create_stamp_begin_time="+start_date
              +"&create_stamp_end_time="+end_date;
         dataTable.ajax.url(url).load();

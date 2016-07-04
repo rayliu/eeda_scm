@@ -15,11 +15,11 @@ import models.Party;
 import models.PartyAttribute;
 import models.Permission;
 import models.eeda.profile.Product;
+import models.eeda.profile.Warehouse;
 import models.Role;
 import models.RolePermission;
 import models.UserCustomer;
 import models.UserOffice;
-import models.Warehouse;
 import models.yh.profile.Carinfo;
 import models.yh.profile.Contact;
 

@@ -13,11 +13,11 @@ import models.Location;
 import models.Office;
 import models.ParentOfficeModel;
 import models.UserLogin;
-import models.Warehouse;
 import models.WarehouseOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
+import models.eeda.profile.Warehouse;
 import models.yh.profile.Contact;
 
 import org.apache.commons.lang.StringUtils;

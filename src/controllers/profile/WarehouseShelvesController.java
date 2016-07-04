@@ -9,6 +9,8 @@ import java.util.Map;
 
 import models.UserLogin;
 import models.eeda.profile.CustomCompany;
+import models.eeda.profile.Warehouse;
+import models.eeda.profile.WarehouseShelves;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -49,36 +51,34 @@ public class WarehouseShelvesController extends Controller {
        	Gson gson = new Gson();  
         Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
             
-        CustomCompany customCompany = new CustomCompany();
+        WarehouseShelves warehouseShelves = new WarehouseShelves();
    		String id = (String) dto.get("id");
    		
    		UserLogin user = LoginUserController.getLoginUser(this);
    		
    		if (StringUtils.isNotEmpty(id)) {
    			//update
-   			customCompany = CustomCompany.dao.findById(id);
-   			DbUtils.setModelValues(dto, customCompany);
+   			warehouseShelves = WarehouseShelves.dao.findById(id);
+   			DbUtils.setModelValues(dto, warehouseShelves);
    			
    			//需后台处理的字段
-   			customCompany.set("update_by", user.getLong("id"));
-   			customCompany.set("update_stamp", new Date());
-   			customCompany.update();
+   			warehouseShelves.set("update_by", user.getLong("id"));
+   			warehouseShelves.set("update_stamp", new Date());
+   			warehouseShelves.update();
    		} else {
-   			//create 
-   			customCompany = new CustomCompany();
-   			DbUtils.setModelValues(dto, customCompany);
+   			DbUtils.setModelValues(dto, warehouseShelves);
    			
    			//需后台处理的字段
-   			customCompany.set("create_by", user.getLong("id"));
-   			customCompany.set("create_stamp", new Date());
-   			customCompany.save();
+   			warehouseShelves.set("create_by", user.getLong("id"));
+   			warehouseShelves.set("create_stamp", new Date());
+   			warehouseShelves.save();
    		}
 
-   		long create_by = customCompany.getLong("create_by");
+   		long create_by = warehouseShelves.getLong("create_by");
    		String user_name = LoginUserController.getUserNameById(create_by);
 
-   		Record r = customCompany.toRecord();
-   		r.set("create_by_name", user_name);
+   		Record r = warehouseShelves.toRecord();
+   		r.set("creator_name", user_name);
    		
    		renderJson(r);
    	}
@@ -86,11 +86,19 @@ public class WarehouseShelvesController extends Controller {
     @Before(Tx.class)
     public void edit() {
     	String id = getPara("id");
-    	CustomCompany customCompany = CustomCompany.dao.findById(id);
-    	setAttr("order", customCompany);
+    	WarehouseShelves warehouseShelves = WarehouseShelves.dao.findById(id);
+    	setAttr("order", warehouseShelves);
+    	
+    	//仓库回显
+    	long warehouse_id = warehouseShelves.getLong("warehouse_id");
+    	Warehouse warehouse = Warehouse.dao.findById(warehouse_id);
+    	if(warehouse != null){
+    		String warehouse_name = warehouse.getStr("warehouse_name");
+    		setAttr("warehouse_name", warehouse_name);
+    	}
     	
     	//用户信息
-    	long create_by = customCompany.getLong("create_by");
+    	long create_by = warehouseShelves.getLong("create_by");
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
@@ -105,9 +113,10 @@ public class WarehouseShelvesController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT ccy.*, ifnull(u.c_name, u.user_name) creator_name "
-    			+ "  from custom_company ccy "
-    			+ "  left join user_login u on u.id = ccy.create_by where 1 =1 ";
+        String sql = "SELECT ws.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
+    			+ "  from warehouse_shelves ws "
+    			+ "  left join warehouse wh on wh.id = ws.warehouse_id "
+    			+ "  left join user_login u on u.id = ws.create_by where 1 =1 ";
         
         String condition = DbUtils.buildConditions(getParaMap());
 

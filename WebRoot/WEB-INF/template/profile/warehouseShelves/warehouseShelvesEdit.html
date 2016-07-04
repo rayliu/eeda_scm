@@ -14,54 +14,64 @@
             <form id="orderForm">
                 <div class="row">
                     <div class="col-lg-4">
-                        <%include("/yh/component/form/inputField.html", 
-                                            {   id:'shop_no', 
-                                                label:'', 
-                                                value:order.shop_no!''
-                                            }){}%>
+                        <%include("/yh/component/form/inputWarehouseField.html", {
+											id:'warehouse_id', 
+											label:'仓库', 
+											required:'required',
+											value:order.warehouse_id!'', 
+											display_value: warehouse_name!'' 
+											}){}%>
                     </div>  
                     <div class="col-lg-4">
                         <%include("/yh/component/form/inputField.html", 
-                                            {   id:'shop_name', 
-                                                label:'商户名称', 
-                                                value:order.shop_name!''
+                                            {   id:'warehouse_area', 
+                                                label:'库区', 
+                                                value:order.warehouse_area!''
                                             }){}%>
                     </div>     
                     <div class="col-lg-4">
                         <%include("/yh/component/form/inputField.html", 
-                                            {   id:'legal_person', 
-                                                label:'法人', 
-                                                value:order.legal_person!''
+                                            {   id:'warehouse_road', 
+                                                label:'库道', 
+                                                value:order.warehouse_road!''
                                             }){}%>
                     </div>                      
                 </div>
                 <div class="row">
-                    <div class="col-lg-4">
+                	<div class="col-lg-4">
                         <%include("/yh/component/form/inputField.html", 
-                                        {   id:'contact_person', 
-                                            label:'联系人', 
-                                            value:order.contact_person!''
+                                        {   id:'warehouse_row', 
+                                            label:'库行', 
+                                            value:order.warehouse_row!''
                                             }){} %>
                     
                     </div>   
                     <div class="col-lg-4">
                         <%include("/yh/component/form/inputField.html", 
-                                        {   id:'contact_phone', 
-                                            label:'联系电话', 
-                                            value:order.contact_phone!''
+                                        {   id:'warehouse_column', 
+                                            label:'库列', 
+                                            value:order.warehouse_column!''
                                             }){} %>
                     
                     </div>   
                     <div class="col-lg-4">
                         <%include("/yh/component/form/inputField.html", 
-                                        {   id:'company_phone', 
-                                            label:'公司电话', 
-                                            value:order.company_phone!''
+                                        {   id:'warehouse_layer', 
+                                            label:'库层', 
+                                            value:order.warehouse_layer!''
                                             }){} %>
                     
-                    </div>                          
+                    </div>                   
                 </div>
                 <div class="row">
+                	<div class="col-lg-4">
+                        <%include("/yh/component/form/inputField.html", 
+                                        {   id:'position', 
+                                            label:'库位', 
+                                            value:order.position!''
+                                            }){} %>
+                    
+                    </div>   
                     <div class="col-lg-4">
                         <%include("/yh/component/form/inputField.html", 
                                             {   id:'creator_name', 
@@ -80,12 +90,14 @@
                     </div>    
                 </div>
             </form>
-            <div class="form-group">
-                <div class="col-lg-12">
-                    <a id='saveBtn' class="btn  btn-primary" href="#">保存</a>
-                    <a class="btn  btn-default" href="/customCompany">返回</a>
+			<br/>
+            <div class="row">
+           		<div class="col-lg-12">
+                	<a id='saveBtn' class="btn  btn-primary" href="#">保存</a>
+                	<a class="btn  btn-default" href="/warehouseShelves">返回</a>
                 </div>
             </div>
+
         </div>
     </div>
 <%}%>

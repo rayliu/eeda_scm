@@ -1,4 +1,4 @@
-package models;
+package models.eeda.profile;
 
 import com.jfinal.plugin.activerecord.Model;
 @SuppressWarnings("serial")
