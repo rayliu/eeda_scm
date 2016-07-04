@@ -30,6 +30,15 @@ $(document).ready(function() {
 	        },
 	        consignee_telephone_name:{
 	        	isPhone:true
+	        },
+	        freight_name:{
+	        	number:true
+	        },
+	        goods_value_name:{
+	        	number:true
+	        },
+	        pro_amount_name:{
+	        	number:true
 	        }
         },
         messages: {
@@ -222,5 +231,6 @@ $(document).ready(function() {
     	 $('#submitDingDanBtn').attr('disabled',false);
     	 $('#goYunDanBtn').attr('disabled',false);
     }
-
+    
+  
 } );
