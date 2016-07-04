@@ -13,7 +13,9 @@ $(document).ready(function() {
     	            warehouse_area: $('#warehouse_area').val(),
     	            notify_mobile: $('#notify_mobile').val(),
     	            warehouse_area: $('#warehouse_area').val(),
-    	            warehouse_desc: $('#warehouse_desc').val()
+    	            warehouse_desc: $('#warehouse_desc').val(),
+    	            notify_name:$('#notify_name').val(),
+    	            status:$('[name=warehouseStatus]:checked').val()
     	        };
     	$('#saveBtn').attr('disabled',true);
     	$.post('/warehouse/save',{params:JSON.stringify(order)},function(data){
