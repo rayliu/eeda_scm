@@ -18,6 +18,7 @@ import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.profile.Warehouse;
+import models.eeda.profile.WarehouseShelves;
 import models.yh.profile.Contact;
 
 import org.apache.commons.lang.StringUtils;
@@ -143,5 +144,24 @@ public class WarehouseController extends Controller{
    		r.set("create_by_name", user_name);
    		renderJson(r);
    	}
+	
+	@Before(Tx.class)
+    public void edit() {
+    	String id = getPara("id");
+    	Warehouse warehouse = Warehouse.dao.findById(id);
+    	setAttr("warehouse", warehouse);
+    	
+    	//	地址回显
+    	String district = warehouse.getStr("location");
+    	Record re = Db.findFirst("select get_loc_full_name(?) address",district);
+    	setAttr("location_name", re.get("address"));
+    
+    	//用户信息
+//    	long create_by = warehouse.getLong("create_by");
+//    	UserLogin user = UserLogin.dao.findById(create_by);
+//    	setAttr("user",user);
+    	
+        render("/profile/warehouse/warehouseEdit.html");
+    }
 
 }

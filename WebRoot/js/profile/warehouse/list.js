@@ -19,7 +19,7 @@ $(document).ready(function() {
          "columns": [
             { "data": "WAREHOUSE_NAME", 
             	"render": function ( data, type, full, meta ) {
-                    return "<a href='/salesOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
+                    return "<a href='/warehouse/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
                 }
             },
             { "data": "WAREHOUSE_ADDRESS"},
