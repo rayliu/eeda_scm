@@ -13,6 +13,7 @@ import models.Office;
 import models.Party;
 import models.Permission;
 import models.Warehouse;
+import models.WarehouseShelves;
 import models.eeda.profile.Product;
 import models.Role;
 import models.RolePermission;
@@ -70,6 +71,7 @@ import controllers.profile.LogisticsCustomCompanyController;
 import controllers.profile.PrivilegeController;
 import controllers.profile.WarehouseController;
 import controllers.profile.UnitController;
+import controllers.profile.WarehouseShelvesController;
 import controllers.yh.arap.AccountAuditLogController;
 
 public class EedaConfig extends JFinalConfig {
@@ -172,6 +174,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/inspectionOrder", InspectionOrderController.class, contentPath);
 		me.add("/allinpay", AllinpayController.class, contentPath);
 		me.add("/api", ApiController.class, contentPath);
+		me.add("/warehouseShelves", WarehouseShelvesController.class, contentPath);
 	}
 
     @Override
@@ -237,6 +240,7 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("gate_in_order_item", GateInOrderItem.class);
         arp.addMapping("inspection_order", InspectionOrder.class);
         arp.addMapping("inspection_order_item", InspectionOrderItem.class);
+        arp.addMapping("warehouse_shelves", WarehouseShelves.class);
         
         arp.addMapping("order_action_log", OrderActionLog.class);
         arp.addMapping("unit", Unit.class);
