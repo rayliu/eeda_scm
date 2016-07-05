@@ -17,6 +17,7 @@ import models.WarehouseOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
+import models.eeda.profile.CustomCompany;
 import models.eeda.profile.Warehouse;
 import models.eeda.profile.WarehouseShelves;
 import models.yh.profile.Contact;
@@ -162,6 +163,20 @@ public class WarehouseController extends Controller{
 //    	setAttr("user",user);
     	
         render("/profile/warehouse/warehouseEdit.html");
+    }
+	
+	
+	//查询仓库列表
+    public void search(){
+    	String inpiutFiled = getPara("warehouseName").trim();
+    	String conditions = " where 1 = 1";
+    	if(!"".equals(inpiutFiled))
+    		conditions += " and warehouse_name like '%" + inpiutFiled + "%' or warehouse_address like '%" + inpiutFiled + "%'";
+    	
+    	String sql = " select * from warehouse ";
+    	List<Warehouse> list = Warehouse.dao.find(sql + conditions);
+    	
+    	renderJson(list); 
     }
 
 }
