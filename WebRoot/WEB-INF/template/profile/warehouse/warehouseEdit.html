@@ -19,10 +19,10 @@
 						<input id="order_id" name="warehouse_id" type="hidden" value="${warehouse.id!''}"> 
 
 						<input id="notifyPartyId" type="hidden" name="notifyPartyId" value="${warehouse.notify_party_id!''}" />
-						<div class="form-group">
+						<div class="row">
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputField.html", { id:'warehouse_name',
-								label:'仓库名称', required:'required', value:warehouse.warehouse_name!'' }){}%>
+								label:'仓库名称', required:'required', value:warehouse.warehouse_name!'',required:'required' }){}%>
 							</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputLocationField.html", {
@@ -31,14 +31,14 @@
 								</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputField.html", { id:'warehouse_address',
-								label:'详细地址', required:'required', value:warehouse.warehouse_address!'' }){}%>
+								label:'详细地址', required:'required', value:warehouse.warehouse_address!'' ,required:'required'}){}%>
 							</div>
 						</div>
 
-						<div class="form-group">
+						<div class="row">
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputField.html", { id:'warehouse_area',
-								label:'仓库面积', required:'required', value:warehouse.warehouse_area!'' }){}%>
+								label:'仓库面积', required:'required', value:warehouse.warehouse_area!'' ,required:'required'}){}%>
 							</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputField.html", { id:'notify_name',
@@ -50,10 +50,10 @@
 							</div>
 						</div>
 						
-						<div class="form-group">
+						<div class="row">
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputField.html", { id:'warehouse_desc',
-								label:'仓库描述', value:warehouse.warehouse_desc!'' }){}%>
+								label:'仓库描述', value:warehouse.warehouse_desc!''}){}%>
 							</div>
 						</div>
 						<div class="col-lg-12">

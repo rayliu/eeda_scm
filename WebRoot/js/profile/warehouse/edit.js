@@ -4,7 +4,22 @@ $(document).ready(function() {
 	}
     $('#menu_profile').addClass('active').find('ul').addClass('in');
     
+    
+    $("#warehouseForm").validate({
+    	rules:{
+    		warehouse_area_name:{
+    			number:true
+    		}
+    	}
+  	});
+    
+    
     $('#saveBtn').click(function(){
+    	
+    	 if(!$("#warehouseForm").valid()){
+             return;
+         }
+    	 
     	 var order = {
     	            id: $('#order_id').val(),
     	            warehouse_name: $('#warehouse_name').val(),  
@@ -30,6 +45,6 @@ $(document).ready(function() {
     	})
     })
     
-
+	 
 
 } );
