@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "title": "前海德丰电子商务-电商系统 API",
-        "description": "前海德丰电子商务提供给第三方电商的销售订单接口, 基本路径为/api <br/><span style='color:red;'>签名认证:</span> 必须通过appkey生成的sign(放在请求中)进行认证后才能调用相关接口, 第三方电商的appkey值需向德丰IT人员索取<br/><br/><br/> 数字签名计算方法: <ul> <li>1. appkey: 由德丰信息系统分配给电商用户企业的appkey, 测试系统appkey=123456</li> <li>2. salt: 调用接口时的时间戳,秒级的10位int值, 即timestamp.</li> <li>3. sign: 数字签名,计算方法如下: <ol> <li>先把get/post请求参数(参数只要求是ref_order_no), 构成一个字符串, <br/>示例如下: stringA = “ref_order_no=123456” </li> <li>把求得的字符串和appkey, salt(即timestamp)进行拼接 stringSignTemp = “stringA &appkey=123456&salt=1467182687” </li> <li>然后求其md5值 sign=MD5 (stringSignTemp).toUpperCase()=”1DBF882F565E422EAA38686D93CBAB51” </li> <li> 最终向服务器发送数据 <br/>get 数据示例:<br/> /api/salesOrder?ref_order_no=test2&appkey=123456&salt=2312313&sign=1DBF882F565E422EAA38686D93CBAB51<br/> <br/>post 数据示例:<br/> order:{<br/> &nbsp;&nbsp;ref_order_no:123456, <br/>..., <br/> &nbsp;&nbsp;appkey: '123456',<br/> &nbsp;&nbsp;salt: 1467182687,<br/> &nbsp;&nbsp;sign: '1DBF882F565E422EAA38686D93CBAB51'<br/> } <br/> </li> </ol> </li> <br/><br/> 参考文档 <ul> <li><a href='http://www.baike.com/wiki/%E8%AE%A1%E9%87%8F%E5%8D%95%E4%BD%8D%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>计量单位报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E5%B8%81%E5%88%B6%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>币制报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E5%9B%BD%E5%88%AB%E5%9C%B0%E5%8C%BA%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>国别地区报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E5%85%B3%E5%8C%BA%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>关区报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E6%88%90%E4%BA%A4%E6%96%B9%E5%BC%8F%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>成交方式报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E5%BE%81%E5%85%8D%E7%A8%8E%E6%96%B9%E5%BC%8F%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>征免税方式报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E8%BF%90%E8%BE%93%E6%96%B9%E5%BC%8F%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>运输方式报关代码表</a></li> <li><a href='http://www.stats.gov.cn/tjsj/tjbz/xzqhdm/201504/t20150415_712722.html'>国内省市县行政区划代码表</a></li> </ul> ",
+        "description": "前海德丰电子商务提供给第三方电商的销售订单接口, 基本路径为/api <br/><span style='color:red;'>签名认证:</span> 必须通过appkey生成的sign(放在请求中)进行认证后才能调用相关接口, 第三方电商的appkey值需向德丰IT人员索取<br/><br/><br/> 数字签名计算方法: <ul> <li>1. appkey: 由德丰信息系统分配给电商用户企业的appkey, 测试系统appkey=123456</li> <li>2. salt: 调用接口时的时间戳,秒级的10位int值, 即timestamp.</li> <li>3. sign: 数字签名,计算方法如下: <ol> <li>先把post请求参数(参数只要求是ref_order_no), 构成一个字符串, <br/>示例如下: stringA = “ref_order_no=123456” </li> <li>把求得的字符串和appkey, salt(即timestamp)进行拼接 stringSignTemp = “stringA &appkey=123456&salt=1467182687” </li> <li>然后求其md5值 sign=MD5 (stringSignTemp).toUpperCase()=”1DBF882F565E422EAA38686D93CBAB51” </li> <li> 最终向服务器发送数据\n<br/>post 数据示例:<br/> order:{<br/> &nbsp;&nbsp;ref_order_no:123456, <br/>..., <br/> &nbsp;&nbsp;appkey: '123456',<br/> &nbsp;&nbsp;salt: '1467182687',<br/> &nbsp;&nbsp;sign: '1DBF882F565E422EAA38686D93CBAB51'<br/> } <br/> </li> </ol> </li> <br/><br/> 参考文档 <ul> <li><a href='http://www.baike.com/wiki/%E8%AE%A1%E9%87%8F%E5%8D%95%E4%BD%8D%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>计量单位报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E5%B8%81%E5%88%B6%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>币制报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E5%9B%BD%E5%88%AB%E5%9C%B0%E5%8C%BA%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>国别地区报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E5%85%B3%E5%8C%BA%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>关区报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E6%88%90%E4%BA%A4%E6%96%B9%E5%BC%8F%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>成交方式报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E5%BE%81%E5%85%8D%E7%A8%8E%E6%96%B9%E5%BC%8F%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>征免税方式报关代码表</a></li> <li><a href='http://www.baike.com/wiki/%E8%BF%90%E8%BE%93%E6%96%B9%E5%BC%8F%E6%8A%A5%E5%85%B3%E4%BB%A3%E7%A0%81%E8%A1%A8'>运输方式报关代码表</a></li> <li><a href='http://www.stats.gov.cn/tjsj/tjbz/xzqhdm/201504/t20150415_712722.html'>国内省市县行政区划代码表</a></li> </ul> ",
         "version": "1.0.0"
     },
     "host": "yd2demo.eeda123.com",
@@ -18,6 +18,10 @@
         {
             "name": "基础数据_商品",
             "description": "基础数据_商品的创建与查询"
+        },
+        {
+            "name": "回调",
+            "description": "回调方法描述德丰系统对外调时的数据结构"
         }
     ],
     "produces": [
@@ -25,64 +29,6 @@
     ],
     "paths": {
         "/salesOrder": {
-            "get": {
-                "summary": "获取销售订单",
-                "description": "此接口通过提供订单号码,返回一个订单的数据结构<br/>参与签名参数:ref_order_no <br/>返回值不包括appkey, salt, sign.",
-                "parameters": [
-                    {
-                        "name": "ref_order_no",
-                        "in": "query",
-                        "description": "电商订单号码",
-                        "required": true,
-                        "type": "string",
-                        "format": "string",
-                        "default": "test1"
-                    },
-                    {
-                        "name": "appkey",
-                        "in": "query",
-                        "description": "电商appkey",
-                        "required": true,
-                        "type": "string",
-                        "format": "string",
-                        "default": "123456"
-                    },
-                    {
-                        "name": "salt",
-                        "in": "query",
-                        "description": "调用接口时的时间戳,秒级的10位int值, 即timestamp",
-                        "required": true,
-                        "type": "integer",
-                        "default": 1467182687
-                    },
-                    {
-                        "name": "sign",
-                        "in": "query",
-                        "description": "MD5签名",
-                        "required": true,
-                        "type": "string",
-                        "format": "string",
-                        "default": "417D585DECCF4A16708F1B040257774F"
-                    }
-                ],
-                "tags": [
-                    "销售订单"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "正确执行后返回一个订单的数据结构",
-                        "schema": {
-                            "$ref": "#/definitions/SalesOrder"
-                        }
-                    },
-                    "default": {
-                        "description": "出错",
-                        "schema": {
-                            "$ref": "#/definitions/msg"
-                        }
-                    }
-                }
-            },
             "post": {
                 "summary": "创建销售订单",
                 "description": "此接口创建销售订单,返回一个订单的数据结构<br/>参与签名参数:ref_order_no <br/>返回值不包括appkey, salt, sign.\n",
@@ -116,45 +62,53 @@
                 }
             }
         },
-        "/baseItem": {
-            "get": {
+        "/salesOrderQuery": {
+            "post": {
+                "summary": "获取销售订单",
+                "description": "此接口通过提供订单号码,返回一个订单的数据结构<br/>参与签名参数:ref_order_no <br/>返回值不包括appkey, salt, sign.",
+                "parameters": [
+                    {
+                        "name": "orderQuery",
+                        "in": "body",
+                        "description": "传入一个查询订单的数据结构",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/SalesOrderQuery"
+                        }
+                    }
+                ],
+                "tags": [
+                    "销售订单"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "正确执行后返回一个订单的数据结构",
+                        "schema": {
+                            "$ref": "#/definitions/SalesOrder"
+                        }
+                    },
+                    "default": {
+                        "description": "出错",
+                        "schema": {
+                            "$ref": "#/definitions/msg"
+                        }
+                    }
+                }
+            }
+        },
+        "/baseItemQuery": {
+            "post": {
                 "summary": "获取商品信息",
                 "description": "此接口通过提供商品号码,返回一个商品的数据结构<br/>参与签名参数:ref_item_no <br/>返回值不包括appkey, salt, sign.",
                 "parameters": [
                     {
-                        "name": "ref_item_no",
-                        "in": "query",
-                        "description": "第三方电商平台已备案的item_no",
+                        "name": "orderQuery",
+                        "in": "body",
+                        "description": "传入一个查询商品的数据结构",
                         "required": true,
-                        "type": "string",
-                        "format": "string",
-                        "default": "DF_SKU_001"
-                    },
-                    {
-                        "name": "appkey",
-                        "in": "query",
-                        "description": "电商appkey",
-                        "required": true,
-                        "type": "string",
-                        "format": "string",
-                        "default": "123456"
-                    },
-                    {
-                        "name": "salt",
-                        "in": "query",
-                        "description": "调用接口时的时间戳,秒级的10位int值, 即timestamp",
-                        "required": true,
-                        "type": "integer",
-                        "default": 1467182687
-                    },
-                    {
-                        "name": "sign",
-                        "in": "query",
-                        "description": "MD5签名",
-                        "required": true,
-                        "type": "string",
-                        "format": "string",
-                        "default": "279A8433CFBAB037B1615616E3162A8B"
+                        "schema": {
+                            "$ref": "#/definitions/GoodItemQuery"
+                        }
                     }
                 ],
                 "tags": [
@@ -174,7 +128,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/baseItem": {
             "post": {
                 "summary": "创建商品item",
                 "description": "此接口创建商品item,返回一个商品item的数据结构<br/>参与签名参数:ref_item_no <br/>返回值不包括appkey, salt, sign.\n",
@@ -207,9 +163,205 @@
                     }
                 }
             }
+        },
+        "/orderNotify": {
+            "post": {
+                "summary": "当订单报关状态发生变化时,通知第三方系统",
+                "parameters": [
+                    {
+                        "name": "order",
+                        "in": "body",
+                        "description": "传入一个item的数据结构",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/OrderNotify"
+                        }
+                    }
+                ],
+                "tags": [
+                    "回调"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "正确执行后返回一个数据结构",
+                        "schema": {
+                            "$ref": "#/definitions/OrderNotify"
+                        }
+                    },
+                    "default": {
+                        "description": "出错",
+                        "schema": {
+                            "$ref": "#/definitions/msg"
+                        }
+                    }
+                }
+            }
+        },
+        "/gateOutNotify": {
+            "post": {
+                "summary": "当订单出库状态发生变化时,通知第三方系统",
+                "parameters": [
+                    {
+                        "name": "order",
+                        "in": "body",
+                        "description": "传入一个出库item的数据结构",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GateOutNotify"
+                        }
+                    }
+                ],
+                "tags": [
+                    "回调"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "正确执行后返回一个数据结构",
+                        "schema": {
+                            "$ref": "#/definitions/GateOutNotify"
+                        }
+                    },
+                    "default": {
+                        "description": "出错",
+                        "schema": {
+                            "$ref": "#/definitions/msg"
+                        }
+                    }
+                }
+            }
+        },
+        "/gateInNotify": {
+            "post": {
+                "summary": "当库存状态发生变化时,通知第三方系统当前库存总数",
+                "parameters": [
+                    {
+                        "name": "order",
+                        "in": "body",
+                        "description": "传入一个入库item的数据结构",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GateInNotify"
+                        }
+                    }
+                ],
+                "tags": [
+                    "回调"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "正确执行后返回一个数据结构",
+                        "schema": {
+                            "$ref": "#/definitions/GateInNotify"
+                        }
+                    },
+                    "default": {
+                        "description": "出错",
+                        "schema": {
+                            "$ref": "#/definitions/msg"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
+        "OrderNotify": {
+            "type": "object",
+            "properties": {
+                "ref_order_no": {
+                    "type": "string",
+                    "description": "第三方电商的订单号码",
+                    "example": "DD2016061500006"
+                },
+                "custom_status": {
+                    "type": "string",
+                    "description": "订单报关状态",
+                    "example": "DD2016061500006"
+                }
+            }
+        },
+        "GateOutNotify": {
+            "type": "object",
+            "properties": {
+                "ref_order_no": {
+                    "type": "string",
+                    "description": "第三方电商的订单号码",
+                    "example": "DD2016061500006"
+                },
+                "ref_item_no": {
+                    "type": "string",
+                    "description": "第三方电商的商品货品号码",
+                    "example": "DF_SKU_001"
+                },
+                "delivery_no": {
+                    "type": "string",
+                    "description": "快递单号码",
+                    "example": "ZTO201607050001"
+                },
+                "amount": {
+                    "type": "number",
+                    "description": "此次出库数量",
+                    "example": "DD2016061500006"
+                },
+                "order_time": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "订单出库时间(yyyy-MM-dd HH:mm:ss)",
+                    "example": "2016-06-25 10:10:10"
+                }
+            }
+        },
+        "GateInNotify": {
+            "type": "object",
+            "properties": {
+                "ref_item_no": {
+                    "type": "string",
+                    "description": "第三方电商的商品货品号码",
+                    "example": "DF_SKU_001"
+                },
+                "gate_in_amount": {
+                    "type": "number",
+                    "description": "此次入库数量",
+                    "example": "20"
+                },
+                "total_amount": {
+                    "type": "number",
+                    "description": "入库后货品总数量",
+                    "example": "100"
+                },
+                "order_time": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "入库时间(yyyy-MM-dd HH:mm:ss)",
+                    "example": "2016-06-25 10:10:10"
+                }
+            }
+        },
+        "SalesOrderQuery": {
+            "type": "object",
+            "properties": {
+                "ref_order_no": {
+                    "type": "string",
+                    "description": "第三方电商的订单号码.",
+                    "example": "ref_order_no_001"
+                },
+                "appkey": {
+                    "type": "string",
+                    "description": "第三方电商的appkey值, 需向德丰IT人员索取",
+                    "example": "123456"
+                },
+                "salt": {
+                    "type": "string",
+                    "description": "调用接口时的时间戳,秒级的10位int值, 即timestamp",
+                    "example": "1467182687"
+                },
+                "sign": {
+                    "type": "string",
+                    "description": "MD5",
+                    "example": "A64834B88F24DBC6C74F972666F05EF0"
+                }
+            }
+        },
         "SalesOrder": {
             "type": "object",
             "properties": {
@@ -401,6 +553,11 @@
                     "description": "企业商品名称",
                     "example": "XX奶粉"
                 },
+                "ref_item_no": {
+                    "type": "string",
+                    "description": "第三方电商企业商品货号",
+                    "example": "DF_SKU_001"
+                },
                 "custom_item_no": {
                     "type": "string",
                     "description": "海关商品货号, 可与企业商品货号一致",
@@ -435,6 +592,31 @@
                     "type": "string",
                     "description": "是否赠品 Y:N",
                     "example": "N"
+                }
+            }
+        },
+        "GoodItemQuery": {
+            "type": "object",
+            "properties": {
+                "ref_item_no": {
+                    "type": "string",
+                    "description": "外部电商商品货号",
+                    "example": "DF_SKU_001"
+                },
+                "appkey": {
+                    "type": "string",
+                    "description": "第三方电商的appkey值, 需向德丰IT人员索取",
+                    "example": "123456"
+                },
+                "salt": {
+                    "type": "string",
+                    "description": "调用接口时的时间戳,秒级的10位int值, 即timestamp",
+                    "example": 1467182687
+                },
+                "sign": {
+                    "type": "string",
+                    "description": "MD5",
+                    "example": "4C23F5A2CA98A42F57C51C26B704D374"
                 }
             }
         },

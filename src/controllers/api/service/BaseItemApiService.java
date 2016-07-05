@@ -50,16 +50,39 @@ public class BaseItemApiService {
             controller.renderJson(r);
         }
     }
+    
+    @Before(Tx.class)
+    public void query() {
+        if ("POST".equals(requestMethod)) {
+            get();
+        } else {
+            Record r = new Record();
+            r.set("errCode", "04");
+            r.set("errMsg", "API接口只支持POST请求.");
+            controller.renderJson(r);
+        }
+    }
 
     private void get() {
-        String fullUrl = ApiController.getFullURL(request);
+//        String fullUrl = ApiController.getFullURL(request);
+        String orderJsonStr = controller.getPara("orderQuery");//form 提交
 
-        saveLog("api_item_get", fullUrl);
+        if (orderJsonStr == null) {//raw 提交
+            orderJsonStr = ApiController.getRequestPayload(controller.getRequest());
+        }
+        
+        ApiController.saveLog("api_item_query_post", orderJsonStr);
 
-        String sign = controller.getPara("sign");
+     // 这里将json字符串转化成javabean对象
+        Map<String, ?> itemDto = new Gson().fromJson(orderJsonStr, HashMap.class);
+        
         // 校验sign
-        int splitIndex = fullUrl.indexOf("?");
-        String paraStr = fullUrl.substring(splitIndex + 1);
+        String ref_item_no = itemDto.get("ref_item_no").toString();
+        String appkey = itemDto.get("appkey").toString();
+        String salt = itemDto.get("salt").toString();
+        String sign = itemDto.get("sign").toString();
+        
+        String paraStr = "ref_item_no="+ref_item_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
         logger.debug("paraStr=" + paraStr);
         int signIndex = paraStr.indexOf("sign");
         if (signIndex == -1) {
@@ -69,6 +92,18 @@ public class BaseItemApiService {
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
+        
+        //appkey
+        Party party = Party.dao.findFirst("select * from party where party_type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
+        if (party == null) {
+            Record r = new Record();
+            r.set("errCode", "02");
+            r.set("errMsg", "请求中appkey不正确!");
+            controller.renderJson(r);
+            return;// 注意这里一定要返回,否则会继续往下执行
+        }
+        String org_code=party.getStr("org_code");
+        
         String paraStrNoSign = paraStr.substring(0, signIndex - 1);
         logger.debug("paraStrNoSign=" + paraStrNoSign);
 
@@ -81,15 +116,14 @@ public class BaseItemApiService {
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
-        String appkey = controller.getPara("appkey");
-        String ref_item_no = controller.getPara("ref_item_no");
+        
         String searchSql = "select pd.*, p.org_code from product pd left join category cat on pd.category_id = cat.id"
                 + " left join party p on cat.customer_id=p.id where pd.ref_item_no=? and p.appkey=?";
         Record p = Db.findFirst(searchSql, ref_item_no, appkey);
         if (p != null) {
-            BaseItemDto itemDto = BaseItemBuilder.buildItemDto(p.getLong("id")
+            BaseItemDto returnItemDto = BaseItemBuilder.buildItemDto(p.getLong("id")
                     .toString(), p.getStr("org_code"));
-            controller.renderJson(itemDto);
+            controller.renderJson(returnItemDto);
         } else {
             Record r = new Record();
             r.set("errCode", "01");
@@ -99,14 +133,7 @@ public class BaseItemApiService {
 
     }
 
-    private void saveLog(String orderTeyp, String content) {
-        OrderActionLog log = new OrderActionLog();
-        log.set("order_type", orderTeyp);
-        log.set("action", "get");
-        log.set("json", content);
-        log.set("time_stamp", new Date());
-        log.save();
-    }
+    
 
     private void post() {
         String orderJsonStr = controller.getPara("item");//form 提交
@@ -115,7 +142,7 @@ public class BaseItemApiService {
             orderJsonStr = ApiController.getRequestPayload(controller.getRequest());
         }
 
-        saveLog("api_item_post", orderJsonStr);
+        ApiController.saveLog("api_item_post", orderJsonStr);
         
         if (orderJsonStr == null) {
             Record r = new Record();
