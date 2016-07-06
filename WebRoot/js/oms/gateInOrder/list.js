@@ -25,7 +25,7 @@ $(document).ready(function() {
                     return "<a href='/gateInOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
                 }
             },
-            { "data": "WAREHOUSE_ID"},
+            { "data": "WAREHOUSE_NAME"},
             { "data": "ORDER_TYPE"}, 
             { "data": "CREATOR_NAME"}, 
             { "data": "CREATE_STAMP"}, 

@@ -17,6 +17,7 @@ import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
 import models.eeda.profile.CustomCompany;
+import models.eeda.profile.Warehouse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -122,6 +123,10 @@ public class GateInOrderController extends Controller {
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
+    	//仓库回显
+    	Warehouse warehouse = Warehouse.dao.findById(gateInOrder.getLong("warehouse_id"));
+    	setAttr("warehouse", warehouse);
+    	
     	String route_from = gateInOrder.getStr("route_from");
     	String route_to = gateInOrder.getStr("route_to");
     	
@@ -155,8 +160,9 @@ public class GateInOrderController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name "
+        String sql = "SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
     			+ "  from gate_in_order gio "
+    			+ "  left join warehouse wh on wh.id = gio.warehouse_id"
     			+ "  left join user_login u on u.id = gio.create_by"
     			+ "   where 1 =1 ";
         

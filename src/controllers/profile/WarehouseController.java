@@ -94,17 +94,17 @@ public class WarehouseController extends Controller{
 	}
 	
 	@RequiresPermissions(value = {PermissionConstant.PERMSSION_W_DELETE})
-	public void delete() {
-		
-		String id = getPara();
+	public void stop() {
+		String id = getPara("id");
 		Warehouse warehouse = Warehouse.dao.findById(id);
-		if(!"inactive".equals(warehouse.get("status"))){
-			warehouse.set("status", "inactive");
-		}else{
+		if("inactive".equals(warehouse.get("status"))){
 			warehouse.set("status", "active");
+		}else{
+			warehouse.set("status", "inactive");
 		}
 		warehouse.update();
-		redirect("/warehouse");
+		
+		renderJson(warehouse);
 	}
 
 	@RequiresPermissions(value = {PermissionConstant.PERMSSION_W_CREATE, PermissionConstant.PERMSSION_W_UPDATE}, logical=Logical.OR)

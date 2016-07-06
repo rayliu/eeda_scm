@@ -16,6 +16,7 @@ import models.eeda.oms.InspectionOrderItem;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.profile.CustomCompany;
+import models.eeda.profile.Warehouse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -117,6 +118,10 @@ public class InspectionOrderController extends Controller {
     	//获取报关企业信息
     	CustomCompany custom = CustomCompany.dao.findById(inspectionOrder.getLong("custom_id"));
     	setAttr("custom", custom);
+    	
+    	//仓库回显
+    	Warehouse warehouse = Warehouse.dao.findById(inspectionOrder.getLong("warehouse_id"));
+    	setAttr("warehouse", warehouse);
 
     	//用户信息
     	long create_by = inspectionOrder.getLong("create_by");
@@ -134,8 +139,9 @@ public class InspectionOrderController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT inso.*, ifnull(u.c_name, u.user_name) creator_name "
+        String sql = "SELECT inso.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
     			+ "  from inspection_order inso "
+    			+ "  left join warehouse wh on wh.id = inso.warehouse_id"
     			+ "  left join user_login u on u.id = inso.create_by"
     			+ "   where 1 =1 ";
         

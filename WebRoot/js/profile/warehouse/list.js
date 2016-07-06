@@ -7,11 +7,11 @@ $(document).ready(function() {
     var dataTable = $('#eeda-table').DataTable({
     	 "processing": true,
          "searching": false,
-         //"serverSide": true,
+         "serverSide": false,
          "scrollX": true,
-         "scrollY": "300px",
+         "scrollY": "500px",
          "scrollCollapse": true,
-         "autoWidth": false,
+         "autoWidth": true,
          "language": {
              "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
          },
@@ -27,40 +27,40 @@ $(document).ready(function() {
             { "data": "CREATE_STAMP"}, 
             { "data": "STATUS",
             	"render": function ( data, type, full, meta ) {
-                	var str="<nobr>";
-                	if(Warehouser.isUpdate){
-                		str += "<a class='btn  btn-primary btn-sm' href='/warehouse/edit/"+full.ID+"' target='_blank'>"+
-	                        "<i class='fa fa-edit fa-fw'></i>"+
-	                        "编辑"+
-	                        "</a> ";
-                	}
+            		var str = '停用';
+            		var btn = 'btn-danger'
                 	if(Warehouser.isDel){
-                		if(full.STATUS != "inactive"){
-                    		str += "<a class='btn btn-danger  btn-sm' href='/warehouse/delete/"+full.ID+"'>"+
-    	                            "<i class='fa fa-trash-o fa-fw'></i>"+ 
-    	                            "停用"+
-    	                        "</a>";
-                    	}else{
-                    		str += "<a class='btn btn-success  btn-sm' href='/warehouse/delete/"+full.ID+"'>"+
-    	                            "<i class='fa fa-trash-o fa-fw'></i>"+ 
-    	                            "启用"+
-    	                        "</a>";
-    	                }
+                		if(full.STATUS != "active"){
+                    		str = "启用";
+                    		btn = 'btn-success';
+                    	}
                 	}
-                	str+="</nobr>";
-                	return str;
-	                    
-	              }
+                	return "<button class='btn " + btn + " btn-sm' id='"+full.ID+"'>"+ str + "</button>";
+            	}
             }
         ]
     });
     
+    //停用按钮
+    $('#eeda-table').on('click','.btn',function(){
+    	$(this).prop('disabled',true);
+    	var id = $(this).attr("id");
+    	$.post('/warehouse/stop',{id:id , status:status},function(data){
+    		searchData();
+    	})
+    })
+    
+    //查询按钮
     $('#searchBtn').click(function(){
+        searchData(); 
+    })
+
+    var searchData=function(){
     	var warehouse_name = $("#warehouseName_filter").val();
     	var warehouse_address = $("#warehouseAddress_filter").val();
     	
     	var url = "/warehouse/list?warehouse_name="+warehouse_name
     							+"&warehouse_address="+warehouse_address;
     	dataTable.ajax.url(url).load();
-   });
+    };
 } );

@@ -21,9 +21,9 @@
 					label:'单号', value:order.ORDER_NO!'', disabled: 'disabled'
 					}){}%></div>
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputCustomCompanyField.html", {
+					<%include("/yh/component/form/inputWarehouseField.html", {
 					id:'warehouse_id', label:'仓库', required:'required',
-					value:order.CUSTOM_ID!'', display_value: custom.shop_name!'' }){}
+					value:order.warehouse_id!'', display_value: warehouse.warehouse_name!'' }){}
 					%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'consignor',
