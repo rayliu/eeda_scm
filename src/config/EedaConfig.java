@@ -28,6 +28,8 @@ import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
+import models.eeda.oms.WaveOrder;
+import models.eeda.oms.WaveOrderItem;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.LogisticsCustomCompany;
 import models.eeda.profile.Unit;
@@ -66,6 +68,7 @@ import controllers.oms.inspectionOrder.InspectionOrderController;
 import controllers.oms.loadOrder.LoadOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
 import controllers.oms.salesOrder.SalesOrderController;
+import controllers.oms.waveOrder.WaveOrderController;
 import controllers.profile.AccountController;
 import controllers.profile.CustomCompanyController;
 import controllers.profile.LogisticsCustomCompanyController;
@@ -177,6 +180,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/api", ApiController.class, contentPath);
 		me.add("/warehouseShelves", WarehouseShelvesController.class, contentPath);
 		me.add("/loadOrder", LoadOrderController.class, contentPath);
+		me.add("/waveOrder", WaveOrderController.class, contentPath);
 	}
 
     @Override
@@ -243,6 +247,8 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("inspection_order", InspectionOrder.class);
         arp.addMapping("inspection_order_item", InspectionOrderItem.class);
         arp.addMapping("warehouse_shelves", WarehouseShelves.class);
+        arp.addMapping("wave_order", WaveOrder.class);
+        arp.addMapping("wave_order_item", WaveOrderItem.class);
         
         arp.addMapping("order_action_log", OrderActionLog.class);
         arp.addMapping("unit", Unit.class);

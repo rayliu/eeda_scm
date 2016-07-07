@@ -1,0 +1,1 @@
+package models.eeda.oms;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class WaveOrder extends Model<WaveOrder> {	public static final WaveOrder dao = new WaveOrder();}
