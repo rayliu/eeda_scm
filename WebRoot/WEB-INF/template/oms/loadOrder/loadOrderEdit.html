@@ -1,0 +1,459 @@
+<%layout("/yh/layout.html"){%>
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/yh/css/ui/jquery-ui.css">
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+<link
+	href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css"
+	rel="stylesheet">
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="btn-header" style="font-size: 32px">出区核放单</div>
+		</div>
+	</div>
+
+	<input id="order_id" type="hidden" name="order_id"
+		value="${order.id!''}" />
+	<div class="form_group">
+		<!--  form row  -->
+		<form id="orderForm">
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>销售订单信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<!--  第1行  -->
+				<div class="col-lg-4">
+					<!--  三列排版  -->
+					<%include("/yh/component/form/inputField.html", { id:'order_no',
+					label:'电商平台的原始订单编号', value:salesOrder.ORDER_NO!'', disabled: 'disabled'
+					}){}%>
+				</div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'pay_code',
+					label:'支付企业的海关备案编码', value:salesOrder.pay_code!'', disabled: 'disabled' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'pay_name',
+					label:'支付企业的海关备案名称', value:salesOrder.pay_name!'', disabled: 'disabled' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'consignee_id', label:'收货人证件号', value:salesOrder.consignee_id!'', disabled: 'disabled'
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'consignee_type', label:'收货人证件类型', value:salesOrder.consignee_type!'', disabled: 'disabled'
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'consignee',
+					label:'收货人名称', value:salesOrder.consignee!'', disabled: 'disabled' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'consignee_telephone', label:'收货人电话',
+					value:salesOrder.consignee_telephone!'', disabled: 'disabled' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'consignee_address', label:'收件人地址',
+					value:salesOrder.consignee_address!'' , disabled: 'disabled'}){}%></div>
+				<div class="col-lg-4">
+					<div class="form-group">
+					    <label class="search-label">收货人地址（国）</label>
+					    <select id="consignee_country" name="consignee_country" disabled
+					    	class="form-control search-control" >
+			                    <option value='142'>中国</option>
+					    </select>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputAllLocationField.html", {
+						id:'sales_pro_ci_dis', label:'收件人(省-市-区)',value: sales_pro_ci_dis!'',
+						display_value:sales_pro_ci_dis_name!'' ,disabled:'disabled' }){}%></div>
+				<!--  第2行  -->
+				<div class="col-lg-4">
+				    <label class="search-label">币制</label>
+				    <select id="currency" name="currency" disabled
+				    	class="form-control search-control" >
+		                    <option value='142'>人民币</option>
+				    </select>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>运单信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<!--  第行  -->
+				<div class="col-lg-4">
+					<div class="form-group">
+					    <label class="search-label">起运国</label>
+					    <select id="country_code" name="country_code" 
+					    	field_type='list'
+					    	class="form-control search-control" >
+			                    <option value='142'>中国</option>
+					    </select>
+					</div>
+				</div>
+				<!-- <div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'shipper_country', label:'发货人所在国',
+					value:order.shipper_country!'',required:'required' }){}%></div> -->
+				<div class="col-lg-4">
+					<div class="form-group">
+					    <label class="search-label">发货人所在国</label>
+					    <select id="shipper_country" name="shipper_country" 
+					    	class="form-control search-control" >
+			                    <option value='142'>中国</option>
+					    </select>
+					</div>
+				</div>
+				<!-- /.col-lg-4 -->
+				<!-- <div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'shipper_city', label:'发货人所在城市',required:'required', value:order.shipper_city!''
+					}){}%></div> -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputLocationField.html", {
+						id:'shipper_city', label:'发货人所在城市',value: order.shipper_city!'',
+						display_value:shipper_city_name!'' ,required:'required' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<!-- /.row-->
+
+			<div class="row">
+				<!--  第行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'shipper',
+					label:'发货人名称', value:order.shipper!'',required:'required'  }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'shipper_address', label:'发货人地址', value:order.shipper_address!'',required:'required'
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'shipper_telephone', label:'发货人电话',
+					value:order.shipper_telephone!'',required:'required' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<!-- /.row-->
+
+			<div class="row">
+				<!--  第行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'traf_mode',
+					label:'运输方式', value:order.traf_mode!'',required:'required' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'ship_name',
+					label:'运输工具名称', value:order.ship_name!'',required:'required' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'freight',
+					label:'运费', value:order.freight!'' ,required:'required'}){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<!-- /.row-->
+
+			<div class="row">
+				<!--  第行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'insure_fee',
+					label:'保价费', value:order.insure_fee!'' ,required:'required'}){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'weight',
+					label:'毛重（Kg）', value:order.weight!'',required:'required' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'netwt',
+					label:'净重（Kg）', value:order.netwt!''}){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<!-- /.row-->
+
+			<div class="row">
+				<!--  第行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'pack_no',
+					label:'件数', value:order.pack_no!'' ,required:'required'}){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'parcel_info',
+					label:'包裹单信息', value:order.parcel_info!'',required:'required' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'goods_info',
+					label:'商品信息', value:order.goods_info!'',required:'required' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<!-- /.row-->
+
+			<div class="row">
+				<!--  第行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'customs_code', label:'主管海关', value:order.customs_code!'',required:'required' }){}%>
+				</div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'ciq_code',
+					label:'主管检验检疫机构代码', value:order.ciq_code!'',required:'required' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'port_code',
+					label:'进出口岸代码', value:order.port_code!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<!-- /.row-->
+
+			<div class="row">
+				<!--  第行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'decl_code',
+					label:'申报口岸代码', value:order.decl_code!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'supervision_code', label:'监管场所代码',
+					value:order.supervision_code!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'destination_port', label:'指/抵运港',
+					value:order.destination_port!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<!-- /.row-->
+
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/dateInputField.html", { id:'ie_date',
+					label:'进出境日期', value:order.ie_date!'',required:'required' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/dateInputField.html", {
+					id:'deliver_date', label:'出区日期', value:order.deliver_date!'' }){}%>
+				</div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'trade_mode',
+					label:'监管方式', value:order.trade_mode!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'ps_type',
+					label:'境区类型', value:order.ps_type!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'trans_mode',
+					label:'成交方式', value:order.trans_mode!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'warp_type',
+					label:'包装种类', value:order.warp_type!'' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'cut_mode',
+					label:'征免性质', value:order.cut_mode!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'ems_no',
+					label:'电商账册编号', value:order.ems_no!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'report_pay_no', label:'支付通关申报编号', value:order.report_pay_no!''
+					}){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+
+
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'log_no',
+					label:'物流运单编号', value:order.log_no!'', disabled:'disabled' }){}%></div>
+				<!-- /.col-lg-4 -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'creator_name', label:'创建人', value:user.c_name!'', disabled:
+					'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'create_stamp', label:'订单时间', value:order.create_stamp!'',
+					disabled: 'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'status',
+					label:'状态', value:order.status!'', disabled: 'disabled' }){}%></div>
+				<!-- /.col-lg-4 -->
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<label>备注</label>
+					<textarea id='note' class="form-control" rows="3" name="note">${order.note!''}</textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- /.row -->
+
+	<div class="group-form" style="margin-top: 15px">
+		<ul id="orderTabs" class="nav nav-tabs">
+			<li class="active"><a href="#itemDetail" data-toggle="tab"
+				id="costCheckOrderItem">货品明细</a></li>
+			<li><a href="#custom" data-toggle="tab" data-src="create"
+				id="costCheckOrderbasic">报关信息</a></li>
+		</ul>
+
+		<div class="tab-content">
+			<div class="tab-pane fade active in" id="itemDetail">
+				<div class="form-group">
+					<div class="col-lg-12">
+						<!-- <button class="btn btn-success btn-xs" id="add_cargo">添加</button> -->
+						<%include("/yh/component/form/detailTable.html", {
+						id:'cargo_table', headers:[ '企业商品货号', '数量', '计量单位', '单价',
+						'总价'], field_list:[ 'item_no', 'qty', 'unit', 'price',
+						'total'], value_list: itemList![] }){} %>
+					</div>
+				</div>
+			</div>
+
+			<div class="tab-pane fade" id="custom">
+				<div class="form-group">
+					<!--  第行  -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", { id:'org_code',
+						label:'企业组织机构代码', value:custom.org_code!'', disabled: 'disabled'
+						}){}%></div>
+					<!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", { id:'order_no',
+						label:'电商平台的原始订单编号', value:custom.order_no!'', disabled:
+						'disabled' }){}%></div>
+					<!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", {
+						id:'warehouse_no', label:'仓库编号', value:custom.warehouse_no!'',
+						disabled: 'disabled' }){}%></div>
+					<!-- /.col-lg-4 -->
+				</div>
+
+				<div class="form-group">
+					<!--  第行  -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", {
+						id:'ebp_code_cus', label:'电商平台的海关备案编码',
+						value:custom.ebp_code_cus!'', disabled: 'disabled' }){}%></div>
+					<!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", {
+						id:'ebp_code_ciq', label:'电商企业的国检备案编码',
+						value:custom.ebp_code_ciq!'', disabled: 'disabled' }){}%></div>
+					<!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", { id:'ebp_name',
+						label:'电商平台名称', value:custom.ebp_name!'', disabled: 'disabled'
+						}){}%></div>
+				</div>
+
+				<div class="form-group">
+					<!--  第行  -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", {
+						id:'ebc_code_cus', label:'电商企业的海关备案编码',
+						value:custom.ebc_code_cus!'', disabled: 'disabled' }){}%></div>
+					<!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", {
+						id:'ebc_code_ciq', label:'电商企业的国检备案编码',
+						value:custom.ebc_code_ciq!'', disabled: 'disabled' }){}%></div>
+					<!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", { id:'ebc_name',
+						label:'电商企业名称', value:custom.ebc_name!'', disabled: 'disabled'
+						}){}%></div>
+				</div>
+
+				<div class="form-group">
+					<!--  第行  -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", {
+						id:'agent_code_cus', label:'代理清单报关企业的海关备案编码',
+						value:custom.agent_code_cus!'', disabled: 'disabled' }){}%></div>
+					<!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", {
+						id:'agent_code_ciq', label:'代理清单报关企业的国检备案编码',
+						value:custom.agent_code_ciq!'', disabled: 'disabled' }){}%></div>
+					<!-- /.col-lg-4 -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", { id:'agent_name',
+						label:'代理清单报关企业的海关备案名称', value:custom.agent_name!'', disabled:
+						'disabled' }){}%></div>
+				</div>
+				<div class="form-group">
+					<!--  第4行  -->
+					<div class="col-lg-4">
+						<%include("/yh/component/form/inputField.html", { id:'ciq_code',
+						label:'国检备案号', value:custom.ciq_code!'', disabled: 'disabled'
+						}){}%></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-lg-12">
+			<a id='saveBtn' class="btn  btn-primary" href="#">保存</a> <a
+				id='submitBtn' class="btn  btn-primary" href="#">上报</a>
+			<button id="printBtn" type="button" class="btn  btn-primary"
+				data-toggle="modal" data-target=".bs-example-modal-sm">打印</button>
+			<a class="btn  btn-default" href="/logisticsOrder">返回</a>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+
+
+</div>
+<!--  form row  -->
+<!-- /#page-wrapper -->
+<%}%>
+
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script
+	src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+
+<!-- 引入校验的js 文件及其 中文 文件-->
+<script src="/yh/js/jquery.validate.min.js"></script>
+<script src="/yh/js/jvalidate.messages_cn.js"></script>
+
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+
+<script src="/yh/js/eeda-common.js"></script>
+<script src="/js/checkUtil.js"></script>
+<script>
+    var order_no = '${order.order_no!'出区核放单编辑'}'; 
+    var salesOrder = {};
+</script>
+<script src="/js/oms/loadOrder/edit_item_table.js"></script>
+<script src="/js/oms/loadOrder/edit.js"></script>

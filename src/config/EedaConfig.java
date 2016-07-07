@@ -63,6 +63,7 @@ import controllers.api.ApiController;
 import controllers.oms.allinpay.AllinpayController;
 import controllers.oms.gateInOrder.GateInOrderController;
 import controllers.oms.inspectionOrder.InspectionOrderController;
+import controllers.oms.loadOrder.LoadOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
 import controllers.oms.salesOrder.SalesOrderController;
 import controllers.profile.AccountController;
@@ -175,6 +176,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/allinpay", AllinpayController.class, contentPath);
 		me.add("/api", ApiController.class, contentPath);
 		me.add("/warehouseShelves", WarehouseShelvesController.class, contentPath);
+		me.add("/loadOrder", LoadOrderController.class, contentPath);
 	}
 
     @Override
