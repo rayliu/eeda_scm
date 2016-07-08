@@ -2,20 +2,23 @@
 $(document).ready(function() {
 
 	document.title = order_no + ' | ' + document.title;
-
-    $('#menu_order').addClass('active').find('ul').addClass('in');
-    
-    $('#amount').blur(function(){
-        $('#total_amount').text($(this).val());
-    });
-    
-
+	
+	 //form表单校验
+	$("#itemForm").validate({
+        rules: {
+        	amount:{
+        		min:0
+        	}
+        }    
+	});
+	 
     //------------save
     $('#saveBtn').click(function(e){
         //阻止a 的默认响应行为，不需要跳转
         e.preventDefault();
-        //提交前，校验数据
-        if(!$("#orderForm").valid()){
+        //提交前，校验数
+        
+        if(!$("#itemForm").valid()){
             return;
         }
         
@@ -32,12 +35,15 @@ $(document).ready(function() {
             var order = data;
             if(order.ID>0){
                 $("#order_id").val(order.ID);
+                $("#order_no").val(order.ORDER_NO);
+                $("#creator_name").val(order.CREATOR_NAME);
+                $("#create_stamp").val(order.CREATE_STAMP);
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
                 
                 //异步刷新明细表
-                inspectionOrder.refleshTable(order.ID);
+                waveOrder.refleshTable(order.ID);
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);
@@ -47,6 +53,4 @@ $(document).ready(function() {
             $('#saveBtn').attr('disabled', false);
           });
     });  
- 
-
 } );

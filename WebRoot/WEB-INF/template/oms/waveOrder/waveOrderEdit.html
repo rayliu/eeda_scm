@@ -14,11 +14,37 @@
 
 	<input id="order_id" type="hidden" name="order_id"
 		value="${order.id!''}" />	
-
-	<div class="form-group">
+	<form id="orderForm">
+		<div class="form-group">
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>创建信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'order_no',
+					label:'订单号', value:order.ORDER_NO!'', disabled: 'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'creator_name', label:'创建人', value:user.c_name!'', disabled:
+					'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'create_stamp', label:'订单时间', value:order.create_stamp!'',
+					disabled: 'disabled' }){}%></div>
+            </div>
+        </div>
+    </form>
+    <div class="row">
 		<div class="col-lg-12">
+			<h3>明细信息</h3>
+		</div>
+	</div>
+	<div class="col-lg-12">
+		<div class="row">
 			<button class="btn btn-success btn-xs" id="add_cargo">添加</button>
-			<form id="orderForm">
+			<form id="itemForm">
 				<%include("/yh/component/form/detailTable.html", {
 				id:'cargo_table', 
 				headers:['', 
@@ -31,13 +57,13 @@
 	
 	<br>
 	<br>
-	<div class="form-group">
+	<div class="row">
 		<div class="col-lg-12">
 			<a id='saveBtn' class="btn  btn-primary" href="#">保存</a> 
 			<!-- <a id='submitBtn' class="btn  btn-primary" href="#">上报</a> -->
 			<button id="printBtn" type="button" class="btn  btn-primary"
 				data-toggle="modal" data-target=".bs-example-modal-sm">打印</button>
-			<a class="btn  btn-default" href="/logisticsOrder">返回</a>
+			<a class="btn  btn-default" href="/waveOrder">返回</a>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>

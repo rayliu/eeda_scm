@@ -71,7 +71,7 @@ public class WaveOrderController extends Controller {
    			DbUtils.setModelValues(dto, waveOrder);
    			
    			//需后台处理的字段
-   			waveOrder.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
+   			waveOrder.set("order_no", OrderNoGenerator.getNextOrderNo("BC"));
    			waveOrder.set("create_by", user.getLong("id"));
    			waveOrder.set("create_stamp", new Date());
    			waveOrder.save();
@@ -121,10 +121,9 @@ public class WaveOrderController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT inso.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
-    			+ "  from inspection_order inso "
-    			+ "  left join warehouse wh on wh.id = inso.warehouse_id"
-    			+ "  left join user_login u on u.id = inso.create_by"
+        String sql = "SELECT wor.*, ifnull(u.c_name, u.user_name) creator_name "
+    			+ "  from wave_order wor "
+    			+ "  left join user_login u on u.id = wor.create_by"
     			+ "   where 1 =1 ";
         
         String condition = DbUtils.buildConditions(getParaMap());

@@ -6,7 +6,7 @@ $(document).ready(function() {
     var dataTable = $('#eeda-table').DataTable({
         "processing": true,
         "searching": false,
-        //"serverSide": true,
+        "serverSide": false,
         "scrollX": true,
         "scrollY": "300px",
         "scrollCollapse": true,
@@ -14,14 +14,12 @@ $(document).ready(function() {
         "language": {
             "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
         },
-        //"ajax": "/damageOrder/list",
         "columns": [
-            { "data": null, 
+            { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
                     return "<a href='/inspectionOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
                 }
             },
-            { "data": "WAREHOUSE_NAME"},
             { "data": "CREATOR_NAME"}, 
             { "data": "CREATE_STAMP"}, 
             { "data": "STATUS"}
@@ -50,7 +48,7 @@ $(document).ready(function() {
             *_status =
             时间字段需成双定义  *_begin_time *_end_time   between
         */
-        var url = "/inspectionOrder/list?order_no="+order_no
+        var url = "/waveOrder/list?order_no="+order_no
              +"&status="+status
              +"&create_stamp_begin_time="+start_date
              +"&create_stamp_end_time="+end_date;

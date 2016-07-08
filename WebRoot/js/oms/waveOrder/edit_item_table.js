@@ -106,8 +106,8 @@ $(document).ready(function() {
             { "data": "AMOUNT", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='';
-                    return '<input type="text" name="amount" value="'+data+'" class="form-control" />';
+                        data='1';
+                    return '<input type="number" name="amount" value="'+data+'" class="form-control easyui-numberbox" data-options="max:0"/>';
                 }
             },
             { "data": "SHELVES", 
