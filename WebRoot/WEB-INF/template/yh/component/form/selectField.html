@@ -1,6 +1,13 @@
 <div class="form-group">
-    <label class="search-label">${label}</label>
-    <select id="${id}" class="form-control search-control">
+    <label class="search-label">${label}
+    <%if(required!'' =='required'){%>
+        <span style='color:red; display:initial;'>*</span>
+    <%}%>
+    </label>
+    <select id="${id}" class="form-control search-control"
+    ${required!''} 
+	${disabled!''}
+    >
     	<%for(item in value_list){%>
         	<option value="${item.code}">${item.value}</option>
         <%}%>

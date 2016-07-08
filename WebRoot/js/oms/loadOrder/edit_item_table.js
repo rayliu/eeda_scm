@@ -12,7 +12,7 @@ $(document).ready(function() {
         itemTable.row(tr).remove().draw();
     }); 
 
-    inspectionOrder.buildItemDetail=function(){
+    order.buildItemDetail=function(){
         var item_table_rows = $("#item_table tr");
         var items_array=[];
         for(var index=0; index<item_table_rows.length; index++){
@@ -28,14 +28,17 @@ $(document).ready(function() {
             if(!id){
                 id='';
             }
-            var item={
-                id: id,
-                bar_code: $(row.children[1]).find('input').val(), 
-                item_code: $(row.children[2]).find('input').val(), 
-                guarantee_date: $(row.children[3]).find('input').val(), 
-                shelves: $(row.children[4]).find('input').val(),
-                action: id.length>0?'UPDATE':'CREATE'
-            };
+            
+            var item={}
+            item.id = id;
+            for(var i = 1; i < row.childNodes.length; i++){
+            	var name = $(row.childNodes[i]).find('input').attr('name');
+            	var value = $(row.childNodes[i]).find('input').val();
+            	if(name){
+            		item[name] = value;
+            	}
+            }
+            item.action = id.length > 0?'UPDATE':'CREATE';
             items_array.push(item);
         }
 
@@ -52,23 +55,6 @@ $(document).ready(function() {
         return items_array;
     };
     
-    inspectionOrder.reDrawCargoTable=function(order){
-        deletedTableIds=[];
-        cargoTable.clear();
-        for (var i = 0; i < order.ITEM_LIST.length; i++) {
-            var item = order.ITEM_LIST[i];
-            var item={
-                "ID": item.ID,
-                "BAR_CODE": item.BAR_CODE,
-                "ITEM_CODE": item.ITEM_CODE,
-                "GUARANTEE_DATE": item.GUARANTEE_DATE,
-                "SHELVES": item.SHELVES
-            };
-    
-            cargoTable.row.add(item).draw(false);
-        }       
-    };
-
     //------------事件处理
     var itemTable = $('#item_table').DataTable({
         "processing": true,
@@ -88,32 +74,11 @@ $(document).ready(function() {
                 	return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
                 }
             },
-            { "data": "BAR_CODE", 
+            { "data": "NUMBER", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control bar_code" required/>';
-                }
-            },
-            { "data": "ITEM_CODE", 
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "GUARANTEE_DATE", 
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "SHELVES", 
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             }
         ]
@@ -134,7 +99,7 @@ $(document).ready(function() {
     });
     
     //刷新明细表
-    inspectionOrder.refleshTable = function(order_id){
+    order.refleshTable = function(order_id){
     	var url = "/inspectionOrder/tableList?order_id="+order_id
         +"&table_type=item";
     	itemTable.ajax.url(url).load();
