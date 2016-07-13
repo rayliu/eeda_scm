@@ -151,7 +151,7 @@
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'CONTA_ID_2', label:'集装箱号12',
+					id:'CONTA_ID_2', label:'集装箱号2',
 					value:order.CONTA_ID_2!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
@@ -159,66 +159,49 @@
 					value:order.CONTA_WT_2!'' }){}%></div>
 			</div>
 			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
 			<div class="row">
-				<div class="col-lg-4">
-					<%include("/yh/component/form/inputAllLocationField.html", {
-						id:'sales_pro_ci_dis', label:'收件人(省-市-区)',value: sales_pro_ci_dis!'',
-						display_value:sales_pro_ci_dis_name!''  }){}%></div>
-				<!--  第2行  -->
-				<div class="col-lg-4">
-				    <label class="search-label">币制</label>
-				    <select id="currency" name="currency" disabled
-				    	class="form-control search-control" >
-		                    <option value='142'>人民币</option>
-				    </select>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="col-lg-12">
-					<h3>运单信息</h3>
-				</div>
-			</div>
-			<div class="row">
-				<!--  第行  -->
 				<div class="col-lg-4">
 					<div class="form-group">
-					    <label class="search-label">起运国</label>
-					    <select id="country_code" name="country_code" 
-					    	field_type='list'
+					    <label class="search-label">抵运地</label>
+					    <select id="ARRIVAL_PLACE" name="ARRIVAL_PLACE_name"
 					    	class="form-control search-control" >
-			                    <option value='142'>中国</option>
+			                    <option value='000000000'>其它</option>
+			                    <option value='5349210001'>前海湾保税港码头作业区</option>
+			                    <option value='5349990002'>前海湾保税港报税作业区</option>
+			                    <option value='5304210000'>:蛇口其他码头</option>
 					    </select>
 					</div>
 				</div>
 				<div class="col-lg-4">
-					<div class="form-group">
-					    <label class="search-label">发货人所在国</label>
-					    <select id="shipper_country" name="shipper_country" 
-					    	class="form-control search-control" >
-			                    <option value='142'>中国</option>
-					    </select>
-					</div>
-				</div>
+					<%include("/yh/component/form/inputField.html", {
+					id:'P_NO', label:'公路舱单批次号',
+					value:order.P_NO!'' }){}%></div>
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputLocationField.html", {
-						id:'shipper_city', label:'发货人所在城市',value: order.shipper_city!'',
-						display_value:shipper_city_name!'' ,required:'required' }){}%></div>
+					<%include("/yh/component/form/inputField.html", {
+					id:'IC_CARD_NO', label:'车辆IC卡号',
+					value:order.IC_CARD_NO!'' }){}%></div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'SEAL_NO', label:'关锁号',
+					value:order.SEAL_NO!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'SEAL_KEY', label:'关锁密钥',
+					value:order.SEAL_KEY!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'EMS_NO', label:'帐册号',
+					value:order.EMS_NO!'' }){}%></div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'WYGL_CODE', label:'承运委托企业(物业管理)海关备案号',
+					value:order.WYGL_CODE!'' }){}%></div>
 			</div>
 
 			<div class="row">
