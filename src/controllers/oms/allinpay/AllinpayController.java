@@ -138,8 +138,25 @@ public class AllinpayController extends Controller {
 	    setAttr("strSignMsg", strSignMsg);
 	    render("/oms/allinpay/pay.html");
 	}
-	
-	//支付回调接口
+	//支付回调接口, 即通联的pickupUrl
+    public void pickupUrl(){
+        //Parameter: payDatetime=20160622161441  ext1=123  payAmount=1  returnDatetime=20160622161156  
+        //issuerId=  signMsg=jBKEl/ls4ut1Kb0LvdRsrcUaS5g5jNe1NqAG7XDHmDmQFIdlaIPH4lJVB57C1y5H9TMGPIMvqw2nv9ftiDj5w/uR4Szo6yWRe81Z9cO7nChfsbyWM0Om5KB5nvmMwJLMHj8s406e0NFX4jFTEDiMhDawLTj9wdKPPl+o8scSDr4=  
+        //payType=0  language=1  orderDatetime=20160622103144  merchantId=100020091218001  errorCode=  version=v1.0  ext2=123  signType=1  orderAmount=1
+        //orderNo=DD2016052600004  德丰-销售订单号 
+        //paymentOrderId=201606221614261038 通联支付流水号 
+        //payResult=1  支付成功
+        String orderNo=getPara("orderNo");
+        String payResult = getPara("payResult");
+        if(!"1".equals(payResult)){
+            render("/oms/allinpay/payOK.html");
+        }else{
+            render("/oms/allinpay/payFail.html");
+        }
+        
+    }
+    
+	//支付回调接口, 即通联的receiveUrl
 	public void payResultRecv(){
 	    //Parameter: payDatetime=20160622161441  ext1=123  payAmount=1  returnDatetime=20160622161156  
 	    //issuerId=  signMsg=jBKEl/ls4ut1Kb0LvdRsrcUaS5g5jNe1NqAG7XDHmDmQFIdlaIPH4lJVB57C1y5H9TMGPIMvqw2nv9ftiDj5w/uR4Szo6yWRe81Z9cO7nChfsbyWM0Om5KB5nvmMwJLMHj8s406e0NFX4jFTEDiMhDawLTj9wdKPPl+o8scSDr4=  
