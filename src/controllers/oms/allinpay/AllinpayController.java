@@ -6,10 +6,11 @@ import com.allinpay.ets.client.SecurityUtil;
 import com.jfinal.core.Controller;
 import com.jfinal.log.Logger;
 
+import config.EedaConfig;
 import controllers.oms.custom.dto.SendReturnDto;
 
 public class AllinpayController extends Controller {
-
+    
 	private Logger logger = Logger.getLogger(AllinpayController.class);
     
 	//demo
@@ -136,6 +137,7 @@ public class AllinpayController extends Controller {
 	    setAttr("serverUrl", serverUrl);
 	    setAttr("strSrcMsg", strSrcMsg);
 	    setAttr("strSignMsg", strSignMsg);
+	    
 	    render("/oms/allinpay/pay.html");
 	}
 	//支付回调接口, 即通联的pickupUrl

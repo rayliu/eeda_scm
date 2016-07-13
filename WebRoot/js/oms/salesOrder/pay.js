@@ -10,13 +10,13 @@ $(document).ready(function() {
     	
     	var item = salesOrder.buildCargoDetail();
     	
-        var serverIp = 'service.allinpay.com';//'ceshi.allinpay.com';
-        var receiveServer = 'df.eeda123.com';//'yd2demo.eeda123.com';
+        var allinpayServer = salesOrder.allinpayServer;
+        var callbackServer = salesOrder.allinpayCallbackServer;
         var formObj = {
-            serverUrl : "http://"+serverIp+"/gateway/index.do?",
+            serverUrl : "http://"+allinpayServer+"/gateway/index.do?",
             inputCharset : '1', //字符集
-            pickupUrl: 'http://'+serverIp+'/demo/eshop/display-pay-result/display.do', //取货地址
-            receiveUrl: 'http://'+receiveServer+'/allinpay/payResultRecv', //商户系统通知地址
+            pickupUrl: 'http://'+serverIp+'/allinpay/pickupUrl', //回调页面,  即取货地址
+            receiveUrl: 'http://'+callbackServer+'/allinpay/payResultRecv', //后台回调, 即商户系统通知地址
             version: 'v1.0', //版本号
             language: '1', //语言,  1代表utf-8
             signType: '1',//签名类型

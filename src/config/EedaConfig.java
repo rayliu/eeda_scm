@@ -4,6 +4,7 @@ import handler.UrlHanlder;
 
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
+import java.util.Properties;
 
 import models.Account;
 import models.ArapAccountAuditLog;
@@ -88,6 +89,7 @@ public class EedaConfig extends JFinalConfig {
     public static String mailUser;
     public static String mailPwd;
     
+    public static Properties sysProp;//留给以后的controller调用
     /**
      * 
      * 供Shiro插件使用 。
@@ -100,7 +102,7 @@ public class EedaConfig extends JFinalConfig {
     @Override
 	public void configConstant(Constants me) {
         //加载配置文件    	
-        loadPropertyFile("app_config.txt");
+        sysProp = loadPropertyFile("app_config.txt");
         
         me.setDevMode(getPropertyToBoolean("devMode", false));
         

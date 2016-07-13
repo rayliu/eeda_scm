@@ -30,6 +30,7 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
+import config.EedaConfig;
 import controllers.oms.custom.dto.DingDanBuilder;
 import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.custom.dto.DingDanGoodsDto;
@@ -52,6 +53,9 @@ public class SalesOrderController extends Controller {
 	}
 	
     public void create() {
+        //构造支付url时需要服务器名字,达到动态改UAT, PROD的效果
+        setAttr("serverName", EedaConfig.sysProp.getProperty("allinpayServer"));
+        
         render("/oms/salesOrder/salesOrderEdit.html");
     }
     
@@ -175,6 +179,8 @@ public class SalesOrderController extends Controller {
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
+    	//构造支付url时需要服务器名字,达到动态改UAT, PROD的效果
+        setAttr("serverName", EedaConfig.sysProp.getProperty("allinpayServer"));
         render("/oms/salesOrder/salesOrderEdit.html");
     }
     
