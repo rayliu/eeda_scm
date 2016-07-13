@@ -20,7 +20,7 @@ $(document).ready(function() {
             version: 'v1.0', //版本号
             language: '1', //语言,  1代表utf-8
             signType: '1',//签名类型
-            merchantId: '109127551603009', //商户号  test'100020091218001'
+            merchantId: salesOrder.merchantId, //商户号
             //payerName: '飞龙',//付款人姓名
             payerName: $('#payer_name').val(),//付款人姓名
             payerEmail: 'test@163.com', //付款人联系email
