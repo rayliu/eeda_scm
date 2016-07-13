@@ -10,7 +10,7 @@
 <body BGCOLOR='#FFFFFF' TEXT='#000000' LINK='#0000FF' VLINK='#0000FF' ALINK='#FF0000'>
 <center> <h4>正在跳转到支付提交页面...</h4></center>
 <center>
-	<form id='payForm' name="form" action="${serverUrl!''}" method="post" style="display: block;">
+	<form id='payForm' name="form" action="${serverUrl!''}" method="post" style="display: none;">
 		<table border="1" cellpadding="1" cellspacing="1" align="center">
 			<!-- 报文参数 -->
 			<tr>
@@ -140,7 +140,7 @@
 	</center>
 <script type="text/javascript">
 	$(document).ready(function() {
-		// $('#payForm').submit();
+		$('#payForm').submit();
 	});
 </script>
 </BODY>

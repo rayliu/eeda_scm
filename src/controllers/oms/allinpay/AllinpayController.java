@@ -150,7 +150,7 @@ public class AllinpayController extends Controller {
         //payResult=1  支付成功
         String orderNo=getPara("orderNo");
         String payResult = getPara("payResult");
-        if(!"1".equals(payResult)){
+        if("1".equals(payResult)){
             render("/oms/allinpay/payOK.html");
         }else{
             render("/oms/allinpay/payFail.html");
