@@ -20,7 +20,7 @@
 							label:'订单号', value:order.ORDER_NO!'', disabled: 'disabled' }){}%></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'order_no',
-							label:'外部电商订单号', value:order.ORDER_NO!'', disabled: 'disabled'
+							label:'外部电商订单号', value:order.REF_ORDER_NO!'', disabled: 'disabled'
 							}){}%></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputCustomCompanyField.html", {
@@ -136,7 +136,7 @@
 					<div class="row">
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'pay_no',
-								label:'原始支付单交易编号', value:order.pay_no!'' 
+								label:'原始支付单交易编号', value:order.pay_no!'', disabled: 'disabled'
 							}){}%></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", {
