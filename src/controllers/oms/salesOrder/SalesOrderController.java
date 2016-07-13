@@ -180,7 +180,8 @@ public class SalesOrderController extends Controller {
     	setAttr("user", user);
     	
     	//构造支付url时需要服务器名字,达到动态改UAT, PROD的效果
-        setAttr("serverName", EedaConfig.sysProp.getProperty("allinpayServer"));
+        setAttr("allinpayServer", EedaConfig.sysProp.getProperty("allinpayServer"));
+        setAttr("allinpayCallbackServer", EedaConfig.sysProp.getProperty("allinpayCallbackServer"));
         render("/oms/salesOrder/salesOrderEdit.html");
     }
     
