@@ -15,7 +15,7 @@ $(document).ready(function() {
         var formObj = {
             serverUrl : "http://"+allinpayServer+"/gateway/index.do?",
             inputCharset : '1', //字符集
-            pickupUrl: 'http://'+serverIp+'/allinpay/pickupUrl', //回调页面,  即取货地址
+            pickupUrl: 'http://'+callbackServer+'/allinpay/pickupUrl', //回调页面,  即取货地址
             receiveUrl: 'http://'+callbackServer+'/allinpay/payResultRecv', //后台回调, 即商户系统通知地址
             version: 'v1.0', //版本号
             language: '1', //语言,  1代表utf-8
