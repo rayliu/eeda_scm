@@ -154,11 +154,11 @@
 			</div>
 			<div class="row">
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'etd',
+					<%include("/yh/component/form/dateInputField.html", { id:'etd',
 					label:'ETD', value:order.etd!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
+					<%include("/yh/component/form/dateInputField.html", {
 					id:'eta', label:'ETA', value:order.eta!''
 					}){}%></div>
 				<!-- /.col-lg-4 -->
@@ -232,7 +232,7 @@
 					<div class="col-lg-12">
 						<button class="btn btn-success btn-xs" id="add_cargo">添加</button>
 						<%include("/yh/component/form/detailTable.html", {
-						id:'cargo_table', 
+						id:'cargo_table', style:'width:1500px;',
 						headers:['', 
 						'行号', 
 						'纸箱编号<span style="color: red";>*</span>',

@@ -95,7 +95,12 @@ $(document).ready(function() {
         "searching": false,
         "paging": false,
         "info": false,
-        "autoWidth": true,
+        "autoWidth": false,
+        "serverSide": false,
+        "scrollX":  true,
+        "responsive": true,
+        "scrollY":  true, 
+        "scrollCollapse":  true,
         "language": {
             "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
         },
