@@ -100,7 +100,22 @@ public class GateInOrderController extends Controller {
    		renderJson(r);
    	}
     
+    @Before(Tx.class)
+    public void confirmOrder(){
+    	String order_id = getPara("params");
+    	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
+    	gateInOrder.set("status","已确认").update();
+    	renderJson(gateInOrder);
+    }
     
+    @Before(Tx.class)
+    public void canselOrder(){
+    	String order_id = getPara("params");
+    	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
+    	gateInOrder.set("status","已取消").update();
+    	renderJson(gateInOrder);
+    }
+
     private List<Record> getGateInItems(String orderId) {
 		String itemSql = "select * from gate_in_order_item where order_id=?";
 		List<Record> itemList = Db.find(itemSql, orderId);

@@ -5,53 +5,19 @@ $(document).ready(function() {
 
     $('#menu_order').addClass('active').find('ul').addClass('in');
     
-    $('#amount').blur(function(){
-        $('#total_amount').text($(this).val());
-    });
-    
-    
     //form表单校验
-	 $("#orderForm").validate({
-	        rules: {
-	        	consignee_id_name:{
-	        		rangelength:[15,18],
-	        		
-	        	},
-				currency_name:{
-			 		required: true,
-			 		rangelength:[3,3]
-			 	},
-			 	consignee_country_name:{
-			 		rangelength:[3,3]
-			 	},
-			 	province_name:{
-			 		rangelength:[6,6]
-			 	},
-			 	city_name:{
-			 		rangelength:[6,6]
-			 	},
-			 	district_name:{
-			 		rangelength:[6,6]
-			 	},
-			 	pay_no_name:{
-			 		minlength: 5
-		        },
-		        consignee_type_name:{
-		        	rangelength:[1,1]
-		        }
-	        },
-	        messages: {
-	        	consignee_id_name: "身份证号码长度为15位或18位",
-	        	currency_name: "长度必须为3位字符",
-	        	consignee_country_name: "长度必须为3位字符",
-	        	province_name: "长度必须为6位字符",
-	        	city_name: "长度必须为6位字符",
-	        	district_name: "长度必须为6位字符",
-	        	pay_no_name: "长度不能小于5位字符",
-	        	consignee_type_name: "长度必须为1位字符"
-	        }
-	       
-	 });
+//	 $("#orderForm").validate({
+//	        rules: {
+//	        	consignee_id_name:{
+//	        		rangelength:[15,18],
+//	        		
+//	        	}
+//	        },
+//	        messages: {
+//	        	consignee_id_name: "身份证号码长度为15位或18位"
+//	        }
+//	       
+//	 });
 
 
     //------------save
@@ -77,7 +43,7 @@ $(document).ready(function() {
             goods_type: $('#goods_type').val(),  
             storage_type: $('#storage_type').val(),  
             service_detail: $('#service_detail').val(),
-            status: $('#status').val()==''?'新建':$('#status').val(), 
+            status: $('#status').val()==''?'暂存':$('#status').val(), 
             so_no: $('#so_no').val(),  
             po_no: $('#po_no').val(),  
             customer_refer_no: $('#customer_refer_no').val(),
@@ -112,12 +78,12 @@ $(document).ready(function() {
             		$("#create_stamp").val(eeda.getDate());
                 $("#order_id").val(order.ID);
                 $("#order_no").val(order.ORDER_NO);
-                if(status=='') {
-                	$('#status').val('未上报');
-                }
-                contactUrl("edit?id",order.ID);
+				$('#status').val(order.STATUS);
+				contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
+                $('#confirmBtn').attr('disabled', false);
+                $('#canselBtn').attr('disabled', false);
                 
                 //异步刷新字表
                 gateInOrder.refleshTable(order.ID);
@@ -131,58 +97,55 @@ $(document).ready(function() {
           });
     });  
     
-    
-    //上报订单
-    $('#submitDingDanBtn').click(function(){
-    	$('#submitDingDanBtn').attr('disabled',true);
-    	$.post('/salesOrder/submitDingDan', {order_id:$("#order_id").val()}, function(data){
-    		if(data!=null){
-    			var message = $(data.orders).attr('message');
-    			if(message == '订单写入成功'){
-    				$.scojs_message(message , $.scojs_message.TYPE_OK);
-    				$('#status').val(message);
-    			}else{
-    				$.scojs_message(message , $.scojs_message.TYPE_FALSE);
-    			}	
+    //确认按钮
+    $('#confirmBtn').click(function(e){
+    	e.preventDefault();
+    	var self = $(this);
+    	self.attr('disabled',true);
+    	var order_id = $("#order_id").val();
+    	$.post('/gateInOrder/confirmOrder', {params:order_id}, function(data){
+    		if(data.ID){
+    			$('#status').val(data.STATUS);
+    			$('#saveBtn').attr('disabled', true);
+    			$.scojs_message('确认成功', $.scojs_message.TYPE_OK);
     		}else{
-    			$.scojs_message('上报失败', $.scojs_message.TYPE_FALSE);
+    			$.scojs_message('确认失败', $.scojs_message.TYPE_ERROR);
+    			self.attr('disabled',false);
     		}
-    	});
-    });
+    	})
+    })
     
-    //通过报关企业获取内容
-    $('#custom_id_input').on('blur',function(){
-    	var custom_id = $('#custom_id').val();
-        if(custom_id!=null)
-        	showCustom(custom_id);
-    });
-    
-    //回显报关信息
-    var showCustom = function(custom_id){
-    	if(custom_id.trim()=="")
-    		return;
-    	$.post('/salesOrder/getCustomCompany', {params:custom_id}, function(data){
-    		if(data!=null){
-    			$("#org_code").val(data.ORG_CODE);	
-    			$("#warehouse_no").val(data.WAREHOUSE_NO);	
-    			$("#ebp_code_cus").val(data.EBP_CODE_CUS);	
-    			$("#ebp_code_ciq").val(data.EBP_CODE_CIQ);	
-    			$("#ebp_name").val(data.EBP_NAME);	
-    			$("#ebc_code_cus").val(data.EBC_CODE_CUS);	
-    			$("#ebc_code_ciq").val(data.EBC_CODE_CIQ);	
-    			$("#ebc_name").val(data.EBC_NAME);	
-    			$("#agent_code_cus").val(data.AGENT_CODE_CUS);	
-    			$("#agent_code_ciq").val(data.AGENT_CODE_CIQ);	
-    			$("#agent_name").val(data.AGENT_NAME);	
-    			$("#ciq_code").val(data.CIQ_CODE);	
+    //取消按钮
+    $('#canselBtn').click(function(e){
+    	e.preventDefault();
+    	var self = $(this);
+    	self.attr('disabled',true);
+    	var order_id = $("#order_id").val();
+    	$.post('/gateInOrder/canselOrder', {params:order_id}, function(data){
+    		if(data.ID){
+    			$('#status').val(data.STATUS);
+    			$('#saveBtn').attr('disabled', true);
+    			$('#confirmBtn').attr('disabled', true);
+    			$.scojs_message('取消成功', $.scojs_message.TYPE_OK);
+    		}else{
+    			$.scojs_message('取消失败', $.scojs_message.TYPE_ERROR);
+    			self.attr('disabled',false);
     		}
-    	})	
-    }
+    	})
+    })
     
     //按钮控制
-    var order_id = $("#order_id").val()
+    var order_id = $("#order_id").val();
+    var status = $("#status").val();
     if(order_id != ''){
-    	 $('#submitDingDanBtn').attr('disabled',false);
+    	if(status=='暂存'){
+    		$('#saveBtn').attr('disabled', false);
+    		$('#confirmBtn').attr('disabled', false);
+    		$('#canselBtn').attr('disabled', false);
+    	}else if(status=='已确认'){
+    		$('#canselBtn').attr('disabled', false);
+    	}
+    }else{
+    	$('#saveBtn').attr('disabled', false);
     }
-
 } );
