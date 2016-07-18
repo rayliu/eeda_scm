@@ -28,9 +28,9 @@ $(document).ready(function() {
             { "data": "CUSTOM_ID"},
             { "data": "PAYER_NAME"}, 
             { "data": "GOODS_VALUE"}, 
+            { "data": "STATUS"}, 
             { "data": "CREATOR_NAME"}, 
-            { "data": "CREATE_STAMP"}, 
-            { "data": "STATUS"}
+            { "data": "CREATE_STAMP"}
         ]
     });
 
@@ -64,5 +64,5 @@ $(document).ready(function() {
         dataTable.ajax.url(url).load();
     };
     
-
+    searchData();
 } );
