@@ -1,4 +1,4 @@
-	// 字符验证 
+	// 字符验证 test
 	 $.validator.addMethod("stringCheck", function(value, element) { 
 	     return this.optional(element) || /^[\u0391-\uFFE5\w]+$/.test(value); 
 	 }, "只能包括中文字、英文字母、数字和下划线"); 
