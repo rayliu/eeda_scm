@@ -1,6 +1,8 @@
 
 $(document).ready(function() {
 	document.title = '报关企业查询 | '+document.title;
+	
+	
 
     $('#menu_order').addClass('active').find('ul').addClass('in');
     
@@ -10,7 +12,7 @@ $(document).ready(function() {
     var dataTable = $('#eeda-table').DataTable({
         "processing": true,
         "searching": false,
-        //"serverSide": true,
+        //"serverSide": false,
         "scrollX": true,
         "scrollY": "300px",
         "scrollCollapse": true,
@@ -18,11 +20,11 @@ $(document).ready(function() {
         "language": {
             "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
         },
-        //"ajax": "/damageOrder/list",
+        "ajax": "/customCompany/list",
         "columns": [
             { "data": "SHOP_NO"},
             { "data": "SHOP_NAME", 
-                "render": function ( data, type, full, meta ) {
+              "render": function ( data, type, full, meta ) {
                     return "<a href='/customCompany/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
                 }
             },
@@ -31,7 +33,27 @@ $(document).ready(function() {
             { "data": "CONTACT_PHONE"}, 
             { "data": "COMPANY_PHONE"},
             { "data": "CREATOR_NAME"}, 
-            { "data": "CREATE_STAMP"}
+            { "data": "CREATE_STAMP"},
+            { "data": null,
+                "width": "10%",
+                "render": function ( data, type, full, meta ) {
+                        var str="<nobr>";
+             
+                    
+                         if(full.IS_STOP == 'N'){
+                                 str += "<a class='btn btn-danger  btn-sm' href='/customCompany/delete/"+full.ID+"'>"+
+                                         "<i class='fa fa-trash-o fa-fw'></i>"+ 
+                                         "停用"+
+                                         "</a>";
+                         }else{
+                             str +="<a class='btn btn-success btn-sm' href='/customCompany/delete/"+full.ID+"'>"+
+                                     "<i class='fa fa-trash-o fa-fw'></i>启用</a>";
+                         }
+                    
+                    str +="</nobr>";
+                   return str;
+                }
+            }
         ]
     });
 
@@ -39,7 +61,9 @@ $(document).ready(function() {
     $('#resetBtn').click(function(e){
         $("#orderForm")[0].reset();
     });
-
+    
+     
+    
     $('#searchBtn').click(function(){
         searchData(); 
     })
@@ -60,7 +84,9 @@ $(document).ready(function() {
              +"&create_stamp_begin_time="+start_date
              +"&create_stamp_end_time="+end_date;
         dataTable.ajax.url(url).load();
+        
     };
+   
     
 
 } );

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Party;
 import models.UserLogin;
 import models.eeda.profile.CustomCompany;
 
@@ -14,6 +15,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 
 import com.google.gson.Gson;
@@ -24,6 +26,7 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
 import controllers.util.DbUtils;
+import controllers.util.PermissionConstant;
 
 
 @RequiresAuthentication
@@ -95,6 +98,22 @@ public class CustomCompanyController extends Controller {
     	setAttr("user", user);
     	
         render("/profile/customCompany/customCompanyEdit.html");
+    }
+    @RequiresPermissions(value = {PermissionConstant.PERMSSION_P_DELETE})
+    public void delete() {
+        
+        String id = getPara();
+        
+        CustomCompany customCompany = CustomCompany.dao.findById(id);
+        
+        String obj = customCompany.getStr("is_stop");
+        if("Y".equals(obj)){
+        	customCompany.set("is_stop", "N");
+        }else{
+        	customCompany.set("is_stop", "Y");
+        }
+        customCompany.update();
+        redirect("/customCompany");
     }
     
 
