@@ -155,8 +155,27 @@
 			<div class="row">
 				<!--  第行  -->
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'traf_mode',
-					label:'运输方式', value:order.traf_mode!'',required:'required' }){}%></div>
+				    <label class="search-label">运输方式</label>
+				    <select id="traf_mode" name="traf_mode_name"
+				    	class="form-control search-control" >
+		                    <option value='0' <%if(order.traf_mode!''=='0'){ %>selected<%}%>>非保税区</option>
+		                    <option value='1' <%if(order.traf_mode!''=='1'){ %>selected<%}%>>监管仓库</option>
+		                    <option value='2' <%if(order.traf_mode!''=='2'){ %>selected<%}%>>水路运输</option>
+		                    <option value='3' <%if(order.traf_mode!''=='3'){ %>selected<%}%>>铁路运输</option>
+		                    <option value='4' <%if(order.traf_mode!'4'=='4'){ %>selected<%}%>>公路运输</option>
+		                    <option value='5' <%if(order.traf_mode!''=='5'){ %>selected<%}%>>航空运输</option>
+		                    <option value='6' <%if(order.traf_mode!''=='6'){ %>selected<%}%>>邮件运输</option>
+		                    <option value='7' <%if(order.traf_mode!''=='7'){ %>selected<%}%>>保税区</option>
+		                    <option value='8' <%if(order.traf_mode!''=='8'){ %>selected<%}%>>保税仓库</option>
+		                    <option value='9' <%if(order.traf_mode!''=='9'){ %>selected<%}%>>其它运输</option>
+		                    <option value='H' <%if(order.traf_mode!''=='H'){ %>selected<%}%>>边境特殊海关作业区</option>
+		                    <option value='T' <%if(order.traf_mode!''=='T'){ %>selected<%}%>>综合实验区</option>
+		                    <option value='W' <%if(order.traf_mode!''=='W'){ %>selected<%}%>>物流中心</option>
+		                    <option value='X' <%if(order.traf_mode!''=='X'){ %>selected<%}%>>物流园区</option>
+		                    <option value='Y' <%if(order.traf_mode!''=='Y'){ %>selected<%}%>>保税港区</option>
+		                    <option value='Z' <%if(order.traf_mode!''=='Z'){ %>selected<%}%>>出口加工区</option>
+				    </select>
+				</div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'ship_name',
