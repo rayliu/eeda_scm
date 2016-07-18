@@ -70,16 +70,15 @@ public class CustomerController extends Controller {
                 sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
             }
 
-            String sqlTotal = "select count(1) total from party p left join office o on p.office_id = o.id where p.party_type='CUSTOMER'and (o.id = " + parentID + " or o.belong_office = "+ parentID +")";
+            String sqlTotal = "select count(1) total from party p left join office o on p.office_id = o.id where p.type='CUSTOMER'and (o.id = " + parentID + " or o.belong_office = "+ parentID +")";
             
 
-            String sql = "select p.*,c.*,p.id as pid,l.name,trim(concat(l2.name, ' ', l1.name,' ',l.name)) as dname from party p "
-                    + "left join contact c on p.contact_id=c.id "
-                    + "left join location l on l.code=c.location "
+            String sql = "select p.*,p.id as pid,l.name,trim(concat(l2.name, ' ', l1.name,' ',l.name)) as dname from party p "
+                    + "left join location l on l.code=p.location "
                     + "left join location  l1 on l.pcode =l1.code "
                     + "left join location l2 on l1.pcode = l2.code "
                     + " left join office o on o.id = p.office_id  "
-                    + "where p.party_type='CUSTOMER' and (o.id = " + parentID + " or o.belong_office = " + parentID + ") order by p.create_date desc " + sLimit;
+                    + "where p.type='CUSTOMER' and (o.id = " + parentID + " or o.belong_office = " + parentID + ") order by p.create_date desc " + sLimit;
             
             Record rec = Db.findFirst(sqlTotal);
             logger.debug("total records:" + rec.getLong("total"));
@@ -100,26 +99,25 @@ public class CustomerController extends Controller {
                 sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
             }
 
-            String sqlTotal = "select count(1) total from party p left join office o on o.id = p.office_id where p.party_type='CUSTOMER' and (o.id = " + parentID + " or o.belong_office = " + parentID + ")";
+            String sqlTotal = "select count(1) total from party p left join office o on o.id = p.office_id where p.type='CUSTOMER' and (o.id = " + parentID + " or o.belong_office = " + parentID + ")";
             Record rec = Db.findFirst(sqlTotal);
             logger.debug("total records:" + rec.getLong("total"));
 
-            String sql = "select p.*,c.*,p.id as pid,l.name,trim(concat(l2.name, ' ', l1.name,' ',l.name)) as dname from party p "
-                    + "left join contact c on p.contact_id=c.id "
-                    + "left join location l on l.code=c.location "
+            String sql = "select p.*,p.id as pid,l.name,trim(concat(l2.name, ' ', l1.name,' ',l.name)) as dname from party p "
+                    + "left join location l on l.code=p.location "
                     + "left join location  l1 on l.pcode =l1.code "
                     + "left join location l2 on l1.pcode = l2.code "
                     + "left join office o on o.id = p.office_id "
-                    + "where p.party_type='CUSTOMER' "
-                    + "and ifnull(c.company_name,'') like '%"
+                    + "where p.type='CUSTOMER' "
+                    + "and ifnull(p.company_name,'') like '%"
                     + company_name
-                    + "%' and ifnull(c.contact_person,'') like '%"
+                    + "%' and ifnull(p.contact_person,'') like '%"
                     + contact_person
                     + "%' and ifnull(p.receipt,'') like '%"
                     + receipt
-                    + "%' and ifnull(c.address,'') like '%"
+                    + "%' and ifnull(p.address,'') like '%"
                     + address
-                    + "%' and ifnull(c.abbr,'') like '%" + abbr + "%'  and (o.id = " + parentID + " or o.belong_office = " + parentID + ") order by p.create_date desc " + sLimit;
+                    + "%' and ifnull(p.abbr,'') like '%" + abbr + "%'  and (o.id = " + parentID + " or o.belong_office = " + parentID + ") order by p.create_date desc " + sLimit;
 
             List<Record> customers = Db.find(sql);
 
@@ -141,37 +139,34 @@ public class CustomerController extends Controller {
         String id = getPara();
 
         Party party = Party.dao.findById(id);
-        Contact locationCode = Contact.dao.findById(party.get("contact_id"));
-        String code = locationCode.get("location");
-
-        List<Location> provinces = Location.dao.find("select * from location where pcode ='1'");
-        Location l = Location.dao
-                .findFirst("select * from location where code = (select pcode from location where code = '" + code
-                        + "')");
-        Location location = null;
-        if (provinces.contains(l)) {
-            location = Location.dao
-                    .findFirst("select l.name as city,l1.name as province,l.code from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code = '"
-                            + code + "'");
-        } else {
-            location = Location.dao
-                    .findFirst("select l.name as district, l1.name as city,l2.name as province,l.code from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code ='"
-                            + code + "'");
-        }
-        setAttr("location", location);
+//        Contact locationCode = Contact.dao.findById(party.get("contact_id"));
+//        String code = locationCode.get("location");
+////
+//        List<Location> provinces = Location.dao.find("select * from location where pcode ='1'");
+//        Location l = Location.dao
+//                .findFirst("select * from location where code = (select pcode from location where code = '" + code
+//                        + "')");
+//        Location location = null;
+//        if (provinces.contains(l)) {
+//            location = Location.dao
+//                    .findFirst("select l.name as city,l1.name as province,l.code from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code = '"
+//                            + code + "'");
+//        } else {
+//            location = Location.dao
+//                    .findFirst("select l.name as district, l1.name as city,l2.name as province,l.code from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code ='"
+//                            + code + "'");
+//        }
+//        setAttr("location", location);
         
         Record re = Db.findFirst("select get_loc_full_name('"+party.getStr("default_loc_from")+"') as locFrom");
         setAttr("default_loc_from", re.getStr("locFrom"));
         
         setAttr("party", party);
-        if(party.getInt("is_inventory_control")>0){
-        	setAttr("is_inventory_control", "Y");
-        }else{
-        	setAttr("is_inventory_control", "N");
-        }
-        Contact contact = Contact.dao.findFirst("select c.* from contact c,party p where c.id=p.contact_id and p.id="
-                + id);
-        setAttr("contact", contact);
+//        if(party.getInt("is_inventory_control")>0){
+//        	setAttr("is_inventory_control", "Y");
+//        }else{
+//        	setAttr("is_inventory_control", "N");
+//        }
 
         render("/yh/profile/customer/CustomerEdit.html");
     }
@@ -214,33 +209,28 @@ public class CustomerController extends Controller {
             if(getPara("insurance_rates") != ""){
             	party.set("insurance_rates", getPara("insurance_rates"));
             }
+            setContact(party);
             party.update();
-
-            contact = Contact.dao.findFirst("select c.* from contact c,party p where c.id=p.contact_id and p.id=" + id);
-            setContact(contact);
-            contact.update();
         } else {
-            contact = new Contact();
-            setContact(contact);
-            contact.save();
-            
+          
             party = new Party();
-            party.set("party_type", Party.PARTY_TYPE_CUSTOMER);
-            party.set("contact_id", contact.getLong("id"));
-            party.set("creator", currentUser.getPrincipal());
+            setContact(party);
+            party.set("type", Party.PARTY_TYPE_CUSTOMER);
+            
+            party.set("creator", LoginUserController.getLoginUserId(this));
             party.set("create_date", createDate);
             party.set("remark", getPara("remark"));
             party.set("receipt", getPara("receipt"));
             party.set("payment", getPara("payment"));
             party.set("charge_type", getPara("chargeType"));
             party.set("office_id", pom.getCurrentOfficeId());
-            party.set("is_auto_ps", getPara("isAutoPS"));
+            //party.set("is_auto_ps", getPara("isAutoPS"));
             party.set("default_loc_from", getPara("default_loc_from"));
-            if("Y".equals(getPara("isInventoryControl"))){
-            	party.set("is_inventory_control", true);
-            }else{
-            	party.set("is_inventory_control", false);
-            }
+//            if("Y".equals(getPara("isInventoryControl"))){
+//            	party.set("is_inventory_control", true);
+//            }else{
+//            	party.set("is_inventory_control", false);
+//            }
             if(getPara("insurance_rates") != ""){
             	party.set("insurance_rates", getPara("insurance_rates"));
             }
@@ -264,7 +254,7 @@ public class CustomerController extends Controller {
             redirect("/customer");
     }
 
-    private void setContact(Contact contact) {
+    private void setContact(Party contact) {
         contact.set("company_name", getPara("company_name"));
         contact.set("contact_person", getPara("contact_person"));
         contact.set("email", getPara("email"));
@@ -291,7 +281,7 @@ public class CustomerController extends Controller {
  		String company_name= getPara("company_name");
  		boolean checkObjectExist;
  		Long parentID = pom.getParentOfficeId();
- 		Contact contact = Contact.dao.findFirst("select c.*,p.*,c.id as cid,p.id as pid from contact c left join party p on c.id = p.contact_id where c.company_name =? and p.party_type='CUSTOMER' and p.office_id = ?",company_name,parentID);
+ 		Party contact = Party.dao.findFirst("select 1 from party p where p.company_name =? and p.type='CUSTOMER' and p.office_id = ?",company_name,parentID);
  		
  		if(contact == null){
  			checkObjectExist=true;
@@ -304,7 +294,7 @@ public class CustomerController extends Controller {
     	String abbr= getPara("abbr");
  		boolean checkObjectExist;
  		Long parentID = pom.getParentOfficeId();
- 		Contact contact = Contact.dao.findFirst("select c.*,p.*,c.id as cid,p.id as pid from contact c left join party p on c.id = p.contact_id where c.abbr =? and p.party_type='CUSTOMER' and p.office_id = ?",abbr,parentID);
+ 		Party contact = Party.dao.findFirst("select 1 from party p where p.abbr =? and p.type='CUSTOMER' and p.office_id = ?",abbr,parentID);
  		if(contact == null){
  			checkObjectExist=true;
  		}else{

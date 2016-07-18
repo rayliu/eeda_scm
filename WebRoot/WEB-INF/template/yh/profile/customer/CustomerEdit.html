@@ -11,7 +11,7 @@
               保存成功
             </div>
 		    <%}%>
-            <div class="btn-header">创建新客户</div>
+            <div class="btn-header"></div>
          
         </div>
         <!-- /.col-lg-12 -->
@@ -27,27 +27,63 @@
                             <div class="row">
                                 <form id="customerForm" role="form" action="/customer/save" method="post">
                                     <input id="partyId" name="party_id" type="hidden" value="${party.id!''}">
-                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                    
+                                    
+                                    
+                                    
                                     <div class="col-lg-6">
-                                       	<label>客户所在地</label>
-                                        <input id="location" type="hidden" name="location" value="${contact.location!''}">
-                                        <div class="form-group">
-                                            <label>省</label>
-                                            <input id="hideProvince" type="hidden" value="${location.province!''}" />
-                                            <select id="mbProvince" style="width:150px" name="mbProvince" value=""></select>
-                                            <label>市</label>
-                                            <input id="hideCity" type="hidden" value="${location.city!''}"/>
-                                            <select  id="cmbCity" style="width:150px" name="cmbCity" value=""></select>
-                                            <label>区(县)</label>
-                                            <input id="hideDistrict" type="hidden" value="${location.district!''}"/>
-                                            <select  id="cmbArea" style="width:150px" name="cmbArea" value=""></select>
-                                        </div>
+                                        <fieldset>
+                                            <div class="form-group">
+                                                
+                                                <label>公司名称(必填)</label>
+                                                <input  class="form-control" id="company_name" name="company_name" type="text" value="${party.company_name!''}">
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+
+                                                <label>简称(必填)</label>
+                                                <input  class="form-control" id="abbr" name="abbr" type="text" value="${party.abbr!''}">
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>
+
+                                    <!-- /.col-lg-6 (even) 偶数列-->                                    
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>联系人(必填)</label>
+                                                <input class="form-control" id="contact_person" type="text" name="contact_person" value="${party.contact_person!''}">
+                                            </div>
+                                        </fieldset>
+                                    </div>
+
+                                    <!-- /.col-lg-6 (odd) 奇数列 -->
+                                     <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>联系地址</label>
+                                                <input  class="form-control" id="address" type="text" name="address" value="${party.address!''}">
+                                            </div>                                     
+                                        </fieldset>
+                                    </div>                                    
+                                    
+                                    <!-- /.col-lg-6 (even) 偶数列 -->
+                                    <div class="col-lg-6">
+                                        <fieldset>
+                                            <div class="form-group">
+                                                <label>联系人电话</label>
+                                                <input class="form-control" id="disabledInput" type="text" name="phone" value="${party.phone!''}">
+                                            </div>
+                                        </fieldset>
                                     </div>
                                     <div class="col-lg-6">
                                         <fieldset>
                                             <div class="form-group">
                                                 <label>邮政编码</label>
-                                                <input class="form-control" id="postal_code" type="text" name="postal_code" value="${contact.postal_code!''}">
+                                                <input class="form-control" id="postal_code" type="text" name="postal_code" value="${party.postal_code!''}">
                                             </div>
                                         </fieldset>
                                     </div>
@@ -64,63 +100,12 @@
                                         </div>
                                         <!-- /.col-lg-6 (even) 偶数列 -->
                                     </div>
-                                    
-                                    
-                                    <div class="col-lg-6">
-                                        <fieldset>
-                                            <div class="form-group">
-                                                
-                                                <label>公司名称(必填)</label>
-                                                <input  class="form-control" id="company_name" name="company_name" type="text" value="${contact.company_name!''}">
-                                            </div>                                     
-                                        </fieldset>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <fieldset>
-                                            <div class="form-group">
-
-                                                <label>简称(必填)</label>
-                                                <input  class="form-control" id="abbr" name="abbr" type="text" value="${contact.abbr!''}">
-                                            </div>                                     
-                                        </fieldset>
-                                    </div>
-
-                                    <!-- /.col-lg-6 (even) 偶数列-->                                    
-                                    <div class="col-lg-6">
-                                        <fieldset>
-                                            <div class="form-group">
-                                                <label>联系人(必填)</label>
-                                                <input class="form-control" id="contact_person" type="text" name="contact_person" value="${contact.contact_person!''}">
-                                            </div>
-                                        </fieldset>
-                                    </div>
-
-                                    <!-- /.col-lg-6 (odd) 奇数列 -->
-                                     <div class="col-lg-6">
-                                        <fieldset>
-                                            <div class="form-group">
-                                                <label>联系地址</label>
-                                                <input  class="form-control" id="address" type="text" name="address" value="${contact.address!''}">
-                                            </div>                                     
-                                        </fieldset>
-                                    </div>                                    
-                                    
-                                    <!-- /.col-lg-6 (even) 偶数列 -->
-                                    <div class="col-lg-6">
-                                        <fieldset>
-                                            <div class="form-group">
-                                                <label>联系人电话</label>
-                                                <input class="form-control" id="disabledInput" type="text" name="phone" value="${contact.phone!''}">
-                                            </div>
-                                        </fieldset>
-                                    </div>
-                                    
                                     <!-- /.col-lg-6 (odd) 奇数列 -->
                                     <div class="col-lg-6">
                                         <fieldset>
                                             <div class="form-group">
                                                 <label>email</label>
-                                                <input  class="form-control " id="email" type="text" name="email" value="${contact.email!''}">
+                                                <input  class="form-control " id="email" type="text" name="email" value="${party.email!''}">
                                             </div>                                     
                                         </fieldset>
                                     </div>
@@ -172,7 +157,7 @@
                                         <fieldset>
                                             <div class="form-group">
                                                 <label>公司简介</label>
-												<textarea class="form-control" rows="2" name="introduction">${contact.introduction!''}</textarea>
+												<textarea class="form-control" rows="2" name="introduction">${party.introduction!''}</textarea>
                                             </div>
                                         </fieldset>
                                     </div>
@@ -181,11 +166,11 @@
                                         <fieldset>
                                             <div class="form-group">
                                                 <label>备注</label>
-												<textarea class="form-control" rows="2" name="remark">${contact.remark!''}</textarea>
+												<textarea class="form-control" rows="2" name="remark">${party.remark!''}</textarea>
                                             </div>
                                         </fieldset>
                                     </div>
-                                    <div class="col-lg-6">
+                                    <!-- <div class="col-lg-6">
                                             <div class="form-group">
                                                 <input type="hidden" name="AutoPS" id="AutoPS" value="${party.is_auto_ps!''}">
                                                 <label>单品入库生成配送单</label>
@@ -198,7 +183,7 @@
                                                 <input type="radio" name="isInventoryControl" id="isInventoryControlY" value="Y" checked="checked">是
                                                 <input type="radio" name="isInventoryControl" id="isInventoryControlN" value="N">否
                                             </div>
-                                    </div>
+                                    </div> -->
 									
                                     <!-- /.col-lg-6 (odd) 奇数列 -->
                                     <div class="col-lg-6" style="clear:both;">
@@ -380,8 +365,8 @@
 
 
 <script>
-if('${contact.company_name!''}'){
-	document.title = '${contact.company_name!''}'+' | '+document.title;
+if('${party.company_name!''}'){
+	document.title = '${party.company_name!''}'+' | '+document.title;
 }
 $('#menu_profile').addClass('active').find('ul').addClass('in');
 
