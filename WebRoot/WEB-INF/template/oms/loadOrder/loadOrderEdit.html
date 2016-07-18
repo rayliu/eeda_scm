@@ -31,37 +31,44 @@
 					}){}%>
 				</div>
 				<div class="col-lg-4">
-					<div class="form-group">
-					    <label class="search-label">重报单证类型</label>
-					    <select id="again_bill_type" name="again_bill_type_name"
-					    	class="form-control search-control" >
-			                    <option value='ALL'>全部</option>
-			                    <option value='CUS'>海关</option>
-			                    <option value='CIQ'>国检</option>
-					    </select>
-					</div>
+				    <label class="search-label">重报单证类型</label>
+				    <select id="again_bill_type" name="again_bill_type_name"
+				    	class="form-control search-control" >
+		                    <option value='ALL' <%if(order.again_bill_type!''=='ALL'){ %>selected<%}%>>全部</option>
+		                    <option value='CUS' <%if(order.again_bill_type!''=='CUS'){ %>selected<%}%>>海关</option>
+		                    <option value='CIQ' <%if(order.again_bill_type!''=='CIQ'){ %>selected<%}%>>国检</option>
+				    </select>
 				</div>
-				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'customs_code',
-					label:'主管海关代码', value:order.customs_code!''}){}%></div>
-				<!-- /.col-lg-4 -->
+					<label class="search-label">主管海关代码</label>
+					<select id="customs_code" name="customs_code_name" 
+				    	class="form-control search-control" >
+		                    <option value='5349' <%if(order.customs_code!''=='5349'){ %>selected<%}%>>5349-前海港区</option>
+				    </select>
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'ciq_cod', label:'主管检验检疫代码', value:order.ciq_cod!''
-					}){}%></div>
-				<!-- /.col-lg-4 -->
+					<label class="search-label">主管检验检疫代码</label>
+					<select id="pay_channel" name="pay_channel_name" 
+				    	class="form-control search-control" >
+		                    <option value='471800' <%if(order.ciq_cod!''=='471800'){ %>selected<%}%>>471800-深圳局前海湾保税港区办事处</option>
+				    </select>
+				</div>
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'supervision_code', label:'监管场所代码', value:order.supervision_code!''
-					}){}%></div>
-				<!-- /.col-lg-4 -->
+					<label class="search-label">监管场所代码</label>
+					<select id="supervision_code" name="supervision_code_name" 
+				    	class="form-control search-control" >
+		                    <option value='5349' <%if(order.supervision_code!''=='5349'){ %>selected<%}%>>5349-前海港区</option>
+				    </select>
+				</div>
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'business_mode',
-					label:'业务模式', value:order.business_mode!''}){}%></div>
-				<!-- /.col-lg-4 -->
+					<label class="search-label">业务模式</label>
+					<select id="business_mode" name="business_mode_name" 
+				    	class="form-control search-control" >
+		                    <option value='2' <%if(order.business_mode!''=='2'){ %>selected<%}%>>2-网购保税进口</option>
+				    </select>
+				</div>
 			</div>
 			<div class="row">
 				<div class="col-lg-4">
@@ -86,13 +93,28 @@
 					value:order.PORT_CODE!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'CHECK_BILL_TYPE', label:'核放单类型',
-					value:order.CHECK_BILL_TYPE!'' }){}%></div>
+					<label class="search-label">核放单类型</label>
+					<select id="check_bill_type" name="check_bill_type_name" 
+				    	class="form-control search-control" >
+		                    <option value='E1' <%if(order.check_bill_type!''=='E1'){ %>selected<%}%>>E1-一线出区（报关，备案制）</option>
+		                    <option value='E23' <%if(order.check_bill_type!'E23'=='E23'){ %>selected<%}%>>E23-二线出区（报关）</option>
+		                    <option value='I1' <%if(order.check_bill_type!''=='I1'){ %>selected<%}%>>I1-一线入区（报关）</option>
+		                    <option value='A0000' <%if(order.check_bill_type!''=='A0000'){ %>selected<%}%>>A0000-空车</option>
+		                    <option value='B0000' <%if(order.check_bill_type!''=='B0000'){ %>selected<%}%>>B0000-空箱</option>
+				    </select>
+				</div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'AUTOED', label:'是否申报空车',
-					value:order.AUTOED!'' }){}%></div>
+					id:'autoed', label:'是否申报空车',
+					value:order.AUTOED!'' }){}%>
+				
+					<label class="search-label">是否申报空车</label>
+					<select id="autoed" name="autoed_name" 
+				    	class="form-control search-control" >
+		                    <option value='0' <%if(order.autoed!''=='0'){ %>selected<%}%>>0-否</option>
+		                    <option value='1' <%if(order.autoed!''=='1'){ %>selected<%}%>>1-是</option>
+				    </select>
+				</div>
 			</div>
 			
 			<div class="row">
@@ -162,13 +184,25 @@
 			<div class="row">
 				<div class="col-lg-4">
 					<div class="form-group">
-					    <label class="search-label">抵运地</label>
-					    <select id="ARRIVAL_PLACE" name="ARRIVAL_PLACE_name"
+					    <label class="search-label">启运地</label>
+					    <select id="start_place" name="start_place_name"
 					    	class="form-control search-control" >
-			                    <option value='000000000'>其它</option>
-			                    <option value='5349210001'>前海湾保税港码头作业区</option>
-			                    <option value='5349990002'>前海湾保税港报税作业区</option>
-			                    <option value='5304210000'>:蛇口其他码头</option>
+			                    <option value='5349210001' <%if(order.start_place!''=='5349210001'){ %>selected<%}%>>5349210001-前海湾保税港码头作业区</option>
+			                    <option value='5349990002' <%if(order.start_place!''=='5349990002'){ %>selected<%}%>>5349990002-前海湾保税港报税作业区</option>
+			                    <option value='5304210000' <%if(order.start_place!''=='5304210000'){ %>selected<%}%>>5304210000-蛇口其他码头</option>
+			                    <option value='000000000' <%if(order.start_place!'000000000'=='000000000'){ %>selected<%}%>>000000000-其它</option>
+					    </select>
+					</div>
+				</div>
+				<div class="col-lg-4">
+					<div class="form-group">
+					    <label class="search-label">抵运地</label>
+					    <select id="arrival_place" name="arrival_place_name"
+					    	class="form-control search-control" >
+			                    <option value='5349210001' <%if(order.arrival_place!''=='5349210001'){ %>selected<%}%>>5349210001-前海湾保税港码头作业区</option>
+			                    <option value='5349990002' <%if(order.arrival_place!''=='5349990002'){ %>selected<%}%>>5349990002-前海湾保税港报税作业区</option>
+			                    <option value='5304210000' <%if(order.arrival_place!''=='5304210000'){ %>selected<%}%>>5304210000-蛇口其他码头</option>
+			                    <option value='000000000' <%if(order.arrival_place!'000000000'=='000000000'){ %>selected<%}%>>000000000-其它</option>
 					    </select>
 					</div>
 				</div>
@@ -176,10 +210,6 @@
 					<%include("/yh/component/form/inputField.html", {
 					id:'P_NO', label:'公路舱单批次号',
 					value:order.P_NO!'' }){}%></div>
-				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'IC_CARD_NO', label:'车辆IC卡号',
-					value:order.IC_CARD_NO!'' }){}%></div>
 			</div>
 			
 			<div class="row">
@@ -198,10 +228,16 @@
 			</div>
 			
 			<div class="row">
-				<div class="col-lg-4">
+			    <div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'WYGL_CODE', label:'承运委托企业(物业管理)海关备案号',
-					value:order.WYGL_CODE!'' }){}%></div>
+					id:'IC_CARD_NO', label:'车辆IC卡号',
+					value:order.IC_CARD_NO!'' }){}%></div>
+				<div class="col-lg-4">
+					<label class="search-label">承运委托企业海关备案号</label>
+				    <select id="wygl_code" name="wygl_code_name"
+				    	class="form-control search-control" >
+		                    <option value='4403630001' <%if(order.wygl_code!''=='4403630001'){ %>selected<%}%>>4403630001-招商局保税物流有限公司</option>
+		            </select>
 			</div>
 
 			<div class="row">
