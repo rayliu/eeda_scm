@@ -81,7 +81,7 @@ $(document).ready(function() {
 			                         "</a>";
 	                		
 		               	}else{
-		               		str +="<a class='btn btn-success' href='/serviceProvider/delete/"+obj.aData.PID+"'>"+
+		               		str +="<a class='btn btn-success btn-sm' href='/serviceProvider/delete/"+obj.aData.PID+"'>"+
 				                         "<i class='fa fa-trash-o fa-fw'></i>"+ 
 				                         "启用"+
 				                     "</a>";

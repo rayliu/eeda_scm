@@ -99,15 +99,14 @@ public class MainController extends Controller {
             setAttr("login_time",user.get("last_login"));
             setAttr("lastIndex",user.get("last_index") == null ? "pastOneDay" : user.get("last_index"));
             
-            //查询两个月内即将过期的客户合同
-            String sql ="select c.id, c.name, c.period_to from user_customer uc"
-					+" left join contract c on c.party_id= uc.customer_id  "
-					+" LEFT JOIN party p ON c.party_id = p.id and p.party_type = 'CUSTOMER'"
-				    +" where uc.user_name='"+currentUser.getPrincipal()+"'"
-					+" and c.period_to > SYSDATE()"
-					+" and c.period_to < DATE_ADD(SYSDATE(), INTERVAL 60 DAY);  ";
-            List<Record> contractList = Db.find(sql);
-            setAttr("contractList", contractList);
+//            //查询两个月内即将过期的客户合同
+//            String sql ="select p.id, p.company_name, p.period_to from user_customer uc"
+//					+" LEFT JOIN party p ON uc.customer_id = p.id and p.type = 'CUSTOMER'"
+//				    +" where uc.user_name='"+currentUser.getPrincipal()+"'"
+//					+" and p.period_to > SYSDATE()"
+//					+" and p.period_to < DATE_ADD(SYSDATE(), INTERVAL 60 DAY);  ";
+//            List<Record> contractList = Db.find(sql);
+//            setAttr("contractList", contractList);
             //更新当前用户最后一次登陆的时间
             updateLastLogin(user);
             

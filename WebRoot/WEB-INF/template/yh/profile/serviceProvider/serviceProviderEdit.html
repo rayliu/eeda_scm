@@ -5,15 +5,9 @@
     
     <div class="row">
         <div class="col-lg-12 panel-body">
-        	<!-- 不清楚有何用 -->
-           <!--  <% if(saveOK!''==true){%>
-            <div class="alert alert-success alert-dismissable">
-                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-               		 保存成功。
+            <div class="btn-header"style="font-size: 32px">
+                
             </div>
-            <%}%> -->
-            <div class="btn-header"style="font-size: 32px">创建新供应商</div>
-           
         </div>
         <!-- /.col-lg-12 -->
     </div>
@@ -32,12 +26,12 @@
 									<div class="col-lg-6">
                                             <div class="form-group">
                                                 <label>公司名称(必填)</label>
-                                                <input placeholder="" class="form-control" id="company_name" name="company_name" type="text" value="${contact.company_name!''}">
+                                                <input placeholder="" class="form-control" id="company_name" name="company_name" type="text" value="${party.company_name!''}">
                                             </div> 
 
                                             <div class="form-group">
                                                 <label>简称(必填)</label>
-                                                <input class="form-control" id="abbr" type="text" name="abbr" value="${contact.abbr!''}">
+                                                <input class="form-control" id="abbr" type="text" name="abbr" value="${party.abbr!''}">
                                             </div>
 
                                             <div class="form-group">
@@ -81,17 +75,17 @@
                                             
                                             <div class="form-group">
                                                 <label>收款人</label>
-                                                <input class="form-control" id="receiver" type="text" name="receiver" value="${contact.receiver!''}">
+                                                <input class="form-control" id="receiver" type="text" name="receiver" value="${party.receiver!''}">
                                             </div>
                                             
                                             <div class="form-group">
                                                 <label>银行账号</label>
-                                                <input class="form-control" id="bank_no" type="text" name="bank_no" value="${contact.bank_no!''}">
+                                                <input class="form-control" id="bank_no" type="text" name="bank_no" value="${party.bank_no!''}">
                                             </div>
                                             
                                             <div class="form-group">
                                                 <label>开户行</label>
-                                                <input class="form-control" id="bank_name" type="text" name="bank_name" value="${contact.bank_name!''}">
+                                                <input class="form-control" id="bank_name" type="text" name="bank_name" value="${party.bank_name!''}">
                                             </div>
 
                                             <div class="form-group">
@@ -103,21 +97,7 @@
 	                                           		<option value="perCargo">零担</option>
 	                                           	</select>
                                             </div>
-                                            <div class="form-group">
-                                         	<label>供应商所在地</label>
-                                                <input id="location" type="hidden" name="location" value="${contact.location!''}">
-		                                            <div class="form-group">
-		                                                <label>省</label>
-		                                                <input id="hideProvince" type="hidden" value="${location.province!''}"/>
-		                                                <select id="mbProvince" style="width:150px" name="mbProvince" value=""></select>
-		                                                <label>市</label>
-		                                                <input id="hideCity" type="hidden" value="${location.city!''}"/>
-		                                                <select  id="cmbCity" style="width:150px" name="cmbCity" value=""></select>
-		                                                <label>区(县)</label>
-		                                                <input id="hideDistrict" type="hidden" value="${location.district!''}"/>
-		                                                <select  id="cmbArea" style="width:150px" name="cmbArea" value=""></select>
-		                                            </div>
-                                       </div>
+                                            
                                             
   											<div class="form-group">
                                                 <label>备注</label>
@@ -128,26 +108,26 @@
 										<div class="col-lg-6">
 											<div class="form-group">
                                                 <label>联系人(必填)</label>
-                                                <input placeholder="" class="form-control" id="contact_person" type="text" name="contact_person" value="${contact.contact_person!''}">
+                                                <input placeholder="" class="form-control" id="contact_person" type="text" name="contact_person" value="${party.contact_person!''}">
                                             </div>
                                             <div class="form-group">
                                                 <label>联系地址</label>
-                                                <input placeholder="" class="form-control" id="address" type="text" name="address" value="${contact.address!''}">
+                                                <input placeholder="" class="form-control" id="address" type="text" name="address" value="${party.address!''}">
                                             </div> 
 
                                             <div class="form-group">
                                                 <label>联系人电话</label>
-                                                <input placeholder="" class="form-control" id="disabledInput" type="text" name="phone" value="${contact.phone!''}">
+                                                <input placeholder="" class="form-control" id="disabledInput" type="text" name="phone" value="${party.phone!''}">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>email</label>
-                                                <input placeholder="" class="form-control" id="email" type="text" name="email" value="${contact.email!''}">
+                                                <input placeholder="" class="form-control" id="email" type="text" name="email" value="${party.email!''}">
                                             </div>
 
                                             <div class="form-group">
                                                 <label>邮政编码</label>
-                                                <input placeholder="" class="form-control" id="postal_code" type="text" name="postal_code" value="${contact.postal_code!''}">
+                                                <input placeholder="" class="form-control" id="postal_code" type="text" name="postal_code" value="${party.postal_code!''}">
                                             </div>
 
                                             <div class="form-group">
@@ -158,7 +138,7 @@
 
                                             <div class="form-group">
                                                 <label>公司简介</label>
-												<textarea class="form-control" rows="3" name="introduction">${contact.introduction!''}</textarea>
+												<textarea class="form-control" rows="3" name="introduction">${party.introduction!''}</textarea>
                                             </div>
                                        </div>
 									</form>
@@ -169,7 +149,7 @@
 
                             </div>
                             <!-- /.row (nested) -->
-                            <hr>
+                           <!--  <hr>
 							<div class="tab-content">
 			            	 	<div class="tab-pane fade active in" id="basic">
                              	 	<div class="table-responsive">
@@ -192,7 +172,7 @@
 	                               		 </table>
 	                            	</div>
 			            	 	</div>
-			            	</div>
+			            	</div> -->
 			            	<div class="modal fade" id="chargeTypeItemModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 							  <div class="modal-dialog">
 							    <div class="modal-content">
@@ -235,8 +215,7 @@
                         </div>
                     </div>
                     <div>
-                	<p>操作提示：</p>
-                	<p>添加客户计费的时候，如果客户计费已经存在 ，则直接更新已存在客户计费</p>
+                	
                 </div>
                 </div>
                 
@@ -254,13 +233,13 @@
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
 <script src="/yh/css/ui/jquery-ui.js"></script>
 <script>
-	if('${contact.company_name!''}'){
-		document.title = '${contact.company_name!''}'+' | '+document.title;
+	if('${party.company_name!''}'){
+		document.title = '${party.company_name!''}'+' | '+document.title;
 	}
 	var province = '${location.province!''}';
 	var city = '${location.city!''}';
 	var district = '${location.district!''}';
-	var spType = '${contact.sp_type!''}';
+	var spType = '${party.sp_type!''}';
 	var payment = '${party.payment!''}';
 </script>
 <script src="/yh/js/eeda-common.js"></script>

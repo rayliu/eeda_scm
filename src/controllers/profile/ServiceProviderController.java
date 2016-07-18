@@ -63,17 +63,16 @@ public class ServiceProviderController extends Controller {
             if (getPara("iDisplayStart") != null && getPara("iDisplayLength") != null) {
                 sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
             }
-            String sqlTotal = "select count(1) total from party p left join office o on p.office_id = o.id where p.party_type='SERVICE_PROVIDER' and (o.id = " + parentID + " or o.belong_office = " + parentID + ")";
+            String sqlTotal = "select count(1) total from party p left join office o on p.office_id = o.id where p.type='SERVICE_PROVIDER' and (o.id = " + parentID + " or o.belong_office = " + parentID + ")";
             Record rec = Db.findFirst(sqlTotal); 
             logger.debug("total records:" + rec.getLong("total"));
 
-            String sql = "select p.*,c.*,p.id as pid,l.name,trim(concat(l2.name, ' ', l1.name,' ',l.name)) as dname from party p "
-                    + "left join contact c on p.contact_id=c.id "
-                    + "left join location l on l.code=c.location "
+            String sql = "select p.*,p.id as pid,l.name,trim(concat(l2.name, ' ', l1.name,' ',l.name)) as dname from party p "
+                    + "left join location l on l.code=p.location "
                     + "left join location  l1 on l.pcode =l1.code "
                     + "left join location l2 on l1.pcode = l2.code "
                     + "left join office o on o.id = p.office_id "
-                    + "where p.party_type='SERVICE_PROVIDER' and (o.id = " + parentID + " or o.belong_office = " + parentID + ")  " + sLimit;
+                    + "where p.type='SERVICE_PROVIDER' and (o.id = " + parentID + " or o.belong_office = " + parentID + ")  " + sLimit;
             List<Record> customers = Db.find(sql);
             
             Map customerListMap = new HashMap();
@@ -90,40 +89,38 @@ public class ServiceProviderController extends Controller {
                 sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
             }
             String sqlTotal = "select count(*) total from party p "
-                    + "left join contact c on p.contact_id=c.id "
-                    + "left join location l on l.code=c.location "
+                    + "left join location l on l.code=p.location "
                     + "left join location  l1 on l.pcode =l1.code "
                     + "left join location l2 on l1.pcode = l2.code "
                     + "left join office o on o.id = p.office_id "
-                    + "where p.party_type='SERVICE_PROVIDER' "
-                    + "and ifnull(c.company_name,'') like '%"
+                    + "where p.type='SERVICE_PROVIDER' "
+                    + "and ifnull(p.company_name,'') like '%"
                     + company_name
-                    + "%' and ifnull(c.contact_person,'') like '%"
+                    + "%' and ifnull(p.contact_person,'') like '%"
                     + contact_person
                     + "%' and ifnull(p.receipt,'') like '%"
                     + receipt
-                    + "%' and ifnull(c.address,'') like '%"
+                    + "%' and ifnull(p.address,'') like '%"
                     + address
-                    + "%' and ifnull(c.abbr,'') like '%" + abbr + "%' and (o.id = " + parentID + " or o.belong_office = " + parentID + ")" ;
+                    + "%' and ifnull(p.abbr,'') like '%" + abbr + "%' and (o.id = " + parentID + " or o.belong_office = " + parentID + ")" ;
             Record rec = Db.findFirst(sqlTotal);
             logger.debug("total records:" + rec.getLong("total"));
 
-            String sql = "select p.*,c.*,p.id as pid,l.name,trim(concat(l2.name, ' ', l1.name,' ',l.name)) as dname from party p "
-                    + "left join contact c on p.contact_id=c.id "
-                    + "left join location l on l.code=c.location "
+            String sql = "select p.*,p.id as pid,l.name,trim(concat(l2.name, ' ', l1.name,' ',l.name)) as dname from party p "
+                    + "left join location l on l.code=p.location "
                     + "left join location  l1 on l.pcode =l1.code "
                     + "left join location l2 on l1.pcode = l2.code "
                     + "left join office o on o.id = p.office_id "
-                    + "where p.party_type='SERVICE_PROVIDER' "
-                    + "and ifnull(c.company_name,'') like '%"
+                    + "where p.type='SERVICE_PROVIDER' "
+                    + "and ifnull(p.company_name,'') like '%"
                     + company_name
-                    + "%' and ifnull(c.contact_person,'') like '%"
+                    + "%' and ifnull(p.contact_person,'') like '%"
                     + contact_person
                     + "%' and ifnull(p.receipt,'') like '%"
                     + receipt
-                    + "%' and ifnull(c.address,'') like '%"
+                    + "%' and ifnull(p.address,'') like '%"
                     + address
-                    + "%' and ifnull(c.abbr,'') like '%" + abbr + "%' and (o.id = " + parentID + " or o.belong_office = " + parentID + ") " + sLimit;
+                    + "%' and ifnull(p.abbr,'') like '%" + abbr + "%' and (o.id = " + parentID + " or o.belong_office = " + parentID + ") " + sLimit;
             List<Record> customers = Db.find(sql);
 
             Map customerListMap = new HashMap();
@@ -143,30 +140,27 @@ public class ServiceProviderController extends Controller {
     public void edit() {
         String id = getPara("id");
         Party party = Party.dao.findById(id);
-        Contact locationCode = Contact.dao.findById(party.getLong("contact_id"));
-        String code = locationCode.get("location");
-
-        List<Location> provinces = Location.dao.find("select * from location where pcode ='1'");
-        Location l = Location.dao
-                .findFirst("select * from location where code = (select pcode from location where code = '" + code
-                        + "')");
-        Location location = null;
-        if (provinces.contains(l)) {
-            location = Location.dao
-                    .findFirst("select l.name as city,l1.name as province,l.code from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code = '"
-                            + code + "'");
-        } else {
-            location = Location.dao
-                    .findFirst("select l.name as district, l1.name as city,l2.name as province,l.code from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code ='"
-                            + code + "'");
-        }
-        setAttr("location", location);
+       
+//        String code = party.get("location");
+//
+//        List<Location> provinces = Location.dao.find("select * from location where pcode ='1'");
+//        Location l = Location.dao
+//                .findFirst("select * from location where code = (select pcode from location where code = '" + code
+//                        + "')");
+//        Location location = null;
+//        if (provinces.contains(l)) {
+//            location = Location.dao
+//                    .findFirst("select l.name as city,l1.name as province,l.code from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code = '"
+//                            + code + "'");
+//        } else {
+//            location = Location.dao
+//                    .findFirst("select l.name as district, l1.name as city,l2.name as province,l.code from location l left join location  l1 on l.pcode =l1.code left join location l2 on l1.pcode = l2.code where l.code ='"
+//                            + code + "'");
+//        }
+//        setAttr("location", location);
 
         setAttr("party", party);
         
-        Contact contact = Contact.dao.findFirst("select c.* from contact c,party p where c.id=p.contact_id and p.id="
-                + id);
-        setAttr("contact", contact);
         render("/yh/profile/serviceProvider/serviceProviderEdit.html");
     }
     @RequiresPermissions(value = {PermissionConstant.PERMSSION_P_DELETE})
@@ -189,52 +183,38 @@ public class ServiceProviderController extends Controller {
     public void save() {
         String id = getPara("party_id");
         Party party = null;
-        Contact contact = null;
-        Contact contact1 = null;
-        Contact contact2 = null;
+        Party contact = null;
+        Party contact1 = null;
+        Party contact2 = null;
         Date createDate = Calendar.getInstance().getTime();
         if (id != null && !id.equals("")) {
             party = Party.dao.findById(id);
-            party.set("last_update_date", createDate);
-            party.set("remark", getPara("remark"));
-            party.set("receipt", getPara("receipt"));
-            party.set("payment", getPara("payment"));
+            setContact(party);
+            
             party.update();
 
-            contact = Contact.dao.findFirst("select c.* from contact c,party p where c.id=p.contact_id and p.id=" + id);
-            contact.set("receiver", getPara("receiver"));
-            contact.set("bank_no", getPara("bank_no"));
-            contact.set("bank_name", getPara("bank_name"));
-            setContact(contact);
-            contact.update();
+           
+            
         } else {
             //判断供应商简称
-            contact1 = Contact.dao.findFirst("select * from contact where abbr=?",getPara("abbr"));
+            contact1 = Party.dao.findFirst("select * from party where abbr=?",getPara("abbr"));
             if(contact1!=null){
             	renderText("abbrError");
             	return ;
             }
           //判断供应商全称
-            contact2 = Contact.dao.findFirst("select * from contact where company_name=?",getPara("company_name")); 
+            contact2 = Party.dao.findFirst("select * from party where company_name=?",getPara("company_name")); 
             if(contact2!=null){
             	renderText("companyError");
             	return ;
             }
-        	/*Long parentID = parentOffice.get("belong_office");
-        	if(parentID == null || "".equals(parentID)){
-        		parentID = parentOffice.getLong("id");
-        	}*/
-            contact = new Contact();
-            setContact(contact);
-            contact.save();
+
             party = new Party();
-            party.set("party_type", Party.PARTY_TYPE_SERVICE_PROVIDER);
-            party.set("contact_id", contact.getLong("id"));
-            party.set("creator", currentUser.getPrincipal());
+            setContact(party);
+            party.set("type", Party.PARTY_TYPE_SERVICE_PROVIDER);
+            party.set("creator", LoginUserController.getLoginUserId(this));
             party.set("create_date", createDate);
-            party.set("receipt", getPara("receipt"));
-            party.set("remark", getPara("remark"));
-            party.set("payment", getPara("payment"));
+
             party.set("charge_type", getPara("chargeType"));
             party.set("office_id", pom.getCurrentOfficeId());
             party.save();
@@ -246,7 +226,7 @@ public class ServiceProviderController extends Controller {
         renderJson(party);
     }
 
-    private void setContact(Contact contact) {
+    private void setContact(Party contact) {
         contact.set("company_name", getPara("company_name"));
         contact.set("contact_person", getPara("contact_person"));
         contact.set("location", getPara("location"));
@@ -263,6 +243,12 @@ public class ServiceProviderController extends Controller {
         contact.set("introduction", getPara("introduction"));
         contact.set("city", getPara("city"));
         contact.set("postal_code", getPara("postal_code"));
+        contact.set("receiver", getPara("receiver"));
+        contact.set("bank_no", getPara("bank_no"));
+        contact.set("bank_name", getPara("bank_name"));
+        contact.set("remark", getPara("remark"));
+        contact.set("receipt", getPara("receipt"));
+        contact.set("payment", getPara("payment"));
     }
 
     public void province() {
