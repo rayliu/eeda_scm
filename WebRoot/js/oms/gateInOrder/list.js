@@ -18,7 +18,7 @@ $(document).ready(function() {
         "language": {
             "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
         },
-        //"ajax": "/damageOrder/list",
+        "ajax": "/gateInOrder/list",
         "columns": [
             { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
@@ -63,5 +63,4 @@ $(document).ready(function() {
         dataTable.ajax.url(url).load();
     };
     
-
-} );
+});
