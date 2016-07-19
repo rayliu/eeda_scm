@@ -23,7 +23,7 @@ $(document).ready(function() {
                 }
             },
             { "data": "WAREHOUSE_ADDRESS"},
-            { "data": "CREATE_BY"}, 
+            { "data": "CREATE_NAME"}, 
             { "data": "CREATE_STAMP"}, 
             { "data": "STATUS",
             	"render": function ( data, type, full, meta ) {

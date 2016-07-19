@@ -73,7 +73,7 @@ public class WarehouseController extends Controller{
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
         
-		String sql = "select * from warehouse where 1=1 ";
+		String sql = "select w.*, u.c_name create_name from warehouse w left join user_login u on w.create_by=u.id where 1=1 ";
         
         String condition = DbUtils.buildConditions(getParaMap());
 
