@@ -1,0 +1,55 @@
+ <%layout("/yh/layout.html"){%>
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+<link href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css" rel="stylesheet">
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <i class="fa fa-list fa-fw"></i>单位列表
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+
+                            <div class="">  <!--  form row  -->
+                                <form id="orderForm">
+                                    <div class="row"><!--  第1行  -->
+                                        <div class="col-lg-4"><!--  三列排版  -->
+                                            <%include("/yh/component/form/inputField.html", 
+                                                                {   id: 'name', 
+                                                                    label: '单位', 
+                                                                    value: ''
+                                                                }){}%>
+                                        </div>
+                                    </div><!-- /.row-->
+                                </form>
+                            </div><!-- /.row -->
+
+                            <div class="form-group button-bar" >
+                                <button id="searchBtn" class="btn btn-primary btn-sm" type="button">查询</button>
+                                <button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
+                                <a class="btn btn-success btn-sm" href="/unit/create">新增</a>
+                            </div>
+
+                            <%include("/yh/component/form/detailTable.html", 
+                                {
+                                    id:'eeda-table', 
+                                    headers:['单位', '']
+                                }){} %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<%}%>
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script
+	src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+<script src="/yh/js/eeda-common.js"></script>
+
+<script src="/js/profile/unit/list.js"></script>

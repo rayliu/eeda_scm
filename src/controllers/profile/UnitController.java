@@ -6,23 +6,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import models.Office;
 import models.ParentOfficeModel;
-import models.Toll;
-import models.UserOffice;
+import models.eeda.profile.Unit;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 
+import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.log.Logger;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
+import controllers.util.DbUtils;
 import controllers.util.ParentOffice;
 import controllers.util.PermissionConstant;
 
@@ -40,53 +41,50 @@ public class UnitController extends Controller {
 
     @RequiresPermissions(value = { PermissionConstant.PERMSSION_T_LIST })
     public void index() {
-        render("/yh/profile/toll/TollList.html");
+        render("/yh/profile/unit/unitList.html");
     }
-
+    
+    public void create() {
+        render("/yh/profile/unit/unitEdit.html");
+    }
+    
     @RequiresPermissions(value = { PermissionConstant.PERMSSION_T_LIST })
     public void list() {
         String sLimit = "";
         String pageIndex = getPara("sEcho");
-        if (getPara("iDisplayStart") != null
-                && getPara("iDisplayLength") != null) {
-            sLimit = " LIMIT " + getPara("iDisplayStart") + ", "
-                    + getPara("iDisplayLength");
+        if (getPara("iDisplayStart") != null && getPara("iDisplayLength") != null) {
+            sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
-        Long parentID = pom.getParentOfficeId();
-        // 获取总条数
-        String totalWhere = "";
-        String sql = "select count(1) total from fin_item  where type ='应收' and office_id = "
-                + parentID;
-        Record rec = Db.findFirst(sql + totalWhere);
+
+        String sql = "SELECT * from unit where 1 =1 ";
+        
+        String condition = DbUtils.buildConditions(getParaMap());
+
+        String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
+        Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
+        
+        List<Record> BillingOrders = Db.find(sql+ condition + " order by id desc " +sLimit);
+        Map BillingOrderListMap = new HashMap();
+        BillingOrderListMap.put("sEcho", pageIndex);
+        BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
+        BillingOrderListMap.put("iTotalDisplayRecords", rec.getLong("total"));
 
-        // 获取当前页的数据
-        List<Record> orders = Db.find(
-                "select * from fin_item  where type ='应收' and office_id = ?",
-                parentID);
-        Map orderMap = new HashMap();
-        orderMap.put("sEcho", pageIndex);
-        orderMap.put("iTotalRecords", rec.getLong("total"));
-        orderMap.put("iTotalDisplayRecords", rec.getLong("total"));
+        BillingOrderListMap.put("aaData", BillingOrders);
 
-        orderMap.put("aaData", orders);
-
-        renderJson(orderMap);
-
+        renderJson(BillingOrderListMap); 
     }
 
     // 编辑条目按钮
     @RequiresPermissions(value = { PermissionConstant.PERMSSION_T_CREATE,
             PermissionConstant.PERMSSION_T_UPDATE }, logical = Logical.OR)
-    public void Edit() {
-        String id = getPara();
-        if (id != null) {
-            Toll h = Toll.dao.findById(id);
-            setAttr("to", h);
-            render("/yh/profile/toll/TollEdit.html");
-        } else {
-            render("/yh/profile/toll/TollEdit.html");
-        }
+    public void edit() {
+        String id = getPara("id");
+        Unit u = Unit.dao.findById(id);
+        setAttr("order", u);
+        
+        render("/yh/profile/unit/unitEdit.html");
+        
     }
 
     // 删除条目
@@ -94,7 +92,7 @@ public class UnitController extends Controller {
     public void delete() {
         String id = getPara();
         if (id != null) {
-            Toll l = Toll.dao.findById(id);
+            Unit l = Unit.dao.findById(id);
             Object obj = l.get("is_stop");
             if (obj == null || "".equals(obj) || obj.equals(false)
                     || obj.equals(0)) {
@@ -104,38 +102,29 @@ public class UnitController extends Controller {
             }
             l.update();
         }
-        redirect("/toll");
+        redirect("/unit");
     }
 
-    // 添加编辑保存
+    // 添加,或者编辑保存
     @RequiresPermissions(value = { PermissionConstant.PERMSSION_T_CREATE,
             PermissionConstant.PERMSSION_T_UPDATE }, logical = Logical.OR)
-    public void SaveEdit() {
-
-        String id = getPara("id");
-
-        String name = getPara("name");
-        String type = "应收";
-        String code = getPara("code");
-        String remark = getPara("remark");
-
-        Long parentID = pom.getParentOfficeId();
-
-        if (id == "") {
-            Toll r = new Toll();
-
-            boolean s = r.set("name", name).set("code", code).set("type", type)
-                    .set("office_id", parentID).set("remark", remark).save();
-            if (s == true) {
-                render("/yh/profile/toll/TollList.html");
-                // render("profile/toll/TollList.html");
-            }
+    public void save() throws Exception{
+        String jsonStr=getPara("params");
+        
+        Gson gson = new Gson();  
+        Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
+        Unit r = null;
+        String id = (String) dto.get("id");
+        String name = (String) dto.get("name");
+        if (StringUtils.isBlank(id)) {
+            r = new Unit();
+            r.set("name", name);
+            r.save();
         } else {
-            Toll toll = Toll.dao.findById(id);
-            boolean b = toll.set("name", name).set("type", type)
-                    .set("code", code).set("remark", remark).update();
-            render("/yh/profile/toll/TollList.html");
+            r = Unit.dao.findById(id);
+            r.set("name", name);
+            r.update();
         }
-
+        renderJson(r);
     }
 }
