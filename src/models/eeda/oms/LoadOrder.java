@@ -1,0 +1,1 @@
+package models.eeda.oms;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class LoadOrder extends Model<LoadOrder> {	public static final LoadOrder dao = new LoadOrder();}

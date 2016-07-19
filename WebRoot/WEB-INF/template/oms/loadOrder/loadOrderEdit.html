@@ -18,16 +18,11 @@
 		<!--  form row  -->
 		<form id="orderForm">
 			<div class="row">
-				<div class="col-lg-12">
-					<h3>销售订单信息</h3>
-				</div>
-			</div>
-			<div class="row">
 				<!--  第1行  -->
 				<div class="col-lg-4">
 					<!--  三列排版  -->
-					<%include("/yh/component/form/inputField.html", { id:'check_bill',
-					label:'原核放单号', value:order.check_bill!''
+					<%include("/yh/component/form/inputField.html", { id:'logistics_order_no',
+					label:'运单号', value:order.logistics_order_no!''
 					}){}%>
 				</div>
 				<div class="col-lg-4">
@@ -77,20 +72,20 @@
 					value:order.in_out_date!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'IN_OUT_DATE', label:'出区日期',
-					value:order.IN_OUT_DATE!'' }){}%></div>
+					<%include("/yh/component/form/dateInputField.html", {
+					id:'in_out_date', label:'出区日期',
+					value:order.in_out_date!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'DECL_PORT', label:'申报口岸代码',
-					value:order.DECL_PORT!'' }){}%></div>
+					id:'decl_port', label:'申报口岸代码',
+					value:order.decl_port!'' }){}%></div>
 			</div>
 			
 			<div class="row">
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'PORT_CODE', label:'进出口岸代码',
-					value:order.PORT_CODE!'' }){}%></div>
+					id:'port_code', label:'进出口岸代码',
+					value:order.port_code!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<label class="search-label">核放单类型</label>
@@ -104,10 +99,6 @@
 				    </select>
 				</div>
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'autoed', label:'是否申报空车',
-					value:order.AUTOED!'' }){}%>
-				
 					<label class="search-label">是否申报空车</label>
 					<select id="autoed" name="autoed_name" 
 				    	class="form-control search-control" >
@@ -120,65 +111,65 @@
 			<div class="row">
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'PLATE_NUMBER', label:'车牌号',
-					value:order.PLATE_NUMBER!'' }){}%></div>
+					id:'plate_number', label:'车牌号',
+					value:order.plate_number!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'FORM_NUM', label:'单证数量',
-					value:order.FORM_NUM!'' }){}%></div>
+					id:'form_num', label:'单证数量',
+					value:order.form_num!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'GOODS_NUM', label:'商品项数',
-					value:order.GOODS_NUM!'' }){}%></div>
+					id:'goods_num', label:'商品项数',
+					value:order.goods_num!'' }){}%></div>
 			</div>
 			
 			<div class="row">
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'TOTAL_PACK_NO', label:'总件数',
-					value:order.TOTAL_PACK_NO!'' }){}%></div>
+					id:'total_pack_no', label:'总件数',
+					value:order.total_pack_no!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'WEIGHT', label:'总重量（Kg）',
-					value:order.WEIGHT!'' }){}%></div>
+					id:'weight', label:'总重量（Kg）',
+					value:order.weight!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'CAR_WT', label:'车自重（Kg）',
-					value:order.CAR_WT!'' }){}%></div>
+					id:'car_wt', label:'车自重（Kg）',
+					value:order.car_wt!'' }){}%></div>
 			</div>
 			
 			<div class="row">
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'TOWING_BRACKET_WT', label:'拖架重量（Kg）',
-					value:order.TOWING_BRACKET_WT!'' }){}%></div>
+					id:'towing_bracket_wt', label:'拖架重量（Kg）',
+					value:order.towing_bracket_wt!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'CONTA_WT_1', label:'集装箱1空箱重量（Kg）',
-					value:order.CONTA_WT_1!'' }){}%></div>
+					id:'conta_wt_1', label:'集装箱1空箱重量（Kg）',
+					value:order.conta_wt_1!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'CONTA_WT_2', label:'集装箱2空箱重量（Kg））',
-					value:order.CONTA_WT_2!'' }){}%></div>
+					id:'conta_wt_2', label:'集装箱2空箱重量（Kg））',
+					value:order.conta_wt_2!'' }){}%></div>
 			</div>
 			
 			<div class="row">
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'CONTA_ID_1', label:'集装箱号1',
-					value:order.CONTA_ID_1!'' }){}%></div>
+					id:'conta_id_1', label:'集装箱号1',
+					value:order.conta_id_1!'' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'CONTA_ID_2', label:'集装箱号2',
-					value:order.CONTA_ID_2!'' }){}%></div>
+					id:'conta_id_2', label:'集装箱号2',
+					value:order.conta_id_2!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'CONTA_WT_2', label:'集装箱2空箱重量（Kg））',
-					value:order.CONTA_WT_2!'' }){}%></div>
+					id:'conta_wt_2', label:'集装箱2空箱重量（Kg））',
+					value:order.conta_wt_2!'' }){}%></div>
 			</div>
 			
 			<div class="row">
@@ -208,36 +199,61 @@
 				</div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'P_NO', label:'公路舱单批次号',
-					value:order.P_NO!'' }){}%></div>
+					id:'p_no', label:'公路舱单批次号',
+					value:order.p_no!'' }){}%></div>
 			</div>
 			
 			<div class="row">
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'SEAL_NO', label:'关锁号',
-					value:order.SEAL_NO!'' }){}%></div>
+					id:'seal_no', label:'关锁号',
+					value:order.seal_no!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'SEAL_KEY', label:'关锁密钥',
-					value:order.SEAL_KEY!'' }){}%></div>
+					id:'seal_key', label:'关锁密钥',
+					value:order.seal_key!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'EMS_NO', label:'帐册号',
-					value:order.EMS_NO!'' }){}%></div>
+					id:'ems_no', label:'帐册号',
+					value:order.ems_no!'' }){}%></div>
 			</div>
 			
 			<div class="row">
 			    <div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'IC_CARD_NO', label:'车辆IC卡号',
-					value:order.IC_CARD_NO!'' }){}%></div>
+					id:'ic_card_no', label:'车辆IC卡号',
+					value:order.ic_card_no!'' }){}%></div>
 				<div class="col-lg-4">
 					<label class="search-label">承运委托企业海关备案号</label>
 				    <select id="wygl_code" name="wygl_code_name"
 				    	class="form-control search-control" >
 		                    <option value='4403630001' <%if(order.wygl_code!''=='4403630001'){ %>selected<%}%>>4403630001-招商局保税物流有限公司</option>
 		            </select>
+		        </div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>基础信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'order_no', label:'核放单号', value:order.order_no!'', disabled:
+					'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'creator_name', label:'创建人', value:user.c_name!'', disabled:
+					'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'create_stamp', label:'创建时间', value:order.create_stamp!'',
+					disabled: 'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'status',
+					label:'状态', value:order.status!'暂存', disabled: 'disabled' }){}%></div>
 			</div>
 
 			<div class="row">
@@ -250,7 +266,7 @@
 	</div>
 	<!-- /.row -->
 
-	<div class="group-form" style="margin-top: 15px">
+	<div class="group-form" style="margin-top: 15px;display:none">
 		<ul id="orderTabs" class="nav nav-tabs">
 			<li class="active"><a href="#itemDetail" data-toggle="tab"
 				id="costCheckOrderItem">明细信息</a></li>
@@ -279,7 +295,7 @@
 				id='submitBtn' class="btn  btn-primary" href="#">上报</a>
 			<button id="printBtn" type="button" class="btn  btn-primary"
 				data-toggle="modal" data-target=".bs-example-modal-sm">打印</button>
-			<a class="btn  btn-default" href="/logisticsOrder">返回</a>
+			<a class="btn  btn-default" href="/loadOrder">返回</a>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>

@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import models.UserLogin;
 import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.InspectionOrderItem;
+import models.eeda.oms.LoadOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.profile.CustomCompany;
@@ -37,6 +38,7 @@ import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
+import controllers.util.OrderNoGenerator;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -61,45 +63,42 @@ public class LoadOrderController extends Controller {
        	Gson gson = new Gson();  
         Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
             
-        InspectionOrder inspectionOrder = new InspectionOrder();
+        LoadOrder loadOrder = new LoadOrder();
    		String id = (String) dto.get("id");
    		
    		UserLogin user = LoginUserController.getLoginUser(this);
    		
    		if (StringUtils.isNotEmpty(id)) {
    			//update
-   			inspectionOrder = InspectionOrder.dao.findById(id);
-   			DbUtils.setModelValues(dto, inspectionOrder);
+   			loadOrder = LoadOrder.dao.findById(id);
+   			DbUtils.setModelValues(dto, loadOrder);
    			
    			//需后台处理的字段
-   			inspectionOrder.set("update_by", user.getLong("id"));
-   			inspectionOrder.set("update_stamp", new Date());
-   			inspectionOrder.update();
+   			loadOrder.set("update_by", user.getLong("id"));
+   			loadOrder.set("update_stamp", new Date());
+   			loadOrder.update();
    		} else {
    			//create 
-   			DbUtils.setModelValues(dto, inspectionOrder);
+   			DbUtils.setModelValues(dto, loadOrder);
    			
    			//需后台处理的字段
-   			//inspectionOrder.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
-   			inspectionOrder.set("create_by", user.getLong("id"));
-   			inspectionOrder.set("create_stamp", new Date());
-   			inspectionOrder.save();
+   			loadOrder.set("order_no", OrderNoGenerator.getNextOrderNo("HF"));
+   			loadOrder.set("create_by", user.getLong("id"));
+   			loadOrder.set("create_stamp", new Date());
+   			loadOrder.save();
    			
-   			id = inspectionOrder.getLong("id").toString();
+   			id = loadOrder.getLong("id").toString();
    		}
-   		
-   		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
-		DbUtils.handleList(itemList, id, InspectionOrderItem.class, "order_id");
-		
-		long create_by = inspectionOrder.getLong("create_by");
+
+		long create_by = loadOrder.getLong("create_by");
    		String user_name = LoginUserController.getUserNameById(create_by);
-		Record r = inspectionOrder.toRecord();
+		Record r = loadOrder.toRecord();
    		r.set("creator_name", user_name);
    		renderJson(r);
    	}
     
     
-    private List<Record> getInspectionItems(String orderId) {
+    private List<Record> getItems(String orderId) {
 		String itemSql = "select * from  inspection_order_item where order_id=?";
 		List<Record> itemList = Db.find(itemSql, orderId);
 		return itemList;
@@ -109,22 +108,11 @@ public class LoadOrderController extends Controller {
     @Before(Tx.class)
     public void edit() {
     	String id = getPara("id");
-    	InspectionOrder inspectionOrder = InspectionOrder.dao.findById(id);
-    	setAttr("order", inspectionOrder);
-    	
-    	//获取明细表信息
-    	setAttr("itemList", getInspectionItems(id));
-    	
-    	//获取报关企业信息
-    	CustomCompany custom = CustomCompany.dao.findById(inspectionOrder.getLong("custom_id"));
-    	setAttr("custom", custom);
-    	
-    	//仓库回显
-    	Warehouse warehouse = Warehouse.dao.findById(inspectionOrder.getLong("warehouse_id"));
-    	setAttr("warehouse", warehouse);
+    	LoadOrder loadOrder = LoadOrder.dao.findById(id);
+    	setAttr("order", loadOrder);
 
     	//用户信息
-    	long create_by = inspectionOrder.getLong("create_by");
+    	long create_by = loadOrder.getLong("create_by");
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
@@ -139,11 +127,10 @@ public class LoadOrderController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT inso.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
-    			+ "  from inspection_order inso "
-    			+ "  left join warehouse wh on wh.id = inso.warehouse_id"
-    			+ "  left join user_login u on u.id = inso.create_by"
-    			+ "   where 1 =1 ";
+        String sql = "select * from (SELECT lor.*, ifnull(u.c_name, u.user_name) creator_name"
+    			+ "  from load_order lor "
+    			+ "  left join user_login u on u.id = lor.create_by"
+    			+ "  ) A where 1 = 1 ";
         
         String condition = DbUtils.buildConditions(getParaMap());
 
@@ -166,7 +153,7 @@ public class LoadOrderController extends Controller {
     public void tableList(){
     	String order_id = getPara("order_id");
     	List<Record> list = null;
-    	list = getInspectionItems(order_id);
+    	list = getItems(order_id);
 
     	Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", 1);

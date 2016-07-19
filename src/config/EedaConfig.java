@@ -26,6 +26,7 @@ import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.GateOutOrderItem;
 import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.InspectionOrderItem;
+import models.eeda.oms.LoadOrder;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderCount;
@@ -258,7 +259,7 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("wave_order_item", WaveOrderItem.class);
         arp.addMapping("gate_out_order", GateOutOrder.class);
         arp.addMapping("gate_out_order_item", GateOutOrderItem.class);
-        
+        arp.addMapping("load_order", LoadOrder.class);
         arp.addMapping("order_action_log", OrderActionLog.class);
         arp.addMapping("unit", Unit.class);
     }
