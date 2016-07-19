@@ -175,19 +175,18 @@ public class GateInOrderController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
+        String sql = "select * from ( SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
     			+ "  from gate_in_order gio "
     			+ "  left join warehouse wh on wh.id = gio.warehouse_id"
     			+ "  left join user_login u on u.id = gio.create_by"
-    			+ "   where 1 =1 ";
+    			+ "  ) A where 1 =1 ";
         
         String condition = DbUtils.buildConditions(getParaMap());
 
-        String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
+        String sqlTotal = "select count(1) total from ("+ sql + condition +") B";
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
-        
-        List<Record> BillingOrders = Db.find(sql+ condition + " order by create_stamp desc " +sLimit);
+        List<Record> BillingOrders = Db.find(sql + condition + " order by create_stamp desc " +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
