@@ -134,7 +134,7 @@ public class ProductController extends Controller {
             product.set("item_name", getPara("item_name")).set("serial_no", getPara("serial_no")).set("item_no", getPara("item_no")).set("item_desc", getPara("item_desc"))
                     .set("unit", getPara("unit")).set("category_id", getPara("categoryId"));
             if (size != null && !"".equals(size)) {
-                product.set("size", size);
+                product.set("length", size);
             }
             if (width != null && !"".equals(weight)) {
                 product.set("width", width);
@@ -164,7 +164,7 @@ public class ProductController extends Controller {
             product.set("item_name", itemName).set("serial_no", getPara("serial_no")).set("item_no", itemNo).set("item_desc", itemDesc).set("unit", getPara("unit"))
                     .set("category_id", getPara("categoryId"));
             if (size != null && !"".equals(size)) {
-                product.set("size", size);
+                product.set("length", size);
             }
             if (width != null && !"".equals(weight)) {
                 product.set("width", width);
@@ -350,12 +350,18 @@ public class ProductController extends Controller {
     	Long parentID = pom.getParentOfficeId();
     	
         List<Party> parties = Party.dao
-                .find("select p.id party_id, c.*, cat.id cat_id from party p left join contact c on c.id = p.contact_id left join category cat on p.id = cat.customer_id left join office o on p.office_id = o.id  where party_type = ? and cat.parent_id is null and (o.id = ? or o.belong_office = ? )",
-                        Party.PARTY_TYPE_CUSTOMER,parentID,parentID);
+                .find("select p.id party_id, p.*, cat.id cat_id from party p "
+                        + " left join category cat on p.id = cat.customer_id"
+                        + " left join office o on p.office_id = o.id "
+                        + " where p.type = ? and cat.parent_id is null and (o.id = ? or o.belong_office = ? )",
+                        Party.PARTY_TYPE_CUSTOMER, parentID, parentID);
         createRootForParty(parties);
 
         List<Party> rootParties = Party.dao
-                .find("select p.id pid, c.*, cat.id cat_id from party p left join contact c on c.id = p.contact_id left join category cat on p.id = cat.customer_id left join office o on p.office_id = o.id where party_type = ? and cat.parent_id is null and (o.id = ? or o.belong_office = ? ) ",
+                .find("select p.id pid, p.*, cat.id cat_id from party p "
+                        + " left join category cat on p.id = cat.customer_id"
+                        + " left join office o on p.office_id = o.id"
+                        + " where p.type = ? and cat.parent_id is null and (o.id = ? or o.belong_office = ? ) ",
                         Party.PARTY_TYPE_CUSTOMER,parentID,parentID);
         renderJson(rootParties);
     }
@@ -367,7 +373,7 @@ public class ProductController extends Controller {
             if (categories.size() == 0) {
                 Category category = new Category();
                 Contact customerParty = Contact.dao
-                        .findFirst("select c.* from party p left join contact c on c.id = p.contact_id where p.id=" + customerId);
+                        .findFirst("select p.* from party p where p.id=" + customerId);
                 category.set("name", customerParty.get("company_name"));
                 category.set("customer_id", customerId);
                 category.save();
@@ -405,7 +411,7 @@ public class ProductController extends Controller {
         	if(!"item_no".equals(status)){
         	p = Product.dao.findById(itemId);
         	p.set("category_id", category_id)
-            .set("size", size)
+            .set("length", size)
             .set("width", width)
             .set("height", height)
             .set("volume", volume)
@@ -426,7 +432,7 @@ public class ProductController extends Controller {
             }else{
             	p = new Product();
                 p.set("category_id", category_id)
-                 .set("size", size)
+                 .set("length", size)
                  .set("width", width)
                  .set("height", height)
                  .set("volume", volume)
@@ -502,7 +508,7 @@ public class ProductController extends Controller {
             item.set("item_desc", itemDesc).update();
             returnValue = itemDesc;
         } else if (!"".equals(size) && size != null) {
-            item.set("size", size).update();
+            item.set("length", size).update();
             returnValue = size;
         } else if (!"".equals(width) && width != null) {
             item.set("width", width).update();
@@ -523,8 +529,8 @@ public class ProductController extends Controller {
 	    	item.set("insurance_amount", insuranceAmount).update();
 	    	returnValue = insuranceAmount;
 	    }
-        if (item.get("size") != null && item.get("width") != null && item.get("height") != null) {
-	        Double volume = Double.parseDouble(item.get("size")+"")/1000 * Double.parseDouble(item.get("width")+"")/1000 * Double.parseDouble(item.get("height")+"")/1000;
+        if (item.get("length") != null && item.get("width") != null && item.get("height") != null) {
+	        Double volume = Double.parseDouble(item.get("length")+"")/1000 * Double.parseDouble(item.get("width")+"")/1000 * Double.parseDouble(item.get("height")+"")/1000;
 	        volume = Double.parseDouble(String.format("%.2f", volume));
 	        item.set("volume", volume).update();
         }

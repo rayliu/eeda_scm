@@ -68,24 +68,25 @@ $(document).ready(function() {
 				    "bVisible":Product.isDel,
 					"sClass": "item_desc",              
 				    "fnRender": function(obj) {
-				    	var str="<nobr>";
+				    	var str="";
+                        if(Product.isUpdate){
+                            str +="<a class='btn btn-primary btn-xs updateProduct' data-toggle='modal' data-target='#addOrder' data-backdrop='static' id="+obj.aData.ID+" target='_blank' title='编辑'>"+
+                            "<i class='fa fa-edit fa-fw'></i>编辑"+
+                            "</a> "
+                        }
+                        
 				    	if(Product.isDel){
 				    		if(obj.aData.IS_STOP != true){
-				    			str +="<a class='btn btn-danger  btn-xs deleteProduct' id="+obj.aData.ID+" title='停用'>"+
-					                    "<i class='fa fa-edit fa-fw'></i>"+
+				    			str +="<a class='btn btn-danger  btn-xs deleteProduct' id="+obj.aData.ID+" title='停用' style='margin-top: 5px;'>"+
+					                    "<i class='fa fa-edit fa-fw'></i>停用"+
 					                    "</a>";
 				        	}else{
-				        		str +=	"<a class='btn btn-success  btn-xs deleteProduct' id="+obj.aData.ID+" title='启用'>"+
-					                    "<i class='fa fa-edit fa-fw'></i>"+
+				        		str +=	"<a class='btn btn-success  btn-xs deleteProduct' id="+obj.aData.ID+" title='启用' style='margin-top: 5px;'>"+
+					                    "<i class='fa fa-edit fa-fw'></i>启用"+
 					                    "</a>";
 				        	}
 				    	}
-				    	if(Product.isUpdate){
-				    		str +="<a class='btn btn-primary btn-xs updateProduct' data-toggle='modal' data-target='#addOrder' data-backdrop='static' id="+obj.aData.ID+" target='_blank' title='编辑'>"+
-                            "<i class='fa fa-edit fa-fw'></i>"+
-                            "</a> "
-				    	}
-				    	str +="</nobr>";
+				    	
 				        return str;
 				    }
 				}, 
@@ -93,69 +94,20 @@ $(document).ready(function() {
             	"mDataProp":"ITEM_NO",
             	"sClass": "item_no",
             	"fnRender":function(obj){
-            		var str = obj.aData.ITEM_NO ;
-            		if(str == null){
-            			str ="";
-            		}
-            		return str;
-            	}
-            },       	
-            {
-            	"mDataProp":"SERIAL_NO",
-            	"sClass": "serial_no",
-            	"fnRender":function(obj){
-            		var str = obj.aData.SERIAL_NO ;
-            		if(str == null){
-            			str ="";
-            		}
-            			
-            		return str;
-            	}
-            },        	
-            {
-            	"mDataProp":"ITEM_NAME",
-            	"sClass": "item_name",
-            	"fnRender":function(obj){
-            		var str = obj.aData.ITEM_NAME ;
+                    var size = obj.aData.LENGTH +' x '+obj.aData.WIDTH+' x '+obj.aData.HEIGHT;
+            		var str = "产品型号: "+obj.aData.ITEM_NO +'<br/>'+
+                                '产品编号: '+(obj.aData.SERIAL_NO==null?'':obj.aData.SERIAL_NO)+'<br/>'+
+                                '产品名称: '+obj.aData.ITEM_NAME +'<br/>'+
+                                '长宽高(mm): '+size +'<br/>'+
+                                '单位: '+obj.aData.UNIT+ 
+                                '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;体积(m³): ' + obj.aData.VOLUME+ 
+                                '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;重量(kg): ' + obj.aData.WEIGHT;
             		if(str == null){
             			str ="";
             		}
             		return str;
             	}
             },
-            {
-            	"mDataProp":"SIZE", 
-            	"sClass": "size",
-            	"fnRender":function(obj){
-            		var str = obj.aData.SIZE ;
-            		if(str == null){
-            			str ="";
-            		}
-            		return str;
-            	}
-        	},
-            {
-            	"mDataProp":"WIDTH",
-            	"sClass": "width",
-            	"fnRender":function(obj){
-            		var str = obj.aData.WIDTH ;
-            		if(str == null){
-            			str ="";
-            		}
-            		return str;
-            	}
-            },
-            {
-            	"mDataProp":"HEIGHT", 
-            	"sClass": "height",
-            	"fnRender":function(obj){
-            		var str = obj.aData.HEIGHT ;
-            		if(str == null){
-            			str ="";
-            		}
-            		return str;
-            	}
-        	},
         	{
             	"mDataProp":"INSURANCE_AMOUNT", 
             	"sClass": "insurance_amount",
@@ -179,39 +131,6 @@ $(document).ready(function() {
             		return str;
             	}
         	},
-        	{
-            	"mDataProp":"UNIT",
-            	"sClass": "unit",
-            	"fnRender":function(obj){
-		        	var str =obj.aData.UNIT;
-            		if(str==null){
-            			str = '';
-            		}
-            		return str;
-            	}
-            },
-            {
-            	"mDataProp":"VOLUME",
-            	"sClass": "volume",
-            	"fnRender":function(obj){
-            		var str = obj.aData.VOLUME;
-            		if(str == null){
-            			str ="";
-            		}
-            		return str;
-            	}
-            }, 
-            {
-            	"mDataProp":"WEIGHT",
-            	"sClass": "weight",
-            	"fnRender":function(obj){
-            		var str = obj.aData.WEIGHT ;
-            		if(str == null){
-            			str ="";
-            		}
-            		return str;
-            	}
-            },
             {"mDataProp":"ITEM_DESC",
             	"fnRender":function(obj){
             		var str = obj.aData.ITEM_DESC;
@@ -359,7 +278,7 @@ $(document).ready(function() {
 			$("#categoryId").val(data.CATEGORY_ID);	    	
   	    	$("#item_no").val(data.ITEM_NO);
   	    	$("#item_name").val(data.ITEM_NAME);
-  	    	$("#size").val(data.SIZE);	    	
+  	    	$("#length").val(data.LENGTH);	    	
   	    	$("#width").val(data.WIDTH);	    	
   	    	$("#height").val(data.HEIGHT);	    	
   	    	$("#unit").val(data.UNIT);	    	
@@ -399,7 +318,7 @@ $(document).ready(function() {
     		$("#item_no_hidden").val(data.ITEM_NO); 
     		$("#serial_no_update").val(data.SERIAL_NO); 
     		$("#item_name_update").val(data.ITEM_NAME);
-    		$("#size_update").val(data.SIZE);
+    		$("#size_update").val(data.LENGTH);
     		$("#width_update").val(data.WIDTH);
     		$("#height_update").val(data.HEIGHT);
     		$("#insurance_amount_update").val(data.INSURANCE_AMOUNT);
