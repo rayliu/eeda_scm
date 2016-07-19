@@ -92,49 +92,71 @@
                     <%  
                     	var map = permissionMap;
                     %>
+
                         <li id="menu_order">
                             <a href="#"><i class="fa fa-cog fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
+                        
                             <ul class="nav nav-second-level">
+                            <%
+		               		var salesPermission = map.SalesOrder_list;
+		               		
+		               	%>
+                                <% if( nvl(salesPermission, '') != '') {%>
                                 <li>
                                     <a href="/salesOrder">销售订单</a>
                                 </li>
+                                 <%}%>
+                               
                                 <li>
                                     <a href="/logisticsOrder">运输单</a>
                                 </li>
+                                
+                                
                                 <li>
                                     <a href="/loadOrder">出区核放单</a>
                                 </li>
+                                
+                               
                                 <li>
                                     <a href="/waveOrder">波次单</a>
                                 </li>
+                                
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                   
+                         
+
                         <li id="menu_customs">
                             <a href="#"><i class="fa fa-cny fa-fw"></i> 报关管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
+                            
                                 <li>
                                     <a href="/salesOrder">报关状态查询</a>
                                 </li>
+                             
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+
                         <li id="menu_incoming">
                         	<a href="#"><i class="fa fa-cog fa-fw"></i> 仓库管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
+                           
                                 <li>
                                     <a href="/gateInOrder">入库通知单</a>
                                 </li>
+                              
                                 <li>
                                     <a href="/inspectionOrder">验货单</a>
                                 </li>
+                                 
                                 <li>
                                     <a href="/gateOutOrder">出库单</a>
                                 </li>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+                        
                     	<%
 		               		var chunarijiPermission = map.PaymentCheckOrder_list;
 		               		if( nvl(chunarijiPermission, '') != '') {
