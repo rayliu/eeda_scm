@@ -13,7 +13,6 @@ import models.Location;
 import models.Office;
 import models.Party;
 import models.Permission;
-import models.eeda.profile.Product;
 import models.Role;
 import models.RolePermission;
 import models.UserCustomer;
@@ -23,16 +22,19 @@ import models.UserRole;
 import models.eeda.OrderActionLog;
 import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateInOrderItem;
+import models.eeda.oms.GateOutOrder;
+import models.eeda.oms.GateOutOrderItem;
 import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.InspectionOrderItem;
-import models.eeda.oms.SalesOrderCount;
-import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
+import models.eeda.oms.SalesOrderCount;
+import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.WaveOrder;
 import models.eeda.oms.WaveOrderItem;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.LogisticsCustomCompany;
+import models.eeda.profile.Product;
 import models.eeda.profile.Unit;
 import models.eeda.profile.Warehouse;
 import models.eeda.profile.WarehouseShelves;
@@ -66,6 +68,7 @@ import controllers.HomeController;
 import controllers.api.ApiController;
 import controllers.oms.allinpay.AllinpayController;
 import controllers.oms.gateInOrder.GateInOrderController;
+import controllers.oms.gateOutOrder.GateOutOrderController;
 import controllers.oms.inspectionOrder.InspectionOrderController;
 import controllers.oms.loadOrder.LoadOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
@@ -75,8 +78,8 @@ import controllers.profile.AccountController;
 import controllers.profile.CustomCompanyController;
 import controllers.profile.LogisticsCustomCompanyController;
 import controllers.profile.PrivilegeController;
-import controllers.profile.WarehouseController;
 import controllers.profile.UnitController;
+import controllers.profile.WarehouseController;
 import controllers.profile.WarehouseShelvesController;
 import controllers.yh.arap.AccountAuditLogController;
 
@@ -184,6 +187,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/warehouseShelves", WarehouseShelvesController.class, contentPath);
 		me.add("/loadOrder", LoadOrderController.class, contentPath);
 		me.add("/waveOrder", WaveOrderController.class, contentPath);
+		me.add("/gateOutOrder", GateOutOrderController.class, contentPath);
 	}
 
     @Override
@@ -252,6 +256,8 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("warehouse_shelves", WarehouseShelves.class);
         arp.addMapping("wave_order", WaveOrder.class);
         arp.addMapping("wave_order_item", WaveOrderItem.class);
+        arp.addMapping("gate_out_order", GateOutOrder.class);
+        arp.addMapping("gate_out_order_item", GateOutOrderItem.class);
         
         arp.addMapping("order_action_log", OrderActionLog.class);
         arp.addMapping("unit", Unit.class);
