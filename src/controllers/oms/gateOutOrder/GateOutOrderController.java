@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.UserLogin;
+import models.eeda.OrderActionLog;
 import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.GateOutOrderItem;
@@ -47,6 +48,18 @@ public class GateOutOrderController extends Controller {
         render("/oms/gateOutOrder/gateOutOrderEdit.html");
     }
     
+    //表order_action_log
+    public void OperationLog(String json,String order_id,Long operator){
+    	OrderActionLog orderActionLog = new OrderActionLog();
+    	orderActionLog.set("json", json);
+    	orderActionLog.set("time_stamp", new Date());
+    	orderActionLog.set("order_type", "gateOutOrder");
+    	orderActionLog.set("order_id", order_id);
+    	orderActionLog.set("operator", operator);
+//    	orderActionLog.set("action", "");
+    	orderActionLog.save();
+    }
+    
     @Before(Tx.class)
    	public void save() throws Exception {		
    		String jsonStr = getPara("params");
@@ -58,6 +71,7 @@ public class GateOutOrderController extends Controller {
    		String id = (String) dto.get("id");
    		
    		UserLogin user = LoginUserController.getLoginUser(this);
+   		Long operator = user.getLong("id");
    		
    		if (StringUtils.isNotEmpty(id)) {
    			//update
@@ -65,7 +79,7 @@ public class GateOutOrderController extends Controller {
    			DbUtils.setModelValues(dto, gateOutOrder);
    			
    			//需后台处理的字段
-   			gateOutOrder.set("update_by", user.getLong("id"));
+   			gateOutOrder.set("update_by", operator);
    			gateOutOrder.set("update_stamp", new Date());
    			gateOutOrder.update();
    		} else {
@@ -74,12 +88,15 @@ public class GateOutOrderController extends Controller {
    			
    			//需后台处理的字段
    			gateOutOrder.set("order_no", OrderNoGenerator.getNextOrderNo("CKTZ"));
-   			gateOutOrder.set("create_by", user.getLong("id"));
+   			gateOutOrder.set("create_by", operator);
    			gateOutOrder.set("create_stamp", new Date());
    			gateOutOrder.save();
    			
    			id = gateOutOrder.getLong("id").toString();
    		}
+   		
+   		//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+   		OperationLog(jsonStr, id, operator);
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
 		DbUtils.handleList(itemList, id, GateOutOrderItem.class, "order_id");
