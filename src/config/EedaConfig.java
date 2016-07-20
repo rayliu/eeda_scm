@@ -73,6 +73,7 @@ import controllers.oms.gateOutOrder.GateOutOrderController;
 import controllers.oms.inspectionOrder.InspectionOrderController;
 import controllers.oms.loadOrder.LoadOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
+import controllers.oms.orderStatus.OrderStatusController;
 import controllers.oms.salesOrder.SalesOrderController;
 import controllers.oms.waveOrder.WaveOrderController;
 import controllers.profile.AccountController;
@@ -189,6 +190,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/loadOrder", LoadOrderController.class, contentPath);
 		me.add("/waveOrder", WaveOrderController.class, contentPath);
 		me.add("/gateOutOrder", GateOutOrderController.class, contentPath);
+		me.add("/searchStatus", OrderStatusController.class, contentPath);
 	}
 
     @Override

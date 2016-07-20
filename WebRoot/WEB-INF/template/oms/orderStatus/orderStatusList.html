@@ -1,0 +1,167 @@
+ <%layout("/yh/layout.html"){%>
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+<link
+	href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css"
+	rel="stylesheet">
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-list fa-fw"></i>单据状态查询
+				</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<!--  form row  -->
+					<form id="orderForm" class="form-group">
+						<div class="row">
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:
+								'sales_order_no', label: '销售单号', value: '' }){}%>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:
+								'log_order_no', label: '运单号', value: '' }){}%>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:
+								'load_order_no', label: '核放单号', value: '' }){}%>
+							</div>
+						</div>
+					</form>
+
+					<!-- buttom -->
+					<div class="form-group button-bar">
+						<button id="searchBtn" class="btn btn-primary btn-sm"
+							type="button">查询</button>
+						<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
+					</div>
+					
+					<div class="form-group">
+						<textarea rows="10" id="massage" class="form-control"></textarea>
+					
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'code', label: 'CODE', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'message', label: '提示信息', value: '' }){}%>
+					</div>
+
+					<div class="col-lg-12">
+						<h3 align="center">单证通关状态明细</h3>
+					</div>
+
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'ORDER_CUS_STATUS', label: '订单海关状态', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'ORDER_CUS_RESULT', label: '订单海关状态说明', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'ORDER_CUS_RESULT', label: '订单海关状态说明', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'ORDER_CIQ_STATUS', label: '订单国检状态', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'ORDER_CIQ_RESULT', label: '订单国检状态说明', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'LOGISTICS_NO', label: '原始运单号码', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'LOGISTICS_CUS_STATUS', label: '运单海关状态', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'LOGISTICS_CUS_RESULT', label: '运单海关状态说明', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'LOGISTICS_CIQ_STATUS', label: '运单国检状态', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'LOGISTICS_CIQ_RESULT', label: '运单国检状态说明', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'PAY_NO', label: '支付单申报编号', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'PAY_STATUS', label: '支付单申报状态', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'PAY_RESULT', label: '支付单申报状态说明', value: '' }){}%>
+					</div>
+					
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'BILL_CUS_NO', label: '海关清单号码', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'BILL_CUS_STATUS', label: '海关清单状态', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'BILL_CUS_RESULT', label: '海关清单状态说明', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'BILL_CUS_TIME', label: '海关清单状态时间', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'BILL_CIQ_NO', label: '国检出区申报单号码', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'BILL_CIQ_STATUS', label: '国检出区申报单状态', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'BILL_CIQ_RESULT', label: '国检出区申报单状态说明', value: '' }){}%>
+					</div>
+					<div class="col-lg-6">
+						<%include("/yh/component/form/inputField.html", { id:
+						'BILL_CIQ_TIME', label: '国检出区申报单状态时间格式', value: '' }){}%>
+					</div>
+					
+					
+					<!-- table list -->
+					<div class="form-group" style="display:none">
+						<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
+						headers:['订单号', '仓库', '业务类型', '创建人', '创建时间', '状态']
+						}){} %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<%}%>
+
+<!-- Page-Level Plugin Scripts - Tables -->
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script
+	src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+
+<script src="/js/oms/orderStatus/list.js"></script>
+
