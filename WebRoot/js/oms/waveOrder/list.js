@@ -14,6 +14,7 @@ $(document).ready(function() {
         "language": {
             "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
         },
+        "ajax": "/waveOrder/list",
         "columns": [
             { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
@@ -53,8 +54,7 @@ $(document).ready(function() {
              +"&create_stamp_begin_time="+start_date
              +"&create_stamp_end_time="+end_date;
 
-        dataTable.ajax.url(url).load(true);
+        dataTable.ajax.url(url).load();
     };
-    searchData(); 
 
 });
