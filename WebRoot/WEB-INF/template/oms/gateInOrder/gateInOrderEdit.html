@@ -224,7 +224,7 @@
 					<div class="col-lg-12">
 						<button class="btn btn-success btn-xs" id="add_cargo">添加</button>
 						<%include("/yh/component/form/detailTable.html", {
-						id:'cargo_table', style:'width:1500px;',
+						id:'cargo_table', 
 						headers:['', 
 						'行号', 
 						'纸箱编号<span style="color: red";>*</span>',
@@ -240,7 +240,7 @@
 						'包装数量<span style="color: red";>*</span>',
 						'实收数量<span style="color: red";>*</span>',
 						'货损数量<span style="color: red";>*</span>'],
-						field_list:['','number', 'carton_no', 'upstream_sku', 'custom_code',
+						field_list:['','', 'carton_no', 'upstream_sku', 'custom_code',
 						'item_code', 'name_specifications', 'color', 'size', 'currency',
 						'unit_value','packing_unit','packing_amount','received_amount','damage_amount'], 
 						value_list: itemList![] }){} %>

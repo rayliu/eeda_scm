@@ -1,6 +1,6 @@
 
 $(document).ready(function() {
-	document.title = '入库通知单查询   | '+document.title;
+	document.title = '出库单查询   | '+document.title;
 
     $('#menu_incoming').addClass('active').find('ul').addClass('in');
     

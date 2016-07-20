@@ -3,23 +3,8 @@ $(document).ready(function() {
 
 	document.title = order_no + ' | ' + document.title;
 
-    $('#menu_order').addClass('active').find('ul').addClass('in');
+    $('#menu_incoming').addClass('active').find('ul').addClass('in');
     
-    //form表单校验
-//	 $("#orderForm").validate({
-//	        rules: {
-//	        	consignee_id_name:{
-//	        		rangelength:[15,18],
-//	        		
-//	        	}
-//	        },
-//	        messages: {
-//	        	consignee_id_name: "身份证号码长度为15位或18位"
-//	        }
-//	       
-//	 });
-
-
     //------------save
     $('#saveBtn').click(function(e){
         //阻止a 的默认响应行为，不需要跳转
@@ -64,6 +49,7 @@ $(document).ready(function() {
             packing_unit: $('#packing_unit').val(),
             pre_number: $('#pre_number').val(),
             batch_no: $('#batch_no').val(),
+            remark: $('#remark').val(),
             item_list: items_array
         };
 

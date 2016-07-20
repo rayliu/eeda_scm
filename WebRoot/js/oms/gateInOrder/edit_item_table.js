@@ -29,8 +29,7 @@ $(document).ready(function() {
                 id='';
             }
             var item={
-                id: id,
-                number: $(row.children[1]).find('input').val(), 
+        		id: id,
                 carton_no: $(row.children[2]).find('input').val(), 
                 upstream_sku: $(row.children[3]).find('input').val(), 
                 custom_code: $(row.children[4]).find('input').val(),
@@ -40,7 +39,7 @@ $(document).ready(function() {
                 size: $(row.children[8]).find('input').val(), 
                 currency: $(row.children[9]).find('input').val(), 
                 unit_value: $(row.children[10]).find('input').val(),
-                packing_unit: $(row.children[11]).find('input').val(), 
+                packing_unit: $(row.children[11]).find('select').val(), 
                 packing_amount: $(row.children[12]).find('input').val(), 
                 received_amount: $(row.children[13]).find('input').val(), 
                 damage_amount: $(row.children[14]).find('input').val(), 
@@ -69,7 +68,6 @@ $(document).ready(function() {
             var item = order.ITEM_LIST[i];
             var item={
                 "ID": item.ID,
-                "NUMBER": item.NUMBER,
                 "CARTON_NO": item.CARTON_NO,
                 "UPSTREAM_SKU": item.UPSTREAM_SKU,
                 "CUSTOM_CODE": item.CUSTOM_CODE,
@@ -113,11 +111,9 @@ $(document).ready(function() {
                 	return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
                 }
             },
-            { "data": "NUMBER", 
+            { "data": null, 
                 "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return meta.row+1;
                 }
             },
             { "data": "CARTON_NO", 
@@ -183,11 +179,34 @@ $(document).ready(function() {
                    return '<input type="text" value="'+data+'" class="form-control" required/>';
                 }
             },
-            { "data": "PACKING_UNIT",
+            { "data": "PACKING_UNIT","width": "60px",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   var str= '<select class="form-control search-control">'
+            	   	   +'<option></option>'
+	                   +'<option value="台" '+ (data=='台'?'selected':'') +'>台</option>'
+	                   +'<option value="件" '+ (data=='件'?'selected':'') +'>件</option>'
+	                   +'<option value="套" '+ (data=='套'?'selected':'') +'>套</option>'
+	                   +'<option value="条" '+ (data=='条'?'selected':'') +'>条</option>'
+	                   +'<option value="本" '+ (data=='本'?'selected':'') +'>本</option>'
+	                   +'<option value="颗" '+ (data=='颗'?'selected':'') +'>颗</option>'
+	                   +'<option value="棵" '+ (data=='棵'?'selected':'') +'>棵</option>'
+	                   +'<option value="株" '+ (data=='株'?'selected':'') +'>株</option>'
+	                   +'<option value="架" '+ (data=='架'?'selected':'') +'>架</option>'
+	                   +'<option value="辆" '+ (data=='辆'?'selected':'') +'>辆</option>'
+	                   +'<option value="支" '+ (data=='支'?'selected':'') +'>支</option>'
+	                   +'<option value="盒" '+ (data=='盒'?'selected':'') +'>盒</option>'
+	                   +'<option value="卷" '+ (data=='卷'?'selected':'') +'>卷</option>'
+	                   +'<option value="幅" '+ (data=='幅'?'selected':'') +'>幅</option>'
+	                   +'<option value="枚" '+ (data=='枚'?'selected':'') +'>枚</option>'
+	                   +'<option value="箱" '+ (data=='箱'?'selected':'') +'>箱</option>'
+	                   +'<option value="对" '+ (data=='对'?'selected':'') +'>对</option>'
+	                   +'<option value="双" '+ (data=='双'?'selected':'') +'>双</option>'
+	                   +'<option value="串" '+ (data=='串'?'selected':'') +'>串</option>'
+	                   +'<option value="个" '+ (data=='个'?'selected':'') +'>个</option>'
+	                   +'</select>';
+                    return str;
                 }
             },
             { "data": "PACKING_AMOUNT",
@@ -214,6 +233,7 @@ $(document).ready(function() {
         ]
     });
 
+    
     $('#add_cargo').on('click', function(){
         var item={};
         cargoTable.row.add(item).draw(true);

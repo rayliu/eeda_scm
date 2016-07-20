@@ -2,6 +2,7 @@
 $(document).ready(function() {
 	document.title = '波次单查询   | '+document.title;
 
+	$('#menu_order').addClass('active').find('ul').addClass('in');
 	  //datatable, 动态处理
     var dataTable = $('#eeda-table').DataTable({
         "processing": true,

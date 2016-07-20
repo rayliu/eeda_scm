@@ -39,7 +39,7 @@ $(document).ready(function() {
                 size: $(row.children[7]).find('input').val(), 
                 currency: $(row.children[8]).find('input').val(), 
                 unit_value: $(row.children[9]).find('input').val(),
-                packing_unit: $(row.children[10]).find('input').val(), 
+                packing_unit: $(row.children[10]).find('select').val(), 
                 packing_amount: $(row.children[11]).find('input').val(), 
                 received_amount: $(row.children[12]).find('input').val(), 
                 damage_amount: $(row.children[13]).find('input').val(), 
@@ -175,11 +175,11 @@ $(document).ready(function() {
                    return '<input type="text" value="'+data+'" class="form-control" required/>';
                 }
             },
-            { "data": "PACKING_UNIT",
+            { "data": "PACKING_UNIT","width": "60px",
                 "render": function ( data, type, full, meta ) {
                 	if(!data)
                         data='';
-                    var str= '<select class="form-control">'
+                    var str= '<select class="form-control search-control">'
             	   	   +'<option></option>'
 	                   +'<option value="台" '+ (data=='台'?'selected':'') +'>台</option>'
 	                   +'<option value="件" '+ (data=='件'?'selected':'') +'>件</option>'
