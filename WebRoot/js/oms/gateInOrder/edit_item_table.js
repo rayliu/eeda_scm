@@ -30,19 +30,24 @@ $(document).ready(function() {
             }
             var item={
         		id: id,
-                carton_no: $(row.children[2]).find('input').val(), 
-                upstream_sku: $(row.children[3]).find('input').val(), 
-                custom_code: $(row.children[4]).find('input').val(),
-                item_code: $(row.children[5]).find('input').val(),
-                name_specifications: $(row.children[6]).find('input').val(),
-                color: $(row.children[7]).find('input').val(),
-                size: $(row.children[8]).find('input').val(), 
-                currency: $(row.children[9]).find('input').val(), 
-                unit_value: $(row.children[10]).find('input').val(),
-                packing_unit: $(row.children[11]).find('select').val(), 
-                packing_amount: $(row.children[12]).find('input').val(), 
-                received_amount: $(row.children[13]).find('input').val(), 
-                damage_amount: $(row.children[14]).find('input').val(), 
+        		UPC: $(row.children[2]).find('input').val(),
+        		cargo_name: $(row.children[3]).find('input').val(),
+        		paln_amount: $(row.children[4]).find('input').val(),
+        		shelf_life: $(row.children[5]).find('input').val(),
+                carton_no: $(row.children[6]).find('input').val(), 
+                upstream_sku: $(row.children[7]).find('input').val(), 
+                custom_code: $(row.children[8]).find('input').val(),
+                item_code: $(row.children[9]).find('input').val(),
+                name_specifications: $(row.children[10]).find('input').val(),
+                color: $(row.children[11]).find('input').val(),
+                size: $(row.children[12]).find('input').val(), 
+                currency: $(row.children[13]).find('input').val(), 
+                unit_value: $(row.children[14]).find('input').val(),
+                packing_unit: $(row.children[15]).find('select').val(), 
+                packing_amount: $(row.children[16]).find('input').val(), 
+                received_amount: $(row.children[17]).find('input').val(), 
+                damage_amount: $(row.children[18]).find('input').val(), 
+                remark: $(row.children[19]).find('input').val(), 
                 action: id.length>0?'UPDATE':'CREATE'
             };
             cargo_items_array.push(item);
@@ -68,6 +73,10 @@ $(document).ready(function() {
             var item = order.ITEM_LIST[i];
             var item={
                 "ID": item.ID,
+                "UPC": item.UPC,
+                "cargo_name": item.CARGO_NAME,
+                "paln_amount": item.PALN_AMOUNT,
+                "shelf_life": item.SHELF_LIFE,
                 "CARTON_NO": item.CARTON_NO,
                 "UPSTREAM_SKU": item.UPSTREAM_SKU,
                 "CUSTOM_CODE": item.CUSTOM_CODE,
@@ -80,7 +89,8 @@ $(document).ready(function() {
                 "PACKING_UNIT": item.PACKING_UNIT,
                 "PACKING_AMOUNT": item.PACKING_AMOUNT,
                 "RECEIVED_AMOUNT": item.RECEIVED_AMOUNT,
-                "DAMAGE_AMOUNT": item.DAMAGE_AMOUNT
+                "DAMAGE_AMOUNT": item.DAMAGE_AMOUNT,
+                "REMARK": item.REMARK
             };
     
             cargoTable.row.add(item).draw(false);
@@ -111,10 +121,38 @@ $(document).ready(function() {
                 	return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
                 }
             },
-            { "data": null, 
+            { "width": "30px", 
                 "render": function ( data, type, full, meta ) {
                     return meta.row+1;
                 }
+            },
+            { "data": "UPC", 
+            	"render": function ( data, type, full, meta ) {
+            		if(!data)
+            			data='';
+            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            	}
+            },
+            { "data": "CARGO_NAME", 
+            	"render": function ( data, type, full, meta ) {
+            		if(!data)
+            			data='';
+            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            	}
+            },
+            { "data": "PALN_AMOUNT", 
+            	"render": function ( data, type, full, meta ) {
+            		if(!data)
+            			data='';
+            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            	}
+            },
+            { "data": "SHELF_LIFE", 
+            	"render": function ( data, type, full, meta ) {
+            		if(!data)
+            			data='';
+            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            	}
             },
             { "data": "CARTON_NO", 
                 "render": function ( data, type, full, meta ) {
@@ -229,6 +267,13 @@ $(document).ready(function() {
                         data='';
                    return '<input type="text" value="'+data+'" class="form-control" required/>';
                 }
+            },
+            { "data": "REMARK",
+            	"render": function ( data, type, full, meta ) {
+            		if(!data)
+            			data='';
+            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            	}
             }
         ]
     });
