@@ -86,7 +86,7 @@ public class SalesOrderService {
         }
         
         //appkey
-        Party party = Party.dao.findFirst("select * from party where party_type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
+        Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
         if (party == null) {
             Record r = new Record();
             r.set("errCode", "02");
@@ -180,7 +180,7 @@ public class SalesOrderService {
         }
         
         //appkey
-        Party party = Party.dao.findFirst("select * from party where party_type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
+        Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
         if (party == null) {
             Record r = new Record();
             r.set("errCode", "02");

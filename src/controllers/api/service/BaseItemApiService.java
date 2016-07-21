@@ -94,7 +94,7 @@ public class BaseItemApiService {
         }
         
         //appkey
-        Party party = Party.dao.findFirst("select * from party where party_type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
+        Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
         if (party == null) {
             Record r = new Record();
             r.set("errCode", "02");
@@ -117,7 +117,7 @@ public class BaseItemApiService {
             return;// 注意这里一定要返回,否则会继续往下执行
         }
         
-        String searchSql = "select pd.*, p.org_code from product pd left join category cat on pd.category_id = cat.id"
+        String searchSql = "select pd.*, pd.org_code from product pd left join category cat on pd.category_id = cat.id"
                 + " left join party p on cat.customer_id=p.id where pd.ref_item_no=? and p.appkey=?";
         Record p = Db.findFirst(searchSql, ref_item_no, appkey);
         if (p != null) {
@@ -173,7 +173,7 @@ public class BaseItemApiService {
         }
         
         //appkey
-        Party party = Party.dao.findFirst("select * from party where party_type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
+        Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
         if (party == null) {
             Record r = new Record();
             r.set("errCode", "02");
