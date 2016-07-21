@@ -21,7 +21,7 @@ $(document).ready(function() {
             id: $('#order_id').val(),
             order_no: $('#order_no').val(),
             warehouse_id: $('#warehouse_id').val(),  
-            consignor: $('#consignor').val(),  
+            customer_id: $('#customer_id').val(),  
             order_type: $('#order_type').val(),  
             gate_in_date: $('#gate_in_date').val(),
             goods_type: $('#goods_type').val(),  

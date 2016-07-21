@@ -100,6 +100,7 @@ public class GateInOrderController extends Controller {
    			gateInOrder.set("order_no", OrderNoGenerator.getNextOrderNo("RKTZ"));
    			gateInOrder.set("create_by", operator);
    			gateInOrder.set("create_stamp", new Date());
+   			gateInOrder.set("office_id", user.get("office_id"));
    			gateInOrder.save();
    			
    			id = gateInOrder.getLong("id").toString();

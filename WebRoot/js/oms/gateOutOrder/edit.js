@@ -28,6 +28,7 @@ $(document).ready(function() {
             goods_type: $('#goods_type').val(),  
             consignee_type: $('#consignee_type').val(),
             consignee_id: $('#consignee_id').val(),
+            consignee: $('#consignee').val(),
             consignee_telephone: $('#consignee_telephone').val(),
             consignee_address: $('#consignee_address').val(),
             location: $('#location').val(),
