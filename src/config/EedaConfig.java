@@ -33,6 +33,7 @@ import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.WaveOrder;
 import models.eeda.oms.WaveOrderItem;
+import models.eeda.profile.Country;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.LogisticsCustomCompany;
 import models.eeda.profile.Product;
@@ -191,6 +192,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/waveOrder", WaveOrderController.class, contentPath);
 		me.add("/gateOutOrder", GateOutOrderController.class, contentPath);
 		me.add("/searchStatus", OrderStatusController.class, contentPath);
+		
 	}
 
     @Override
@@ -264,6 +266,7 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("load_order", LoadOrder.class);
         arp.addMapping("order_action_log", OrderActionLog.class);
         arp.addMapping("unit", Unit.class);
+        arp.addMapping("country", Country.class);
     }
 
     private void initDBconnector() {
