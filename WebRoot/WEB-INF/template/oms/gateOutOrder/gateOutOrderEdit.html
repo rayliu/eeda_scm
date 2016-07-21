@@ -46,9 +46,6 @@
 					</div>
 					<div class="row">
 						<div class="col-lg-4">
-							<!-- <%include("/yh/component/form/inputField.html", {
-							id:'consignee_type', label:'收货人证件类型', required:'required',
-							value:order.consignee_type!'' }){}%> -->
 							<div class="form-group">
 							    <label class="search-label">收货人证件类型</label>
 							    <select id="consignee_type" name="consignee_type" 
@@ -94,7 +91,7 @@
 						<div class="col-lg-4">
 						<%include("/yh/component/form/inputLocationField.html", {
 							id:'location', label:'收件人(省-市-区)',value: order.location!'',
-							display_value: order.location_name!'' ,required:'required' }){}%></div>
+							display_value: location_name!'' ,required:'required' }){}%></div>
 					</div>
 			<div class="row">
 				<div class="col-lg-12">
@@ -165,7 +162,7 @@
 	<br>
 	<div class="row">
 		<div class="col-lg-12">
-			<a id='saveBtn' class="btn  btn-primary" href="javascript: void(0);" >保存</a> 
+			<a id='saveBtn' class="btn  btn-primary" href="javascript: void(0);" disabled>保存</a> 
 			<a id='confirmBtn' class="btn  btn-primary" href="#" disabled>确认</a> 
 			<a id='cancelBtn' class="btn  btn-primary" href="#" disabled>取消</a>
 			<button id="printBtn" type="button" class="btn  btn-primary"
@@ -193,7 +190,7 @@
 <script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
-
+<script src="/js/checkUtil.js"></script>
 <script src="/yh/js/eeda-common.js"></script>
 <script>
     var order_no = '${order.order_no!'出库单编辑'}'; 

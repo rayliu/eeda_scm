@@ -5,6 +5,14 @@ $(document).ready(function() {
 
     $('#menu_incoming').addClass('active').find('ul').addClass('in');
     
+    $("#orderForm").validate({
+        rules: {//身份证
+        	consignee_telephone_name:{
+	        	isPhone:true
+	        }
+        }
+    })
+    
     //------------save
     $('#saveBtn').click(function(e){
         //阻止a 的默认响应行为，不需要跳转

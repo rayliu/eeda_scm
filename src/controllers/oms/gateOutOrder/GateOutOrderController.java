@@ -160,7 +160,13 @@ public class GateOutOrderController extends Controller {
     	Warehouse warehouse = Warehouse.dao.findById(gateOutOrder.getLong("warehouse_id"));
     	setAttr("warehouse", warehouse);
     	
-    	
+    	//地址回显（省市区）
+    	String location = gateOutOrder.getStr("location");
+    	if(StringUtils.isNotEmpty(location)){
+    		Record re = Db.findFirst("select get_loc_full_name(?) address",location);
+        	setAttr("location_name", re.getStr("address"));
+    	}
+
         render("/oms/gateOutOrder/gateOutOrderEdit.html");
     }
     
