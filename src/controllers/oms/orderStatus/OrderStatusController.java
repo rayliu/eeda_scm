@@ -3,19 +3,12 @@ package controllers.oms.orderStatus;
 import interceptor.SetAttrLoginUserInterceptor;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import models.UserLogin;
-import models.eeda.oms.LogisticsOrder;
-import models.eeda.oms.SalesOrder;
-import models.eeda.profile.CustomCompany;
-
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
@@ -26,19 +19,12 @@ import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
-import com.jfinal.plugin.activerecord.tx.Tx;
 
-import controllers.oms.custom.CustomManager;
-import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.custom.dto.QueryBillDto;
 import controllers.oms.custom.dto.QueryDingDanDto;
-import controllers.oms.custom.dto.YunDanDto;
-import controllers.oms.salesOrder.SalesOrderController;
-import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
-import controllers.util.OrderNoGenerator;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -86,9 +72,12 @@ public class OrderStatusController extends Controller {
     public void search(){
     	String sales_order_no = getPara("sales_order_no"); 
     	String massage = queryOrder(sales_order_no);
-    	Record re = new Record();
-    	re.set("massage", massage);
-    	renderJson(re);
+    	
+
+//    	
+//    	Record re = new Record();
+//    	re.set("massage", massage);
+    	renderJson(massage);
     }
     
     
