@@ -165,7 +165,7 @@
                         	<a href="#"><i class="fa fa-cog fa-fw"></i> 仓库管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                            <% if(gateInOrderPermission != ''){%>
-                                <li>
+                                <li> 
                                     <a href="/gateInOrder">入库通知单</a>
                                 </li>
                                 <%}%>
@@ -182,7 +182,12 @@
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+<<<<<<< HEAD
                         <% }%>
+=======
+                        <%}%>
+                        
+>>>>>>> 管控面板权限修改
                     	<%
 		               		var chunarijiPermission = map.PaymentCheckOrder_list;
 		               		if( nvl(chunarijiPermission, '') != '') {
