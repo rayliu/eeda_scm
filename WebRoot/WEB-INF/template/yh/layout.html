@@ -92,65 +92,93 @@
                     <%  
                     	var map = permissionMap;
                     %>
-
+                    
+                    <%
+                    	var salesOrderPermission = map.SalesOrder_list;
+                    	var logisticsOrderPermission = map.LogisticsOrder_list;
+                    	var loadOrderPermission = map.LoadOrder_list;
+                    	var waveOrderPermission = map.WaveOrder_list;
+                    	                 
+                    	
+                    	if(nvl(salesOrderPermission, '') != '' || 
+                            nvl(logisticsOrderPermission, '') != '' ||
+                            nvl(loadOrderPermission, '') != '' ||
+                            nvl(waveOrderPermission, '') != '' ){
+                    %>
                         <li id="menu_order">
                             <a href="#"><i class="fa fa-cog fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
                         
                             <ul class="nav nav-second-level">
-                            <%
-		               		var salesPermission = map.SalesOrder_list;
-		               		
-		               	%>
-                                <% if( nvl(salesPermission, '') != '') {%>
+
+                                <% if( salesOrderPermission != '') {%>
                                 <li>
                                     <a href="/salesOrder">销售订单</a>
                                 </li>
                                  <%}%>
-                               
+                                <% if( logisticsOrderPermission != '') {%>
                                 <li>
                                     <a href="/logisticsOrder">运输单</a>
                                 </li>
-                                
-                                
+                                <%}%>
+                                 <% if( loadOrderPermission != '') {%> 
                                 <li>
                                     <a href="/loadOrder">出区核放单</a>
                                 </li>
-                                
-                               
+                                <%}%>
+                                <% if( waveOrderPermission != '') {%>
                                 <li>
                                     <a href="/waveOrder">波次单</a>
                                 </li>
-                                
+                                  <%}%>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
-                         
-
+                         <%}%>
+                         <%
+                    	var customStatusPermission = map.CustomStatus_list;
+                    	 if( nvl(customStatusPermission, '') != '') {
+                       %>  
                         <li id="menu_customs">
                             <a href="#"><i class="fa fa-cny fa-fw"></i> 报关管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
+                            <% if(customStatusPermission != ''){%>
                                 <li>
-                                    <a href="/searchStatus">报关状态查询</a>
-                                </li>  
+                                    <a href="/salesOrder">报关状态查询</a>
+                                </li>
+                            <%}%> 
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
+                       <%}%>
+                    <%
+                    	var gateInOrderPermission = map.GateInOrder_list;
+                    	var inspectionOrderPermission = map.InspectionOrder_list;
+                    	var gateOutOrderPermission = map.GateOutOrder_list;
 
+                        if( nvl(gateInOrderPermission, '') != '' ||
+                            nvl(inspectionOrderPermission, '') != '' ||
+                            nvl(gateOutOrderPermission, '') != '') {
+                    	
+                    	
+                    %> 
                         <li id="menu_incoming">
                         	<a href="#"><i class="fa fa-cog fa-fw"></i> 仓库管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                           
+                           <% if(gateInOrderPermission != ''){%>
                                 <li>
                                     <a href="/gateInOrder">入库通知单</a>
                                 </li>
-                              
+                                <%}%>
+                                <% if(inspectionOrderPermission != ''){%>
                                 <li>
                                     <a href="/inspectionOrder">验货单</a>
                                 </li>
-                                 
+                                <%}%>
+                                <% if(gateOutOrderPermission != ''){%>
                                 <li>
                                     <a href="/gateOutOrder">出库单</a>
                                 </li>
+                                <%}%>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -173,26 +201,35 @@
                     <%}%>
                     
                     <%
-                    	var customerPermission = map.Customer_list;
+                    	var customerListPermission = map.Customer_list;
                     	var spListPermission = map.Provider_list;
                     	var productListPermission = map.Product_list;
-                    	 var warehouseListPermission = map.Warehouse_list;
-                    	 var accountListPermission = map.Account_list;
-                    
+                    	var warehouseListPermission = map.Warehouse_list;
+                    	var accountListPermission = map.Account_list;
+                    	var customCompanyListPermission = map.CustomCompany_list;
+                        var unitListPermission = map.Unit_list;
+                        var locationListPermission = map.Location_list;
+                        var warehouseShelvesListPermission = map.WarehouseShelves_list;
                     	
-                    	if(nvl(customerPermission, '') != '' || 
+                    	if( nvl(customerListPermission, '') != '' || 
                             nvl(spListPermission, '') != '' ||
                             nvl(warehouseListPermission, '') != '' ||
                             nvl(accountListPermission, '') != '' ||  
-                            nvl(productListPermission, '') != ''){
+                            nvl(productListPermission, '') != '' ||
+                            nvl(customCompanyListPermission, '') != '' ||
+                            nvl(unitListPermission, '') != '' ||
+                            nvl(locationListPermission, '') != '' ||
+                            nvl(warehouseShelvesListPermission, '') != ''){
                     %>
                     
 	                    <li id="menu_profile">
 	                        <a href="#"><i class="fa fa-cog fa-fw"></i> 基础数据设置<span class="fa arrow"></span></a>
 	                        <ul class="nav nav-second-level">
+	                        <% if(customCompanyListPermission != ''){%>
 	                        		<li>
                                         <a href="/customCompany">电商报关企业</a>
                                     </li>
+                                    <%}%>
                                    <!--  <li>
                                         <a href="/logisticsCustomCompany">运输报关企业</a>
                                     </li> -->
@@ -201,6 +238,8 @@
 		                            <li>
 		                                <a href="/serviceProvider">供应商</a>
 		                            </li>
+		                            <%}%>
+		                            <% if(customerListPermission != ''){%>
                                     <li>
                                         <a href="/customer">客户</a>
                                     </li>
@@ -210,16 +249,22 @@
 		                                <a href="/product">产品</a>
 		                            </li>
 	                             <%}%>
+	                             <% if(unitListPermission != ''){%>
 	                            <li>
                                     <a href="/unit">包装单位</a>
                                 </li>
+                                <%}%>
+                                <% if(locationListPermission != ''){%>
 	                            <li>
 	                                <a href="/location">城市</a>
 	                            </li>
+	                            <%}%>
 	                            <% if(warehouseListPermission != ''){%>
 		                            <li>
 		                                <a href="/warehouse">仓库</a>
 		                            </li>
+		                         <%}%>
+		                         <% if(warehouseShelvesListPermission != ''){%>
 		                            <li>
 		                                <a href="/warehouseShelves">库位</a>
 		                            </li>
