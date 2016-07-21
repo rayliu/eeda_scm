@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import models.Party;
 import models.UserLogin;
 import models.eeda.OrderActionLog;
 import models.eeda.oms.GateInOrder;
@@ -145,7 +146,15 @@ public class GateInOrderController extends Controller {
     public void edit() {
     	String id = getPara("id");
     	GateInOrder gateInOrder = GateInOrder.dao.findById(id);
-    	setAttr("order", gateInOrder);
+    	Record gateInOrderRec = gateInOrder.toRecord();
+    	Long customer_id = gateInOrder.getLong("customer_id");
+    	if(customer_id!=null){
+    	    Party p = Party.dao.findById(customer_id);
+    	    if(p!=null){
+    	        gateInOrderRec.set("customer_name", p.get("abbr"));
+    	    }
+    	}
+    	setAttr("order", gateInOrderRec);
     	
     	//获取明细表信息
     	setAttr("itemList", getGateInItems(id));

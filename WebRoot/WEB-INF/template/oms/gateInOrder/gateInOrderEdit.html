@@ -26,8 +26,11 @@
 					value:order.warehouse_id!'', display_value: warehouse.warehouse_name!'' }){}
 					%></div>
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'consignor',
-					label:'货主', required:'required', value:order.consignor!'' }){}%>
+					<%include("/yh/component/form/inputCustomerField.html", { 
+						id:'customer_id',
+					    label:'客户', 
+					    value:order.customer_id!'',
+					    display_value: order.customer_name!''}){}%>
 				</div>
 			</div>
 
@@ -35,15 +38,16 @@
 				<div class="col-lg-4">
 					<label class="search-label">业务类型 <span style="color:red;">*</span></label>
 					<select class="form-control search-control order_type" id="order_type" name="order_type" required>
-						<option>b2c</option>
-						<option>b2b</option>
+						<option>B2C</option>
+						<option>B2B</option>
 					</select>
 				</div>
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputDateQueryField.html", { id:'pre_storage_date',
-					label:'预计入库日期', 
-					begin_value:order.pre_storage_begin_time!'' ,
-					end_value:order.pre_storage_end_time!''}){}%></div>
+					<%include("/yh/component/form/dateInputField.html", { 
+					id:'gate_in_date',
+					label:'入库日期', 
+					value:order.gate_in_date!''
+					}){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
 					id:'goods_type', label:'货品类型',
