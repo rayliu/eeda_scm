@@ -36,6 +36,8 @@ $(document).ready(function() {
             item_list: items_array
         };
 
+        var status = $('#status').val();
+        var order_id = $('#order_id').val();
         //异步向后台提交数据
         $.post('/gateOutOrder/save', {params:JSON.stringify(order)}, function(data){
             var order = data;
@@ -83,7 +85,7 @@ $(document).ready(function() {
     })
     
     //取消按钮
-    $('#canselBtn').click(function(e){
+    $('#cancelBtn').click(function(e){
     	e.preventDefault();
     	var self = $(this);
     	self.attr('disabled',true);

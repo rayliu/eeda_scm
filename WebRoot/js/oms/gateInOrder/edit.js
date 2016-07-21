@@ -23,8 +23,7 @@ $(document).ready(function() {
             warehouse_id: $('#warehouse_id').val(),  
             consignor: $('#consignor').val(),  
             order_type: $('#order_type').val(),  
-            pre_storage_begin_time: $('#pre_storage_date_begin_time').val(),
-            pre_storage_end_time: $('#pre_storage_date_end_time').val(),
+            gate_in_date: $('#gate_in_date').val(),
             goods_type: $('#goods_type').val(),  
             storage_type: $('#storage_type').val(),  
             service_detail: $('#service_detail').val(),
@@ -102,7 +101,7 @@ $(document).ready(function() {
     })
     
     //取消按钮
-    $('#canselBtn').click(function(e){
+    $('#cancelBtn').click(function(e){
     	e.preventDefault();
     	var self = $(this);
     	self.attr('disabled',true);

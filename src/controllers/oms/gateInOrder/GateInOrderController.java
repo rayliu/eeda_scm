@@ -127,7 +127,7 @@ public class GateInOrderController extends Controller {
     }
     
     @Before(Tx.class)
-    public void canselOrder(){
+    public void cancelOrder(){
     	String order_id = getPara("params");
     	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
     	gateInOrder.set("status","已取消").update();

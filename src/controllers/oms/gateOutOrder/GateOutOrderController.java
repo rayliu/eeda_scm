@@ -10,7 +10,6 @@ import java.util.Map;
 
 import models.UserLogin;
 import models.eeda.OrderActionLog;
-import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.GateOutOrderItem;
 import models.eeda.profile.CustomCompany;
@@ -111,17 +110,17 @@ public class GateOutOrderController extends Controller {
     @Before(Tx.class)
     public void confirmOrder(){
     	String order_id = getPara("params");
-    	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
-    	gateInOrder.set("status","已确认").update();
-    	renderJson(gateInOrder);
+    	GateOutOrder gateOutOrder = GateOutOrder.dao.findById(order_id);
+    	gateOutOrder.set("status","已确认").update();
+    	renderJson(gateOutOrder);
     }
     
     @Before(Tx.class)
-    public void canselOrder(){
+    public void cancelOrder(){
     	String order_id = getPara("params");
-    	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
-    	gateInOrder.set("status","已取消").update();
-    	renderJson(gateInOrder);
+    	GateOutOrder gateOutOrder = GateOutOrder.dao.findById(order_id);
+    	gateOutOrder.set("status","已取消").update();
+    	renderJson(gateOutOrder);
     }
 
     private List<Record> getGateOutItems(String orderId) {
@@ -129,8 +128,6 @@ public class GateOutOrderController extends Controller {
 		List<Record> itemList = Db.find(itemSql, orderId);
 		return itemList;
 	}
-
-    
     
     @Before(Tx.class)
     public void edit() {
