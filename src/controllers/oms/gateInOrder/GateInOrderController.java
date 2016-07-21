@@ -187,13 +187,6 @@ public class GateInOrderController extends Controller {
     }
     
     
-    @Before(Tx.class)
-    public void getUser() {
-    	String id = getPara("params");
-    	UserLogin user = UserLogin.dao.findById(id);
-    	renderJson(user);
-    }
-    
     
     public void list() {
     	String sLimit = "";
