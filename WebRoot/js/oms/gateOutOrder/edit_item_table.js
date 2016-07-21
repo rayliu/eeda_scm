@@ -40,9 +40,7 @@ $(document).ready(function() {
                 currency: $(row.children[8]).find('input').val(), 
                 unit_value: $(row.children[9]).find('input').val(),
                 packing_unit: $(row.children[10]).find('select').val(), 
-                packing_amount: $(row.children[11]).find('input').val(), 
-                received_amount: $(row.children[12]).find('input').val(), 
-                damage_amount: $(row.children[13]).find('input').val(), 
+                packing_amount: $(row.children[11]).find('input').val(),
                 action: id.length>0?'UPDATE':'CREATE'
             };
             cargo_items_array.push(item);
@@ -79,9 +77,7 @@ $(document).ready(function() {
                 "CURRENCY": item.CURRENCY,
                 "UNIT_VALUE": item.UNIT_VALUE,
                 "PACKING_UNIT": item.PACKING_UNIT,
-                "PACKING_AMOUNT": item.PACKING_AMOUNT,
-                "RECEIVED_AMOUNT": item.RECEIVED_AMOUNT,
-                "DAMAGE_AMOUNT": item.DAMAGE_AMOUNT
+                "PACKING_AMOUNT": item.PACKING_AMOUNT
             };
     
             cargoTable.row.add(item).draw(false);
@@ -206,20 +202,6 @@ $(document).ready(function() {
                 }
             },
             { "data": "PACKING_AMOUNT",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "RECEIVED_AMOUNT",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "DAMAGE_AMOUNT",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';

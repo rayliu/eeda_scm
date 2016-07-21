@@ -424,4 +424,27 @@ public class CustomerController extends Controller {
         orderListMap.put("data", locationList);
         renderJson(orderListMap);
     }
+    
+    // 列出客户公司名称
+    public void search() {
+        String customerName = getPara("locationName");
+        if(StringUtils.isEmpty(customerName)){
+            customerName = getPara("customerName");
+        }
+        
+        if(StringUtils.isEmpty(customerName)){
+            customerName = "";
+        }
+        
+        List<Record> locationList = Collections.EMPTY_LIST;
+        String sql = "select p.id, p.abbr from party p where p.type = 'CUSTOMER' "
+                + " and p.id in (select customer_id from user_customer where user_name='"+currentUser.getPrincipal()+"') ";
+                    
+        if (customerName.trim().length() > 0) {
+            sql +=" and (p.abbr like '%" + customerName + "%' or p.quick_search_code like '%" + customerName.toUpperCase() + "%') ";
+        }
+        locationList = Db.find(sql);
+
+        renderJson(locationList);
+    }
 }
