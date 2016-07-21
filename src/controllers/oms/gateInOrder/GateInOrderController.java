@@ -59,14 +59,14 @@ public class GateInOrderController extends Controller {
     }
     
     //保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
-    public void OperationLog(String json,String order_id,Long operator){
+    public void OperationLog(String json,String order_id,Long operator,String action){
     	OrderActionLog orderActionLog = new OrderActionLog();
     	orderActionLog.set("json", json);
     	orderActionLog.set("time_stamp", new Date());
     	orderActionLog.set("order_type", "gateInOrder");
     	orderActionLog.set("order_id", order_id);
     	orderActionLog.set("operator", operator);
-//    	orderActionLog.set("action", "");
+    	orderActionLog.set("action", action);
     	orderActionLog.save();
     }
     
@@ -92,6 +92,8 @@ public class GateInOrderController extends Controller {
    			gateInOrder.set("update_by", operator);
    			gateInOrder.set("update_stamp", new Date());
    			gateInOrder.update();
+   			//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+   			OperationLog(jsonStr, id, operator,"update");
    		} else {
    			//create 
    			DbUtils.setModelValues(dto, gateInOrder);
@@ -104,10 +106,10 @@ public class GateInOrderController extends Controller {
    			gateInOrder.save();
    			
    			id = gateInOrder.getLong("id").toString();
+   			//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+   			OperationLog(jsonStr, id, operator,"create");
    		}
    		
-   		//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
-   		OperationLog(jsonStr, id, operator);
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
 		DbUtils.handleList(itemList, id, GateInOrderItem.class, "order_id");
@@ -125,6 +127,11 @@ public class GateInOrderController extends Controller {
     	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
     	gateInOrder.set("status","已确认").update();
     	renderJson(gateInOrder);
+    	
+    	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+    	UserLogin user = LoginUserController.getLoginUser(this);
+   		Long operator = user.getLong("id");
+    	OperationLog(order_id, order_id, operator,"confirm");
     }
     
     @Before(Tx.class)
@@ -133,6 +140,11 @@ public class GateInOrderController extends Controller {
     	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
     	gateInOrder.set("status","已取消").update();
     	renderJson(gateInOrder);
+    	
+    	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+    	UserLogin user = LoginUserController.getLoginUser(this);
+   		Long operator = user.getLong("id");
+    	OperationLog(order_id, order_id, operator,"cancel");
     }
 
     private List<Record> getGateInItems(String orderId) {

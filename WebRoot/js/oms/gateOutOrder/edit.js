@@ -53,7 +53,7 @@ $(document).ready(function() {
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
                 $('#confirmBtn').attr('disabled', false);
-                $('#canselBtn').attr('disabled', false);
+                $('#cancelBtn').attr('disabled', false);
                 
                 //异步刷新字表
                 gateOutOrder.refleshTable(order.ID);
@@ -91,7 +91,7 @@ $(document).ready(function() {
     	var self = $(this);
     	self.attr('disabled',true);
     	var order_id = $("#order_id").val();
-    	$.post('/gateOutOrder/canselOrder', {params:order_id}, function(data){
+    	$.post('/gateOutOrder/cancelOrder', {params:order_id}, function(data){
     		if(data.ID){
     			$('#status').val(data.STATUS);
     			$('#saveBtn').attr('disabled', true);
@@ -111,9 +111,9 @@ $(document).ready(function() {
     	if(status=='暂存'){
     		$('#saveBtn').attr('disabled', false);
     		$('#confirmBtn').attr('disabled', false);
-    		$('#canselBtn').attr('disabled', false);
+    		$('#cancelBtn').attr('disabled', false);
     	}else if(status=='已确认'){
-    		$('#canselBtn').attr('disabled', false);
+    		$('#cancelBtn').attr('disabled', false);
     	}
     }else{
     	$('#saveBtn').attr('disabled', false);
