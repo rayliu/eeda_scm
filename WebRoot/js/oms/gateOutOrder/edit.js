@@ -40,6 +40,7 @@ $(document).ready(function() {
             consignee_telephone: $('#consignee_telephone').val(),
             consignee_address: $('#consignee_address').val(),
             location: $('#location').val(),
+            express_no: $('#express_no').val(),  
             remark: $('#remark').val(),  
             status: $('#status').val()==''?'暂存':$('#status').val(), 
             item_list: items_array
