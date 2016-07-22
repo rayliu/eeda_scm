@@ -30,17 +30,20 @@ $(document).ready(function() {
             }
             var item={
                 id: id,
-                carton_no: $(row.children[1]).find('input').val(), 
-                upstream_sku: $(row.children[2]).find('input').val(), 
-                custom_code: $(row.children[3]).find('input').val(),
-                item_code: $(row.children[4]).find('input').val(),
-                name_specifications: $(row.children[5]).find('input').val(),
-                color: $(row.children[6]).find('input').val(),
-                size: $(row.children[7]).find('input').val(), 
-                currency: $(row.children[8]).find('input').val(), 
-                unit_value: $(row.children[9]).find('input').val(),
-                packing_unit: $(row.children[10]).find('select').val(), 
-                packing_amount: $(row.children[11]).find('input').val(),
+                bar_code: $(row.children[1]).find('input').val(), 
+                cargo_name: $(row.children[2]).find('input').val(), 
+                packing_amount: $(row.children[3]).find('input').val(),
+                express_no: $(row.children[4]).find('input').val(),
+                carton_no: $(row.children[5]).find('input').val(), 
+                upstream_sku: $(row.children[6]).find('input').val(), 
+                custom_code: $(row.children[7]).find('input').val(),
+                item_code: $(row.children[8]).find('input').val(),
+                name_specifications: $(row.children[9]).find('input').val(),
+                color: $(row.children[10]).find('input').val(),
+                size: $(row.children[11]).find('input').val(), 
+                currency: $(row.children[12]).find('input').val(), 
+                unit_value: $(row.children[13]).find('input').val(),
+                packing_unit: $(row.children[14]).find('select').val(), 
                 action: id.length>0?'UPDATE':'CREATE'
             };
             cargo_items_array.push(item);
@@ -60,29 +63,6 @@ $(document).ready(function() {
         return cargo_items_array;
     };
     
-    gateOutOrder.reDrawCargoTable=function(order){
-        deletedTableIds=[];
-        cargoTable.clear();
-        for (var i = 0; i < order.ITEM_LIST.length; i++) {
-            var item = order.ITEM_LIST[i];
-            var item={
-                "ID": item.ID,
-                "CARTON_NO": item.CARTON_NO,
-                "UPSTREAM_SKU": item.UPSTREAM_SKU,
-                "CUSTOM_CODE": item.CUSTOM_CODE,
-                "ITEM_CODE": item.ITEM_CODE,
-                "NAME_SPECIFICATIONS": item.NAME_SPECIFICATIONS,
-                "COLOR": item.COLOR,
-                "SIZE": item.SIZE,
-                "CURRENCY": item.CURRENCY,
-                "UNIT_VALUE": item.UNIT_VALUE,
-                "PACKING_UNIT": item.PACKING_UNIT,
-                "PACKING_AMOUNT": item.PACKING_AMOUNT
-            };
-    
-            cargoTable.row.add(item).draw(false);
-        }       
-    };
 
     //------------事件处理
     var cargoTable = $('#cargo_table').DataTable({
@@ -106,6 +86,34 @@ $(document).ready(function() {
             { "width": "30px",
                 "render": function ( data, type, full, meta ) {
                 	return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
+                }
+            },
+            { "data": "BAR_CODE", "width": "120px",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "CARGO_NAME", "width": "200px",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "PACKING_AMOUNT",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "EXPRESS_NO", "width": "120px", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "CARTON_NO", 
@@ -199,13 +207,6 @@ $(document).ready(function() {
 	                   +'<option value="个" '+ (data=='个'?'selected':'') +'>个</option>'
 	                   +'</select>';
                     return str;
-                }
-            },
-            { "data": "PACKING_AMOUNT",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
                 }
             }
         ]
