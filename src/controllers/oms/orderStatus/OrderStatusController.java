@@ -81,7 +81,7 @@ public class OrderStatusController extends Controller {
     }
     
     
-    private static String queryOrder(String orderNo){ 
+    public static String queryOrder(String orderNo){ 
 	    String jsonMsg = setQueryMsg(orderNo);
 
         TreeMap<String, String> paramsMap = new TreeMap<String, String>();

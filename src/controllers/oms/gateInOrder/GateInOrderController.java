@@ -59,6 +59,7 @@ public class GateInOrderController extends Controller {
     }
     
     //保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+    @Before(Tx.class)
     public void OperationLog(String json,String order_id,Long operator,String action){
     	OrderActionLog orderActionLog = new OrderActionLog();
     	orderActionLog.set("json", json);
