@@ -68,6 +68,7 @@ import com.jfinal.weixin.sdk.api.ApiConfigKit;
 
 import controllers.HomeController;
 import controllers.api.ApiController;
+import controllers.eeda.report.ReportController;
 import controllers.oms.allinpay.AllinpayController;
 import controllers.oms.gateInOrder.GateInOrderController;
 import controllers.oms.gateOutOrder.GateOutOrderController;
@@ -192,7 +193,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/waveOrder", WaveOrderController.class, contentPath);
 		me.add("/gateOutOrder", GateOutOrderController.class, contentPath);
 		me.add("/searchStatus", OrderStatusController.class, contentPath);
-		
+		me.add("/report", ReportController.class, contentPath);
 	}
 
     @Override

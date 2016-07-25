@@ -111,7 +111,7 @@ $(document).ready(function() {
     			self.attr('disabled',false);
     		}
     	})
-    })
+    });
     
     //按钮控制
     var order_id = $("#order_id").val();
@@ -127,4 +127,21 @@ $(document).ready(function() {
     }else{
     	$('#saveBtn').attr('disabled', false);
     }
+    
+  //打印按钮      
+    $('#printBtn').click(function(e){
+    	console.log("打印");
+    	e.preventDefault();
+    	var self = $(this);
+    	self.attr('disabled',true);
+    	var order_no = $("#express_no").val();
+    	$.post('/report/printZtoOrder', {order_no:order_no}, function(data){
+    		if(data){
+                window.open(data);
+             }else
+               $.scojs_message('打印失败', $.scojs_message.TYPE_ERROR);
+
+    	});
+    });
 } );
+
