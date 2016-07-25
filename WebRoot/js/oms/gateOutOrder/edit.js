@@ -134,7 +134,7 @@ $(document).ready(function() {
     	e.preventDefault();
     	var self = $(this);
     	self.attr('disabled',true);
-    	var order_no = $("#express_no").val();
+    	var order_no = $("#order_no").val();
     	$.post('/report/printZtoOrder', {order_no:order_no}, function(data){
     		if(data){
                 window.open(data);
