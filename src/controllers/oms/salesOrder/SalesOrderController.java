@@ -15,6 +15,7 @@ import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
+import models.eeda.profile.Country;
 import models.eeda.profile.CustomCompany;
 
 import org.apache.commons.lang.StringUtils;
@@ -160,6 +161,14 @@ public class SalesOrderController extends Controller {
     	//获取报关企业信息
     	CustomCompany custom = CustomCompany.dao.findById(salesOrder.getLong("custom_id"));
     	setAttr("custom", custom);
+    	
+    	//国家回显
+    	String sql = "select * from country where code = ?";
+    	Country country = Country.dao.findFirst(sql,salesOrder.getStr("consignee_country"));
+    	if(country!=null){
+    		setAttr("country_name", country.getStr("chinese_name"));
+    	}
+    	
     	
     	//收货人地址
     	String district = salesOrder.getStr("district");
