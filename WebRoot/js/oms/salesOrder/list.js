@@ -28,7 +28,19 @@ $(document).ready(function() {
             { "data": "CUSTOM_ID"},
             { "data": "PAYER_NAME"}, 
             { "data": "GOODS_VALUE"}, 
-            { "data": "STATUS"}, 
+            { "data": null,
+            	"render": function ( data, type, full, meta ) {
+            		var order_cus_status = data.ORDER_CUS_STATUS;
+            		var order_ciq_status = data.ORDER_CIQ_STATUS;
+            		var pay_status = data.PAY_STATUS;
+            		
+            		if(order_cus_status=='接收成功' && order_ciq_status=='接收成功' && pay_status=='接收成功'){
+            			return '<span style="color:green">订单报关已完成</span>';
+            		}else{
+            			return '<span style="color:red">订单报关处理中</span>';
+            		}
+            	}
+            }, 
             { "data": "CREATOR_NAME"}, 
             { "data": "CREATE_STAMP"}
         ]

@@ -40,6 +40,7 @@ import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
+import controllers.yh.job.CustomJob;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -83,6 +84,8 @@ public class SalesOrderController extends Controller {
    			salesOrder.update();
    			
    			log_id = createLogOrder(id,"update");
+   			
+   			CustomJob.operationLog("salesOrder", jsonStr, id, "update", LoginUserController.getLoginUserId(this).toString());
    		} else {
    			//create 
    			DbUtils.setModelValues(dto, salesOrder);
@@ -96,6 +99,8 @@ public class SalesOrderController extends Controller {
    			//生成对应的运输单
    			id = salesOrder.getLong("id").toString();
    			log_id = createLogOrder(id,"create");
+   			
+   			CustomJob.operationLog("salesOrder", jsonStr, id, "create", LoginUserController.getLoginUserId(this).toString());
    		}
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
@@ -202,10 +207,10 @@ public class SalesOrderController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT sor.*, ifnull(u.c_name, u.user_name) creator_name "
+        String sql = "select * from(SELECT sor.*, ifnull(u.c_name, u.user_name) creator_name "
     			+ "  from sales_order sor "
     			+ "  left join user_login u on u.id = sor.create_by"
-    			+ "   where 1 =1 ";
+    			+ "  ) A where 1 =1 ";
         
         String condition = DbUtils.buildConditions(getParaMap());
 
@@ -213,7 +218,7 @@ public class SalesOrderController extends Controller {
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
         
-        List<Record> BillingOrders = Db.find(sql+ condition + " order by create_stamp desc " +sLimit);
+        List<Record> BillingOrders = Db.find(sql+ condition + " order by create_stamp desc" +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
@@ -253,6 +258,7 @@ public class SalesOrderController extends Controller {
         	SalesOrder salesOrder = SalesOrder.dao.findById(order_id);
         	salesOrder.set("status", status).update();
         }
+        CustomJob.operationLog("salesOrder", jsonMsg, order_id, "submitDingDan", LoginUserController.getLoginUserId(this).toString());
         
 		renderJson(returnMsg);
     }

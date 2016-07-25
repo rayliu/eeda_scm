@@ -96,8 +96,8 @@
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputCountryField.html", {
 							id:'consignee_country', label:'收货人地址(国)',
-							value:order.consignee_country!'',
-							display_value: country_name!'' }){}%></div>
+							value:order.consignee_country!,
+							display_value: country_name! }){}%></div>
 					</div>
 		
 					<div class="row">
@@ -212,6 +212,25 @@
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'status',
 							label:'状态', value:order.status!'', disabled: 'disabled' }){}%>
+						</div>
+					</div>
+		            <div class="row">
+						<div class="col-lg-12">
+							<h3>报关状态信息</h3>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:
+							'order_cus_status', label: '订单海关状态', value: order.order_cus_status!'', disabled: 'disabled' }){}%>
+						</div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:
+							'order_ciq_status', label: '订单国检状态', value: order.order_ciq_status!'', disabled: 'disabled' }){}%>
+						</div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:
+							'pay_status', label: '支付单申报状态', value: order.pay_status!'', disabled: 'disabled' }){}%>
 						</div>
 					</div>
 					<div class="row">
