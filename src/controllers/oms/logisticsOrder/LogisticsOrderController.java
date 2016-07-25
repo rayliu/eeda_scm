@@ -37,6 +37,7 @@ import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
+import controllers.yh.job.CustomJob;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -75,6 +76,8 @@ public class LogisticsOrderController extends Controller {
    			logisticsOrder.set("update_by", user.getLong("id"));
    			logisticsOrder.set("update_stamp", new Date());
    			logisticsOrder.update();
+   			
+   			CustomJob.operationLog("logisticsOrder", jsonStr, id, "update", LoginUserController.getLoginUserId(this).toString());
    		} else {
    			//create 
    			DbUtils.setModelValues(dto, logisticsOrder);
@@ -86,6 +89,7 @@ public class LogisticsOrderController extends Controller {
    			logisticsOrder.save();
    			
    			id = logisticsOrder.getLong("id").toString();
+   			CustomJob.operationLog("logisticsOrder", jsonStr, id, "create", LoginUserController.getLoginUserId(this).toString());
    		}
    		
    		long create_by = logisticsOrder.getLong("create_by");
@@ -199,6 +203,7 @@ public class LogisticsOrderController extends Controller {
          String returnMsg = EedaHttpKit.post(urlStr, PostData);
          //String returnMsg = InUtil.getResult(urlStr, PostData);
          System.out.println("结果"+returnMsg);
+         CustomJob.operationLog("logisticsOrder", jsonMsg, order_id, "submitYunDan", LoginUserController.getLoginUserId(this).toString());
          renderJson(returnMsg);
     }
     
