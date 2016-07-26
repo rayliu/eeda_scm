@@ -19,7 +19,7 @@ $(document).ready(function() {
         "columns": [
             { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/inspectionOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
+                    return "<a href='/waveOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
                 }
             },
             { "data": "CREATOR_NAME"}, 
