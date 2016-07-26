@@ -128,9 +128,9 @@ $(document).ready(function() {
     	$('#saveBtn').attr('disabled', false);
     }
     
-  //打印按钮      
+     //打印按钮      
     $('#printBtn').click(function(e){
-    	console.log("打印");
+    	
     	e.preventDefault();
     	var self = $(this);
     	self.attr('disabled',true);
@@ -138,11 +138,13 @@ $(document).ready(function() {
     	$.post('/report/printZtoOrder', {order_no:order_no}, function(data){
     		if(data){
                 window.open(data);
-             }else
+             }else{
                $.scojs_message('打印失败', $.scojs_message.TYPE_ERROR);
+               }
 
     	});
     	self.attr('disabled',false);
+    	
     });
 } );
 
