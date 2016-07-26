@@ -142,6 +142,7 @@ $(document).ready(function() {
                $.scojs_message('打印失败', $.scojs_message.TYPE_ERROR);
 
     	});
+    	self.attr('disabled',false);
     });
 } );
 

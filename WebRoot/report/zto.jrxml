@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ralls" language="groovy" columnDirection="RTL" pageWidth="284" pageHeight="514" whenNoDataType="AllSectionsNoDetail" columnWidth="284" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="0ad70e3f-e9f0-4944-b70f-531a1df6ff02">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ralls" language="groovy" columnDirection="RTL" pageWidth="284" pageHeight="514" whenNoDataType="AllSectionsNoDetail" columnWidth="284" leftMargin="0" rightMargin="0" topMargin="15" bottomMargin="0" isIgnorePagination="true" uuid="0ad70e3f-e9f0-4944-b70f-531a1df6ff02">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="72"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -83,103 +83,77 @@
 			<staticText>
 				<reportElement x="140" y="262" width="68" height="20" uuid="ac047ef7-d355-4ebe-96db-e2abc35970d1"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="4"/>
+					<font fontName="宋体" size="8" isBold="false" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[时 间：]]></text>
+				<text><![CDATA[  时 间：]]></text>
 			</staticText>
-			<textField>
-				<reportElement x="142" y="326" width="139" height="17" uuid="47260863-0a11-4857-9bc3-4c5b59bcfa3f">
-					<printWhenExpression><![CDATA[]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="微软雅黑" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{consignee_telephone}]]></textFieldExpression>
-			</textField>
 			<staticText>
-				<reportElement style="table_TD" x="236" y="460" width="42" height="19" uuid="f385c518-531c-48c7-a75e-3b5742190741"/>
+				<reportElement x="236" y="460" width="42" height="19" uuid="f385c518-531c-48c7-a75e-3b5742190741"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="4"/>
+					<font fontName="宋体" size="8" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[已验视]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="21" y="326" width="122" height="17" uuid="9749e080-6d09-4cc6-ab36-bf2857e29355"/>
-				<textElement>
-					<font fontName="微软雅黑"/>
-					<paragraph leftIndent="5"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consignee}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="table_TD" x="5" y="0" width="275" height="40" uuid="bff54938-37a1-489d-bef5-6d44310dd216"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table_TD" x="5" y="40" width="275" height="25" uuid="8d02d2a5-3ca3-4ae5-a777-f0cd97be80c7"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[      深圳前海湾]]></text>
+				<text><![CDATA[    深圳前海湾]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table_TD" x="5" y="65" width="14" height="50" uuid="f50dadf6-f7ad-46a8-bcb2-b5d1d0dbcfd8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[收件]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table_TD" x="5" y="115" width="14" height="40" uuid="91bacad0-0272-4f2b-8922-012273ac8b96"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[寄件]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="21" y="115" width="160" height="14" uuid="f583cc76-185e-4c3e-98da-9dade7af5743"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[深圳前海德丰投资发展有限公司]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="20" y="129" width="161" height="26" uuid="6aba244f-e3de-417c-bdbc-343c14f09f92"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[深圳前海湾保税港区W6仓A206]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="21" y="65" width="122" height="17" uuid="fb50bc10-a548-4fd2-98b9-b4fb91b5e4ab"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consignee}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement style="table_TD" x="142" y="65" width="138" height="17" uuid="a02326ba-1946-4107-ab26-99a9132998e9">
-					<printWhenExpression><![CDATA[]]></printWhenExpression>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="微软雅黑" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
-					<paragraph leftIndent="5"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{consignee_telephone}]]></textFieldExpression>
-			</textField>
-			<textField>
 				<reportElement x="20" y="83" width="261" height="32" uuid="6eca4e05-23e5-4b89-b990-3ab86bafdf94"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="微软雅黑" isStrikeThrough="false"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consignee_address}]]></textFieldExpression>
 			</textField>
@@ -192,62 +166,57 @@
 			</staticText>
 			<staticText>
 				<reportElement style="table_TD" x="5" y="223" width="133" height="64" uuid="b0318e4e-87e9-4742-957d-390843e43736"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="5"/>
+				<textElement textAlignment="Left" verticalAlignment="Top">
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[您对此单的签收，代表您已经验货，确认商品信息无误，包装完好，没有划痕、破损等表面质量问题]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="140" y="223" width="68" height="31" uuid="f13faa2c-2e82-4edb-94b5-955ba111f9db"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[ 签收人：]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table_TD" x="5" y="288" width="84" height="38" uuid="0ac5e525-456e-4669-a5f3-110a735e4486"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table_TD" x="5" y="326" width="14" height="50" uuid="2eee559a-aa19-4ab4-948b-93b8fe496b88"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[收件]]></text>
 			</staticText>
 			<textField>
 				<reportElement x="20" y="343" width="266" height="33" uuid="963d09c7-25e9-495c-81a6-959cdbb7aa15"/>
 				<textElement>
-					<font fontName="微软雅黑"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consignee_address}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="table_TD" x="5" y="376" width="14" height="40" uuid="7d0129f1-48f7-4031-9714-07dd2323368b"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[寄件]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="20" y="376" width="161" height="15" uuid="0ddcfbf2-72a6-4a9e-8df0-9f1851ef602d"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[深圳前海德丰投资发展有限公司]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="20" y="391" width="161" height="25" uuid="f567bfb2-5d5c-4288-a961-0d9af5e34797"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[深圳前海湾保税港区 W6仓A206]]></text>
 			</staticText>
@@ -261,77 +230,75 @@
 			<staticText>
 				<reportElement x="5" y="416" width="275" height="63" uuid="49e1aee3-0631-4e6d-b5fc-e0642a195bb4"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[   商家自定义]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="144" y="40" width="38" height="26" uuid="ddfdcd17-2a08-4fd2-af44-d64f21f6aa28"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13"/>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[日期]]></text>
 			</staticText>
 			<textField pattern="yyyy-MM-dd">
 				<reportElement x="181" y="40" width="100" height="25" uuid="60931387-9c39-4f9d-8a9d-09ddae280bfd"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13"/>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gate_out_date}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="table" x="5" y="223" width="275" height="64" uuid="885423ba-1009-4da6-8dff-d2eba7445b9b"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table" x="5" y="326" width="275" height="50" uuid="52fb9f5c-1322-4fbb-b7d9-8fdf6434394f"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table" x="5" y="115" width="275" height="40" uuid="04e258a8-4b76-44ca-9cbe-59ae05fe7871"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table" x="5" y="376" width="275" height="40" uuid="67149d6b-ebfe-448d-bfba-cb3d4bd59788"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table" x="5" y="416" width="275" height="63" uuid="0142e1c4-198d-4ec4-a1ab-e4ff456b55e3"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-					<paragraph leftIndent="5"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table" x="5" y="65" width="275" height="50" uuid="cf7567cd-f24e-4bc5-9d52-7c242e92b67a"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
 				<reportElement style="table" x="5" y="288" width="275" height="38" uuid="0dce8e04-6aab-408c-ad7e-44e60c738bb6"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font fontName="微软雅黑" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<componentElement>
-				<reportElement x="8" y="161" width="270" height="42" uuid="9af9772a-b51a-4e9e-a744-f6ac96a2eecf"/>
+				<reportElement stretchType="RelativeToBandHeight" x="10" y="161" width="257" height="32" isPrintInFirstWholeBand="true" uuid="9af9772a-b51a-4e9e-a744-f6ac96a2eecf"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128C" drawText="false" checksumRequired="false">
 					<jr:codeExpression><![CDATA[$F{express_no}]]></jr:codeExpression>
 				</jr:barbecue>
@@ -339,7 +306,7 @@
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" x="38" y="193" width="200" height="16" uuid="e8a961bd-c2c5-42f1-9a25-1c1ba97889ad"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 					<paragraph lineSpacing="Proportional"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{express_no}]]></textFieldExpression>
@@ -347,7 +314,7 @@
 			<textField isBlankWhenNull="true">
 				<reportElement stretchType="RelativeToBandHeight" x="142" y="310" width="84" height="15" uuid="a12d3c39-a742-4038-8bae-5977e6da76ab"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
-					<font fontName="微软雅黑" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{express_no}]]></textFieldExpression>
 			</textField>
@@ -357,6 +324,20 @@
 					<jr:codeExpression><![CDATA[$F{express_no}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
+			<textField>
+				<reportElement x="144" y="327" width="134" height="17" uuid="860bc2f7-e475-4f28-b088-56b5145f8cda"/>
+				<textElement>
+					<font fontName="黑体" size="11" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consignee_telephone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="144" y="66" width="134" height="17" uuid="9b24fa8d-9b6e-4444-b102-2e4da10e762e"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="黑体" size="11" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{consignee_telephone}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>
