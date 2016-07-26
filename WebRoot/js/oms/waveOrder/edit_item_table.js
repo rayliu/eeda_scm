@@ -75,11 +75,9 @@ $(document).ready(function() {
                 	return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
                 }
             },
-            { "data": "NUMBER", 
+            { "data": null, 
                 "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                    return '<input type="text" value="'+data+'" class="form-control" />';
+                	return meta.row+1;
                 }
             },
             { "data": "ORDER_NO_CODE", 
@@ -117,11 +115,11 @@ $(document).ready(function() {
                     return '<input type="text" name="shelves" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "ITEM_BAR_CODE", 
+            { "data": "CARGO_BAR_CODE", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="item_bar_code" value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="cargo_bar_code" value="'+data+'" class="form-control" />';
                 }
             } 
         ]
@@ -135,6 +133,11 @@ $(document).ready(function() {
     //刷新明细表
     waveOrder.refleshTable = function(order_id){
     	var url = "/waveOrder/tableList?order_id="+order_id;
+    	cargoTable.ajax.url(url).load();
+    }
+    
+    waveOrder.showTable = function(order_ids){
+    	var url = "/waveOrder/tableList?order_ids="+order_ids;
     	cargoTable.ajax.url(url).load();
     }
 } );

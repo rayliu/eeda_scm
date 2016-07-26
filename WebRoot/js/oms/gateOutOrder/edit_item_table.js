@@ -33,7 +33,7 @@ $(document).ready(function() {
                 bar_code: $(row.children[1]).find('input').val(), 
                 cargo_name: $(row.children[2]).find('input').val(), 
                 packing_amount: $(row.children[3]).find('input').val(),
-                shelve: $(row.children[4]).find('input').val(),
+                shelves: $(row.children[4]).find('input').val(),
                 carton_no: $(row.children[5]).find('input').val(), 
                 upstream_sku: $(row.children[6]).find('input').val(), 
                 custom_code: $(row.children[7]).find('input').val(),
@@ -109,7 +109,7 @@ $(document).ready(function() {
                    return '<input type="text" value="'+data+'" class="form-control" required/>';
                 }
             },
-            { "data": "SHELVE",
+            { "data": "SHELVES",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';

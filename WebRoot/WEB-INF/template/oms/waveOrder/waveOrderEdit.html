@@ -42,14 +42,16 @@
 		</div>
 	</div>
 	<div class="col-lg-12">
-		<div class="row">
-			<button class="btn btn-success btn-xs" id="add_cargo">添加</button>
+		<div class="row">	
+			<a id='edit_detail' data-target='#itemDetail' data-toggle='modal'>
+				<button class="btn btn-success btn-xs" id="add_cargo1">添加</button>
+			</a>
 			<form id="itemForm">
 				<%include("/yh/component/form/detailTable.html", {
 				id:'cargo_table', 
 				headers:['', 
 				'序号', '订单号条码' ,'订单号' ,'货品编码' ,'数量' ,'库位', '商品条码'],
-				field_list:['','number', 'order_no_code','sales_order_no','item_code','amount','shelves','item_bar_code' ], 
+				field_list:['','', 'order_no_code','sales_order_no','item_code','amount','shelves','cargo_bar_code' ], 
 				value_list: itemList![] }){} %>
 			</form>
 		</div>
@@ -60,14 +62,39 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<a id='saveBtn' class="btn  btn-primary" href="#">保存</a> 
-			<!-- <a id='submitBtn' class="btn  btn-primary" href="#">上报</a> -->
 			<button id="printBtn" type="button" class="btn  btn-primary"
 				data-toggle="modal" data-target=".bs-example-modal-sm">打印</button>
 			<a class="btn  btn-default" href="/waveOrder">返回</a>
 		</div>
 		<!-- /.col-lg-12 -->
 	</div>
-
+	<div class="modal fade" id="itemDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog" style="width:1000px;">
+	    <div class="modal-content">
+	      <div class="modal-header">入库单列表</div>
+	      	<div class="modal-body">
+				<div class="row">
+				</div>
+				<div class="table-responsive">    
+					<%include("/yh/component/form/detailTable.html", {
+					id:'gate_out_table', 
+					style:'width:1000px;',
+					headers:['', 
+							'出库单号' ,
+							'销售订单号' ,
+							'状态' ,
+							'仓库位'
+							]
+					}){} %>        
+               </div>
+	        </div>
+	        <div class="modal-footer">
+	        	<button type="button" id="confirmBtn" disabled class="btn  btn-primary">确认</button>
+	            <button type="button" id="returnBtn" class="btn  btn-default" data-dismiss="modal">返回</button>
+	        </div>
+	    </div>
+	  </div>
+	</div>
 
 </div>
 <!--  form row  -->
@@ -95,3 +122,4 @@
 </script>
 <script src="/js/oms/waveOrder/edit_item_table.js"></script>
 <script src="/js/oms/waveOrder/edit.js"></script>
+<script src="/js/oms/waveOrder/gate_out_list.js"></script>

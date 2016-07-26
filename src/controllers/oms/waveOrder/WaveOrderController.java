@@ -143,11 +143,53 @@ public class WaveOrderController extends Controller {
         renderJson(BillingOrderListMap); 
     }
     
+    
+    public void gateOutlist() {
+    	String sLimit = "";
+        String pageIndex = getPara("sEcho");
+        if (getPara("iDisplayStart") != null && getPara("iDisplayLength") != null) {
+            sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
+        }
+
+        String sql = "SELECT goo.*, ifnull(u.c_name, u.user_name) creator_name ,w.warehouse_name"
+    			+ "  from gate_out_order goo "
+    			+ "  left join user_login u on u.id = goo.create_by"
+    			+ "  left join warehouse w on w.id = goo.warehouse_id"
+    			+ "   where 1 =1 ";
+        
+        String condition = DbUtils.buildConditions(getParaMap());
+
+        String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
+        Record rec = Db.findFirst(sqlTotal);
+        logger.debug("total records:" + rec.getLong("total"));
+        
+        List<Record> BillingOrders = Db.find(sql+ condition + " order by create_stamp desc " +sLimit);
+        Map BillingOrderListMap = new HashMap();
+        BillingOrderListMap.put("sEcho", pageIndex);
+        BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
+        BillingOrderListMap.put("iTotalDisplayRecords", rec.getLong("total"));
+
+        BillingOrderListMap.put("aaData", BillingOrders);
+
+        renderJson(BillingOrderListMap); 
+    }
+    
     //异步刷新字表
     public void tableList(){
     	String order_id = getPara("order_id");
+    	String order_ids = getPara("order_ids");
     	List<Record> list = null;
-    	list = getItems(order_id);
+    	if(StringUtils.isNotEmpty(order_id)){
+    		list = getItems(order_id);
+    	}else if(StringUtils.isNotEmpty(order_ids)){
+    		String sql = "select null id ,gooi.bar_code cargo_bar_code ,goo.customer_refer_no sales_order_no,gooi.shelves,gooi.packing_amount amount,"
+    				+ " gooi.item_code ,null order_no_code"
+    				+ " from gate_out_order goo "
+    				+ " left join gate_out_order_item gooi on gooi.order_id = goo.id"
+    				+ " where goo.id in ("+ order_ids +")";
+    		list = Db.find(sql);
+    	}
+    		
 
     	Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", 1);
