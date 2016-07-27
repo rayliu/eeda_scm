@@ -33,17 +33,19 @@ $(document).ready(function() {
                 bar_code: $(row.children[1]).find('input').val(), 
                 cargo_name: $(row.children[2]).find('input').val(), 
                 packing_amount: $(row.children[3]).find('input').val(),
-                shelves: $(row.children[4]).find('input').val(),
-                carton_no: $(row.children[5]).find('input').val(), 
-                upstream_sku: $(row.children[6]).find('input').val(), 
-                custom_code: $(row.children[7]).find('input').val(),
-                item_code: $(row.children[8]).find('input').val(),
-                name_specifications: $(row.children[9]).find('input').val(),
-                color: $(row.children[10]).find('input').val(),
-                size: $(row.children[11]).find('input').val(), 
-                currency: $(row.children[12]).find('input').val(), 
-                unit_value: $(row.children[13]).find('input').val(),
-                packing_unit: $(row.children[14]).find('select').val(), 
+                gross_weight: $(row.children[4]).find('input').val(),
+                net_weight: $(row.children[5]).find('input').val(), 
+                shelves: $(row.children[7]).find('input').val(),
+                carton_no: $(row.children[8]).find('input').val(), 
+                upstream_sku: $(row.children[9]).find('input').val(), 
+                custom_code: $(row.children[10]).find('input').val(),
+                item_code: $(row.children[11]).find('input').val(),
+                name_specifications: $(row.children[12]).find('input').val(),
+                color: $(row.children[13]).find('input').val(),
+                size: $(row.children[14]).find('input').val(), 
+                currency: $(row.children[15]).find('input').val(), 
+                unit_value: $(row.children[16]).find('input').val(),
+                packing_unit: $(row.children[17]).find('select').val(), 
                 action: id.length>0?'UPDATE':'CREATE'
             };
             cargo_items_array.push(item);
@@ -107,6 +109,27 @@ $(document).ready(function() {
                     if(!data)
                         data='';
                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "GROSS_WEIGHT",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='0';
+                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "NET_WEIGHT",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='0';
+                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": null,
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='0';
+                   return '<input type="text" value="'+data.GROSS_WEIGHT * data.NET_WEIGHT+'" class="form-control" required/>';
                 }
             },
             { "data": "SHELVES",
