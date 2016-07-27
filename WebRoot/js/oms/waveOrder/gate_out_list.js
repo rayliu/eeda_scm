@@ -20,7 +20,7 @@ $(document).ready(function() {
             $(row).attr('id', data.ID);
         },
         "columns": [
-            { "data":null,
+            { "data":null,"width":"30px",
                 "render": function ( data, type, full, meta ) {
                     return '<input type="checkBox" class ="checkBox">';
                 }
@@ -72,10 +72,31 @@ $(document).ready(function() {
     $('#gate_out_table').on('click','.checkBox',function(){
 		var checkbox = $(this).prop('checked');
 		if(checkbox){
-			hava_check++;	
+			++hava_check;	
 		}else{
-			hava_check--;
+			--hava_check;
 		}	
+		if(hava_check>0){
+			$('#confirmBtn').attr('disabled',false);
+		}else{
+			$('#confirmBtn').attr('disabled',true);
+		}
+	});
+    
+    //全选
+    $('#all').on('click',function(){
+    	var all = $(this).prop('checked');
+    	hava_check = -1;
+		$('#gate_out_table input[type="checkbox"]').each(function(){
+			if(all){
+				$(this).prop('checked',true);
+				++hava_check ;
+			}else{
+	    		$(this).prop('checked',false);
+	    		hava_check=0 ;
+			}	
+    	});
+    	
 		if(hava_check>0){
 			$('#confirmBtn').attr('disabled',false);
 		}else{

@@ -49,9 +49,8 @@
 			<form id="itemForm">
 				<%include("/yh/component/form/detailTable.html", {
 				id:'cargo_table', 
-				headers:['', 
-				'序号', '订单号条码' ,'订单号' ,'货品编码' ,'数量' ,'库位', '商品条码'],
-				field_list:['','', 'order_no_code','sales_order_no','item_code','amount','shelves','cargo_bar_code' ], 
+				headers:['', '序号', '出库单号' ,'销售订单号' , '商品条码','货品编码' ,'数量' ,'库位'],
+				field_list:['','','gate_out_no','sales_order_no','cargo_bar_code','item_code','amount','shelves'], 
 				value_list: itemList![] }){} %>
 			</form>
 		</div>
@@ -79,7 +78,7 @@
 					<%include("/yh/component/form/detailTable.html", {
 					id:'gate_out_table', 
 					style:'width:1000px;',
-					headers:['', 
+					headers:['<input type="checkbox" id="all">', 
 							'出库单号' ,
 							'销售订单号' ,
 							'状态' ,

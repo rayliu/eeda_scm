@@ -80,11 +80,11 @@ $(document).ready(function() {
                 	return meta.row+1;
                 }
             },
-            { "data": "ORDER_NO_CODE", 
+            { "data": "GATE_OUT_NO", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="order_no_code" value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="gate_out_no" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "SALES_ORDER_NO", 
@@ -94,6 +94,13 @@ $(document).ready(function() {
                     return '<input type="text" name="sales_order_no" value="'+data+'" class="form-control" />';
                 }
             },
+            { "data": "CARGO_BAR_CODE", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="cargo_bar_code" value="'+data+'" class="form-control" />';
+                }
+            } ,
             { "data": "ITEM_CODE", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
@@ -114,14 +121,7 @@ $(document).ready(function() {
                         data='';
                     return '<input type="text" name="shelves" value="'+data+'" class="form-control" />';
                 }
-            },
-            { "data": "CARGO_BAR_CODE", 
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                    return '<input type="text" name="cargo_bar_code" value="'+data+'" class="form-control" />';
-                }
-            } 
+            }
         ]
     });
 
