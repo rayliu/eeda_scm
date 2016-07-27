@@ -22,7 +22,7 @@ $(document).ready(function() {
         "columns": [
             { "data": "LOG_NO", 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/logisticsOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
+                    return "<a href='/logisticsOrder/edit?id="+full.ID+"'>"+data+"</a>";
                 }
             },
             { "data": "CUSTOM_NAME"},

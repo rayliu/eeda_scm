@@ -14,7 +14,7 @@ $(document).ready(function() {
    	              { "data": "NAME"}, 
                    {"data": null, 
                        "render": function ( data, type, full, meta ) {
-                         var str = "<a class='btn  btn-primary btn-sm' href='/unit/edit?id="+full.ID+"' target='_blank'>"+
+                         var str = "<a class='btn  btn-primary btn-sm' href='/unit/edit?id="+full.ID+"' >"+
                            "<i class='fa fa-edit fa-fw'></i>"+
                            "编辑"+"</a> ";
                          return str;

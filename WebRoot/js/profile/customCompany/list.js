@@ -25,7 +25,7 @@ $(document).ready(function() {
             { "data": "SHOP_NO"},
             { "data": "SHOP_NAME", 
               "render": function ( data, type, full, meta ) {
-                    return "<a href='/customCompany/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
+                    return "<a href='/customCompany/edit?id="+full.ID+"' >"+data+"</a>";
                 }
             },
             { "data": "LEGAL_PERSON"},

@@ -23,7 +23,7 @@ $(document).ready(function() {
             { "data": "WAREHOUSE_NAME"},
             { "data": "POSITION", 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/warehouseShelves/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
+                    return "<a href='/warehouseShelves/edit?id="+full.ID+"' >"+data+"</a>";
                 }
             },
             { "data": "CREATOR_NAME"}, 

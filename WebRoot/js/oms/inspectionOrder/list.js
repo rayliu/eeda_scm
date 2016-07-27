@@ -22,7 +22,7 @@ $(document).ready(function() {
         "columns": [
             { "data": null, 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/inspectionOrder/edit?id="+full.ID+"'target='_blank'>"+data+"</a>";
+                    return "<a href='/inspectionOrder/edit?id="+full.ID+"' >"+data+"</a>";
                 }
             },
             { "data": "WAREHOUSE_NAME"},
