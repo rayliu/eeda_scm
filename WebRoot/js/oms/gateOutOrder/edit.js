@@ -128,7 +128,7 @@ $(document).ready(function() {
     	$('#saveBtn').attr('disabled', false);
     }
     
-     //打印按钮      
+     //打印中通面单按钮      
     $('#printBtn').click(function(e){
     	
     	e.preventDefault();

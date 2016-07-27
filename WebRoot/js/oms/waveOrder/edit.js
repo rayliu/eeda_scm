@@ -53,5 +53,23 @@ $(document).ready(function() {
             $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
             $('#saveBtn').attr('disabled', false);
           });
-    });  
+    }); 
+    
+    //打印中通面单按钮      
+    $('#printBtn').click(function(e){
+    	
+    	e.preventDefault();
+    	var self = $(this);
+    	self.attr('disabled',true);
+    	var order_no = $("#order_no").val();
+    	$.post('/report/printWaveOrder', {order_no:order_no}, function(data){
+    		if(data){
+                window.open(data);
+             }else{
+               $.scojs_message('打印失败', $.scojs_message.TYPE_ERROR);
+               }
+
+    	});    	
+    	self.attr('disabled',false);
+    });
 });

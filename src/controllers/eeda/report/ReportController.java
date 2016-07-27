@@ -89,16 +89,15 @@ public class ReportController extends Controller {
 				hm);
 		renderText(file.substring(file.indexOf("download")-1));
 	}
-	public void printArapMiscCost() {
+	public void printWaveOrder() {
 		String order_no = getPara("order_no").trim();
-		String fileName = "report/arap_misc_cost.jasper";
-		String outFileName = "download/手工成本单";
+		String fileName = "/report/wave_order.jasper";
+		String outFileName = "/download/波次单";
 		HashMap<String, Object> hm = new HashMap<String, Object>();
 		hm.put("order_no", order_no);
         fileName = getContextPath() + fileName;
         outFileName = getContextPath() + outFileName + order_no;
-		String file = PrintPatterns.getInstance().print(fileName, outFileName,
-				hm);
+		String file = PrintPatterns.getInstance().print(fileName, outFileName,hm);
 		renderText(file.substring(file.indexOf("download")-1));
 	}
 	public void printCustomerOrder() {
