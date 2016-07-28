@@ -55,7 +55,7 @@ $(document).ready(function() {
           });
     }); 
     
-    //打印中通面单按钮      
+    //打印波次单按钮      
     $('#printBtn').click(function(e){
     	
     	e.preventDefault();
