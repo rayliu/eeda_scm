@@ -129,7 +129,7 @@ $(document).ready(function() {
     }
     
      //打印中通面单按钮      
-    $('#printBtn').click(function(e){
+    $('#printBtnZto').click(function(e){
     	
     	e.preventDefault();
     	var self = $(this);
@@ -143,6 +143,24 @@ $(document).ready(function() {
                }
 
     	});
+    	self.attr('disabled',false);
+    	
+    });
+    //打印货品内单
+    $('#printBtnGoods').click(function(e){
+    	e.preventDefault();
+    	var self= $(this);
+    	self.attr('disabled',true);
+    	var order_no=$("#order_no").val();
+    	$.post('/report/printGoodsOrder', {order_no:order_no}, function(data){
+    		if(data){
+    			window.open(data);
+    		}else{
+    			$.scojs_message('打印失败',$scojs_massage.TYPE_ERROR);
+    		}
+    		
+    	});
+    	
     	self.attr('disabled',false);
     	
     });
