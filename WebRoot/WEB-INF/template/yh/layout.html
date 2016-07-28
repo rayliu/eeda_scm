@@ -150,21 +150,19 @@
                             <!-- /.nav-second-level -->
                         </li>
                        <%}%>
-                    <%
+                        <%
                     	var gateInOrderPermission = map.GateInOrder_list;
                     	var inspectionOrderPermission = map.InspectionOrder_list;
                     	var gateOutOrderPermission = map.GateOutOrder_list;
 
                         if( nvl(gateInOrderPermission, '') != '' ||
                             nvl(inspectionOrderPermission, '') != '' ||
-                            nvl(gateOutOrderPermission, '') != '') {
-                    	
-                    	
-                    %> 
+                            nvl(gateOutOrderPermission, '') != '') {	
+                        %> 
                         <li id="menu_incoming">
                         	<a href="#"><i class="fa fa-cog fa-fw"></i> 仓库管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
-                           <% if(gateInOrderPermission != ''){%>
+                           		<% if(gateInOrderPermission != ''){%>
                                 <li> 
                                     <a href="/gateInOrder">入库通知单</a>
                                 </li>
@@ -183,6 +181,22 @@
                             <!-- /.nav-second-level -->
                         </li>
                         <% }%>
+                        
+                        
+                        <li id="menu_inventory">
+                        	<a href="#"><i class="fa fa-cog fa-fw"></i> 库存管理<span class="fa arrow"></span></a>
+                            <ul class="nav nav-second-level">
+                            	<li> 
+                                    <a href="/inventory">库存统计</a>
+                                </li>
+                                <li> 
+                                    <a href="/inventory">货品上下架</a>
+                                </li>
+                                <li>
+                                    <a href="/inventory">库存盘点</a>
+                                </li>
+                            </ul>
+                        </li>
 
                     	<%
 		               		var chunarijiPermission = map.PaymentCheckOrder_list;

@@ -53,29 +53,32 @@ public class WarehouseController extends Controller{
     Long parentID = pom.getParentOfficeId();
     
     
-    @RequiresPermissions(value = {PermissionConstant.PERMSSION_W_LIST})
 	public void index() {
 		render("/profile/warehouse/warehouseList.html");
 	}
     
-    @RequiresPermissions(value = {PermissionConstant.PERMSSION_W_LIST})
     public void create(){
     	render("/profile/warehouse/warehouseEdit.html");
     }
     
-    
-    @RequiresPermissions(value = {PermissionConstant.PERMSSION_W_LIST})
 	public void list() {
 		Map warehouseListMap = null;
 		String sLimit = "";
-        String pageIndex = getPara("sEcho");
-        if (getPara("iDisplayStart") != null && getPara("iDisplayLength") != null) {
-            sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
+		String pageIndex = getPara("draw");
+        if (getPara("start") != null && getPara("length") != null) {
+            sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
         
-		String sql = "select w.*, u.c_name create_name from warehouse w left join user_login u on w.create_by=u.id where 1=1 ";
+		String sql = "select * from(select w.*, u.c_name create_name from warehouse w "
+				+ " left join user_login u on w.create_by=u.id) A where 1=1 ";
         
-        String condition = DbUtils.buildConditions(getParaMap());
+		 String condition = "";
+	        String jsonStr = getPara("jsonStr");
+	    	if(StringUtils.isNotEmpty(jsonStr)){
+	    		Gson gson = new Gson(); 
+	            Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
+	            condition = DbUtils.buildConditions(dto);
+	    	}
 
         String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
         Record rec = Db.findFirst(sqlTotal);
@@ -93,7 +96,6 @@ public class WarehouseController extends Controller{
 		renderJson(warehouseListMap);
 	}
 	
-	@RequiresPermissions(value = {PermissionConstant.PERMSSION_W_DELETE})
 	public void stop() {
 		String id = getPara("id");
 		Warehouse warehouse = Warehouse.dao.findById(id);
@@ -107,7 +109,6 @@ public class WarehouseController extends Controller{
 		renderJson(warehouse);
 	}
 
-	@RequiresPermissions(value = {PermissionConstant.PERMSSION_W_CREATE, PermissionConstant.PERMSSION_W_UPDATE}, logical=Logical.OR)
 	@Before(Tx.class)
    	public void save() throws Exception {		
    		String jsonStr=getPara("params");

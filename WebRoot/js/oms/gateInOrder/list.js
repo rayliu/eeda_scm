@@ -7,17 +7,8 @@ $(document).ready(function() {
     $("#beginTime_filter").val(new Date().getFullYear()+'-'+ (new Date().getMonth()+1));
     
 	  //datatable, 动态处理
-    var dataTable = $('#eeda-table').DataTable({
-        "processing": true,
-        "searching": false,
-        //"serverSide": true,
-        "scrollX": true,
-        "scrollY": "300px",
-        "scrollCollapse": true,
-        "autoWidth": false,
-        "language": {
-            "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
-        },
+    var dataTable = eeda.dt({
+        "id": "eeda-table",
         "ajax": "/gateInOrder/list",
         "columns": [
             { "data": "ORDER_NO", 
@@ -41,26 +32,25 @@ $(document).ready(function() {
     $('#searchBtn').click(function(){
         searchData(); 
     })
+    
+    buildCondition=function(){
+    	var item = {};
+    	var orderForm = $('#orderForm input,select');
+    	for(var i = 0; i < orderForm.length; i++){
+    		var name = orderForm[i].id;
+        	var value =orderForm[i].value;
+        	if(name){
+        		item[name] = value;
+        	}
+    	}
+        return item;
+    };
 
-   var searchData=function(){
-        var order_no = $("#order_no").val(); 
-        var status = $('#status').val();
-        var start_date = $("#create_stamp_begin_time").val();
-        var end_date = $("#create_stamp_end_time").val();
-        
-        /*  
-            查询规则：参数对应DB字段名
-            *_no like
-            *_id =
-            *_status =
-            时间字段需成双定义  *_begin_time *_end_time   between
-        */
-        var url = "/gateInOrder/list?order_no="+order_no
-             +"&status="+status
-             +"&create_stamp_begin_time="+start_date
-             +"&create_stamp_end_time="+end_date;
-
+    var searchData=function(){
+    	var itemJson = buildCondition();
+    	var url = "/gateInOrder/list?jsonStr="+JSON.stringify(itemJson);
         dataTable.ajax.url(url).load();
     };
-    
+
+   
 });

@@ -1,4 +1,32 @@
 var eeda={};
+window.eeda=eeda;
+//dataTables builder for 1.10
+eeda.dt = function(opt){
+    var option = {
+        processing: opt.processing || true,
+        searching: opt.searching || false,
+        paging: opt.paging || false,
+        //"serverSide": true,
+        scrollX: opt.scrollX || true,
+        responsive: true,
+        //scrollY: opt.scrollY || true, //"300px",
+        //scrollCollapse: opt.scrollCollapse || true,
+        autoWidth: opt.autoWidth || false,
+        aLengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+        language: {
+            "url": "/js/lib/datatables-1.10.9/i18n/Chinese.json"
+        },
+        createdRow: opt.createdRow || function ( row, data, index ) {
+            $(row).attr('id', data.ID);
+        },
+        ajax: opt.ajax || '',
+        columns: opt.columns || []
+    };
+
+    var dataTable = $('#'+opt.id).DataTable(option);
+
+    return dataTable;
+}
 
 var refreshUrl=function(url){
     	var state = window.history.state;

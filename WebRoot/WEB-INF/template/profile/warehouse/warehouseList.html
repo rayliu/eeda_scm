@@ -21,25 +21,24 @@
 			</div>
 			<!-- /.panel-heading -->
 			<div class="panel-body">
-				<form role="form" style="margin: 0 15px;">
+				<form id="orderForm" role="form" style="margin: 0 15px;">
 					<div class="row search_panel">
 						<div class="col-lg-4">
-							<div class="form-group">
-								<label class="search-label">仓库名称</label> <input type="text"
-									class="form-control search-control warehouseName_filter"
-									id="warehouseName_filter" value="">
-							</div>
+								<%include("/yh/component/form/inputField.html", { id:'warehouse_name',
+								label:'仓库名称', required:'required', value:warehouse.warehouse_name!'',required:'required' }){}%>
 						</div>
 						<div class="col-lg-4">
-							<div class="form-group">
-								<label class="search-label">详细地址</label> <input type="text"
-									class="form-control search-control warehouseAddress_filter"
-									id="warehouseAddress_filter" value="">
-							</div>
+								<%include("/yh/component/form/inputField.html", { id:'warehouse_address',
+								label:'详细地址', required:'required', value:warehouse.warehouse_address!'' ,required:'required'}){}%>
 						</div>
 					</div>
-					<button id="searchBtn" class="btn btn-primary btn-sm" type="button">查询</button>
 				</form>
+				<div class="col-lg-12">
+					<div class="form-group">
+						<button id="searchBtn" class="btn btn-primary btn-sm" type="button">查询</button>
+					</div>
+				</div>
+				
 				<!-- /.panel-heading -->
 				<div class="panel-body">
 					<div class="form-group">
@@ -54,21 +53,11 @@
 
 
 <%}%>
-<!-- Page-Level Plugin Scripts - Tables -->
 <script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
 <script
 	src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
 <script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
-<script>
-	<%
-		var WarehouserUpdate = shiro.hasPermission("Warehouse.update");
-		var WarehouserDel = shiro.hasPermission("Warehouse.delete");
-	%>
-	var Warehouser={};
-	Warehouser.isUpdate = ${WarehouserUpdate};
-	Warehouser.isDel = ${WarehouserDel};
-	
-</script>
+<script src="/js/eeda/eeda-common.js"></script>
 <script src="/js/profile/warehouse/list.js"></script>

@@ -1,21 +1,12 @@
 $(document).ready(function() {
-	document.title = '订单查询   | '+document.title;
+	document.title = '仓库查询   | '+document.title;
 	
     $('#menu_profile').addClass('active').find('ul').addClass('in');
 
 	  //datatable, 动态处理
-    var dataTable = $('#eeda-table').DataTable({
-    	 "processing": true,
-         "searching": false,
-         "serverSide": false,
-         "scrollX": true,
-         "scrollY": "500px",
-         "scrollCollapse": true,
-         "autoWidth": true,
-         "language": {
-             "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
-         },
-         //"ajax": "/damageOrder/list",
+    var dataTable = eeda.dt({
+         "id": "eeda-table",
+         "ajax": "/warehouse/list",
          "columns": [
             { "data": "WAREHOUSE_NAME", 
             	"render": function ( data, type, full, meta ) {
@@ -29,12 +20,11 @@ $(document).ready(function() {
             	"render": function ( data, type, full, meta ) {
             		var str = '停用';
             		var btn = 'btn-danger'
-                	if(Warehouser.isDel){
-                		if(full.STATUS != "active"){
-                    		str = "启用";
-                    		btn = 'btn-success';
-                    	}
+            		if(full.STATUS != "active"){
+                		str = "启用";
+                		btn = 'btn-success';
                 	}
+                	
                 	return "<button class='btn " + btn + " btn-sm' id='"+full.ID+"'>"+ str + "</button>";
             	}
             }
@@ -50,17 +40,27 @@ $(document).ready(function() {
     	})
     })
     
-    //查询按钮
     $('#searchBtn').click(function(){
         searchData(); 
     })
 
+    
+    buildCondition=function(){
+    	var item = {};
+    	var orderForm = $('#orderForm input,select');
+    	for(var i = 0; i < orderForm.length; i++){
+    		var name = orderForm[i].id;
+        	var value =orderForm[i].value;
+        	if(name){
+        		item[name] = value;
+        	}
+    	}
+        return item;
+    };
+
     var searchData=function(){
-    	var warehouse_name = $("#warehouseName_filter").val();
-    	var warehouse_address = $("#warehouseAddress_filter").val();
-    	
-    	var url = "/warehouse/list?warehouse_name="+warehouse_name
-    							+"&warehouse_address="+warehouse_address;
-    	dataTable.ajax.url(url).load();
+    	var itemJson = buildCondition();
+    	var url = "/warehouse/list?jsonStr="+JSON.stringify(itemJson);
+        dataTable.ajax.url(url).load();
     };
 } );

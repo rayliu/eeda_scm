@@ -7,17 +7,8 @@ $(document).ready(function() {
     $("#beginTime_filter").val(new Date().getFullYear()+'-'+ (new Date().getMonth()+1));
     
 	  //datatable, 动态处理
-    var dataTable = $('#eeda-table').DataTable({
-        "processing": true,
-        "searching": false,
-        "serverSide": false,
-        "scrollX": true,
-        "scrollY": "300px",
-        "scrollCollapse": true,
-        "autoWidth": false,
-        "language": {
-            "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
-        },
+    var dataTable = eeda.dt({
+        "id": "eeda-table",
         "ajax":"/gateOutOrder/list",
         "columns": [
             { "data": "ORDER_NO", 
@@ -42,17 +33,22 @@ $(document).ready(function() {
         searchData(); 
     })
 
-   var searchData=function(){
-        var order_no = $("#order_no").val(); 
-        var status = $('#status').val();
-        var start_date = $("#create_stamp_begin_time").val();
-        var end_date = $("#create_stamp_end_time").val();
-        
-        var url = "/gateOutOrder/list?order_no="+order_no
-             +"&status="+status
-             +"&create_stamp_begin_time="+start_date
-             +"&create_stamp_end_time="+end_date;
+    buildCondition=function(){
+    	var item = {};
+    	var orderForm = $('#orderForm input,select');
+    	for(var i = 0; i < orderForm.length; i++){
+    		var name = orderForm[i].id;
+        	var value =orderForm[i].value;
+        	if(name){
+        		item[name] = value;
+        	}
+    	}
+        return item;
+    };
 
+    var searchData=function(){
+    	var itemJson = buildCondition();
+    	var url = "/gateOutOrder/list?jsonStr="+JSON.stringify(itemJson);
         dataTable.ajax.url(url).load();
     };
 

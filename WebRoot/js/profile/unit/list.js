@@ -3,16 +3,12 @@ $(document).ready(function() {
     	$('#menu_profile').addClass('active').find('ul').addClass('in');
 
         //datatable, 动态处理
-        var dataTable = $('#eeda-table').DataTable({
-        	"paging":false,
-        	"searching":false,
-            "language": {
-                "url": "/yh/js/plugins/datatables-1.10.9/i18n/Chinese.json"
-            },
+        var dataTable = eeda.dt({
+            "id": "eeda-table",
             "ajax": "/unit/list",
             columns:[
    	              { "data": "NAME"}, 
-                   {"data": null, 
+                   {"data": null,"width":"30px", 
                        "render": function ( data, type, full, meta ) {
                          var str = "<a class='btn  btn-primary btn-sm' href='/unit/edit?id="+full.ID+"' >"+
                            "<i class='fa fa-edit fa-fw'></i>"+
@@ -31,17 +27,22 @@ $(document).ready(function() {
           searchData(); 
       })
 
-     var searchData=function(){
-          var name = $("#name").val();
-          /*  
-              查询规则：参数对应DB字段名
-              *_no like
-              *_id =
-              *_status =
-              时间字段需成双定义  *_begin_time *_end_time   between
-          */
-          var url = "/unit/list?name="+name;
+      buildCondition=function(){
+      	var item = {};
+      	var orderForm = $('#orderForm input,select');
+      	for(var i = 0; i < orderForm.length; i++){
+      		var name = orderForm[i].id;
+          	var value =orderForm[i].value;
+          	if(name){
+          		item[name] = value;
+          	}
+      	}
+          return item;
+      };
 
+      var searchData=function(){
+      	var itemJson = buildCondition();
+      	var url = "/unit/list?jsonStr="+JSON.stringify(itemJson);
           dataTable.ajax.url(url).load();
       };
     	

@@ -134,18 +134,24 @@ public class InspectionOrderController extends Controller {
     
     public void list() {
     	String sLimit = "";
-        String pageIndex = getPara("sEcho");
-        if (getPara("iDisplayStart") != null && getPara("iDisplayLength") != null) {
-            sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
+    	String pageIndex = getPara("draw");
+        if (getPara("start") != null && getPara("length") != null) {
+            sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
-        String sql = "SELECT inso.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
+        String sql = "select * from(SELECT inso.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
     			+ "  from inspection_order inso "
     			+ "  left join warehouse wh on wh.id = inso.warehouse_id"
     			+ "  left join user_login u on u.id = inso.create_by"
-    			+ "   where 1 =1 ";
+    			+ "  ) A where 1 =1 ";
         
-        String condition = DbUtils.buildConditions(getParaMap());
+        String condition = "";
+        String jsonStr = getPara("jsonStr");
+    	if(StringUtils.isNotEmpty(jsonStr)){
+    		Gson gson = new Gson(); 
+            Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
+            condition = DbUtils.buildConditions(dto);
+    	}
 
         String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
         Record rec = Db.findFirst(sqlTotal);

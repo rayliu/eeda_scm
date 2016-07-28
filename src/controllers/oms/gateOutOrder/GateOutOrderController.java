@@ -182,9 +182,9 @@ public class GateOutOrderController extends Controller {
     
     public void list() {
     	String sLimit = "";
-        String pageIndex = getPara("sEcho");
-        if (getPara("iDisplayStart") != null && getPara("iDisplayLength") != null) {
-            sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
+    	String pageIndex = getPara("draw");
+        if (getPara("start") != null && getPara("length") != null) {
+            sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
         String sql = "select * from (SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
@@ -193,7 +193,14 @@ public class GateOutOrderController extends Controller {
     			+ "  left join user_login u on u.id = gio.create_by"
     			+ " ) A where 1 =1 ";
         
-        String condition = DbUtils.buildConditions(getParaMap());
+        String condition = "";
+        String jsonStr = getPara("jsonStr");
+    	if(StringUtils.isNotEmpty(jsonStr)){
+    		Gson gson = new Gson(); 
+            Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
+            condition = DbUtils.buildConditions(dto);
+    	}
+    	
 
         String sqlTotal = "select count(1) total from (" + sql + condition +") B";
         Record rec = Db.findFirst(sqlTotal);

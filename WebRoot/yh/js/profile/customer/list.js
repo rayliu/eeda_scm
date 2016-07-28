@@ -22,7 +22,7 @@ $(document).ready(function() {
             {"mDataProp":"COMPANY_NAME",
             	"fnRender":function(obj){
             		if(Customer.updatePermission){
-            			return "<a href='/customer/edit/"+obj.aData.PID+"'target='_blank'>" + obj.aData.COMPANY_NAME + "</a>";
+            			return "<a href='/customer/edit/"+obj.aData.PID+"'>" + obj.aData.COMPANY_NAME + "</a>";
             		}else{
             			return obj.aData.COMPANY_NAME;
             		}
@@ -57,7 +57,7 @@ $(document).ready(function() {
                 "fnRender": function(obj) {  
                 	var str="<nobr>";
                 	if(Customer.updatePermission){
-            			str +="<a class='btn  btn-primary btn-sm' href='/customer/edit/"+obj.aData.PID+"' target='_blank'>"+
+            			str +="<a class='btn  btn-primary btn-sm' href='/customer/edit/"+obj.aData.PID+"' >"+
 	                            "<i class='fa fa-edit fa-fw'></i>"+
 	                            "编辑"+"</a> ";
             		}

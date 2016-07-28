@@ -15,6 +15,7 @@ import models.UserLogin;
 import models.eeda.OrderActionLog;
 import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateInOrderItem;
+import models.eeda.oms.Inventory;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
@@ -127,12 +128,41 @@ public class GateInOrderController extends Controller {
     	String order_id = getPara("params");
     	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
     	gateInOrder.set("status","已确认").update();
-    	renderJson(gateInOrder);
-    	
+
     	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
     	UserLogin user = LoginUserController.getLoginUser(this);
    		Long operator = user.getLong("id");
     	OperationLog(order_id, order_id, operator,"confirm");
+    	
+    	//确认时货品入库
+    	gateIn(order_id);
+    	
+    	renderJson(gateInOrder);
+    }
+    
+    @Before(Tx.class)
+    public void gateIn(String order_id){
+    	GateInOrder gir = GateInOrder.dao.findById(order_id);
+    	List<Record> res = Db.find("select * from gate_in_order_item where order_id = ?",order_id);
+    	long user_id = LoginUserController.getLoginUserId(this);
+    	for(Record re :res){
+    		Inventory inv = null;
+    		Double amount = re.getDouble("received_amount");
+    		for (int i = 0; i < amount; i++) {
+    			inv = new Inventory();
+    			inv.set("customer_id", gir.getLong("customer_id"));
+        		inv.set("warehouse_id", gir.getLong("warehouse_id"));
+        		inv.set("gate_in_stamp", gir.getTimestamp("gate_in_date"));
+        		inv.set("cargo_name", re.getStr("cargo_name"));
+        		inv.set("cargo_code", re.getStr("item_code"));
+        		inv.set("shelves", null);
+        		inv.set("unit", re.getStr("packing_unit"));
+        		inv.set("gate_in_amount", 1);
+        		inv.set("create_stamp", new Date());
+        		inv.set("create_by", user_id);
+        		inv.save();
+			}
+    	}
     }
     
     @Before(Tx.class)
@@ -203,9 +233,9 @@ public class GateInOrderController extends Controller {
     
     public void list() {
     	String sLimit = "";
-        String pageIndex = getPara("sEcho");
-        if (getPara("iDisplayStart") != null && getPara("iDisplayLength") != null) {
-            sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
+    	String pageIndex = getPara("draw");
+        if (getPara("start") != null && getPara("length") != null) {
+            sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
         String sql = "select * from ( SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
@@ -214,7 +244,13 @@ public class GateInOrderController extends Controller {
     			+ "  left join user_login u on u.id = gio.create_by"
     			+ "  ) A where 1 =1 ";
         
-        String condition = DbUtils.buildConditions(getParaMap());
+        String condition = "";
+        String jsonStr = getPara("jsonStr");
+    	if(StringUtils.isNotEmpty(jsonStr)){
+    		Gson gson = new Gson(); 
+            Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
+            condition = DbUtils.buildConditions(dto);
+    	}
 
         String sqlTotal = "select count(1) total from ("+ sql + condition +") B";
         Record rec = Db.findFirst(sqlTotal);

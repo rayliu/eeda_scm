@@ -116,9 +116,9 @@ public class WaveOrderController extends Controller {
     
     public void list() {
     	String sLimit = "";
-        String pageIndex = getPara("sEcho");
-        if (getPara("iDisplayStart") != null && getPara("iDisplayLength") != null) {
-            sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
+    	String pageIndex = getPara("draw");
+        if (getPara("start") != null && getPara("length") != null) {
+            sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
         String sql = "SELECT wor.*, ifnull(u.c_name, u.user_name) creator_name "
@@ -126,7 +126,13 @@ public class WaveOrderController extends Controller {
     			+ "  left join user_login u on u.id = wor.create_by"
     			+ "   where 1 =1 ";
         
-        String condition = DbUtils.buildConditions(getParaMap());
+        String condition = "";
+        String jsonStr = getPara("jsonStr");
+    	if(StringUtils.isNotEmpty(jsonStr)){
+    		Gson gson = new Gson(); 
+            Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
+            condition = DbUtils.buildConditions(dto);
+    	}
 
         String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
         Record rec = Db.findFirst(sqlTotal);
@@ -151,13 +157,19 @@ public class WaveOrderController extends Controller {
             sLimit = " LIMIT " + getPara("iDisplayStart") + ", " + getPara("iDisplayLength");
         }
 
-        String sql = "SELECT goo.*, ifnull(u.c_name, u.user_name) creator_name ,w.warehouse_name"
+        String sql = "select * from(SELECT goo.*, ifnull(u.c_name, u.user_name) creator_name ,w.warehouse_name"
     			+ "  from gate_out_order goo "
     			+ "  left join user_login u on u.id = goo.create_by"
     			+ "  left join warehouse w on w.id = goo.warehouse_id"
-    			+ "   where 1 =1 ";
+    			+ "  ) A where 1 =1 ";
         
-        String condition = DbUtils.buildConditions(getParaMap());
+        String condition = "";
+        String jsonStr = getPara("jsonStr");
+    	if(StringUtils.isNotEmpty(jsonStr)){
+    		Gson gson = new Gson(); 
+            Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
+            condition = DbUtils.buildConditions(dto);
+    	}
 
         String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
         Record rec = Db.findFirst(sqlTotal);

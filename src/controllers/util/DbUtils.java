@@ -15,23 +15,17 @@ import com.jfinal.plugin.activerecord.Model;
 public class DbUtils {
 	private static Logger logger = Logger.getLogger(DbUtils.class);
 	
-	public static String buildConditions(Map<String, String[]> paraMap) {
+	public static String buildConditions(Map<String, String> paraMap) {
 		String condition = "";
 		Map<String, Map<String, String>> dateFieldMap = new HashMap<String, Map<String, String>>();
 
-        for (Entry<String, String[]> entry : paraMap.entrySet()) {
+        for (Entry<String, String> entry : paraMap.entrySet()) {
             String key = entry.getKey();
-            String filterValue = entry.getValue()[0];
+            String filterValue = entry.getValue();
             
             if(StringUtils.isNotEmpty(filterValue) && !"undefined".equals(filterValue)){
             	logger.debug(key + ":" + filterValue);
-            	if(key.endsWith("_no") || key.endsWith("_name")){
-            		condition += " and " + key + " like '%" + filterValue + "%' ";
-            		continue;
-            	}else if(key.endsWith("_id") || key.endsWith("_status")){
-            		condition += " and " + key + " = '" + filterValue + "' ";
-            		continue;
-            	}else if(key.endsWith("_begin_time")){
+            	if(key.endsWith("_begin_time")){
             		key = key.replaceAll("_begin_time", "");
             		Map<String, String> valueMap = dateFieldMap.get(key)==null?new HashMap<String, String>():dateFieldMap.get(key);
             		valueMap.put("_begin_time", filterValue);
@@ -43,7 +37,9 @@ public class DbUtils {
             		valueMap.put("_end_time", filterValue);
             		dateFieldMap.put(key, valueMap);
             		continue;
-            	}else if(!"_".equals(key)){
+            	}else if(key.endsWith("_input")){
+            		break;
+            	}else if(!"_".equals(key) ){
             		condition += " and " + key + " like '%" + filterValue + "%' ";
             		continue;
             	}
