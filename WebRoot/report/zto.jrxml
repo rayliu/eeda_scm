@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ralls" language="groovy" columnDirection="RTL" pageWidth="284" pageHeight="514" whenNoDataType="AllSectionsNoDetail" columnWidth="284" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="0ad70e3f-e9f0-4944-b70f-531a1df6ff02">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="14"/>
+	<property name="ireport.y" value="0"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -256,13 +256,6 @@ where order_no=$P{order_no};]]>
 				</textElement>
 				<text><![CDATA[日期]]></text>
 			</staticText>
-			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
-				<reportElement x="179" y="65" width="100" height="25" uuid="60931387-9c39-4f9d-8a9d-09ddae280bfd"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{gate_out_date}]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement style="table" x="5" y="248" width="275" height="65" uuid="885423ba-1009-4da6-8dff-d2eba7445b9b"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
@@ -382,6 +375,13 @@ where order_no=$P{order_no};]]>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
+			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
+				<reportElement x="179" y="66" width="100" height="25" uuid="302cef98-32b9-46a8-990a-b34a199c1b89"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[java.util.Calendar.getInstance().getTime()]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 </jasperReport>

@@ -128,18 +128,11 @@ where order_no=$P{order_no};]]>
 				<text><![CDATA[条数：]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="451" y="19" width="89" height="17" uuid="6e3b7271-00ee-426c-a5da-3c724ea81a7f"/>
+				<reportElement x="451" y="19" width="104" height="17" uuid="6e3b7271-00ee-426c-a5da-3c724ea81a7f"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{order_no}]]></textFieldExpression>
-			</textField>
-			<textField pattern="yyyy-MM-dd">
-				<reportElement x="452" y="36" width="89" height="16" uuid="a823e56c-e9c1-4cea-a1ae-879b8cdee27b"/>
-				<textElement>
-					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{create_stamp}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement style="table_CH" x="0" y="108" width="30" height="20" uuid="ab8dc248-a1dd-4939-9e85-123bc492aa14"/>
@@ -191,14 +184,14 @@ where order_no=$P{order_no};]]>
 				<text><![CDATA[商品条码]]></text>
 			</staticText>
 			<textField evaluationTime="Report">
-				<reportElement x="451" y="51" width="90" height="18" uuid="387e7893-9508-4630-a13c-1c71abdd2fe8"/>
+				<reportElement x="451" y="51" width="104" height="18" uuid="387e7893-9508-4630-a13c-1c71abdd2fe8"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA["共"+$V{PAGE_NUMBER}+"页"]]></textFieldExpression>
 			</textField>
 			<textField evaluationTime="Report">
-				<reportElement x="453" y="69" width="88" height="17" uuid="00ac0ef3-1679-40ec-930d-5f5636cffaca"/>
+				<reportElement x="453" y="69" width="102" height="17" uuid="00ac0ef3-1679-40ec-930d-5f5636cffaca"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
@@ -234,6 +227,13 @@ where order_no=$P{order_no};]]>
 					<pen lineWidth="1.0"/>
 				</graphicElement>
 			</line>
+			<textField pattern="yyyy-MM-dd">
+				<reportElement x="451" y="35" width="104" height="17" uuid="392e3cca-71b9-4611-880e-1e7bd6c5436a"/>
+				<textElement>
+					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-V"/>
+				</textElement>
+				<textFieldExpression><![CDATA[java.util.Calendar.getInstance().getTime()]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
