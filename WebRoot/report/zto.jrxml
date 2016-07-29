@@ -378,7 +378,7 @@ where order_no=$P{order_no};]]>
 			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
 				<reportElement x="179" y="66" width="100" height="25" uuid="302cef98-32b9-46a8-990a-b34a199c1b89"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[java.util.Calendar.getInstance().getTime()]]></textFieldExpression>
 			</textField>
