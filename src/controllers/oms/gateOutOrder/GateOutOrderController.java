@@ -10,8 +10,10 @@ import java.util.Map;
 
 import models.UserLogin;
 import models.eeda.OrderActionLog;
+import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.GateOutOrderItem;
+import models.eeda.oms.Inventory;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.Warehouse;
 
@@ -111,7 +113,7 @@ public class GateOutOrderController extends Controller {
    	}
     
     @Before(Tx.class)
-    public void confirmOrder(){
+    public void confirmOrder() throws Exception{
     	String order_id = getPara("params");
     	GateOutOrder gateOutOrder = GateOutOrder.dao.findById(order_id);
     	gateOutOrder.set("status","已确认").update();
@@ -121,10 +123,57 @@ public class GateOutOrderController extends Controller {
     	UserLogin user = LoginUserController.getLoginUser(this);
    		Long operator = user.getLong("id");
     	OperationLog(order_id, order_id, operator,"confirm");
+    	
+    	//扣库存
+    	gateOut(order_id);
+    	
     }
     
     @Before(Tx.class)
-    public void cancelOrder(){
+    public void gateOut(String order_id){
+    	GateOutOrder goo = GateOutOrder.dao.findById(order_id);
+    	List<Record> res = Db.find("select * from gate_out_order_item where order_id = ?",order_id);
+    	for(Record re :res){
+    		String cargo_name = re.getStr("cargo_name");
+    		int amount = ((int)(re.getDouble("packing_amount")*100))/100;
+    		String sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount) > 0 limit 0,?";
+    		List<Inventory> invs = Inventory.dao.find(sql,cargo_name,amount);
+    		for(Inventory inv : invs){
+        		inv.set("gate_out_stamp", goo.getTimestamp("gate_out_date"));
+        		inv.set("gate_out_amount", 1);
+        		inv.update();
+    		}
+    	}
+    }
+    
+    
+    @Before(Tx.class)
+    public void gateIn(String order_id){
+    	GateInOrder gir = GateInOrder.dao.findById(order_id);
+    	List<Record> res = Db.find("select * from gate_in_order_item where order_id = ?",order_id);
+    	long user_id = LoginUserController.getLoginUserId(this);
+    	for(Record re :res){
+    		Inventory inv = null;
+    		Double amount = re.getDouble("received_amount");
+    		for (int i = 0; i < amount; i++) {
+    			inv = new Inventory();
+    			inv.set("customer_id", gir.getLong("customer_id"));
+        		inv.set("warehouse_id", gir.getLong("warehouse_id"));
+        		inv.set("gate_in_stamp", gir.getTimestamp("gate_in_date"));
+        		inv.set("cargo_name", re.getStr("cargo_name"));
+        		inv.set("cargo_code", re.getStr("item_code"));
+        		inv.set("shelves", null);
+        		inv.set("unit", re.getStr("packing_unit"));
+        		inv.set("gate_in_amount", 1);
+        		inv.set("create_stamp", new Date());
+        		inv.set("create_by", user_id);
+        		inv.save();
+			}
+    	}
+    }
+
+    @Before(Tx.class)
+    public void cancelOrder() throws Exception{
     	String order_id = getPara("params");
     	GateOutOrder gateOutOrder = GateOutOrder.dao.findById(order_id);
     	gateOutOrder.set("status","已取消").update();
@@ -171,13 +220,6 @@ public class GateOutOrderController extends Controller {
         render("/oms/gateOutOrder/gateOutOrderEdit.html");
     }
     
-    
-    @Before(Tx.class)
-    public void getUser() {
-    	String id = getPara("params");
-    	UserLogin user = UserLogin.dao.findById(id);
-    	renderJson(user);
-    }
     
     
     public void list() {
@@ -239,5 +281,7 @@ public class GateOutOrderController extends Controller {
 
         renderJson(BillingOrderListMap); 
     }
+    
+    
 
 }

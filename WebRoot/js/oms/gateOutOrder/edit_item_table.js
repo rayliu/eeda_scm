@@ -94,119 +94,119 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "CARGO_NAME", "width": "200px",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" name="cargo_name" value="'+data+'" class="form-control check" />';
                 }
             },
             { "data": "PACKING_AMOUNT",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="amount" value="'+data+'" class="form-control check" />';
                 }
             },
-            { "data": "GROSS_WEIGHT",
+            { "data": "GROSS_WEIGHT","visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='0';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "NET_WEIGHT",
+            { "data": "NET_WEIGHT","visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='0';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": null,
+            { "data": null,"visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='0';
-                   return '<input type="text" value="'+data.GROSS_WEIGHT * data.NET_WEIGHT+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data.GROSS_WEIGHT * data.NET_WEIGHT+'" class="form-control" />';
                 }
             },
             { "data": "SHELVES",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "CARTON_NO", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "UPSTREAM_SKU", 
+            { "data": "UPSTREAM_SKU", "visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "CUSTOM_CODE" ,
+            { "data": "CUSTOM_CODE" ,"visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "ITEM_CODE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "NAME_SPECIFICATIONS",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "COLOR",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "SIZE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "CURRENCY",
+            { "data": "CURRENCY","visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "UNIT_VALUE",
+            { "data": "UNIT_VALUE","visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "PACKING_UNIT","width": "60px",
                 "render": function ( data, type, full, meta ) {
                 	if(!data)
                         data='';
-                    var str= '<select class="form-control search-control">'
+                    var str= '<select class="form-control search-control" name="unit">'
             	   	   +'<option></option>'
 	                   +'<option value="台" '+ (data=='台'?'selected':'') +'>台</option>'
 	                   +'<option value="件" '+ (data=='件'?'selected':'') +'>件</option>'
@@ -245,6 +245,24 @@ $(document).ready(function() {
     	var url = "/gateOutOrder/tableList?order_id="+order_id;
     	cargoTable.ajax.url(url).load();
     }
-
+    
+    //库存货品校验
+    $('#cargo_table').on('blur','.check',function(){
+    	var $self = $(this).parent().parent();
+    	var name = $self.find('[name=cargo_name]').val();
+    	var amount = $self.find('[name=amount]').val();
+    	if(name=='')
+    		return false;
+    	
+    	$.post('/inventory/check',{name:name,amount:amount},function(data){
+    		if(data.RESULT!="ok"){
+    			$.scojs_message(data.RESULT, $.scojs_message.TYPE_ERROR);
+    		}else{
+    			$self.find('[name=unit]').val(data.ORDER.UNIT)
+    		}
+    	})
+    	
+    })
+    
     
 });
