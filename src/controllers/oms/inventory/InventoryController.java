@@ -70,136 +70,7 @@ public class InventoryController extends Controller {
     	orderActionLog.set("action", action);
     	orderActionLog.save();
     }
-    
-    @Before(Tx.class)
-   	public void save() throws Exception {		
-   		String jsonStr = getPara("params");
-       	
-       	Gson gson = new Gson();  
-        Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
-            
-        GateInOrder gateInOrder = new GateInOrder();
-   		String id = (String) dto.get("id");
-   		
-   		UserLogin user = LoginUserController.getLoginUser(this);
-   		Long operator = user.getLong("id");
-   		
-   		if (StringUtils.isNotEmpty(id)) {
-   			//update
-   			gateInOrder = GateInOrder.dao.findById(id);
-   			DbUtils.setModelValues(dto, gateInOrder);
-   			
-   			//需后台处理的字段
-   			gateInOrder.set("update_by", operator);
-   			gateInOrder.set("update_stamp", new Date());
-   			gateInOrder.update();
-   			//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
-   			OperationLog(jsonStr, id, operator,"update");
-   		} else {
-   			//create 
-   			DbUtils.setModelValues(dto, gateInOrder);
-   			
-   			//需后台处理的字段
-   			gateInOrder.set("order_no", OrderNoGenerator.getNextOrderNo("RKTZ"));
-   			gateInOrder.set("create_by", operator);
-   			gateInOrder.set("create_stamp", new Date());
-   			gateInOrder.set("office_id", user.get("office_id"));
-   			gateInOrder.save();
-   			
-   			id = gateInOrder.getLong("id").toString();
-   			//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
-   			OperationLog(jsonStr, id, operator,"create");
-   		}
-   		
-   		
-   		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
-		DbUtils.handleList(itemList, id, GateInOrderItem.class, "order_id");
 
-		long create_by = gateInOrder.getLong("create_by");
-   		String user_name = LoginUserController.getUserNameById(create_by);
-		Record r = gateInOrder.toRecord();
-   		r.set("create_by_name", user_name);
-   		renderJson(r);
-   	}
-    
-    @Before(Tx.class)
-    public void confirmOrder(){
-    	String order_id = getPara("params");
-    	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
-    	gateInOrder.set("status","已确认").update();
-    	renderJson(gateInOrder);
-    	
-    	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
-    	UserLogin user = LoginUserController.getLoginUser(this);
-   		Long operator = user.getLong("id");
-    	OperationLog(order_id, order_id, operator,"confirm");
-    }
-    
-    @Before(Tx.class)
-    public void cancelOrder(){
-    	String order_id = getPara("params");
-    	GateInOrder gateInOrder = GateInOrder.dao.findById(order_id);
-    	gateInOrder.set("status","已取消").update();
-    	renderJson(gateInOrder);
-    	
-    	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
-    	UserLogin user = LoginUserController.getLoginUser(this);
-   		Long operator = user.getLong("id");
-    	OperationLog(order_id, order_id, operator,"cancel");
-    }
-
-    private List<Record> getGateInItems(String orderId) {
-		String itemSql = "select * from gate_in_order_item where order_id=?";
-		List<Record> itemList = Db.find(itemSql, orderId);
-		return itemList;
-	}
-
-    
-    
-    @Before(Tx.class)
-    public void edit() {
-    	String id = getPara("id");
-    	GateInOrder gateInOrder = GateInOrder.dao.findById(id);
-    	Record gateInOrderRec = gateInOrder.toRecord();
-    	Long customer_id = gateInOrder.getLong("customer_id");
-    	if(customer_id!=null){
-    	    Party p = Party.dao.findById(customer_id);
-    	    if(p!=null){
-    	        gateInOrderRec.set("customer_name", p.get("abbr"));
-    	    }
-    	}
-    	setAttr("order", gateInOrderRec);
-    	
-    	//获取明细表信息
-    	setAttr("itemList", getGateInItems(id));
-
-    	//用户信息
-    	long create_by = gateInOrder.getLong("create_by");
-    	UserLogin user = UserLogin.dao.findById(create_by);
-    	setAttr("user", user);
-    	
-    	//仓库回显
-    	Warehouse warehouse = Warehouse.dao.findById(gateInOrder.getLong("warehouse_id"));
-    	setAttr("warehouse", warehouse);
-    	
-    	String route_from = gateInOrder.getStr("route_from");
-    	String route_to = gateInOrder.getStr("route_to");
-    	
-    	Record re = null;
-    	if(StringUtils.isNotEmpty(route_from)){
-    		re = Db.findFirst("select get_loc_full_name(?) address",route_from);
-        	setAttr("route_from_input", re.getStr("address"));
-    	}
-    	if(StringUtils.isNotEmpty(route_to)){
-    		re = Db.findFirst("select get_loc_full_name(?) address",route_to);
-        	setAttr("route_to_input", re.getStr("address"));
-    	}
-    	
-    	
-        render("/oms/gateInOrder/gateInOrderEdit.html");
-    }
-    
-    
     
     public void list() {
     	String sLimit = "";
@@ -235,23 +106,38 @@ public class InventoryController extends Controller {
 
         renderJson(BillingOrderListMap); 
     }
-
-
-  
-    //异步刷新字表
-    public void tableList(){
-    	String order_id = getPara("order_id");
-    	List<Record> list = null;
-    	list = getGateInItems(order_id);
-
-    	Map BillingOrderListMap = new HashMap();
-        BillingOrderListMap.put("sEcho", 1);
-        BillingOrderListMap.put("iTotalRecords", list.size());
-        BillingOrderListMap.put("iTotalDisplayRecords", list.size());
-
-        BillingOrderListMap.put("aaData", list);
-
-        renderJson(BillingOrderListMap); 
+    
+    //出库库存校验
+    public void check(){
+    	String name = getPara("name");
+    	String amount = getPara("amount");
+    	
+    	Record re = new Record();
+    	String sql = "";
+    	if(StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(amount)){
+    		sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount) > 0 having count(*) >= ?"; 
+    		Record record = Db.findFirst(sql , name, amount);
+    		if(record != null){
+    			re.set("order",record);
+    			re.set("result", "ok");
+    		}else{
+    			sql = "select count(*) amount from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount) > 0"; 
+    			record = Db.findFirst(sql , name);
+    			re.set("result", "此类商品库存数量只有"+record.getLong("amount"));
+    		}
+    	}else if(StringUtils.isNotEmpty(name)){
+    		sql = "select * from inventory inv where cargo_name = ?"; 
+    		Record record = Db.findFirst(sql , name);
+    		if(record != null){
+    			re.set("order",record);
+    			re.set("result", "ok");
+    		}else{
+    			re.set("result", "库存不存在此类商品");
+    		}
+    	}
+    	
+    	renderJson(re);
     }
+
 
 }

@@ -2,7 +2,7 @@
 $(document).ready(function() {
 
 	document.title = order_no + ' | ' + document.title;
-	$('#menu_order').addClass('active').find('ul').addClass('in');
+	$('#menu_incoming').addClass('active').find('ul').addClass('in');
 	
 	 //form表单校验
 	$("#itemForm").validate({

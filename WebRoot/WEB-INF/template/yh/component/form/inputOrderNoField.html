@@ -1,0 +1,73 @@
+<div class="form-group">
+    <label class="search-label">${label!''}
+    <%if(required!'' =='required'){%>
+        <span style='color:red; display:initial;'>*</span>
+    <%}%>
+    </label>
+    <input type="text" class="form-control search-control" 
+    id="${id}_input" placeholder="${placeholder!'请选择单号'}" value="${display_value!''}" 
+    ${required!''} 
+	${disabled!''}
+    >
+    
+    <ul id='${id}_list' tabindex="-1" 
+	    class="pull-right dropdown-menu default dropdown-scroll" 
+	    style="top: 22%; left: 33%;">
+    </ul>
+</div>
+<input id="${id}" style="display: none;" name="${id}_name" value="${value!''}"/>
+<input id="table_input" style="display: none;" value="${table!''}"/>
+<input id="condition_input" style="display: none;" value="${condition!''}"/>
+<script>
+
+$(document).ready(function() {
+	//获取客户列表，自动填充
+	var orderList =$("#${id}_list");
+	var inputField = $('#${id}_input');
+	var hiddenField = $('#${id}');
+	var table = $('#table_input').val();
+	var condition = $('#condition_input').val();
+	
+	inputField.on('keyup click', function(event){
+	    var me = this;
+	    var inputStr = inputField.val();
+	   
+	    
+	     $.get("/salesOrder/searchOrderNo", {orderNo:inputStr,table:table,condition:condition}, function(data){
+	    	if(inputStr!=inputField.val()){//查询条件与当前输入值不相等，返回
+				return;
+			}
+	    	orderList.empty();
+	        for(var i = 0; i < data.length; i++)
+	        	orderList.append("<li><a tabindex='-1' class='orderItem' orderId='"+data[i].ID+"' >"+data[i].ORDER_NO+"</a></li>");
+	            
+	        orderList.css({ 
+		    	left:$(me).position().left+"px", 
+		    	top:$(me).position().top+28+"px" 
+		    });
+	        orderList.show();    
+	    },'json');
+	});
+	
+	orderList.on('click', '.orderItem', function(e){
+		inputField.val($(this).text());
+		orderList.hide();
+	    var orderId = $(this).attr('orderId');
+	    hiddenField.val(orderId);
+	});
+
+	// 1 没选中客户，焦点离开，隐藏列表
+	inputField.on('blur', function(){
+		if (inputField.val().trim().length ==0) {
+			hiddenField.val('');
+		};
+		orderList.hide();
+	});
+	
+	// 2 当用户只点击了滚动条，没选客户，再点击页面别的地方时，隐藏列表
+	orderList.on('mousedown', function(){
+	    return false;//阻止事件回流，不触发 $('#spMessage').on('blur'
+	});
+	
+});
+</script>

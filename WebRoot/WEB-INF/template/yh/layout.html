@@ -102,7 +102,7 @@
                     	
                     	if(nvl(salesOrderPermission, '') != '' || 
                             nvl(logisticsOrderPermission, '') != '' ||
-                            nvl(loadOrderPermission, '') != '' ){
+                            nvl(loadOrderPermission, '') != ''){
                     %>
                         <li id="menu_order">
                             <a href="#"><i class="fa fa-cog fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
@@ -124,7 +124,6 @@
                                     <a href="/loadOrder">出区核放单</a>
                                 </li>
                                 <%}%>
-
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -178,8 +177,7 @@
                                 <li>
                                     <a href="/waveOrder">波次单</a>
                                 </li>
-                                  <%}%>
-                                
+                                <%}%>
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>

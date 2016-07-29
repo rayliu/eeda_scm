@@ -17,11 +17,13 @@ import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.SalesOrder;
 import models.eeda.profile.Country;
 import models.eeda.profile.CustomCompany;
+import models.eeda.profile.Warehouse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 
 import com.google.gson.Gson;
@@ -40,6 +42,7 @@ import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
+import controllers.util.PermissionConstant;
 import controllers.yh.job.CustomJob;
 
 @RequiresAuthentication
@@ -323,6 +326,22 @@ public class SalesOrderController extends Controller {
         BillingOrderListMap.put("aaData", list);
 
         renderJson(BillingOrderListMap); 
+    }
+    
+    
+    public void searchOrderNo(){
+    	String table = getPara("table");
+    	String order_no = getPara("orderNo");
+    	String condition = getPara("condition");
+
+    	String conditions = " where 1 = 1";
+    	if(!"".equals(order_no))
+    		conditions += " and order_no like '%" + order_no + "%'";
+    	
+    	String sql = " select * from " +table;
+    	List<Record> list = Db.find(sql + conditions + condition);
+    	
+    	renderJson(list);
     }
 
 }
