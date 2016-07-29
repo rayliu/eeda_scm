@@ -1,0 +1,72 @@
+ <%layout("/yh/layout.html"){%>
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+<link
+	href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css"
+	rel="stylesheet">
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-list fa-fw"></i>库存统计列表
+				</div>
+				<!-- /.panel-heading -->
+				<div class="panel-body">
+					<!--  form row  -->
+					<form id="orderForm" class="form-group">
+						<div class="row">
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputCustomerField.html", { id:
+								'customer_id', label: '客户', value: '' }){}%>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:
+								'cargo_name', label: '货品名称', value: '' }){}%>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/selectField.html", { id:'status',
+								label:'状态', value: '', value_list:[ {code:'', value:''},
+								{code:'已出库', value:'已出库'}, {code:'在库', value:'在库'} ] } ){} %>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputDateQueryField.html",
+								{id:'gate_in_stamp', label:'入库时间', value:''}){} %>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputDateQueryField.html",
+								{id:'gate_out_stamp', label:'出库时间', value:''}){} %>
+							</div>
+						</div>
+					</form>
+
+					<!-- buttom -->
+					<div class="form-group button-bar">
+						<button id="searchBtn" class="btn btn-primary btn-sm"
+							type="button">查询</button>
+						<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
+					</div>
+					
+					<!-- table list -->
+					<div class="form-group">
+						<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
+						headers:['商品名称', '商品代码','单位','客户', '库位', '入库数量', '出库数量', '在库数量']
+						}){} %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<%}%>
+
+<!-- Page-Level Plugin Scripts - Tables -->
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script
+	src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+<script src="/js/eeda/eeda-common.js"></script>
+<script src="/js/oms/inventory/list.js"></script>
+
