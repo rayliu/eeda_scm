@@ -317,6 +317,6 @@ where order_no=$P{order_no};]]>
 		<band splitType="Stretch"/>
 	</pageFooter>
 	<summary>
-		<band height="58" splitType="Stretch"/>
+		<band splitType="Stretch"/>
 	</summary>
 </jasperReport>
