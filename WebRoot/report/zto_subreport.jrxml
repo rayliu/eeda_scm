@@ -43,7 +43,7 @@ FROM
 	</columnHeader>
 	<detail>
 		<band height="15" splitType="Prevent">
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="6" y="0" width="86" height="15" uuid="feac09c8-2a6e-4bd2-86de-15dbf9e5df14"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
@@ -57,7 +57,7 @@ FROM
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shelves}]]></textFieldExpression>
 			</textField>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="188" y="0" width="54" height="15" uuid="7ef09592-ea40-4955-835b-d1c15f1b257c"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>

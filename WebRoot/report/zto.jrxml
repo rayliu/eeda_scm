@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ralls" language="groovy" columnDirection="RTL" pageWidth="284" pageHeight="514" whenNoDataType="AllSectionsNoDetail" columnWidth="284" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isIgnorePagination="true" uuid="0ad70e3f-e9f0-4944-b70f-531a1df6ff02">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="14"/>
 	<style name="table">
 		<box>
 			<pen lineWidth="1.0" lineColor="#000000"/>
@@ -51,7 +51,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["D:\\workspace\\eeda_scm\\WebRoot\\report\\"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA[""]]></defaultValueExpression>
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT     id,
@@ -95,12 +95,6 @@ where order_no=$P{order_no};]]>
 	</background>
 	<detail>
 		<band height="514">
-			<textField isBlankWhenNull="true">
-				<reportElement style="table_TD" stretchType="RelativeToBandHeight" x="5" y="25" width="275" height="65" uuid="e302008f-d007-42bc-bf0b-2ecb9ff355fa"/>
-				<textElement textAlignment="Center" verticalAlignment="Bottom">
-					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
-				</textElement>
-			</textField>
 			<staticText>
 				<reportElement x="139" y="281" width="68" height="20" uuid="ac047ef7-d355-4ebe-96db-e2abc35970d1"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
@@ -123,14 +117,14 @@ where order_no=$P{order_no};]]>
 				<textFieldExpression><![CDATA[$F{consignee}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement style="table_TD" x="5" y="25" width="275" height="40" uuid="bff54938-37a1-489d-bef5-6d44310dd216"/>
+				<reportElement style="table_TD" x="5" y="140" width="275" height="40" uuid="bff54938-37a1-489d-bef5-6d44310dd216"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_TD" x="5" y="65" width="275" height="25" uuid="8d02d2a5-3ca3-4ae5-a777-f0cd97be80c7"/>
+				<reportElement style="table_TD" x="5" y="66" width="275" height="25" uuid="8d02d2a5-3ca3-4ae5-a777-f0cd97be80c7"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="宋体" size="12" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
@@ -151,14 +145,14 @@ where order_no=$P{order_no};]]>
 				<text><![CDATA[寄件]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="21" y="141" width="160" height="14" uuid="f583cc76-185e-4c3e-98da-9dade7af5743"/>
+				<reportElement x="20" y="141" width="160" height="14" uuid="f583cc76-185e-4c3e-98da-9dade7af5743"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[深圳前海德丰投资发展有限公司]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="20" y="155" width="258" height="26" uuid="6aba244f-e3de-417c-bdbc-343c14f09f92"/>
+				<reportElement x="19" y="156" width="258" height="26" uuid="6aba244f-e3de-417c-bdbc-343c14f09f92"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font fontName="宋体" size="15" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
@@ -172,14 +166,14 @@ where order_no=$P{order_no};]]>
 				<textFieldExpression><![CDATA[$F{consignee}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="20" y="108" width="261" height="32" uuid="6eca4e05-23e5-4b89-b990-3ab86bafdf94"/>
+				<reportElement x="19" y="108" width="261" height="32" uuid="6eca4e05-23e5-4b89-b990-3ab86bafdf94"/>
 				<textElement textAlignment="Left" verticalAlignment="Top">
 					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{consignee_address}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="161" y="141" width="119" height="15" uuid="6125c004-e7e7-412d-8b81-d9468011ce6a"/>
+				<reportElement x="161" y="140" width="119" height="15" uuid="6125c004-e7e7-412d-8b81-d9468011ce6a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="11" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
@@ -284,7 +278,7 @@ where order_no=$P{order_no};]]>
 				<text><![CDATA[]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table" x="5" y="141" width="275" height="40" uuid="04e258a8-4b76-44ca-9cbe-59ae05fe7871"/>
+				<reportElement style="table" x="5" y="140" width="275" height="40" uuid="04e258a8-4b76-44ca-9cbe-59ae05fe7871"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
@@ -325,7 +319,7 @@ where order_no=$P{order_no};]]>
 				</jr:barbecue>
 			</componentElement>
 			<textField isStretchWithOverflow="true" isBlankWhenNull="true">
-				<reportElement stretchType="RelativeToBandHeight" x="40" y="220" width="200" height="16" uuid="e8a961bd-c2c5-42f1-9a25-1c1ba97889ad"/>
+				<reportElement stretchType="RelativeToBandHeight" x="40" y="222" width="200" height="16" uuid="e8a961bd-c2c5-42f1-9a25-1c1ba97889ad"/>
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 					<paragraph lineSpacing="Proportional"/>
@@ -353,7 +347,7 @@ where order_no=$P{order_no};]]>
 				<textFieldExpression><![CDATA[$F{consignee_telephone}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="143" y="91" width="134" height="15" uuid="9b24fa8d-9b6e-4444-b102-2e4da10e762e"/>
+				<reportElement x="143" y="91" width="137" height="15" uuid="9b24fa8d-9b6e-4444-b102-2e4da10e762e"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="黑体" size="11" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
@@ -381,6 +375,13 @@ where order_no=$P{order_no};]]>
 				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
 				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "zto_subreport.jasper"]]></subreportExpression>
 			</subreport>
+			<staticText>
+				<reportElement style="table" x="5" y="25" width="275" height="41" uuid="d894426e-0b22-4201-b0e1-250acf827312"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="宋体" size="8" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
 		</band>
 	</detail>
 </jasperReport>
