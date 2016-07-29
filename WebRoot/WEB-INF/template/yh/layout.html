@@ -97,13 +97,12 @@
                     	var salesOrderPermission = map.SalesOrder_list;
                     	var logisticsOrderPermission = map.LogisticsOrder_list;
                     	var loadOrderPermission = map.LoadOrder_list;
-                    	var waveOrderPermission = map.WaveOrder_list;
+                    	
                     	                 
                     	
                     	if(nvl(salesOrderPermission, '') != '' || 
                             nvl(logisticsOrderPermission, '') != '' ||
-                            nvl(loadOrderPermission, '') != '' ||
-                            nvl(waveOrderPermission, '') != '' ){
+                            nvl(loadOrderPermission, '') != '' ){
                     %>
                         <li id="menu_order">
                             <a href="#"><i class="fa fa-cog fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
@@ -125,11 +124,7 @@
                                     <a href="/loadOrder">出区核放单</a>
                                 </li>
                                 <%}%>
-                                <% if( waveOrderPermission != '') {%>
-                                <li>
-                                    <a href="/waveOrder">波次单</a>
-                                </li>
-                                  <%}%>
+
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
@@ -154,10 +149,12 @@
                     	var gateInOrderPermission = map.GateInOrder_list;
                     	var inspectionOrderPermission = map.InspectionOrder_list;
                     	var gateOutOrderPermission = map.GateOutOrder_list;
+                    	var waveOrderPermission = map.WaveOrder_list;
 
                         if( nvl(gateInOrderPermission, '') != '' ||
                             nvl(inspectionOrderPermission, '') != '' ||
-                            nvl(gateOutOrderPermission, '') != '') {	
+                            nvl(gateOutOrderPermission, '') != '' ||
+                            nvl(waveOrderPermission, '') != '' ) {	
                         %> 
                         <li id="menu_incoming">
                         	<a href="#"><i class="fa fa-cog fa-fw"></i> 仓库管理<span class="fa arrow"></span></a>
@@ -177,6 +174,12 @@
                                     <a href="/gateOutOrder">出库单</a>
                                 </li>
                                 <%}%>
+                                <% if( waveOrderPermission != '') {%>
+                                <li>
+                                    <a href="/waveOrder">波次单</a>
+                                </li>
+                                  <%}%>
+                                
                             </ul>
                             <!-- /.nav-second-level -->
                         </li>
