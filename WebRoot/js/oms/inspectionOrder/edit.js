@@ -115,17 +115,25 @@ $(document).ready(function() {
     
  
 
-    $("#can_check,#have_check").on("input",function(){
+    $("#have_check").on("input",function(){
     	var can_check = $("#can_check").val()==''?'0':$("#can_check").val();
 		var have_check =  $("#have_check").val()==''?'0':$("#have_check").val();
-		if(can_check < have_check){
-			$.scojs_message('抱歉！已验数量不可以大于可验数量！！！', $.scojs_message.TYPE_ERROR);
-			$("#have_check").val('0');
-		}else{
+		if(parseFloat(can_check) >= parseFloat(have_check)){
 			$("#difference").val(parseFloat(can_check) - parseFloat(have_check));
-		}   	
+		}else{
+			$.scojs_message('抱歉！已验数量不可以大于可验数量！！！', $.scojs_message.TYPE_ERROR);
+			$("#have_check").val(can_check);
+			$("#difference").val('0');
+		}  	
 	 });
-		
+	
+    
+    $('#gate_in_id_list').on('click',function(){
+    	$.post('/inspectionOrder/queryAmount',{gate_in_id:$('#gate_in_id').val()},function(data){
+    		if(data)
+    			$('#can_check').val(data.AMOUNT);
+    	})
+    })
 	
 
 } );

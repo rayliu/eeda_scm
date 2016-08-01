@@ -1,30 +1,27 @@
 
 $(document).ready(function() {
-	document.title = '入库单查询   | '+document.title;
+	document.title = '库存统计   | '+document.title;
 
-    $('#menu_incoming').addClass('active').find('ul').addClass('in');
+    $('#menu_inventory').addClass('active').find('ul').addClass('in');
     
     $("#beginTime_filter").val(new Date().getFullYear()+'-'+ (new Date().getMonth()+1));
     
-	  //datatable, 动态处理
     var dataTable = eeda.dt({
         "id": "eeda-table",
-        "ajax": "/gateInOrder/list",
+        "ajax": "/inventoryOrder/list",
         "columns": [
             { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/gateInOrder/edit?id="+full.ID+"'>"+data+"</a>";
+                    return "<a href='/gateInOrder/edit?id="+full.ID+"''>"+data+"</a>";
                 }
             },
             { "data": "WAREHOUSE_NAME"},
-            { "data": "ORDER_TYPE"}, 
-            { "data": "CREATOR_NAME"}, 
-            { "data": "CREATE_STAMP"}, 
+            { "data": "CHECK_STAMP"},
+            { "data": "AUDIT_STAMP"},
             { "data": "STATUS"}
         ]
     });
 
-    
     $('#resetBtn').click(function(e){
         $("#orderForm")[0].reset();
     });
@@ -48,9 +45,8 @@ $(document).ready(function() {
 
     var searchData=function(){
     	var itemJson = buildCondition();
-    	var url = "/gateInOrder/list?jsonStr="+JSON.stringify(itemJson);
+    	var url = "/inventoryOrder/list?jsonStr="+JSON.stringify(itemJson);
         dataTable.ajax.url(url).load();
     };
-
-   
+    
 });

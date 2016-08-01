@@ -1,4 +1,4 @@
-package controllers.oms.inspectionOrder;
+package controllers.oms.inventoryOrder.copy;
 
 import interceptor.SetAttrLoginUserInterceptor;
 
@@ -10,11 +10,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import models.Party;
 import models.UserLogin;
+import models.eeda.OrderActionLog;
+import models.eeda.oms.GateInOrder;
+import models.eeda.oms.GateInOrderItem;
 import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.InspectionOrderItem;
-import models.eeda.oms.SalesOrder;
+import models.eeda.oms.InventoryOrder;
+import models.eeda.oms.InventoryOrderItem;
+import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
+import models.eeda.oms.SalesOrder;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.Warehouse;
 
@@ -37,22 +44,26 @@ import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
+import controllers.util.OrderNoGenerator;
+import controllers.yh.job.CustomJob;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
-public class InspectionOrderController extends Controller {
+public class InventoryOrderController extends Controller {
 
-	private Logger logger = Logger.getLogger(InspectionOrderController.class);
+	private Logger logger = Logger.getLogger(InventoryOrderController.class);
 	Subject currentUser = SecurityUtils.getSubject();
 
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
 	public void index() {
-		render("/oms/inspectionOrder/inspectionOrderList.html");
+		render("/oms/inventoryOrder/inventoryOrderList.html");
 	}
 	
     public void create() {
-        render("/oms/inspectionOrder/inspectionOrderEdit.html");
+        render("/oms/inventoryOrder/inventoryOrderEdit.html");
     }
+    
+
     
     @Before(Tx.class)
    	public void save() throws Exception {		
@@ -61,46 +72,73 @@ public class InspectionOrderController extends Controller {
        	Gson gson = new Gson();  
         Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
             
-        InspectionOrder inspectionOrder = new InspectionOrder();
+        InventoryOrder order = new InventoryOrder();
    		String id = (String) dto.get("id");
    		
    		UserLogin user = LoginUserController.getLoginUser(this);
    		
    		if (StringUtils.isNotEmpty(id)) {
    			//update
-   			inspectionOrder = InspectionOrder.dao.findById(id);
-   			DbUtils.setModelValues(dto, inspectionOrder);
+   			order = InventoryOrder.dao.findById(id);
+   			DbUtils.setModelValues(dto, order);
    			
    			//需后台处理的字段
-   			inspectionOrder.set("update_by", user.getLong("id"));
-   			inspectionOrder.set("update_stamp", new Date());
-   			inspectionOrder.update();
+   			order.set("update_by", user.getLong("id"));
+   			order.set("update_stamp", new Date());
+   			order.update();
+   			CustomJob.operationLog("inventoryOrder", "", id, "update", LoginUserController.getLoginUserId(this).toString());
    		} else {
    			//create 
-   			DbUtils.setModelValues(dto, inspectionOrder);
+   			DbUtils.setModelValues(dto, order);
    			
    			//需后台处理的字段
-   			//inspectionOrder.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
-   			inspectionOrder.set("create_by", user.getLong("id"));
-   			inspectionOrder.set("create_stamp", new Date());
-   			inspectionOrder.save();
+   			order.set("order_no", OrderNoGenerator.getNextOrderNo("PD"));
+   			order.set("create_by", user.getLong("id"));
+   			order.set("create_stamp", new Date());
+   			order.save();
    			
-   			id = inspectionOrder.getLong("id").toString();
+   			id = order.getLong("id").toString();
+   			CustomJob.operationLog("inventoryOrder", "", id, "create", LoginUserController.getLoginUserId(this).toString());
    		}
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
-		DbUtils.handleList(itemList, id, InspectionOrderItem.class, "order_id");
+		DbUtils.handleList(itemList, id, InventoryOrderItem.class, "order_id");
 		
-		long create_by = inspectionOrder.getLong("create_by");
-   		String user_name = LoginUserController.getUserNameById(create_by);
-		Record r = inspectionOrder.toRecord();
+		String user_name = null;
+		if(order.getLong("create_by") != null){
+			long create_by = order.getLong("create_by");
+			user_name = LoginUserController.getUserNameById(create_by);
+		}
+		
+		String audit_name = null;
+		if(order.getLong("create_by") != null){
+			long audit_by = order.getLong("audit_by");
+			audit_name = LoginUserController.getUserNameById(audit_by);
+		}
+	
+		Record r = order.toRecord();
    		r.set("creator_name", user_name);
+   		r.set("audit_name", audit_name);
    		renderJson(r);
    	}
     
+    @Before(Tx.class)
+    public void auditOrder(){
+    	String order_id = getPara("params");
+    	InventoryOrder order = InventoryOrder.dao.findById(order_id);
+    	order.set("status","已审核").update();
+
+    	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+    	UserLogin user = LoginUserController.getLoginUser(this);
+   		Long operator = user.getLong("id");
+    	CustomJob.operationLog("salesOrder", "", order_id, "audit", LoginUserController.getLoginUserId(this).toString());
+
+    	renderJson(order);
+    }
     
-    private List<Record> getInspectionItems(String orderId) {
-		String itemSql = "select * from  inspection_order_item where order_id=?";
+    
+    private List<Record> getItems(String orderId) {
+		String itemSql = "select * from  inventory_order_item where order_id=?";
 		List<Record> itemList = Db.find(itemSql, orderId);
 		return itemList;
 	}
@@ -109,41 +147,40 @@ public class InspectionOrderController extends Controller {
     @Before(Tx.class)
     public void edit() {
     	String id = getPara("id");
-    	InspectionOrder inspectionOrder = InspectionOrder.dao.findById(id);
-    	setAttr("order", inspectionOrder);
+    	InventoryOrder order = InventoryOrder.dao.findById(id);
+    	setAttr("order", order);
     	
     	//获取明细表信息
-    	setAttr("itemList", getInspectionItems(id));
-    	
-    	//获取报关企业信息
-    	CustomCompany custom = CustomCompany.dao.findById(inspectionOrder.getLong("custom_id"));
-    	setAttr("custom", custom);
-    	
+    	setAttr("itemList", getItems(id));
+	
     	//仓库回显
-    	Warehouse warehouse = Warehouse.dao.findById(inspectionOrder.getLong("warehouse_id"));
+    	Warehouse warehouse = Warehouse.dao.findById(order.getLong("warehouse_id"));
     	setAttr("warehouse", warehouse);
 
     	//用户信息
-    	long create_by = inspectionOrder.getLong("create_by");
-    	UserLogin user = UserLogin.dao.findById(create_by);
-    	setAttr("user", user);
+    	long check_by = order.getLong("check_by");
+    	long audit_by = order.getLong("audit_by");
+    	String check_name = LoginUserController.getUserNameById(check_by);
+    	String audit_name = LoginUserController.getUserNameById(audit_by);
+    	setAttr("check_name", check_name);
+    	setAttr("audit_name", audit_name);
     	
-        render("/oms/inspectionOrder/inspectionOrderEdit.html");
+        render("/oms/inventoryOrder/inventoryOrderEdit.html");
     }
+    
     
     
     public void list() {
     	String sLimit = "";
-    	String pageIndex = getPara("draw");
+        String pageIndex = getPara("draw");
         if (getPara("start") != null && getPara("length") != null) {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
-        String sql = "select * from(SELECT inso.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
-    			+ "  from inspection_order inso "
-    			+ "  left join warehouse wh on wh.id = inso.warehouse_id"
-    			+ "  left join user_login u on u.id = inso.create_by"
-    			+ "  ) A where 1 =1 ";
+        String sql = "select * from ( SELECT inv.* ,wh.warehouse_name"
+    			+ "  from inventory_order inv "
+    			+ "  left join warehouse wh on wh.id = inv.warehouse_id"
+    			+ "  ) A where 1 = 1 ";
         
         String condition = "";
         String jsonStr = getPara("jsonStr");
@@ -152,12 +189,11 @@ public class InspectionOrderController extends Controller {
             Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
             condition = DbUtils.buildConditions(dto);
     	}
-
-        String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
+    	
+        String sqlTotal = "select count(1) total from ("+ sql + condition +") B";
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
-        
-        List<Record> BillingOrders = Db.find(sql+ condition + " order by create_stamp desc " +sLimit);
+        List<Record> BillingOrders = Db.find(sql + condition  +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
@@ -168,11 +204,11 @@ public class InspectionOrderController extends Controller {
         renderJson(BillingOrderListMap); 
     }
     
-    //异步刷新字表
+  //异步刷新字表
     public void tableList(){
     	String order_id = getPara("order_id");
     	List<Record> list = null;
-    	list = getInspectionItems(order_id);
+    	list = getItems(order_id);
 
     	Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", 1);
@@ -184,12 +220,5 @@ public class InspectionOrderController extends Controller {
         renderJson(BillingOrderListMap); 
     }
     
-    public void queryAmount(){
-    	String gate_in_id = getPara("gate_in_id");
-    	Record record = Db.findFirst("select sum(gioi.received_amount) amount from gate_in_order gio "
-    			+ " left join gate_in_order_item gioi on gioi.order_id = gio.id where gio.id = ?",gate_in_id);
-    	
-    	renderJson(record);
-    }
     
 }

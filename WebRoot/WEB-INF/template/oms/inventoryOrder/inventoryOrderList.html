@@ -9,7 +9,7 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<i class="fa fa-list fa-fw"></i>出库单列表
+					<i class="fa fa-list fa-fw"></i>盘点单列表
 				</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
@@ -18,16 +18,19 @@
 						<div class="row">
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputField.html", { id:
-								'order_no', label: '订单号', value: '' }){}%>
+								'order_no', label: '单号', value: '' }){}%>
 							</div>
 							<div class="col-lg-4">
-								<%include("/yh/component/form/selectField.html", { id:'status',
-								label:'状态', value: '', value_list:[ {status:'', value:''},
-								{status:'未上报', value:'未上报'}, {status:'已上报', value:'已上报'} ] } ){} %>
+								<%include("/yh/component/form/inputField.html", { id:
+								'cargo_name', label: '货品名称', value: '' }){}%>
 							</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputDateQueryField.html",
-								{id:'create_stamp', label:'创建时间', value:''}){} %>
+								{id:'check_stamp', label:'盘点日期', value:''}){} %>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputDateQueryField.html",
+								{id:'audit_stamp', label:'复核日期', value:''}){} %>
 							</div>
 						</div>
 					</form>
@@ -37,15 +40,13 @@
 						<button id="searchBtn" class="btn btn-primary btn-sm"
 							type="button">查询</button>
 						<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
-						<% if(shiro.hasPermission("GateOutOrder.create")){ %> <a
-							class="btn btn-success btn-sm" href="/gateOutOrder/create">新增通知单</a>
-						<%}%>
+						<a class="btn btn-success btn-sm" href="/inventoryOrder/create">新增盘点单</a>
 					</div>
 					
 					<!-- table list -->
 					<div class="form-group">
 						<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
-						headers:['订单号', '仓库', '业务类型', '创建人', '创建时间', '状态']
+						headers:['单号', '仓库','盘点日期','复核日期', '状态']
 						}){} %>
 					</div>
 				</div>
@@ -63,5 +64,5 @@
 <script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
 <script src="/js/eeda/eeda-common.js"></script>
-<script src="/js/oms/gateOutOrder/list.js"></script>
+<script src="/js/oms/inventoryOrder/list.js"></script>
 
