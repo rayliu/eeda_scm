@@ -83,6 +83,10 @@ where order_no=$P{order_no};]]>
 	<variable name="id_2" class="java.lang.Long" resetType="Page" calculation="Sum">
 		<variableExpression><![CDATA[$F{id}]]></variableExpression>
 	</variable>
+	<variable name="index" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[$V{index}.valueOf( 1 ) ]]></variableExpression>
+		<initialValueExpression><![CDATA[1]]></initialValueExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -234,6 +238,13 @@ where order_no=$P{order_no};]]>
 				</textElement>
 				<textFieldExpression><![CDATA[java.util.Calendar.getInstance().getTime()]]></textFieldExpression>
 			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="147" y="12" width="27" height="20" uuid="135488d7-632c-4ea4-ba99-4e7b21b4a68e"/>
+				<textElement textAlignment="Center">
+					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -241,13 +252,6 @@ where order_no=$P{order_no};]]>
 	</columnHeader>
 	<detail>
 		<band height="50" splitType="Stretch">
-			<textField isBlankWhenNull="true">
-				<reportElement x="3" y="5" width="27" height="20" uuid="135488d7-632c-4ea4-ba99-4e7b21b4a68e"/>
-				<textElement textAlignment="Center">
-					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
-			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="244" y="5" width="98" height="20" uuid="1d2be19c-0a11-44cd-bf28-a590ed79189f"/>
 				<textElement textAlignment="Center">
@@ -284,8 +288,8 @@ where order_no=$P{order_no};]]>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="148" y="5" width="96" height="20" uuid="3f6fc889-e10a-45b7-87e5-14071aeeab9e"/>
-				<textElement>
-					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sales_order_no}]]></textFieldExpression>
 			</textField>
@@ -308,6 +312,13 @@ where order_no=$P{order_no};]]>
 					<jr:codeExpression><![CDATA[$F{gate_out_no}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
+			<textField>
+				<reportElement x="0" y="5" width="30" height="20" uuid="00293ab0-83ad-42a7-b498-8ac9b4dd1928"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{index}]]></textFieldExpression>
+			</textField>
 		</band>
 	</detail>
 	<columnFooter>
