@@ -19,6 +19,7 @@ $(document).ready(function() {
             { "data": "UNIT"},
             { "data": "CUSTOMER_NAME"},
             { "data": "SHELVES"}, 
+            { "data": "SHELF_LIFE"}, 
             { "data": "GATE_IN_AMOUNT"}, 
             { "data": "GATE_OUT_AMOUNT"},
             { "data": null,
