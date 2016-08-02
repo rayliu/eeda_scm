@@ -111,27 +111,6 @@ $(document).ready(function() {
                    return '<input type="text" name="amount" value="'+data+'" class="form-control check" />';
                 }
             },
-            { "data": "GROSS_WEIGHT","visible":false,
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='0';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
-                }
-            },
-            { "data": "NET_WEIGHT","visible":false,
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='0';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
-                }
-            },
-            { "data": null,"visible":false,
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='0';
-                   return '<input type="text" value="'+data.GROSS_WEIGHT * data.NET_WEIGHT+'" class="form-control" />';
-                }
-            },
             { "data": "SHELVES",
                 "render": function ( data, type, full, meta ) {
                     if(!data)

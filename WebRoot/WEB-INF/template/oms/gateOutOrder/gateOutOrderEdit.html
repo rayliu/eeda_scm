@@ -40,63 +40,75 @@
 					value:order.goods_type!'' }){}%></div>
 			</div>
 			<div class="row">
-						<div class="col-lg-12">
-							<h3>收货人信息</h3>
-						</div>
+				<div class="col-lg-12">
+					<h3>收货人信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-4">
+					<div class="form-group">
+					    <label class="search-label">收货人证件类型</label>
+					    <select id="consignee_type" name="consignee_type" 
+					    	field_type='list'
+					    	class="form-control search-control" >
+			                    <option value='1' <%if(order.consignee_type!''=='1'){ %>selected<%}%>>身份证</option>
+			                    <option value='2' <%if(order.consignee_type!''=='2'){ %>selected<%}%>>其它</option>
+					    </select>
 					</div>
-					<div class="row">
-						<div class="col-lg-4">
-							<div class="form-group">
-							    <label class="search-label">收货人证件类型</label>
-							    <select id="consignee_type" name="consignee_type" 
-							    	field_type='list'
-							    	class="form-control search-control" >
-					                    <option value='1' <%if(order.consignee_type!''=='1'){ %>selected<%}%>>身份证</option>
-					                    <option value='2' <%if(order.consignee_type!''=='2'){ %>selected<%}%>>其它</option>
-							    </select>
-							</div>
-						</div>
-						<div class="col-lg-4">
-							<%include("/yh/component/form/inputField.html", {
-							id:'consignee_id', label:'收货人证件号',
-							value:order.consignee_id!'' }){}%></div>
-						<div class="col-lg-4">
-							<%include("/yh/component/form/inputField.html", { id:'consignee',
-							label:'收货人名称', required:'required', value:order.consignee!'' }){}%>
-						</div>
+				</div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'consignee_id', label:'收货人证件号',
+					value:order.consignee_id!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'consignee',
+					label:'收货人名称', value:order.consignee!'' }){}%>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'consignee_telephone', label:'收货人电话',
+					value:order.consignee_telephone!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'consignee_address', label:'收件人地址',
+					value:order.consignee_address!'' }){}%></div>
+				<div class="col-lg-4">
+					<div class="form-group">
+					    <label class="search-label">收货人地址(国)</label>
+					    <select id="consignee_country" name="consignee_country" 
+					    	field_type='list'
+					    	class="form-control search-control" >
+			                    <option value='142'>中国</option>
+					    </select>
 					</div>
-					
-					<div class="row">
-						<div class="col-lg-4">
-							<%include("/yh/component/form/inputField.html", {
-							id:'consignee_telephone', label:'收货人电话', required:'required',
-							value:order.consignee_telephone!'' }){}%></div>
-						<div class="col-lg-4">
-							<%include("/yh/component/form/inputField.html", {
-							id:'consignee_address', label:'收件人地址', required:'required',
-							value:order.consignee_address!'' }){}%></div>
-						<div class="col-lg-4">
-							<div class="form-group">
-							    <label class="search-label">收货人地址(国)</label>
-							    <select id="consignee_country" name="consignee_country" 
-							    	field_type='list'
-							    	class="form-control search-control" >
-					                    <option value='142'>中国</option>
-							    </select>
-							</div>
-						</div>
-					</div>
-		
-					<div class="row">
-						<div class="col-lg-4">
-						<%include("/yh/component/form/inputLocationField.html", {
-							id:'location', label:'收件人(省-市-区)',value: order.location!'',
-							display_value: location_name!'' ,required:'required' }){}%></div>
-						<div class="col-lg-4">
-							<%include("/yh/component/form/inputField.html", {
-							id:'express_no', label:'快递单号', required:'required',
-							value:order.express_no!'' }){}%></div>
-					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4">
+				<%include("/yh/component/form/inputLocationField.html", {
+					id:'location', label:'收件人(省-市-区)',value: order.location!'',
+					display_value: location_name!''}){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'express_no', label:'快递单号', 
+					value:order.express_no!'' }){}%></div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'gross_weight',
+					label:'净重', value:order.gross_weight!'' }){}%>
+				</div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'net_weight',
+					label:'毛重', value:order.net_weight!'' }){}%>
+				</div>
+			</div> 
+			
 			<div class="row">
 				<div class="col-lg-12">
 					<h3>基础信息</h3>
@@ -145,9 +157,6 @@
 						'商品条码',
 						'商品名称',
 						'数量',
-						'毛重',
-						'净重',
-						'总重量',
 						'库位',						
 						'纸箱编号<span style="color: red">*</span>',
 						'上游SKU<span style="color: red">*</span>',
@@ -159,7 +168,7 @@
 						'货币<span style="color: red">*</span>',
 						'单位货值<span style="color: red">*</span>',
 						'包装单位<span style="color: red">*</span>'],
-						field_list:['','bar_code','cargo_name','packing_amount','gross_weight','net_weight','','shelves','carton_no', 'upstream_sku', 'custom_code',
+						field_list:['','bar_code','cargo_name','packing_amount','shelves','carton_no', 'upstream_sku', 'custom_code',
 						'item_code', 'name_specifications', 'color', 'size', 'currency',
 						'unit_value','packing_unit'], 
 						value_list: itemList![] 
