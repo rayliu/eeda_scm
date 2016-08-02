@@ -68,7 +68,7 @@
 		<!-- /.col-lg-12 -->
 	</div>
 	<div class="modal fade" id="itemDetail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	  <div class="modal-dialog" style="width:1000px;">
+	  <div class="modal-dialog" style="width:800px;">
 	    <div class="modal-content">
 	      <div class="modal-header">入库单列表</div>
 	      	<div class="modal-body">
@@ -77,12 +77,12 @@
 				<div class="table-responsive">    
 					<%include("/yh/component/form/detailTable.html", {
 					id:'gate_out_table', 
-					style:'width:1000px;',
+					style:'width:800px;',
 					headers:['<input type="checkbox" id="all">', 
 							'出库单号' ,
 							'销售订单号' ,
 							'状态' ,
-							'仓库位'
+							'仓库'
 							]
 					}){} %>        
                </div>
