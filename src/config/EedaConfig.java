@@ -27,6 +27,8 @@ import models.eeda.oms.GateOutOrderItem;
 import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.InspectionOrderItem;
 import models.eeda.oms.Inventory;
+import models.eeda.oms.InventoryOrder;
+import models.eeda.oms.InventoryOrderItem;
 import models.eeda.oms.LoadOrder;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
@@ -75,6 +77,7 @@ import controllers.oms.gateInOrder.GateInOrderController;
 import controllers.oms.gateOutOrder.GateOutOrderController;
 import controllers.oms.inspectionOrder.InspectionOrderController;
 import controllers.oms.inventory.InventoryController;
+import controllers.oms.inventoryOrder.copy.InventoryOrderController;
 import controllers.oms.loadOrder.LoadOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
 import controllers.oms.orderStatus.OrderStatusController;
@@ -200,6 +203,8 @@ public class EedaConfig extends JFinalConfig {
 		
 		//库存管理
 		me.add("/inventory", InventoryController.class, contentPath);
+        me.add("/inventoryOrder", InventoryOrderController.class, contentPath);
+
 		me.add("/m", MobileController.class, contentPath);
 	}
 
@@ -276,6 +281,9 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("unit", Unit.class);
         arp.addMapping("country", Country.class);
         arp.addMapping("inventory", Inventory.class);
+        arp.addMapping("inventory_order", InventoryOrder.class);
+        arp.addMapping("inventory_order_item", InventoryOrderItem.class);
+
     }
 
     private void initDBconnector() {
