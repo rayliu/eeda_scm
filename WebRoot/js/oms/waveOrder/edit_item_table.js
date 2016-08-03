@@ -101,6 +101,13 @@ $(document).ready(function() {
                     return '<input type="text" name="cargo_bar_code" value="'+data+'" class="form-control" />';
                 }
             } ,
+            { "data": "CARGO_NAME", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" />';
+                }
+            } ,
             { "data": "ITEM_CODE", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
