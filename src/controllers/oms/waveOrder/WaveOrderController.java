@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.UserLogin;
+import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.WaveOrder;
 import models.eeda.oms.WaveOrderItem;
 
@@ -81,6 +82,16 @@ public class WaveOrderController extends Controller {
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
 		DbUtils.handleList(itemList, id , WaveOrderItem.class, "order_id");
+		
+		for(Map item:itemList){
+			String itemId = (String)item.get("id");
+			if("".equals(itemId)){
+				String gate_out_no = (String)item.get("gate_out_no");
+				GateOutOrder go = GateOutOrder.dao.findFirst("select * from gate_out_order where order_no = ?",gate_out_no);
+				go.set("wave_flag", "Y");
+				go.update();
+			}	
+		}
 		
 		long create_by = waveOrder.getLong("create_by");
    		String user_name = LoginUserController.getUserNameById(create_by);
@@ -161,7 +172,7 @@ public class WaveOrderController extends Controller {
     			+ "  from gate_out_order goo "
     			+ "  left join user_login u on u.id = goo.create_by"
     			+ "  left join warehouse w on w.id = goo.warehouse_id"
-    			+ "  ) A where 1 =1 ";
+    			+ "  where goo.status = '已确认' and wave_flag = 'N') A where 1 =1";
         
         String condition = "";
         String jsonStr = getPara("jsonStr");

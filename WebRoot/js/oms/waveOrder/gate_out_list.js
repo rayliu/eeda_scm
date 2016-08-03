@@ -41,32 +41,9 @@ $(document).ready(function() {
         searchData(); 
     })
 
-   var searchData=function(){
-        var order_no = $("#order_no").val(); 
-        var status = $('#status').val();
-        var start_date = $("#create_stamp_begin_time").val();
-        var end_date = $("#create_stamp_end_time").val();
-        
-        /*  
-            查询规则：参数对应DB字段名
-            *_no like
-            *_id =
-            *_status =
-            时间字段需成双定义  *_begin_time *_end_time   between
-        */
-        var url = "/waveOrder/list?order_no="+order_no
-             +"&status="+status
-             +"&create_stamp_begin_time="+start_date
-             +"&create_stamp_end_time="+end_date;
 
-        dataTable.ajax.url(url).load();
-    };
     
-    //刷新明细表
-    waveOrder.refleshTable = function(order_id){
-    	var url = "/waveOrder/tableList?order_id="+order_id;
-    	cargoTable.ajax.url(url).load();
-    }
+
     
     var hava_check = 0;	
     $('#gate_out_table').on('click','.checkBox',function(){
