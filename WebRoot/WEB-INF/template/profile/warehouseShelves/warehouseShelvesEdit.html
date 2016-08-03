@@ -17,48 +17,52 @@
                         <%include("/yh/component/form/inputWarehouseField.html", {
 											id:'warehouse_id', 
 											label:'仓库', 
-											required:'required',
 											value:order.warehouse_id!'', 
 											display_value: warehouse_name!'' 
 											}){}%>
                     </div>  
                     <div class="col-lg-4">
-                        <%include("/yh/component/form/inputField.html", 
+                        <%include("/yh/component/form/inputLimitField.html", 
                                             {   id:'warehouse_area', 
                                                 label:'库区', 
-                                                value:order.warehouse_area!''
+                                                begin_value:order.warehouse_area_begin!'',
+                                                end_value:order.warehouse_area_end!''
                                             }){}%>
                     </div>     
                     <div class="col-lg-4">
-                        <%include("/yh/component/form/inputField.html", 
+                        <%include("/yh/component/form/inputLimitField.html", 
                                             {   id:'warehouse_road', 
                                                 label:'库道', 
-                                                value:order.warehouse_road!''
+                                                begin_value:order.warehouse_road_begin!'',
+                                                end_value:order.warehouse_road_end!''
                                             }){}%>
                     </div>                      
                 </div>
                 <div class="row">
                 	<div class="col-lg-4">
-                        <%include("/yh/component/form/inputField.html", 
+                        <%include("/yh/component/form/inputLimitField.html", 
                                         {   id:'warehouse_row', 
-                                            label:'库行', 
-                                            value:order.warehouse_row!''
+                                            label:'库排', 
+                                            begin_value:order.warehouse_row_begin!'',
+                                            end_value:order.warehouse_row_end!''
                                             }){} %>
                     
                     </div>   
                     <div class="col-lg-4">
-                        <%include("/yh/component/form/inputField.html", 
+                        <%include("/yh/component/form/inputLimitField.html", 
                                         {   id:'warehouse_column', 
                                             label:'库列', 
-                                            value:order.warehouse_column!''
+                                            begin_value:order.warehouse_column_begin!'',
+                                            end_value:order.warehouse_column_end!''
                                             }){} %>
                     
                     </div>   
                     <div class="col-lg-4">
-                        <%include("/yh/component/form/inputField.html", 
+                        <%include("/yh/component/form/inputLimitField.html", 
                                         {   id:'warehouse_layer', 
                                             label:'库层', 
-                                            value:order.warehouse_layer!''
+                                            begin_value:order.warehouse_layer_begin!'',
+                                            end_value:order.warehouse_layer_end!''
                                             }){} %>
                     
                     </div>                   
