@@ -22,11 +22,16 @@ $(document).ready(function() {
         var order = {
             id: $('#order_id').val(),
             warehouse_id: $('#warehouse_id').val(),  
-            warehouse_area: $('#warehouse_area').val(),  
-            warehouse_road: $('#warehouse_road').val(),  
-            warehouse_row: $('#warehouse_row').val(),
-            warehouse_column: $('#warehouse_column').val(),
-            warehouse_layer: $('#warehouse_layer').val(),   
+            warehouse_area_begin: $('#warehouse_area_begin').val(),  
+            warehouse_area_end: $('#warehouse_area_end').val(),  
+            warehouse_road_begin: $('#warehouse_road_begin').val(),
+            warehouse_road_end: $('#warehouse_road_end').val(),
+            warehouse_row_begin: $('#warehouse_row_begin').val(),
+            warehouse_row_end: $('#warehouse_row_end').val(),
+            warehouse_column_begin: $('#warehouse_column_begin').val(),
+            warehouse_column_end: $('#warehouse_column_end').val(),
+            warehouse_layer_begin: $('#warehouse_layer_begin').val(),   
+            warehouse_layer_end: $('#warehouse_layer_end').val(),
             position: $('#position').val()
         };
 
