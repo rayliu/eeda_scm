@@ -111,7 +111,7 @@ public class InventoryOrderController extends Controller {
 		}
 		
 		String audit_name = null;
-		if(order.getLong("create_by") != null){
+		if(order.getLong("audit_by") != null){
 			long audit_by = order.getLong("audit_by");
 			audit_name = LoginUserController.getUserNameById(audit_by);
 		}
