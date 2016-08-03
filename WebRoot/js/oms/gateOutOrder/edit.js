@@ -88,9 +88,27 @@ $(document).ready(function() {
     		if(data.ID){
     			$('#status').val(data.STATUS);
     			$('#saveBtn').attr('disabled', true);
+    			$('#checkBtn').attr('disabled', false);
     			$.scojs_message('确认成功', $.scojs_message.TYPE_OK);
     		}else{
     			$.scojs_message('确认失败', $.scojs_message.TYPE_ERROR);
+    			self.attr('disabled',false);
+    		}
+    	})
+    })
+    
+    //复核按钮
+    $('#checkBtn').click(function(e){
+    	e.preventDefault();
+    	var self = $(this);
+    	self.attr('disabled',true);
+    	var order_id = $("#order_id").val();
+    	$.post('/gateOutOrder/checkOrder', {params:order_id}, function(data){
+    		if(data.ID){
+    			$('#status').val(data.STATUS);
+    			$.scojs_message('复核成功', $.scojs_message.TYPE_OK);
+    		}else{
+    			$.scojs_message('复核失败', $.scojs_message.TYPE_ERROR);
     			self.attr('disabled',false);
     		}
     	})
@@ -124,6 +142,9 @@ $(document).ready(function() {
     		$('#confirmBtn').attr('disabled', false);
     		$('#cancelBtn').attr('disabled', false);
     	}else if(status=='已确认'){
+    		$('#checkBtn').attr('disabled', false);
+    		$('#cancelBtn').attr('disabled', false);
+    	}else if(status=='已复核'){
     		$('#cancelBtn').attr('disabled', false);
     	}
     }else{
@@ -132,7 +153,6 @@ $(document).ready(function() {
     
      //打印中通面单按钮      
     $('#printBtnZto').click(function(e){
-    	
     	e.preventDefault();
     	var self = $(this);
     	self.attr('disabled',true);

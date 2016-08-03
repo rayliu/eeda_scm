@@ -123,10 +123,22 @@ public class GateOutOrderController extends Controller {
     	UserLogin user = LoginUserController.getLoginUser(this);
    		Long operator = user.getLong("id");
     	OperationLog(order_id, order_id, operator,"confirm");
+    }
+    
+    @Before(Tx.class)
+    public void checkOrder() throws Exception{
+    	String order_id = getPara("params");
+    	GateOutOrder gateOutOrder = GateOutOrder.dao.findById(order_id);
+    	gateOutOrder.set("status","已复核").update();
+    	renderJson(gateOutOrder);
+    	
+    	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+    	UserLogin user = LoginUserController.getLoginUser(this);
+   		Long operator = user.getLong("id");
+    	OperationLog(order_id, order_id, operator,"confirm");
     	
     	//扣库存
-    	gateOut(order_id);
-    	
+    	gateOut(order_id);	
     }
     
     @Before(Tx.class)
