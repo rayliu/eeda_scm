@@ -18,7 +18,7 @@
 						<div class="row">
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputField.html", { id:
-								'order_no', label: '订单号', value: '' }){}%>
+								'gate_in_no', label: '入库单号', value: '' }){}%>
 							</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/selectField.html", { id:'status',
@@ -45,7 +45,7 @@
 					<!-- table list -->
 					<div class="form-group">
 						<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
-						headers:['入库通知单号', '仓库', '创建人', '创建时间','状态']
+						headers:['入库单号', '仓库', '创建人', '创建时间','状态']
 						}){} %>
 					</div>
 				</div>

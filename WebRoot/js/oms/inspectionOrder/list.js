@@ -11,7 +11,7 @@ $(document).ready(function() {
         "id": "eeda-table",
         "ajax": "/inspectionOrder/list",
         "columns": [
-            { "data": null, 
+            { "data": "GATE_IN_NO", 
                 "render": function ( data, type, full, meta ) {
                     return "<a href='/inspectionOrder/edit?id="+full.ID+"' >"+data+"</a>";
                 }

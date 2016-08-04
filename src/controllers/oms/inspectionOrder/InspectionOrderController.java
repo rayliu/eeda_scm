@@ -139,9 +139,10 @@ public class InspectionOrderController extends Controller {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
-        String sql = "select * from(SELECT inso.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
+        String sql = "select * from(SELECT inso.*,gio.order_no gate_in_no, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
     			+ "  from inspection_order inso "
     			+ "  left join warehouse wh on wh.id = inso.warehouse_id"
+    			+ "  left join gate_in_order gio on gio.id = inso.gate_in_id"
     			+ "  left join user_login u on u.id = inso.create_by"
     			+ "  ) A where 1 =1 ";
         
