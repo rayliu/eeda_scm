@@ -24,7 +24,7 @@
 			<div class="row">
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'order_no',
-					label:'订单号', value:order.ORDER_NO!'', disabled: 'disabled' }){}%></div>
+					label:'单号', value:order.ORDER_NO!'', disabled: 'disabled' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
 					id:'creator_name', label:'创建人', value:user.c_name!'', disabled:
@@ -124,5 +124,6 @@
     var waveOrder = {};
 </script>
 <script src="/js/oms/waveOrder/edit_item_table.js"></script>
-<script src="/js/oms/waveOrder/edit.js"></script>
 <script src="/js/oms/waveOrder/gate_out_list.js"></script>
+<script src="/js/oms/waveOrder/edit.js"></script>
+

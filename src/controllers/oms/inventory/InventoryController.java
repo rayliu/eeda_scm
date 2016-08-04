@@ -79,7 +79,11 @@ public class InventoryController extends Controller {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
-        String sql = "select * from ( SELECT inv.* ,wh.warehouse_name,p.abbr customer_name"
+        String sql = "select * from ( SELECT inv.* ,wh.warehouse_name,p.abbr customer_name,"
+        		+ "  (case when (inv.gate_in_amount-inv.gate_out_amount)>0"
+        		+ "  then '在库'"
+        		+ "  else"
+        		+ "  '已出库' end) cartgo_status"
     			+ "  from inventory inv "
     			+ "  left join warehouse wh on wh.id = inv.warehouse_id"
     			+ "  left join party p on p.id = inv.customer_id"

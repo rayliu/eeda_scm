@@ -37,10 +37,12 @@ public class DbUtils {
             		valueMap.put("_end_time", filterValue);
             		dateFieldMap.put(key, valueMap);
             		continue;
-            	}else if(key.endsWith("_input")){
-            		break;
-            	}else if(!"_".equals(key) ){
-            		condition += " and " + key + " like '%" + filterValue + "%' ";
+            	}else if(!"_".equals(key) && !key.endsWith("_input")){
+            		if(key.endsWith("_id")){
+            			condition += " and " + key + " = '" + filterValue.trim() + "' ";
+            		}else{
+            			condition += " and " + key + " like '%" + filterValue.trim() + "%' ";
+            		}
             		continue;
             	}
             }	
