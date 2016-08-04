@@ -158,12 +158,17 @@ public class InventoryOrderController extends Controller {
     	setAttr("warehouse", warehouse);
 
     	//用户信息
-    	long check_by = order.getLong("check_by");
-    	long audit_by = order.getLong("audit_by");
-    	String check_name = LoginUserController.getUserNameById(check_by);
-    	String audit_name = LoginUserController.getUserNameById(audit_by);
-    	setAttr("check_name", check_name);
-    	setAttr("audit_name", audit_name);
+    	if(order.getLong("check_by") != null){
+    		long check_by = order.getLong("check_by");
+    		String check_name = LoginUserController.getUserNameById(check_by);
+    		setAttr("check_name", check_name);
+    	}
+    	
+    	if(order.getLong("audit_by") != null){
+    		long audit_by = order.getLong("audit_by");  	
+        	String audit_name = LoginUserController.getUserNameById(audit_by);
+        	setAttr("audit_name", audit_name);
+    	}
     	
         render("/oms/inventoryOrder/inventoryOrderEdit.html");
     }
