@@ -29,6 +29,7 @@ $(document).ready(function() {
         
         var order={}
         order.id = $('#order_id').val();
+        order.status = $('#status').val()==''?'新建':$('#status').val();
         order.item_list = items_array;   
         
         //异步向后台提交数据
@@ -37,6 +38,7 @@ $(document).ready(function() {
             if(order.ID>0){
                 $("#order_id").val(order.ID);
                 $("#order_no").val(order.ORDER_NO);
+                $("#status").val(order.STATUS);
                 $("#creator_name").val(order.CREATOR_NAME);
                 $("#create_stamp").val(order.CREATE_STAMP);
                 contactUrl("edit?id",order.ID);

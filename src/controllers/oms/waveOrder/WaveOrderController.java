@@ -209,7 +209,7 @@ public class WaveOrderController extends Controller {
     				+ " gooi.item_code ,null order_no_code"
     				+ " from gate_out_order goo "
     				+ " left join gate_out_order_item gooi on gooi.order_id = goo.id"
-    				+ " where goo.id in ("+ order_ids +")";
+    				+ " where goo.id in ("+ order_ids +") order by shelves";
     		list = Db.find(sql);
     	}
     		
