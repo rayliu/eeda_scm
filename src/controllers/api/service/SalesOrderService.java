@@ -51,8 +51,8 @@ public class SalesOrderService {
         
         if(orderJsonStr==null){
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "POST请求中, body不存在!");
+            r.set("code", "2");
+            r.set("msg", "POST请求中, body不存在!");
             controller.renderJson(r);
             return;
         }
@@ -79,8 +79,8 @@ public class SalesOrderService {
         int signIndex = paraStr.indexOf("sign");
         if (signIndex == -1) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "请求中sign不存在!");
+            r.set("code", "2");
+            r.set("msg", "请求中sign不存在!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -89,8 +89,8 @@ public class SalesOrderService {
         Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
         if (party == null) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "请求中appkey不正确!");
+            r.set("code", "2");
+            r.set("msg", "请求中appkey不正确!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -99,8 +99,8 @@ public class SalesOrderService {
         SalesOrder sCheck = SalesOrder.dao.findFirst("select * from sales_order where ref_order_no=? and office_id=?", ref_order_no, office_id);
         if (sCheck != null) {
             Record r = new Record();
-            r.set("errCode", "05");
-            r.set("errMsg", "ref_order_no:"+ref_order_no+"已存在!");
+            r.set("code", "5");
+            r.set("msg", "ref_order_no:"+ref_order_no+"已存在!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -124,7 +124,11 @@ public class SalesOrderService {
         DbUtils.handleList(itemList, id, SalesOrderGoods.class, "order_id");
 
         DingDanDto returnSoDto= DingDanBuilder.buildDingDanDto(id, "123456");
-        controller.renderJson(returnSoDto);
+        Record r = new Record();
+        r.set("code", "0");
+        r.set("msg", "请求已成功处理!");
+        r.set("data", returnSoDto);
+        controller.renderJson(r);
     }
 
   
@@ -153,8 +157,8 @@ public class SalesOrderService {
         
         if (orderJsonStr == null) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "POST请求中, body不存在!");
+            r.set("code", "2");
+            r.set("msg", "POST请求中, body不存在!");
             controller.renderJson(r);
             return;
         }
@@ -173,8 +177,8 @@ public class SalesOrderService {
         int signIndex = paraStr.indexOf("sign");
         if (signIndex == -1) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "请求中sign不存在!");
+            r.set("code", "2");
+            r.set("msg", "请求中sign不存在!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -183,8 +187,8 @@ public class SalesOrderService {
         Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
         if (party == null) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "请求中appkey不正确!");
+            r.set("code", "2");
+            r.set("msg", "请求中appkey不正确!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -197,8 +201,8 @@ public class SalesOrderService {
         logger.debug("serverSign=" + serverSign);
         if (!sign.equals(serverSign)) {
             Record r = new Record();
-            r.set("errCode", "03");
-            r.set("errMsg", "请求中sign不正确!");
+            r.set("code", "3");
+            r.set("msg", "请求中sign不正确!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -206,11 +210,15 @@ public class SalesOrderService {
         SalesOrder so = SalesOrder.dao.findFirst("select * from sales_order where ref_order_no = ?", ref_order_no);
         if(so !=null){
             DingDanDto soDto= DingDanBuilder.buildDingDanDto(so.getLong("id").toString(), "123456");
-            controller.renderJson(soDto);
+            Record r = new Record();
+            r.set("code", "0");
+            r.set("msg", "请求已成功处理!");
+            r.set("data", soDto);
+            controller.renderJson(r);            
         }else{
             Record r = new Record();
-            r.set("errCode", "01");
-            r.set("errMsg", "订单号码:"+ref_order_no+"不存在!");
+            r.set("code", "1");
+            r.set("msg", "订单号码:"+ref_order_no+"不存在!");
             controller.renderJson(r);
         }
     }

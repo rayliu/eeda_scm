@@ -1,13 +1,11 @@
 package controllers.api.service;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
 import models.Party;
-import models.eeda.OrderActionLog;
 import models.eeda.profile.Product;
 
 import org.apache.log4j.Logger;
@@ -45,8 +43,8 @@ public class BaseItemApiService {
             post();
         } else {
             Record r = new Record();
-            r.set("errCode", "04");
-            r.set("errMsg", "API接口只支持GET/POST请求.");
+            r.set("code", "4");
+            r.set("msg", "API接口只支持GET/POST请求.");
             controller.renderJson(r);
         }
     }
@@ -57,8 +55,8 @@ public class BaseItemApiService {
             get();
         } else {
             Record r = new Record();
-            r.set("errCode", "04");
-            r.set("errMsg", "API接口只支持POST请求.");
+            r.set("code", "4");
+            r.set("msg", "API接口只支持POST请求.");
             controller.renderJson(r);
         }
     }
@@ -87,8 +85,8 @@ public class BaseItemApiService {
         int signIndex = paraStr.indexOf("sign");
         if (signIndex == -1) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "请求中sign不存在!");
+            r.set("code", "2");
+            r.set("msg", "请求中sign不存在!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -97,8 +95,8 @@ public class BaseItemApiService {
         Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
         if (party == null) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "请求中appkey不正确!");
+            r.set("code", "2");
+            r.set("msg", "请求中appkey不正确!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -111,7 +109,7 @@ public class BaseItemApiService {
         logger.debug("serverSign=" + serverSign);
         if (!sign.equals(serverSign)) {
             Record r = new Record();
-            r.set("code", "03");
+            r.set("code", "3");
             r.set("msg", "请求中sign不正确!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
@@ -130,8 +128,8 @@ public class BaseItemApiService {
             controller.renderJson(r);
         } else {
             Record r = new Record();
-            r.set("errCode", "01");
-            r.set("errMsg", "商品编号" + ref_item_no + "不存在!");
+            r.set("code", "1");
+            r.set("msg", "商品编号" + ref_item_no + "不存在!");
             controller.renderJson(r);
         }
 
@@ -150,8 +148,8 @@ public class BaseItemApiService {
         
         if (orderJsonStr == null) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "POST请求中, body不存在!");
+            r.set("code", "2");
+            r.set("msg", "POST请求中, body不存在!");
             controller.renderJson(r);
             return;
         }
@@ -170,8 +168,8 @@ public class BaseItemApiService {
         int signIndex = paraStr.indexOf("sign");
         if (signIndex == -1) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "请求中sign不存在!");
+            r.set("code", "2");
+            r.set("msg", "请求中sign不存在!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -180,8 +178,8 @@ public class BaseItemApiService {
         Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
         if (party == null) {
             Record r = new Record();
-            r.set("errCode", "02");
-            r.set("errMsg", "请求中appkey不正确!");
+            r.set("code", "2");
+            r.set("msg", "请求中appkey不正确!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -194,8 +192,8 @@ public class BaseItemApiService {
         logger.debug("serverSign=" + serverSign);
         if (!sign.equals(serverSign)) {
             Record r = new Record();
-            r.set("errCode", "03");
-            r.set("errMsg", "请求中sign不正确!");
+            r.set("code", "3");
+            r.set("msg", "请求中sign不正确!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -203,8 +201,8 @@ public class BaseItemApiService {
         Product pCheck = Product.dao.findFirst("select * from product where ref_item_no=? and org_code=?", ref_item_no, org_code);
         if (pCheck != null) {
             Record r = new Record();
-            r.set("errCode", "05");
-            r.set("errMsg", "ref_item_no:"+ref_item_no+"已存在!");
+            r.set("code", "5");
+            r.set("msg", "ref_item_no:"+ref_item_no+"已存在!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -232,6 +230,11 @@ public class BaseItemApiService {
         String id = p.getLong("id").toString();
 
         BaseItemDto returnSoDto = BaseItemBuilder.buildItemDto(id, org_code);
-        controller.renderJson(returnSoDto);
+        Record r = new Record();
+        
+        r.set("code", "0");
+        r.set("msg", "请求已成功处理!");
+        r.set("data", returnSoDto);
+        controller.renderJson(r);
     }
 }
