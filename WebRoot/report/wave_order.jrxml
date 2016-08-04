@@ -84,7 +84,7 @@ where order_no=$P{order_no};]]>
 		<variableExpression><![CDATA[$F{id}]]></variableExpression>
 	</variable>
 	<variable name="index" class="java.lang.Integer" calculation="Count">
-		<variableExpression><![CDATA[$V{index}.valueOf( 1 ) ]]></variableExpression>
+		<variableExpression><![CDATA[$V{index}.valueOf( 1 )]]></variableExpression>
 		<initialValueExpression><![CDATA[1]]></initialValueExpression>
 	</variable>
 	<background>
@@ -104,18 +104,18 @@ where order_no=$P{order_no};]]>
 ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="165" y="32" width="188" height="50" uuid="20771280-47fc-4369-b153-09750e158ed1"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement x="163" y="12" width="188" height="30" uuid="20771280-47fc-4369-b153-09750e158ed1"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font fontName="黑体" size="24" isBold="true" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
 				<text><![CDATA[波次单]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="382" y="19" width="70" height="17" uuid="24090338-89f5-4f4d-bc92-ea1e1ed98745"/>
+				<reportElement x="163" y="77" width="52" height="17" uuid="24090338-89f5-4f4d-bc92-ea1e1ed98745"/>
 				<textElement textAlignment="Right" verticalAlignment="Top">
-					<font fontName="宋体" size="11" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
+					<font fontName="宋体" size="10" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H" isPdfEmbedded="true"/>
 				</textElement>
-				<text><![CDATA[No：]]></text>
+				<text><![CDATA[波次单号：]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="382" y="35" width="70" height="17" uuid="754af059-f656-4421-81c3-37fbcffad461"/>
@@ -132,7 +132,7 @@ where order_no=$P{order_no};]]>
 				<text><![CDATA[条数：]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="451" y="19" width="104" height="17" uuid="6e3b7271-00ee-426c-a5da-3c724ea81a7f"/>
+				<reportElement x="214" y="77" width="104" height="17" uuid="6e3b7271-00ee-426c-a5da-3c724ea81a7f"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
@@ -238,13 +238,12 @@ where order_no=$P{order_no};]]>
 				</textElement>
 				<textFieldExpression><![CDATA[java.util.Calendar.getInstance().getTime()]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="147" y="12" width="27" height="20" uuid="135488d7-632c-4ea4-ba99-4e7b21b4a68e"/>
-				<textElement textAlignment="Center">
-					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
-			</textField>
+			<componentElement>
+				<reportElement x="163" y="50" width="212" height="23" uuid="3e128aca-ed78-4fce-ae61-af9668ca1470"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39" drawText="false" checksumRequired="false">
+					<jr:codeExpression><![CDATA[$F{order_no}]]></jr:codeExpression>
+				</jr:barbecue>
+			</componentElement>
 		</band>
 	</pageHeader>
 	<columnHeader>
@@ -267,15 +266,15 @@ where order_no=$P{order_no};]]>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="450" y="18" width="96" height="14" uuid="f51b6f86-e009-46db-b0c8-c32d78cd0eff"/>
+				<reportElement x="453" y="21" width="101" height="14" uuid="f51b6f86-e009-46db-b0c8-c32d78cd0eff"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cargo_bar_code}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="439" y="6" width="128" height="18" uuid="df67b597-98f7-4782-bcf2-9a4c4db89b87"/>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128C" drawText="false" checksumRequired="false">
+				<reportElement x="451" y="5" width="103" height="18" uuid="df67b597-98f7-4782-bcf2-9a4c4db89b87"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39" drawText="false" checksumRequired="false">
 					<jr:codeExpression><![CDATA[$F{cargo_bar_code}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
@@ -300,15 +299,15 @@ where order_no=$P{order_no};]]>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="40" y="18" width="108" height="14" uuid="876b38fe-0f77-446a-983d-a37e45598582"/>
+				<reportElement x="37" y="21" width="108" height="14" uuid="876b38fe-0f77-446a-983d-a37e45598582"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gate_out_no}]]></textFieldExpression>
 			</textField>
 			<componentElement>
-				<reportElement x="30" y="5" width="117" height="18" uuid="d19d2ca9-5bc9-4997-a4ba-ede46a544078"/>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code128C" drawText="false" checksumRequired="false">
+				<reportElement x="33" y="5" width="112" height="18" uuid="d19d2ca9-5bc9-4997-a4ba-ede46a544078"/>
+				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39" drawText="false" checksumRequired="false">
 					<jr:codeExpression><![CDATA[$F{gate_out_no}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
