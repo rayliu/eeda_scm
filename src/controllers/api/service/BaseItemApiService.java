@@ -111,8 +111,8 @@ public class BaseItemApiService {
         logger.debug("serverSign=" + serverSign);
         if (!sign.equals(serverSign)) {
             Record r = new Record();
-            r.set("errCode", "03");
-            r.set("errMsg", "请求中sign不正确!");
+            r.set("code", "03");
+            r.set("msg", "请求中sign不正确!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
@@ -123,7 +123,11 @@ public class BaseItemApiService {
         if (p != null) {
             BaseItemDto returnItemDto = BaseItemBuilder.buildItemDto(p.getLong("id")
                     .toString(), p.getStr("org_code"));
-            controller.renderJson(returnItemDto);
+            Record r = new Record();
+            r.set("code", "0");
+            r.set("msg", "请求已成功处理!");
+            r.set("data", returnItemDto);
+            controller.renderJson(r);
         } else {
             Record r = new Record();
             r.set("errCode", "01");
