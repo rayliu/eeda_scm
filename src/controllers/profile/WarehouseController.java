@@ -170,7 +170,7 @@ public class WarehouseController extends Controller{
 	//查询仓库列表
     public void search(){
     	String inpiutFiled = getPara("warehouseName").trim();
-    	String conditions = " where 1 = 1";
+    	String conditions = " where 1 = 1 and status = 'active'";
     	if(!"".equals(inpiutFiled))
     		conditions += " and warehouse_name like '%" + inpiutFiled + "%' or warehouse_address like '%" + inpiutFiled + "%'";
     	
