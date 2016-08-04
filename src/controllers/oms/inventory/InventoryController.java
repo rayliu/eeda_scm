@@ -79,7 +79,9 @@ public class InventoryController extends Controller {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
-        String sql = "select * from ( SELECT inv.* ,wh.warehouse_name,p.abbr customer_name,"
+        String sql = "select * from ( SELECT inv.id,inv.cargo_name,inv.cargo_code,inv.unit,inv.customer_id,inv.shelf_life ,"
+        		+ "  inv.shelves, sum(inv.gate_in_amount) gate_in_amount, sum(inv.gate_out_amount) gate_out_amount,sum(inv.lock_amount) lock_amount,"
+        		+ "  wh.warehouse_name,p.abbr customer_name,"
         		+ "  (case when (inv.gate_in_amount-inv.gate_out_amount)>0"
         		+ "  then '在库'"
         		+ "  else"
@@ -97,10 +99,10 @@ public class InventoryController extends Controller {
             condition = DbUtils.buildConditions(dto);
     	}
     	
-        String sqlTotal = "select count(1) total from ("+ sql + condition +") B";
+        String sqlTotal = "select count(1) total from ("+ sql + condition +" group by cargo_name , customer_id) B";
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
-        List<Record> BillingOrders = Db.find(sql + condition  +sLimit);
+        List<Record> BillingOrders = Db.find(sql + condition +" group by cargo_name , customer_id" +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));

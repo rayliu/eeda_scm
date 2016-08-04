@@ -21,13 +21,24 @@ $(document).ready(function() {
             { "data": "SHELVES"}, 
             { "data": "SHELF_LIFE"}, 
             { "data": "GATE_IN_AMOUNT"}, 
+            { "data": "LOCK_AMOUNT",
+            	"render": function ( data, type, full, meta ) {
+            		if(data>0)
+            			return "<span style='color:green;font-weight:bold;'>"+data+"</span>";
+            		else
+            			return data;
+            	}
+            }, 
             { "data": "GATE_OUT_AMOUNT"},
             { "data": null,
             	"render": function ( data, type, full, meta ) {
             		var gate_out_amount = data.GATE_OUT_AMOUNT;
             		var gate_in_amount = data.GATE_IN_AMOUNT;
             		var amount = gate_in_amount - gate_out_amount;
-                    return amount;
+            		if(amount>0)
+            			return "<span style='color:red;font-weight:bold;'>"+amount+"</span>";
+            		else
+            			return amount;
                 }
             }
         ]

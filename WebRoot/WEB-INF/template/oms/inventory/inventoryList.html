@@ -27,7 +27,7 @@
 							<div class="col-lg-4">
 								<%include("/yh/component/form/selectField.html", { id:'cartgo_status',
 								label:'状态', value: '', value_list:[ {code:'', value:''},
-								{code:'已出库', value:'已出库'}, {code:'在库', value:'在库'} ] } ){} %>
+								{code:'已出库', value:'已出库'},{code:'已锁定', value:'已锁定'}, {code:'在库', value:'在库'} ] } ){} %>
 							</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputDateQueryField.html",
@@ -45,12 +45,14 @@
 						<button id="searchBtn" class="btn btn-primary btn-sm"
 							type="button">查询</button>
 						<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
+						<button id="itemBtn" class="btn btn-success btn-sm" style="float:right"
+							type="button">显示明细</button>
 					</div>
 					
 					<!-- table list -->
 					<div class="form-group">
 						<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
-						headers:['商品名称', '商品代码','单位','客户', '库位','保质期', '入库数量', '出库数量', '在库数量']
+						headers:['商品名称', '商品代码','单位','客户', '库位','保质期', '入库数量', '锁定数量','出库数量', '在库数量']
 						}){} %>
 					</div>
 				</div>

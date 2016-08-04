@@ -123,6 +123,9 @@ public class GateOutOrderController extends Controller {
     	UserLogin user = LoginUserController.getLoginUser(this);
    		Long operator = user.getLong("id");
     	OperationLog(order_id, order_id, operator,"confirm");
+    	
+    	//锁定库存
+    	lockInventory(order_id);
     }
     
     @Before(Tx.class)
@@ -140,6 +143,24 @@ public class GateOutOrderController extends Controller {
     	//扣库存
     	gateOut(order_id);	
     }
+    
+    @Before(Tx.class)
+    public void lockInventory(String order_id){
+    	GateOutOrder goo = GateOutOrder.dao.findById(order_id);
+    	List<Record> res = Db.find("select * from gate_out_order_item where order_id = ?",order_id);
+    	for(Record re :res){
+    		String cargo_name = re.getStr("cargo_name");
+    		int amount = ((int)(re.getDouble("packing_amount")*100))/100;
+    		String sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount - lock_amount) > 0 limit 0,?";
+    		List<Inventory> invs = Inventory.dao.find(sql,cargo_name,amount);
+    		for(Inventory inv : invs){
+        		inv.set("lock_stamp", new Date());
+        		inv.set("lock_amount", 1);
+        		inv.update();
+    		}
+    	}
+    }
+    
     
     @Before(Tx.class)
     public void gateOut(String order_id){
