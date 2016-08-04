@@ -69,6 +69,17 @@ $(document).ready(function() {
         }       
     };
 
+    var bindFieldEvent=function(){
+    	$('table .date').datetimepicker({  
+    	    format: 'yyyy-MM-dd',  
+    	    language: 'zh-CN'
+    	}).on('changeDate', function(el){
+    	    $(".bootstrap-datetimepicker-widget").hide();   
+    	    $(el).trigger('keyup');
+    	});
+
+    };
+    
     //------------事件处理
     var itemTable = $('#item_table').DataTable({
         "processing": true,
@@ -81,7 +92,10 @@ $(document).ready(function() {
         },
         "createdRow": function ( row, data, index ) {
             $(row).attr('id', data.ID);
-        },
+        }, 
+            "drawCallback": function( settings ) {
+	        bindFieldEvent();
+	    },
         "columns": [
             { "width": "30px",
                 "render": function ( data, type, full, meta ) {
@@ -105,8 +119,15 @@ $(document).ready(function() {
             { "data": "GUARANTEE_DATE", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                        data='';                    
+            		    var field_html = template('table_date_field_template',
+		                    {
+		                        id: 'GUARANTEE_DATE',
+		                        value: data.substr(0,19)
+		                    }
+		                );
+	                    return field_html;
+                    //return '<input type="text" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "SHELVES", 

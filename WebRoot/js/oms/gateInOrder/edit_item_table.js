@@ -1,4 +1,4 @@
-
+ 
 $(document).ready(function() {
 
     var deletedTableIds=[];
@@ -66,7 +66,16 @@ $(document).ready(function() {
         return cargo_items_array;
     };
     
+    var bindFieldEvent=function(){
+    	$('table .date').datetimepicker({  
+    	    format: 'yyyy-MM-dd',  
+    	    language: 'zh-CN'
+    	}).on('changeDate', function(el){
+    	    $(".bootstrap-datetimepicker-widget").hide();   
+    	    $(el).trigger('keyup');
+    	});
 
+    };
 
     //------------事件处理
     var cargoTable = $('#cargo_table').DataTable({
@@ -85,7 +94,9 @@ $(document).ready(function() {
         },
         "createdRow": function ( row, data, index ) {
             $(row).attr('id', data.ID);
-        },
+        },"drawCallback": function( settings ) {
+	        bindFieldEvent();
+	    },
         "columns": [
             { "width": "30px",
                 "render": function ( data, type, full, meta ) {
@@ -129,7 +140,14 @@ $(document).ready(function() {
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            		var field_html = template('table_date_field_template',
+		                    {
+		                        id: 'SHELF_LIFE',
+		                        value: data.substr(0,19)
+		                    }
+		                );
+	                    return field_html;
+            		//return '<input type="text" value="'+data+'" class="form-control" required/>';
             	}
             },
             { "data": "CARTON_NO", 
@@ -201,6 +219,7 @@ $(document).ready(function() {
                         data='';
                    var str= '<select class="form-control search-control">'
             	   	   +'<option></option>'
+            	   	   +'<option value="罐" '+ (data=='罐'?'selected':'') +'>罐</option>'
 	                   +'<option value="台" '+ (data=='台'?'selected':'') +'>台</option>'
 	                   +'<option value="件" '+ (data=='件'?'selected':'') +'>件</option>'
 	                   +'<option value="套" '+ (data=='套'?'selected':'') +'>套</option>'
@@ -262,5 +281,5 @@ $(document).ready(function() {
     	cargoTable.ajax.url(url).load();
     }
 
-    
-} );
+});   
+
