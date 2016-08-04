@@ -12,44 +12,35 @@ $(document).ready(function() {
         cargoTable.row(tr).remove().draw();
     }); 
     
-    gateOutOrder.buildCargoDetail=function(){
-        var cargo_table_rows = $("#cargo_table tr");
-        var cargo_items_array=[];
-        for(var index=0; index<cargo_table_rows.length; index++){
+
+    itemOrder.buildItemDetail=function(){
+        var item_table_rows = $("#cargo_table tr");
+        var items_array=[];
+        for(var index=0; index<item_table_rows.length; index++){
             if(index==0)
                 continue;
 
-            var row = cargo_table_rows[index];
+            var row = item_table_rows[index];
             var empty = $(row).find('.dataTables_empty').text();
             if(empty)
             	continue;
             
             var id = $(row).attr('id');
             if(!id){
-                id='';  
+                id='';
             }
-            var item={
-                id: id,
-                bar_code: $(row.children[1]).find('input').val(), 
-                cargo_name: $(row.children[2]).find('input').val(), 
-                packing_amount: $(row.children[3]).find('input').val(),
-                gross_weight: $(row.children[4]).find('input').val(),
-                net_weight: $(row.children[5]).find('input').val(), 
-                shelves: $(row.children[7]).find('input').val(),
-                carton_no: $(row.children[8]).find('input').val(), 
-                upstream_sku: $(row.children[9]).find('input').val(), 
-                custom_code: $(row.children[10]).find('input').val(),
-                item_code: $(row.children[11]).find('input').val(),
-                name_specifications: $(row.children[12]).find('input').val(),
-                color: $(row.children[13]).find('input').val(),
-                size: $(row.children[14]).find('input').val(), 
-                currency: $(row.children[15]).find('input').val(), 
-                unit_value: $(row.children[16]).find('input').val(),
-                packing_unit: $(row.children[17]).find('select').val(), 
-                action: id.length>0?'UPDATE':'CREATE'
-            };
-            cargo_items_array.push(item);
             
+            var item={}
+            item.id = id;
+            for(var i = 1; i < row.childNodes.length; i++){
+            	var name = $(row.childNodes[i]).find('input,select').attr('name');
+            	var value = $(row.childNodes[i]).find('input,select').val();
+            	if(name){
+            		item[name] = value;
+            	}
+            }
+            item.action = id.length > 0?'UPDATE':'CREATE';
+            items_array.push(item);
         }
 
         //add deleted items
@@ -59,10 +50,10 @@ $(document).ready(function() {
                 id: id,
                 action: 'DELETE'
             };
-            cargo_items_array.push(item);
+            items_array.push(item);
         }
         deletedTableIds = [];
-        return cargo_items_array;
+        return items_array;
     };
     
 
@@ -94,10 +85,10 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="bar_code" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "CARGO_NAME", "width": "200px",
+            { "data": "CARGO_NAME", "width": "180px",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
@@ -108,84 +99,84 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="amount" value="'+data+'" class="form-control check" />';
+                   return '<input type="text" name="packing_amount" value="'+data+'" class="form-control check" />';
                 }
             },
-            { "data": "SHELVES",
+            { "data": "SHELVES", "width": "100px",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
+                   return '<input type="text" name="shelves" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "CARTON_NO", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="carton_no" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "UPSTREAM_SKU", "visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="upstream_sku" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "CUSTOM_CODE" ,"visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
+                   return '<input type="text" name="custom_code" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "ITEM_CODE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
+                   return '<input type="text" name="item_code" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "NAME_SPECIFICATIONS",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
+                   return '<input type="text" name="name_specifications" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "COLOR",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
+                   return '<input type="text" name="color" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "SIZE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
+                   return '<input type="text" name="size" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "CURRENCY","visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
+                   return '<input type="text" name="currency" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "UNIT_VALUE","visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" />';
+                   return '<input type="text" name="unit_value" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "PACKING_UNIT","width": "60px",
                 "render": function ( data, type, full, meta ) {
                 	if(!data)
                         data='';
-                    var str= '<select class="form-control search-control" name="unit">'
+                    var str= '<select class="form-control search-control" name="packing_unit">'
             	   	   +'<option></option>'
 	                   +'<option value="台" '+ (data=='台'?'selected':'') +'>台</option>'
 	                   +'<option value="件" '+ (data=='件'?'selected':'') +'>件</option>'
@@ -220,7 +211,7 @@ $(document).ready(function() {
     });
     
     //刷新明细表
-    gateOutOrder.refleshTable = function(order_id){
+    itemOrder.refleshTable = function(order_id){
     	var url = "/gateOutOrder/tableList?order_id="+order_id;
     	cargoTable.ajax.url(url).load();
     }
@@ -229,7 +220,7 @@ $(document).ready(function() {
     $('#cargo_table').on('blur','.check',function(){
     	var $self = $(this).parent().parent();
     	var name = $self.find('[name=cargo_name]').val();
-    	var amount = $self.find('[name=amount]').val();
+    	var amount = $self.find('[name=packing_amount]').val();
     	if(name=='')
     		return false;
     	

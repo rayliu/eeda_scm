@@ -24,7 +24,7 @@ $(document).ready(function() {
         
         $(this).attr('disabled', true);
 
-        var items_array = gateOutOrder.buildCargoDetail();
+        var items_array = itemOrder.buildItemDetail();
         
         var order = {
             id: $('#order_id').val(),
@@ -67,7 +67,7 @@ $(document).ready(function() {
                 $('#cancelBtn').attr('disabled', false);
                 
                 //异步刷新字表
-                gateOutOrder.refleshTable(order.ID);
+                itemOrder.refleshTable(order.ID);
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);
