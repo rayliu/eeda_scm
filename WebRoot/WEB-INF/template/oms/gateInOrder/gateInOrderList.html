@@ -23,7 +23,7 @@
 							<div class="col-lg-4">
 								<%include("/yh/component/form/selectField.html", { id:'status',
 								label:'状态', value: '', value_list:[ {code:'', value:''},
-								{code:'未上报', value:'未上报'}, {code:'已上报', value:'已上报'} ] } ){} %>
+								{code:'暂存', value:'暂存'}, {code:'已确认', value:'已确认'} ] } ){} %>
 							</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputDateQueryField.html",
@@ -38,7 +38,7 @@
 							type="button">查询</button>
 						<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
 						<% if(shiro.hasPermission("GateInOrder.create")){ %> <a
-							class="btn btn-success btn-sm" href="/gateInOrder/create">新增通知单</a>
+							class="btn btn-success btn-sm" href="/gateInOrder/create">新增入库单</a>
 						<%}%>
 					</div>
 					

@@ -81,8 +81,6 @@ public class UnitController extends Controller {
     }
 
     // 编辑条目按钮
-    @RequiresPermissions(value = { PermissionConstant.PERMSSION_T_CREATE,
-            PermissionConstant.PERMSSION_T_UPDATE }, logical = Logical.OR)
     public void edit() {
         String id = getPara("id");
         Unit u = Unit.dao.findById(id);
@@ -129,5 +127,19 @@ public class UnitController extends Controller {
             r.update();
         }
         renderJson(r);
+    }
+    
+    
+    public void searchUnit(){
+    	String value = getPara("value");
+    	String conditions = " where 1 = 1" ;
+    	
+    	if(StringUtils.isNotEmpty(value)){
+    		conditions += " and name like '%"+value+"%'";
+    	}
+    	String sql = "select * from unit";
+    	
+    	List<Record> re = Db.find(sql+conditions); 
+    	renderJson(re);
     }
 }
