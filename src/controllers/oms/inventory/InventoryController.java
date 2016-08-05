@@ -78,6 +78,13 @@ public class InventoryController extends Controller {
         if (getPara("start") != null && getPara("length") != null) {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
+        String showItem = getPara("showItem");
+        String group = " group by inv.cargo_name,inv.customer_id ";
+        if("Y".equals(showItem)){
+        	group = " group by inv.id ";
+        }
+        
+        
 
         String sql = "select * from ( SELECT inv.id,inv.cargo_name,inv.cargo_code,inv.unit,inv.customer_id,inv.shelf_life ,"
         		+ "  inv.shelves, sum(inv.gate_in_amount) gate_in_amount, sum(inv.gate_out_amount) gate_out_amount,sum(inv.lock_amount) lock_amount,"
@@ -89,6 +96,7 @@ public class InventoryController extends Controller {
     			+ "  from inventory inv "
     			+ "  left join warehouse wh on wh.id = inv.warehouse_id"
     			+ "  left join party p on p.id = inv.customer_id"
+    			+ group
     			+ "  ) A where 1 = 1 ";
         
         String condition = "";
@@ -99,10 +107,10 @@ public class InventoryController extends Controller {
             condition = DbUtils.buildConditions(dto);
     	}
     	
-        String sqlTotal = "select count(1) total from ("+ sql + condition +" group by cargo_name , customer_id) B";
+        String sqlTotal = "select count(1) total from ("+ sql + condition +" ) B";
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
-        List<Record> BillingOrders = Db.find(sql + condition +" group by cargo_name , customer_id" +sLimit);
+        List<Record> BillingOrders = Db.find(sql + condition +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));

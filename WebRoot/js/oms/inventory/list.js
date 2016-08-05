@@ -55,6 +55,18 @@ $(document).ready(function() {
         searchData(); 
     })
     
+    var showItem = 'N';
+    $('#itemBtn').on('click',function(){
+        if(showItem=='N'){
+        	showItem = 'Y';
+        	$(this).text('显示统计');
+        }else{
+        	showItem = 'N';
+        	$(this).text('显示明细');
+        }
+        searchData();
+    })
+    
     buildCondition=function(){
     	var item = {};
     	var orderForm = $('#orderForm input,select');
@@ -70,7 +82,7 @@ $(document).ready(function() {
 
     var searchData=function(){
     	var itemJson = buildCondition();
-    	var url = "/inventory/list?jsonStr="+JSON.stringify(itemJson);
+    	var url = "/inventory/list?jsonStr="+JSON.stringify(itemJson)+"&showItem="+showItem;
         dataTable.ajax.url(url).load();
     };
     
