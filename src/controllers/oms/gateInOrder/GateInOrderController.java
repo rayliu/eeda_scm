@@ -150,6 +150,7 @@ public class GateInOrderController extends Controller {
     		Double amount = re.getDouble("received_amount");
     		for (int i = 0; i < amount; i++) {
     			inv = new Inventory();
+    			inv.set("gate_in_order_id", order_id);
     			inv.set("customer_id", gir.getLong("customer_id"));
         		inv.set("warehouse_id", gir.getLong("warehouse_id"));
         		inv.set("gate_in_stamp", gir.getTimestamp("gate_in_date"));

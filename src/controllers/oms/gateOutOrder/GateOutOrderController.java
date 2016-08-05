@@ -169,9 +169,10 @@ public class GateOutOrderController extends Controller {
     	for(Record re :res){
     		String cargo_name = re.getStr("cargo_name");
     		int amount = ((int)(re.getDouble("packing_amount")*100))/100;
-    		String sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount) > 0 limit 0,?";
+    		String sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount) > 0 order by shelf_life  limit 0,?";
     		List<Inventory> invs = Inventory.dao.find(sql,cargo_name,amount);
     		for(Inventory inv : invs){
+    			inv.set("gate_out_order_id", order_id);
         		inv.set("gate_out_stamp", goo.getTimestamp("gate_out_date"));
         		inv.set("gate_out_amount", 1);
         		inv.update();
@@ -180,31 +181,6 @@ public class GateOutOrderController extends Controller {
     }
     
     
-    @Before(Tx.class)
-    public void gateIn(String order_id){
-    	GateInOrder gir = GateInOrder.dao.findById(order_id);
-    	List<Record> res = Db.find("select * from gate_in_order_item where order_id = ?",order_id);
-    	long user_id = LoginUserController.getLoginUserId(this);
-    	for(Record re :res){
-    		Inventory inv = null;
-    		Double amount = re.getDouble("received_amount");
-    		for (int i = 0; i < amount; i++) {
-    			inv = new Inventory();
-    			inv.set("customer_id", gir.getLong("customer_id"));
-        		inv.set("warehouse_id", gir.getLong("warehouse_id"));
-        		inv.set("gate_in_stamp", gir.getTimestamp("gate_in_date"));
-        		inv.set("cargo_name", re.getStr("cargo_name"));
-        		inv.set("cargo_code", re.getStr("item_code"));
-        		inv.set("shelves", null);
-        		inv.set("unit", re.getStr("packing_unit"));
-        		inv.set("gate_in_amount", 1);
-        		inv.set("create_stamp", new Date());
-        		inv.set("create_by", user_id);
-        		inv.save();
-			}
-    	}
-    }
-
     @Before(Tx.class)
     public void cancelOrder() throws Exception{
     	String order_id = getPara("params");

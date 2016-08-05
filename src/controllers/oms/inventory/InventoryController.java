@@ -2,24 +2,12 @@ package controllers.oms.inventory;
 
 import interceptor.SetAttrLoginUserInterceptor;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
-import models.Party;
-import models.UserLogin;
 import models.eeda.OrderActionLog;
-import models.eeda.oms.GateInOrder;
-import models.eeda.oms.GateInOrderItem;
-import models.eeda.oms.SalesOrderCount;
-import models.eeda.oms.SalesOrderGoods;
-import models.eeda.oms.SalesOrder;
-import models.eeda.profile.CustomCompany;
-import models.eeda.profile.Warehouse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -34,13 +22,7 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
-import controllers.oms.custom.dto.DingDanDto;
-import controllers.oms.custom.dto.DingDanGoodsDto;
-import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
-import controllers.util.EedaHttpKit;
-import controllers.util.MD5Util;
-import controllers.util.OrderNoGenerator;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -92,7 +74,7 @@ public class InventoryController extends Controller {
         		+ "  (case when (inv.gate_in_amount-inv.gate_out_amount)>0"
         		+ "  then '在库'"
         		+ "  else"
-        		+ "  '已出库' end) cartgo_status"
+        		+ "  '已出库' end) cargo_status"
     			+ "  from inventory inv "
     			+ "  left join warehouse wh on wh.id = inv.warehouse_id"
     			+ "  left join party p on p.id = inv.customer_id"
