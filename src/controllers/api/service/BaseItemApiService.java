@@ -1,13 +1,12 @@
 package controllers.api.service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
 import models.Party;
-import models.eeda.OrderActionLog;
 import models.eeda.profile.Product;
 
 import org.apache.log4j.Logger;
@@ -79,7 +78,7 @@ public class BaseItemApiService {
         // 校验sign
         String ref_item_no = itemDto.get("ref_item_no").toString();
         String appkey = itemDto.get("appkey").toString();
-        String salt = itemDto.get("salt").toString();
+        String salt = new BigDecimal((Double) itemDto.get("salt")).toString();
         String sign = itemDto.get("sign").toString();
         
         String paraStr = "ref_item_no="+ref_item_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
@@ -162,7 +161,7 @@ public class BaseItemApiService {
         // 校验sign
         String ref_item_no = itemDto.get("ref_item_no").toString();
         String appkey = itemDto.get("appkey").toString();
-        String salt = itemDto.get("salt").toString();
+        String salt = new BigDecimal((Double) itemDto.get("salt")).toString();
         String sign = itemDto.get("sign").toString();
         
         String paraStr = "ref_item_no="+ref_item_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;

@@ -1,5 +1,6 @@
 package controllers.api.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -71,7 +72,7 @@ public class SalesOrderService {
      // 校验sign
         String ref_order_no = soDto.get("ref_order_no").toString();
         String appkey = soDto.get("appkey").toString();
-        String salt = soDto.get("salt").toString();
+        String salt = new BigDecimal((Double) soDto.get("salt")).toString();
         String sign = soDto.get("sign").toString();
         
         String paraStr = "ref_order_no="+ref_order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
@@ -169,7 +170,7 @@ public class SalesOrderService {
         // 校验sign
         String ref_order_no = itemDto.get("ref_order_no").toString();
         String appkey = itemDto.get("appkey").toString();
-        String salt = itemDto.get("salt").toString();
+        String salt = new BigDecimal((Double) itemDto.get("salt")).toString();
         String sign = itemDto.get("sign").toString();
         
         String paraStr = "ref_order_no="+ref_order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
