@@ -1,0 +1,48 @@
+<div class="form-group">
+    <div class="input-date">
+        <label class="search-label">${label}
+        <%if(required!'' =='required'){%>
+        <span style='color:red; display:initial;'>*</span>
+        <%}%></label>
+    	<input type="${type!'text'}" 
+    	id="${id}_begin" 
+    	name="${id}_begin_name" 
+		class="form-control search-control" 
+		
+		placeholder="${placeholder!''}" 
+		value="${begin_value !''}" 
+		autocomplete="${autocomplete!'off'}" 
+		style="width:24%"
+		${required!''} 
+		${disabled!''}>
+    </div>
+    — 至  —
+    <div class="input-date" >
+    	<input type="${type!'text'}" 
+    	id="${id}_end" 
+    	name="${id}_end_name" 
+		class="form-control search-control" 
+		
+		placeholder="${placeholder!''}" 
+		value="${end_value !''}" 
+		autocomplete="${autocomplete!'off'}" 
+		style="width:24%"
+		${required!''} 
+		${disabled!''}>
+		<% var d=disabled!'';
+        if(d!='disabled'){%>    
+    <a id="${id}_remove" href="#" class="remove">
+        <span id="${id}_remove_icon" class="glyphicon glyphicon-remove form-control-feedback" style="top: 0px; opacity: .5;" aria-hidden="true"></span>
+    </a>
+    <%}%>
+    </div>
+    
+</div>
+<% if(d!='disabled'){%>    
+    <script type="text/javascript">
+        $('#${id}_remove').on('click', function(e){
+        	e.preventDefault();
+            $(this).parent().find('input').val('');
+        });
+    </script>
+<%}%>
