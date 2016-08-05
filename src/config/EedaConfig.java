@@ -31,6 +31,8 @@ import models.eeda.oms.InventoryOrder;
 import models.eeda.oms.InventoryOrderItem;
 import models.eeda.oms.LoadOrder;
 import models.eeda.oms.LogisticsOrder;
+import models.eeda.oms.MoveOrder;
+import models.eeda.oms.MoveOrderItem;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
@@ -80,6 +82,7 @@ import controllers.oms.inventory.InventoryController;
 import controllers.oms.inventoryOrder.copy.InventoryOrderController;
 import controllers.oms.loadOrder.LoadOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
+import controllers.oms.moveOrder.MoveOrderController;
 import controllers.oms.orderStatus.OrderStatusController;
 import controllers.oms.salesOrder.SalesOrderController;
 import controllers.oms.waveOrder.WaveOrderController;
@@ -204,7 +207,7 @@ public class EedaConfig extends JFinalConfig {
 		//库存管理
 		me.add("/inventory", InventoryController.class, contentPath);
         me.add("/inventoryOrder", InventoryOrderController.class, contentPath);
-
+        me.add("/moveOrder", MoveOrderController.class, contentPath);
 		me.add("/m", MobileController.class, contentPath);
 	}
 
@@ -283,6 +286,8 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("inventory", Inventory.class);
         arp.addMapping("inventory_order", InventoryOrder.class);
         arp.addMapping("inventory_order_item", InventoryOrderItem.class);
+        arp.addMapping("move_order", MoveOrder.class);
+        arp.addMapping("move_order_item", MoveOrderItem.class);
 
     }
 

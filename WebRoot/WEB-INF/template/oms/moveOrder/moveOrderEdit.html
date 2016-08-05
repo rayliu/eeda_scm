@@ -1,0 +1,125 @@
+<%layout("/yh/layout.html"){%>
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/yh/css/ui/jquery-ui.css">
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+<link
+	href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css"
+	rel="stylesheet">
+<div id="page-wrapper">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="btn-header" style="font-size: 32px">移库操作</div>
+		</div>
+	</div>
+	<input id="order_id" type="hidden" name="order_id" value="${order.id!''}" />
+	<div class="form-group">
+		<form id="orderForm">
+			<div class="row">
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", { id:'order_no',
+					label:'移库号', value:order.order_no!'',disabled: 'disabled'
+					}){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputWarehouseField.html", {
+					id:'warehouse_id', label:'仓库', 
+					value:order.warehouse_id!'', display_value: warehouse.warehouse_name!'' }){}
+					%></div>
+				
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-12">
+					<h3>基础信息</h3>
+				</div>
+			</div>
+			<div class="row">
+				<!--  第4行  -->
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'creator_name', label:'创建人', value:user.c_name!'', disabled:
+					'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'create_stamp', label:'创建时间', value:order.create_stamp!'',
+					disabled: 'disabled' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputField.html", {
+					id:'status', label:'状态', value:order.status!'',
+					disabled: 'disabled' }){}%></div>
+			</div>
+			
+			<div class="row">
+				<div class="col-lg-12">
+					<label>备注</label>
+					<textarea id='remark' class="form-control" rows="3" name="note">${order.remark!''}</textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+	
+
+	<div class="form-group" style="margin-top: 15px">
+		<ul id="orderTabs" class="nav nav-tabs">
+			<li class="active"><a href="#itemDetail" data-toggle="tab">扫描信息</a>
+			</li>
+		</ul>
+
+		<div class="tab-content">
+			<div class="tab-pane fade active in" id="itemDetail">
+				<div class="form-group">
+					<div class="col-lg-12">
+						<button class="btn btn-success btn-xs" id="add_cargo">添加</button>
+						<%include("/yh/component/form/detailTable.html", {
+						id:'cargo_table', 
+						headers:['','条码', '货品名称','数量','原仓库','原库位','移至仓库','移至库位','备注'],
+						field_list:['','cargo_bar_code', 'cargo_name', 'amount','warehouse_id','shelves','to_warehouse_id','to_shelves','remark'], 
+						value_list: itemList![] }){} %>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<div class="row">
+		<div class="col-lg-12">
+			<a id='saveBtn' class="btn  btn-primary" disabled href="#">保存</a> 
+			<a id='confirmBtn' class="btn  btn-primary" disabled href="#">确认</a> 
+			<button id="printBtn" type="button" class="btn  btn-primary"
+				data-toggle="modal" data-target=".bs-example-modal-sm">打印</button>
+			<a class="btn  btn-default" href="/moveOrder">返回</a>
+		</div>
+		<!-- /.col-lg-12 -->
+	</div>
+
+
+</div>
+<!--  form row  -->
+<!-- /#page-wrapper -->
+<%}%>
+
+<%include("/yh/component/jsTemplate/tableInputDateField.js",{}){} %>
+
+<script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
+<script
+	src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+
+<!-- 引入校验的js 文件及其 中文 文件-->
+<script src="/yh/js/jquery.validate.min.js"></script>
+<script src="/yh/js/jvalidate.messages_cn.js"></script>
+
+<script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
+<script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+
+<script src="/yh/js/eeda-common.js"></script>
+<script src="/js/eeda/aui-artTemplate-3/template-debug.js"></script>
+<script src="/js/eeda/aui-artTemplate-3/template.js"></script>
+
+
+<script>
+    var order_no = '${order.order_no!'移库单编辑'}'; 
+    var itemOrder = {};
+</script>
+<script src="/js/oms/moveOrder/edit_item_table.js"></script>
+<script src="/js/oms/moveOrder/edit.js"></script>
