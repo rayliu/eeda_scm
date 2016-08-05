@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import models.Party;
 import models.eeda.profile.Product;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
@@ -218,13 +219,20 @@ public class BaseItemApiService {
         p.set("custom_list_item_no", itemDto.get("custom_list_item_no").toString());
         
         p.set("unit", itemDto.get("unit").toString());
-        p.set("currency", itemDto.get("currency").toString());
-        p.set("price", itemDto.get("price").toString());
-        p.set("length", itemDto.get("length").toString());
-        p.set("width", itemDto.get("width").toString());
-        p.set("height", itemDto.get("height").toString());
-        p.set("volume", itemDto.get("volume").toString());
-        p.set("weight", itemDto.get("weight").toString());
+        if(StringUtils.isNotEmpty(itemDto.get("currency").toString()))
+        	p.set("currency", itemDto.get("currency").toString());
+        if(StringUtils.isNotEmpty(itemDto.get("price").toString()))
+        	p.set("price", itemDto.get("price").toString());
+        if(StringUtils.isNotEmpty(itemDto.get("length").toString()))
+        	p.set("length", itemDto.get("length").toString());
+        if(StringUtils.isNotEmpty(itemDto.get("width").toString()))
+        	p.set("width", itemDto.get("width").toString());
+        if(StringUtils.isNotEmpty(itemDto.get("height").toString()))
+        	p.set("height", itemDto.get("height").toString());
+        if(StringUtils.isNotEmpty(itemDto.get("volume").toString()))
+        	p.set("volume", itemDto.get("volume").toString());
+        if(StringUtils.isNotEmpty(itemDto.get("weight").toString()))
+        	p.set("weight", itemDto.get("weight").toString());
         
         p.save();
 
