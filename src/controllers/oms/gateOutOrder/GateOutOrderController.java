@@ -151,9 +151,10 @@ public class GateOutOrderController extends Controller {
     	for(Record re :res){
     		String cargo_name = re.getStr("cargo_name");
     		int amount = ((int)(re.getDouble("packing_amount")*100))/100;
-    		String sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount - lock_amount) > 0 limit 0,?";
+    		String sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount - lock_amount) > 0 order by shelf_life limit 0,?";
     		List<Inventory> invs = Inventory.dao.find(sql,cargo_name,amount);
     		for(Inventory inv : invs){
+    			inv.set("gate_out_order_id", order_id);
         		inv.set("lock_stamp", new Date());
         		inv.set("lock_amount", 1);
         		inv.update();
@@ -172,7 +173,7 @@ public class GateOutOrderController extends Controller {
     		String sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount) > 0 order by shelf_life  limit 0,?";
     		List<Inventory> invs = Inventory.dao.find(sql,cargo_name,amount);
     		for(Inventory inv : invs){
-    			inv.set("gate_out_order_id", order_id);
+    			inv.set("lock_amount", 0);
         		inv.set("gate_out_stamp", goo.getTimestamp("gate_out_date"));
         		inv.set("gate_out_amount", 1);
         		inv.update();
