@@ -9,51 +9,6 @@ $(document).ready(function() {
         $('#total_amount').text($(this).val());
     });
     
-    
-    //form表单校验
-/*	 $("#orderForm").validate({
-	        rules: {
-	        	consignee_id_name:{
-	        		rangelength:[15,18],
-	        		
-	        	},
-				currency_name:{
-			 		required: true,
-			 		rangelength:[3,3]				//输入长度最小是 10 的字符串
-			 	},
-			 	consignee_country_name:{
-			 		rangelength:[3,3]
-			 	},
-			 	province_name:{
-			 		rangelength:[6,6]
-			 	},
-			 	city_name:{
-			 		rangelength:[6,6]
-			 	},
-			 	district_name:{
-			 		rangelength:[6,6]
-			 	},
-			 	pay_no_name:{
-			 		minlength: 5
-		        },
-		        consignee_type_name:{
-		        	rangelength:[1,1]
-		        }
-	        },
-	        messages: {
-	        	consignee_id_name: "身份证号码长度为15位或18位",
-	        	currency_name: "长度必须为3位字符",
-	        	consignee_country_name: "长度必须为3位字符",
-	        	province_name: "长度必须为6位字符",
-	        	city_name: "长度必须为6位字符",
-	        	district_name: "长度必须为6位字符",
-	        	pay_no_name: "长度不能小于5位字符",
-	        	consignee_type_name: "长度必须为1位字符"
-	        }
-	       
-	 });*/
-
-
     //------------save
     $('#saveBtn').click(function(e){
         //阻止a 的默认响应行为，不需要跳转
@@ -68,7 +23,7 @@ $(document).ready(function() {
         var items_array = inspectionOrder.buildItemDetail();
         var order = {
             id: $('#order_id').val(),
-            gate_in_id: $('#gate_in_id').val(),
+            gate_in_order_id: $('#gate_in_order_id').val(),
             warehouse_id: $('#warehouse_id').val(),  
             warehouse_area: $('#warehouse_area').val(),  
             inspection_packing_unit: $('#inspection_packing_unit').val(),  

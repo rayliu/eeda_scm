@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import models.UserLogin;
+import models.eeda.oms.GateInOrder;
 import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.InspectionOrderItem;
 import models.eeda.oms.SalesOrder;
@@ -88,6 +89,11 @@ public class InspectionOrderController extends Controller {
    			id = inspectionOrder.getLong("id").toString();
    		}
    		
+   		String gate_in_order_id = (String) dto.get("gate_in_order_id");
+   		GateInOrder gor = GateInOrder.dao.findById(gate_in_order_id);
+   		gor.set("inspection_flag", "Y");
+   		gor.update();
+   		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
 		DbUtils.handleList(itemList, id, InspectionOrderItem.class, "order_id");
 		
@@ -142,7 +148,7 @@ public class InspectionOrderController extends Controller {
         String sql = "select * from(SELECT inso.*,gio.order_no gate_in_no, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
     			+ "  from inspection_order inso "
     			+ "  left join warehouse wh on wh.id = inso.warehouse_id"
-    			+ "  left join gate_in_order gio on gio.id = inso.gate_in_id"
+    			+ "  left join gate_in_order gio on gio.id = inso.gate_in_order_id"
     			+ "  left join user_login u on u.id = inso.create_by"
     			+ "  ) A where 1 =1 ";
         

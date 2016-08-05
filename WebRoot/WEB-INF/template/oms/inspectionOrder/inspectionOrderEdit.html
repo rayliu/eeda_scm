@@ -19,9 +19,9 @@
 		<form id="orderForm">
 			<div class="row">
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputOrderNoField.html", { id:'gate_in_id',
-					label:'入库通知单号', value:gate_in_id!'',table:'gate_in_order',
-					display_value:order.gate_in_no!'',condition:" and status = '已确认'"
+					<%include("/yh/component/form/inputOrderNoField.html", { id:'gate_in_order_id',
+					label:'入库通知单号', value:gate_in_order_id!'',table:'gate_in_order',
+					display_value:order.gate_in_no!'',condition:" and status = '已确认' and inspection_flag ='N'"
 					}){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputWarehouseField.html", {
