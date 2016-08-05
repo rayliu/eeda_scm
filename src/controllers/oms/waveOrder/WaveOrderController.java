@@ -205,11 +205,12 @@ public class WaveOrderController extends Controller {
     	if(StringUtils.isNotEmpty(order_id)){
     		list = getItems(order_id);
     	}else if(StringUtils.isNotEmpty(order_ids)){
-    		String sql = "select null id ,goo.order_no gate_out_no ,gooi.bar_code cargo_bar_code ,goo.customer_refer_no sales_order_no,gooi.shelves,gooi.packing_amount amount,"
-    				+ " gooi.item_code ,null order_no_code"
-    				+ " from gate_out_order goo "
-    				+ " left join gate_out_order_item gooi on gooi.order_id = goo.id"
-    				+ " where goo.id in ("+ order_ids +") order by shelves";
+    		String sql = "SELECT NULL id, goo.order_no gate_out_no, inv.cargo_code cargo_bar_code,"
+    				+ " goo.customer_refer_no sales_order_no, inv.shelves, inv.lock_amount amount,"
+    				+ " null item_code, NULL order_no_code"
+    				+ " FROM inventory inv LEFT JOIN gate_out_order goo on goo.id = inv.gate_out_order_id"
+    				+ " WHERE inv.gate_out_order_id IN ("+order_ids+") "
+    				+ " ORDER BY inv.shelves";
     		list = Db.find(sql);
     	}
     		
