@@ -617,7 +617,7 @@
                 "sign": {
                     "type": "string",
                     "description": "MD5",
-                    "example": "4C23F5A2CA98A42F57C51C26B704D374"
+                    "example": "279A8433CFBAB037B1615616E3162A8B"
                 }
             }
         },
@@ -707,7 +707,7 @@
                 "sign": {
                     "type": "string",
                     "description": "MD5",
-                    "example": "4C23F5A2CA98A42F57C51C26B704D374"
+                    "example": "279A8433CFBAB037B1615616E3162A8B"
                 }
             }
         },

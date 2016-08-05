@@ -170,7 +170,7 @@ public class SalesOrderService {
         // 校验sign
         String ref_order_no = itemDto.get("ref_order_no").toString();
         String appkey = itemDto.get("appkey").toString();
-        String salt = new BigDecimal((Double) itemDto.get("salt")).toString();
+        String salt = itemDto.get("salt").toString();
         String sign = itemDto.get("sign").toString();
         
         String paraStr = "ref_order_no="+ref_order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
