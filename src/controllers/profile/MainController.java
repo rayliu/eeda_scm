@@ -354,7 +354,7 @@ public class MainController extends Controller {
     }
     
     @Before(SetAttrLoginUserInterceptor.class)
-    public void m() {
+    public void module() {
         String module_id = getPara(0);
         String param1 = getPara(1);
         
