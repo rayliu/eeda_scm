@@ -65,8 +65,8 @@ public class CustomJob implements Runnable {
 	    logger.debug("更新单据状态结束");
 	}
 	
-	public String statusShow(String status){ 
-    	String massage = null;
+	public static String statusShow(String status){ 
+    	String massage = "";
     	if("10".equals(status)){
     		massage = "未发送";
     	}else if("20".equals(status)){

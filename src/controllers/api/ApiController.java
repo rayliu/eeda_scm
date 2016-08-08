@@ -31,6 +31,7 @@ import org.apache.shiro.subject.Subject;
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
@@ -45,6 +46,7 @@ import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
+import controllers.yh.job.CustomJob;
 
 //@RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -127,5 +129,35 @@ public class ApiController extends Controller {
         }  
         return sb.toString(); 
     }
-  
+    
+    //当订单状态发生变化时, 调用第3方系统的API, 通知变化
+    public void orderNotifyCallback(){
+        String order_id = getPara("order_id");
+        Record rec = Db.findFirst("select * from sales_order where id=?", order_id);
+        String urlStr=PropKit.use("app_config.txt").get("ybcEdiUrl")+"/orderNotify";
+        String appKey =PropKit.use("app_config.txt").get("ybcAppKey");
+        long salt = new Date().getTime();
+        String paraStr = "ref_order_no="+rec.getStr("order_no")+"&appkey="+appKey+"&salt="+salt;
+        String sign = MD5Util.encodeByMD5(paraStr).toUpperCase();
+        
+        Record jsonRec = new Record();
+        jsonRec.set("ref_order_no", rec.get("ref_order_no", ""));
+        jsonRec.set("order_cus_status_code", rec.get("order_cus_status_code", ""));
+        jsonRec.set("order_cus_status_msg", CustomJob.statusShow(rec.get("order_cus_status_code", "").toString()));
+        jsonRec.set("order_ciq_status_code", rec.get("order_ciq_status_code", ""));
+        jsonRec.set("order_ciq_status_msg", CustomJob.statusShow(rec.get("order_ciq_status_code", "").toString()));
+        jsonRec.set("order_pay_status_code", rec.get("order_pay_status_code", ""));
+        jsonRec.set("order_pay_status_msg", CustomJob.statusShow(rec.get("order_pay_status_code", "").toString()));
+        jsonRec.set("appkey", appKey);
+        jsonRec.set("salt", salt);
+        jsonRec.set("sign", sign);
+        
+        System.out.println("参数:"+jsonRec.toJson());
+        String returnMsg = EedaHttpKit.post(urlStr, jsonRec.toJson());
+        System.out.println("结果"+returnMsg);
+        
+        CustomJob.operationLog("salesOrder", jsonRec.toJson(), order_id, "orderNotify", LoginUserController.getLoginUserId(this).toString());
+        
+        renderJson(returnMsg);
+    }
 }
