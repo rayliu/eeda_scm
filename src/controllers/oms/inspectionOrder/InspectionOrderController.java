@@ -49,7 +49,7 @@ public class InspectionOrderController extends Controller {
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
 	public void index() {
 		render("/oms/inspectionOrder/inspectionOrderList.html");
-	}
+	} 
 	
     public void create() {
         render("/oms/inspectionOrder/inspectionOrderEdit.html");
