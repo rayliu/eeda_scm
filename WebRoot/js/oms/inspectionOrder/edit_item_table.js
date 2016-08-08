@@ -2,9 +2,11 @@
 $(document).ready(function() {
 
     var deletedTableIds=[];
+    var table_name = 'item_table';
+    var addBtn_id = 'add_item';
 
     //删除一行
-    $("#item_table").on('click', '.delete', function(e){
+    $("#"+table_name).on('click', '.delete', function(e){
         e.preventDefault();
         var tr = $(this).parent().parent();
         deletedTableIds.push(tr.attr('id'))
@@ -12,8 +14,8 @@ $(document).ready(function() {
         itemTable.row(tr).remove().draw();
     }); 
 
-    inspectionOrder.buildItemDetail=function(){
-        var item_table_rows = $("#item_table tr");
+    itemOrder.buildItemDetail=function(){
+        var item_table_rows = $("#"+table_name+" tr");
         var items_array=[];
         for(var index=0; index<item_table_rows.length; index++){
             if(index==0)
@@ -28,14 +30,17 @@ $(document).ready(function() {
             if(!id){
                 id='';
             }
-            var item={
-                id: id,
-                bar_code: $(row.children[1]).find('input').val(), 
-                item_code: $(row.children[2]).find('input').val(), 
-                guarantee_date: $(row.children[3]).find('input').val(), 
-                shelves: $(row.children[4]).find('input').val(),
-                action: id.length>0?'UPDATE':'CREATE'
-            };
+            
+            var item={}
+            item.id = id;
+            for(var i = 1; i < row.childNodes.length; i++){
+            	var name = $(row.childNodes[i]).find('input').attr('name');
+            	var value = $(row.childNodes[i]).find('input').val();
+            	if(name){
+            		item[name] = value;
+            	}
+            }
+            item.action = id.length > 0?'UPDATE':'CREATE';
             items_array.push(item);
         }
 
@@ -52,22 +57,7 @@ $(document).ready(function() {
         return items_array;
     };
     
-    inspectionOrder.reDrawCargoTable=function(order){
-        deletedTableIds=[];
-        cargoTable.clear();
-        for (var i = 0; i < order.ITEM_LIST.length; i++) {
-            var item = order.ITEM_LIST[i];
-            var item={
-                "ID": item.ID,
-                "BAR_CODE": item.BAR_CODE,
-                "ITEM_CODE": item.ITEM_CODE,
-                "GUARANTEE_DATE": item.GUARANTEE_DATE,
-                "SHELVES": item.SHELVES
-            };
-    
-            cargoTable.row.add(item).draw(false);
-        }       
-    };
+
 
     var bindFieldEvent=function(){
     	$('table .date').datetimepicker({  
@@ -81,7 +71,7 @@ $(document).ready(function() {
     };
     
     //------------事件处理
-    var itemTable = $('#item_table').DataTable({
+    var itemTable = $("#"+table_name).DataTable({
         "processing": true,
         "searching": false,
         "paging": false,
@@ -106,14 +96,35 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control bar_code" required/>';
+                    return '<input type="text" name="bar_code" value="'+data+'" class="form-control bar_code" />';
+                }
+            },
+            { "data": "CARGO_NAME", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" />';
+                }
+            },
+            { "data": "CARTON_NO", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="carton_no" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "ITEM_CODE", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" name="item_code"  value="'+data+'" class="form-control" />';
+                }
+            },
+            { "data": "AMOUNT", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="amount" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "GUARANTEE_DATE", 
@@ -123,18 +134,18 @@ $(document).ready(function() {
             		    var field_html = template('table_date_field_template',
 		                    {
 		                        id: 'GUARANTEE_DATE',
+		                        name:'guarantee_date',
 		                        value: data.substr(0,19)
 		                    }
 		                );
 	                    return field_html;
-                    //return '<input type="text" value="'+data+'" class="form-control" required/>';
                 }
             },
-            { "data": "SHELVES", 
+            { "data": "SHELVES", "visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" name="shelves" value="'+data+'" class="form-control" />';
                 }
             }
         ]
@@ -146,16 +157,16 @@ $(document).ready(function() {
     });
     
     //回车自动添加一行
-    $("#item_table").on('keydown', '.bar_code', function(e){
+    $("#"+table_name).on('keydown', '.bar_code', function(e){
         var key = e.which;
         if (key == 13) {
-        	$('#add_item').click();
+        	 $('#'+addBtn_id).click();
             $(this).parent().parent().next().find('.bar_code').focus();
         }
     });
     
     //刷新明细表
-    inspectionOrder.refleshTable = function(order_id){
+    itemOrder.refleshTable = function(order_id){
     	var url = "/inspectionOrder/tableList?order_id="+order_id
         +"&table_type=item";
     	itemTable.ajax.url(url).load();

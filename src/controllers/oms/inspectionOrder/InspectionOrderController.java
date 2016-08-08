@@ -90,9 +90,12 @@ public class InspectionOrderController extends Controller {
    		}
    		
    		String gate_in_order_id = (String) dto.get("gate_in_order_id");
-   		GateInOrder gor = GateInOrder.dao.findById(gate_in_order_id);
-   		gor.set("inspection_flag", "Y");
-   		gor.update();
+   		if(StringUtils.isNotEmpty(gate_in_order_id)){
+   			GateInOrder gor = GateInOrder.dao.findById(gate_in_order_id);
+   	   		gor.set("inspection_flag", "Y");
+   	   		gor.update();
+   		}
+   		
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
 		DbUtils.handleList(itemList, id, InspectionOrderItem.class, "order_id");

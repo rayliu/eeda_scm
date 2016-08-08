@@ -20,7 +20,7 @@ $(document).ready(function() {
         
         $(this).attr('disabled', true);
 
-        var items_array = inspectionOrder.buildItemDetail();
+        var items_array = itemOrder.buildItemDetail();
         var order = {
             id: $('#order_id').val(),
             gate_in_order_id: $('#gate_in_order_id').val(),
@@ -50,7 +50,7 @@ $(document).ready(function() {
                 $('#saveBtn').attr('disabled', false);
                 
                 //异步刷新明细表
-                inspectionOrder.refleshTable(order.ID);
+                itemOrder.refleshTable(order.ID);
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);
@@ -83,8 +83,8 @@ $(document).ready(function() {
 	 });
 	
     
-    $('#gate_in_id_list').on('click',function(){
-    	$.post('/inspectionOrder/queryAmount',{gate_in_id:$('#gate_in_id').val()},function(data){
+    $('#gate_in_order_id_list').on('click',function(){
+    	$.post('/inspectionOrder/queryAmount',{gate_in_id:$('#gate_in_order_id').val()},function(data){
     		if(data)
     			$('#can_check').val(data.AMOUNT);
     	})

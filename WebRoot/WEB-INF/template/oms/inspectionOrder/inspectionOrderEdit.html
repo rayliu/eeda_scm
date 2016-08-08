@@ -20,7 +20,7 @@
 			<div class="row">
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputOrderNoField.html", { id:'gate_in_order_id',
-					label:'入库通知单号', value:gate_in_order_id!'',table:'gate_in_order',
+					label:'入库通知单号',required:'required', value:gate_in_order_id!'',table:'gate_in_order',
 					display_value:order.gate_in_no!'',condition:" and status = '已确认' and inspection_flag ='N'"
 					}){}%></div>
 				<div class="col-lg-4">
@@ -110,7 +110,7 @@
 						<%include("/yh/component/form/detailTable.html", {
 						id:'item_table', 
 						headers:['', 
-						'条码', '货品代码','保质日期','库位'],
+						'商品条码','商品名称','纸箱编号','货品代码','数量','保质日期','库位'],
 						field_list:['','bar_code', 'item_code', 'guarantee_date','shelves'], 
 						value_list: itemList![] }){} %>
 					</div>
@@ -158,8 +158,8 @@
 
 
 <script>
-    var order_no = '${order.order_no!'入库通知单编辑'}'; 
-    var inspectionOrder = {};
+    var order_no = '${order.order_no!'验货单编辑'}'; 
+    var itemOrder = {};
 </script>
 <script src="/js/oms/inspectionOrder/edit_item_table.js"></script>
 <script src="/js/oms/inspectionOrder/edit.js"></script>
