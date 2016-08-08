@@ -40,7 +40,8 @@
   woi.item_code,
   woi.amount,
   woi.shelves,
-  woi.cargo_bar_code
+  woi.cargo_bar_code,
+  woi.cargo_name
 FROM
 	wave_order wo
 LEFT JOIN user_login ul ON wo.create_by = ul.id
@@ -75,6 +76,9 @@ where order_no=$P{order_no};]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="cargo_bar_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cargo_name" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<variable name="id_1" class="java.lang.Long" resetType="Page" calculation="Sum">
@@ -146,42 +150,42 @@ where order_no=$P{order_no};]]>
 				<text><![CDATA[序号]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_CH" x="30" y="108" width="118" height="20" uuid="fa8b0ddc-ca86-4204-ba26-fcae9f153c6a"/>
+				<reportElement style="table_CH" x="348" y="108" width="118" height="20" uuid="fa8b0ddc-ca86-4204-ba26-fcae9f153c6a"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="宋体" size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<text><![CDATA[出库单号]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_CH" x="147" y="108" width="96" height="20" uuid="743c6d01-2b5c-4d3e-8a83-41db6ff07189"/>
+				<reportElement style="table_CH" x="459" y="108" width="96" height="20" uuid="743c6d01-2b5c-4d3e-8a83-41db6ff07189"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<text><![CDATA[销售订单号]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_CH" x="244" y="108" width="98" height="20" uuid="3306ff73-f9f1-4b36-8a17-a0bfd6bfd2a8"/>
+				<reportElement style="table_CH" x="214" y="108" width="95" height="20" uuid="3306ff73-f9f1-4b36-8a17-a0bfd6bfd2a8"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<text><![CDATA[货品编码]]></text>
+				<text><![CDATA[商品名称]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_CH" x="342" y="108" width="40" height="20" uuid="181d4943-2353-4ddc-b662-069cdb01b268"/>
+				<reportElement style="table_CH" x="308" y="108" width="40" height="20" uuid="181d4943-2353-4ddc-b662-069cdb01b268"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<text><![CDATA[数量]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_CH" x="382" y="108" width="68" height="20" uuid="4e6666cd-876f-429c-b737-3dd15a68af85"/>
+				<reportElement style="table_CH" x="30" y="108" width="68" height="20" uuid="4e6666cd-876f-429c-b737-3dd15a68af85"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<text><![CDATA[库位]]></text>
 			</staticText>
 			<staticText>
-				<reportElement style="table_CH" x="450" y="108" width="105" height="20" uuid="9c29b4c6-baee-48f0-95c9-e3082ff95c80"/>
+				<reportElement style="table_CH" x="98" y="108" width="116" height="20" uuid="9c29b4c6-baee-48f0-95c9-e3082ff95c80"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="13" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
@@ -250,73 +254,67 @@ where order_no=$P{order_no};]]>
 		<band splitType="Stretch"/>
 	</columnHeader>
 	<detail>
-		<band height="50" splitType="Stretch">
+		<band height="40" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="244" y="5" width="98" height="20" uuid="1d2be19c-0a11-44cd-bf28-a590ed79189f"/>
+				<reportElement x="106" y="22" width="103" height="15" uuid="1d2be19c-0a11-44cd-bf28-a590ed79189f"/>
 				<textElement textAlignment="Center">
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{item_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="342" y="5" width="40" height="20" uuid="d3d0b956-d883-47d4-b921-958f4ac2cb63"/>
+				<reportElement x="308" y="6" width="41" height="20" uuid="d3d0b956-d883-47d4-b921-958f4ac2cb63"/>
 				<textElement textAlignment="Center">
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
-			<textField isBlankWhenNull="true">
-				<reportElement x="453" y="21" width="101" height="14" uuid="f51b6f86-e009-46db-b0c8-c32d78cd0eff"/>
-				<textElement>
-					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{cargo_bar_code}]]></textFieldExpression>
-			</textField>
 			<componentElement>
-				<reportElement x="451" y="5" width="103" height="18" uuid="df67b597-98f7-4782-bcf2-9a4c4db89b87"/>
+				<reportElement x="99" y="6" width="115" height="18" uuid="df67b597-98f7-4782-bcf2-9a4c4db89b87"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39" drawText="false" checksumRequired="false">
-					<jr:codeExpression><![CDATA[$F{cargo_bar_code}]]></jr:codeExpression>
+					<jr:codeExpression><![CDATA[$F{item_code}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<textField isBlankWhenNull="true">
-				<reportElement x="381" y="5" width="69" height="19" uuid="51dfefc8-d3e7-457f-ab8c-22bf1cae1119"/>
+				<reportElement x="30" y="6" width="69" height="19" uuid="51dfefc8-d3e7-457f-ab8c-22bf1cae1119"/>
 				<textElement textAlignment="Center">
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{shelves}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="148" y="5" width="96" height="20" uuid="3f6fc889-e10a-45b7-87e5-14071aeeab9e"/>
+				<reportElement x="460" y="6" width="96" height="20" uuid="3f6fc889-e10a-45b7-87e5-14071aeeab9e"/>
 				<textElement textAlignment="Center">
 					<font fontName="SansSerif" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sales_order_no}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="0" y="39" width="555" height="1" uuid="0e100134-2753-40b1-9834-a3a88c1a4d62"/>
+				<reportElement x="0" y="37" width="555" height="1" uuid="0e100134-2753-40b1-9834-a3a88c1a4d62"/>
 				<graphicElement>
 					<pen lineWidth="0.5"/>
 				</graphicElement>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="37" y="21" width="108" height="14" uuid="876b38fe-0f77-446a-983d-a37e45598582"/>
+				<reportElement x="352" y="6" width="108" height="18" uuid="876b38fe-0f77-446a-983d-a37e45598582"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{gate_out_no}]]></textFieldExpression>
 			</textField>
-			<componentElement>
-				<reportElement x="33" y="5" width="112" height="18" uuid="d19d2ca9-5bc9-4997-a4ba-ede46a544078"/>
-				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39" drawText="false" checksumRequired="false">
-					<jr:codeExpression><![CDATA[$F{gate_out_no}]]></jr:codeExpression>
-				</jr:barbecue>
-			</componentElement>
 			<textField>
 				<reportElement x="0" y="5" width="30" height="20" uuid="00293ab0-83ad-42a7-b498-8ac9b4dd1928"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="SansSerif" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{index}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="216" y="6" width="93" height="20" uuid="7b064d84-f914-4dae-8a6b-4931a72a3bab"/>
+				<textElement textAlignment="Center" verticalAlignment="Top">
+					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cargo_name}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
