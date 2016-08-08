@@ -36,6 +36,10 @@ $(document).ready(function() {
 	        for(var i = 0; i < data.length; i++)
 	        	warehouseList.append("<li><a tabindex='-1' class='warehouseItem'  warehouseId='"+data[i].ID+"' >"+data[i].WAREHOUSE_NAME+"</a></li>");
 	            
+	        if(data == ''){
+	        	warehouseList.append("<li><a tabindex='-1' >无数据</a></li>");
+	        }
+	        
 	        warehouseList.css({ 
 		    	left:$(me).position().left+"px", 
 		    	top:$(me).position().top+28+"px" 

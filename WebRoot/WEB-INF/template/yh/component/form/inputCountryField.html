@@ -26,6 +26,11 @@ $(document).ready(function() {
 			for(var i = 0; i < data.length; i++){
 				countryList.append("<li><a tabindex='-1' class='fromLocationItem' code ='"+data[i].CODE+"' english_name='"+ data[i].ENGLISH_NAME +"' chinese_name='"+ data[i].CHINESE_NAME+"' >" + data[i].CHINESE_NAME + "</a></li>");
 			}
+			
+			if(data == ''){
+				countryList.append("<li><a tabindex='-1' >无数据</a></li>");
+	        }
+			
 			countryList.css({ 
 	        	left:$(me).position().left+"px", 
 	        	top:$(me).position().top+28+"px" 

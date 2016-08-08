@@ -26,6 +26,11 @@ $(document).ready(function() {
 			for(var i = 0; i < data.length; i++){
 				unitList.append("<li><a tabindex='-1' class='fromLocationItem' id ='"+data[i].ID+"' name='"+ data[i].NAME +"' >" + data[i].NAME + "</a></li>");
 			}
+			
+			if(data == ''){
+				unitList.append("<li><a tabindex='-1' >无数据</a></li>");
+	        }
+			
 			unitList.css({ 
 	        	left:$(me).position().left+"px", 
 	        	top:$(me).position().top+28+"px" 

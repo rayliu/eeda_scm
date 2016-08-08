@@ -35,7 +35,11 @@ $(document).ready(function() {
 	        companyList.empty();
 	        for(var i = 0; i < data.length; i++)
 	            companyList.append("<li><a tabindex='-1' class='fromLocationItem'  customId='"+data[i].ID+"' >"+data[i].SHOP_NAME+"</a></li>");
-	            
+	          
+	        if(data == ''){
+	        	companyList.append("<li><a tabindex='-1' >无数据</a></li>");
+	        }
+	        
 	        companyList.css({ 
 		    	left:$(me).position().left+"px", 
 		    	top:$(me).position().top+28+"px" 

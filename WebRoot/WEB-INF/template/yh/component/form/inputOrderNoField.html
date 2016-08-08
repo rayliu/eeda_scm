@@ -40,7 +40,11 @@ $(document).ready(function() {
 	    	orderList.empty();
 	        for(var i = 0; i < data.length; i++)
 	        	orderList.append("<li><a tabindex='-1' class='orderItem' orderId='"+data[i].ID+"' >"+data[i].ORDER_NO+"</a></li>");
-	            
+	        
+	        if(data == ''){
+	        	orderList.append("<li><a tabindex='-1' >无数据</a></li>");
+	        }
+	        
 	        orderList.css({ 
 		    	left:$(me).position().left+"px", 
 		    	top:$(me).position().top+28+"px" 
