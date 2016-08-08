@@ -21,7 +21,7 @@
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputOrderNoField.html", { id:'gate_in_order_id',
 					label:'入库通知单号',required:'required', value:gate_in_order_id!'',table:'gate_in_order',
-					display_value:order.gate_in_no!'',condition:" and status = '已确认' and inspection_flag ='N'"
+					display_value:gateInOrder.order_no!'',condition:" and status = '已确认' and inspection_flag ='N'"
 					}){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputWarehouseField.html", {
@@ -111,7 +111,7 @@
 						id:'item_table', 
 						headers:['', 
 						'商品条码','商品名称','纸箱编号','货品代码','数量','保质日期','库位'],
-						field_list:['','bar_code', 'item_code', 'guarantee_date','shelves'], 
+						field_list:['','bar_code','cargo_name','carton_no', 'item_code', 'amount','guarantee_date','shelves'], 
 						value_list: itemList![] }){} %>
 					</div>
 				</div>

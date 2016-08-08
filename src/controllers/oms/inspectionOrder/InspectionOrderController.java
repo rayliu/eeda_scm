@@ -125,8 +125,8 @@ public class InspectionOrderController extends Controller {
     	setAttr("itemList", getInspectionItems(id));
     	
     	//获取报关企业信息
-    	CustomCompany custom = CustomCompany.dao.findById(inspectionOrder.getLong("custom_id"));
-    	setAttr("custom", custom);
+    	GateInOrder gateInOrder = GateInOrder.dao.findById(inspectionOrder.getLong("gate_in_order_id"));
+    	setAttr("gateInOrder", gateInOrder);
     	
     	//仓库回显
     	Warehouse warehouse = Warehouse.dao.findById(inspectionOrder.getLong("warehouse_id"));
