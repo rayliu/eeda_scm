@@ -16,7 +16,7 @@ $(document).ready(function() {
                     return "<a href='/salesOrder/edit?id="+full.ID+"'>"+data+"</a>";
                 }
             },
-            { "data": "CUSTOM_ID"},
+            { "data": "SHOP_NAME"},
             { "data": "PAYER_NAME"}, 
             { "data": "GOODS_VALUE"}, 
             { "data": null,
