@@ -68,7 +68,7 @@ public class InventoryController extends Controller {
         
         
 
-        String sql = "select * from ( SELECT inv.id,inv.cargo_name,inv.cargo_code,inv.unit,inv.customer_id,inv.shelf_life ,"
+        String sql = "select * from ( SELECT inv.id,inv.cargo_name,inv.cargo_barcode,inv.cargo_code,inv.unit,inv.customer_id,inv.shelf_life ,"
         		+ "  inv.shelves, sum(inv.gate_in_amount) gate_in_amount, sum(inv.gate_out_amount) gate_out_amount,sum(inv.lock_amount) lock_amount,"
         		+ "  wh.warehouse_name,p.abbr customer_name,"
         		+ "  (case when (inv.gate_in_amount-inv.gate_out_amount)>0"

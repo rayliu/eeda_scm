@@ -15,6 +15,7 @@ $(document).ready(function() {
                     return "<a href='/gateInOrder/edit?id="+full.ID+"''>"+data+"</a>";
                 }*/
             },
+            { "data": "CARGO_BARCODE"},
             { "data": "CARGO_CODE"},
             { "data": "UNIT"},
             { "data": "CUSTOMER_NAME"},
