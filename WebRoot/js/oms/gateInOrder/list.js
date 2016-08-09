@@ -16,6 +16,14 @@ $(document).ready(function() {
                     return "<a href='/gateInOrder/edit?id="+full.ID+"'>"+data+"</a>";
                 }
             },
+            { "data": "GATE_IN_DATE",
+                "render": function ( data, type, full, meta ) {
+                    if(data){
+                        data=data.substr(0,10);
+                    }
+                    return data;
+                }
+            },
             { "data": "WAREHOUSE_NAME"},
             { "data": "ORDER_TYPE"}, 
             { "data": "CREATOR_NAME"}, 
