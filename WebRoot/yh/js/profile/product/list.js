@@ -96,7 +96,7 @@ $(document).ready(function() {
             	"fnRender":function(obj){
                     var size = obj.aData.LENGTH +' x '+obj.aData.WIDTH+' x '+obj.aData.HEIGHT;
             		var str = "产品型号: "+obj.aData.ITEM_NO +'<br/>'+
-                                '产品编号: '+(obj.aData.SERIAL_NO==null?'':obj.aData.SERIAL_NO)+'<br/>'+
+                                '条码: '+(obj.aData.SERIAL_NO==null?'':obj.aData.SERIAL_NO)+'<br/>'+
                                 '产品名称: '+obj.aData.ITEM_NAME +'<br/>'+
                                 '长宽高(mm): '+size +'<br/>'+
                                 '单位: '+obj.aData.UNIT+ 

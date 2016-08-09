@@ -372,7 +372,7 @@ public class ProductController extends Controller {
             List<Category> categories = Category.dao.find("select * from category where customer_id = ?", customerId);
             if (categories.size() == 0) {
                 Category category = new Category();
-                Contact customerParty = Contact.dao
+                Party customerParty = Party.dao
                         .findFirst("select p.* from party p where p.id=" + customerId);
                 category.set("name", customerParty.get("company_name"));
                 category.set("customer_id", customerId);
