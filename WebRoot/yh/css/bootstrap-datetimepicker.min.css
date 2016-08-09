@@ -262,7 +262,6 @@
 .input-append.date .add-on i,.input-prepend.date .add-on i {
 	display: block;
 	cursor: pointer;
-	margin-top: 10px;
 	width: 16px;
 	height: 16px
 }

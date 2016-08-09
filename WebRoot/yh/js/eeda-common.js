@@ -1,5 +1,5 @@
 var eeda={};
-window.eeda=eeda;
+eeda = window.eeda;
 //dataTables builder for 1.10
 eeda.dt = function(opt){
     var option = {
@@ -188,7 +188,7 @@ var refreshUrl=function(url){
       return Object.prototype.toString.apply(number) === ['object String'];
    }
    
-    eeda.getDate =  function() {
+   eeda.getDate =  function() {
     	var d = new Date(); 
     	var year = d.getFullYear(); 
     	var month = d.getMonth()+1; 
