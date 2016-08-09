@@ -111,11 +111,11 @@ $(document).ready(function() {
             		return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" required/>';
             	}
             },
-            { "data": "PALN_AMOUNT", 
+            { "data": "PLAN_AMOUNT", 
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" name="paln_amount" value="'+data+'" class="form-control" required/>';
+            		return '<input type="text" name="plan_amount" value="'+data+'" class="form-control" required/>';
             	}
             },
             { "data": "RECEIVED_AMOUNT",

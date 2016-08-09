@@ -147,7 +147,7 @@ public class GateInOrderController extends Controller {
     	long user_id = LoginUserController.getLoginUserId(this);
     	for(Record re :res){
     		Inventory inv = null;
-    		Double amount = re.getDouble("received_amount");
+    		Double amount = re.getDouble("plan_amount");
     		for (int i = 0; i < amount; i++) {
     			inv = new Inventory();
     			inv.set("gate_in_order_id", order_id);
