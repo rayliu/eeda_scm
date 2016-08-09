@@ -157,14 +157,32 @@ $(document).ready(function() {
     });
     
     //回车自动添加一行
-    $("#"+table_name).on('keydown', '.bar_code', function(e){
+    $("#"+table_name).on('keyup', '.bar_code', function(e){
+    	var self = this;
+    	var $this_row = $(self).parent().parent();
         var key = e.which;
-        if (key == 13) {
-        	 $('#'+addBtn_id).click();
-            $(this).parent().parent().next().find('.bar_code').focus();
-        }
+        var bar_code = $(self).val();
+        var gate_in_order_id = $('#gate_in_order_id').val();
+        
+        if(bar_code=='' || gate_in_order_id=='')
+        	return false;
+        //通过bar_code查询出相应的明细表数据
+        $.post('/inspectionOrder/getGateInOrderItem',{bar_code:bar_code,gate_in_order_id:gate_in_order_id},function(data){
+        	$this_row.find('[name=cargo_name]').val(data.CARGO_NAME);
+        	$this_row.find('[name=carton_no]').val(data.CARTON_NO);
+        	$this_row.find('[name=item_code]').val(data.ITEM_CODE);
+        	$this_row.find('[name=amount]').val(data.PLAN_AMOUNT);
+        	$this_row.find('[name=GUARANTEE_DATE]').val(data.SHELF_LIFE);
+        	
+        	if (key == 13) {
+            	$('#'+addBtn_id).click();
+            	$this_row.next().find('.bar_code').focus();
+            }
+        })
+        
+        
     });
-    
+       
     //刷新明细表
     itemOrder.refleshTable = function(order_id){
     	var url = "/inspectionOrder/tableList?order_id="+order_id

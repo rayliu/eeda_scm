@@ -194,10 +194,22 @@ public class InspectionOrderController extends Controller {
         renderJson(BillingOrderListMap); 
     }
     
-    public void queryAmount(){
+    public void queryAmount() throws Exception{
     	String gate_in_id = getPara("gate_in_id");
-    	Record record = Db.findFirst("select sum(gioi.received_amount) amount from gate_in_order gio "
+    	Record record = new Record();
+    	if(StringUtils.isNotEmpty(gate_in_id))
+    		record = Db.findFirst("select sum(gioi.plan_amount) amount from gate_in_order gio "
     			+ " left join gate_in_order_item gioi on gioi.order_id = gio.id where gio.id = ?",gate_in_id);
+    	
+    	renderJson(record);
+    }
+    
+    public void getGateInOrderItem() throws Exception{
+    	String gate_in_order_id = getPara("gate_in_order_id");
+    	String bar_code = getPara("bar_code");
+    	Record record = new Record();
+    	if(StringUtils.isNotEmpty(gate_in_order_id) && StringUtils.isNotEmpty(bar_code))
+    		record = Db.findFirst("select * from gate_in_order_item gioi where order_id = ? and cargo_upc = ?",gate_in_order_id,bar_code);
     	
     	renderJson(record);
     }
