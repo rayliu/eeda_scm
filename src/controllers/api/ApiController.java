@@ -160,4 +160,76 @@ public class ApiController extends Controller {
         
         renderJson(returnMsg);
     }
+    
+  //当库存状态发生变化时, 调用第3方系统的API, 通知变化, 并返回库存
+    public void gateOutNotifyCallback(){
+        String order_id = getPara("order_id");
+        Record rec = Db.findFirst("select * from sales_order where id=?", order_id);
+        String urlStr=PropKit.use("app_config.txt").get("ybcEdiUrl")+"/orderNotify";
+        String appKey =PropKit.use("app_config.txt").get("ybcAppKey");
+        long salt = new Date().getTime();
+        String paraStr = "ref_order_no="+rec.getStr("order_no")+"&appkey="+appKey+"&salt="+salt;
+        String sign = MD5Util.encodeByMD5(paraStr).toUpperCase();
+        
+        Record jsonRec = new Record();
+        jsonRec.set("ref_order_no", rec.get("ref_order_no", ""));//第3方销售订单号
+        
+        List<Record> itemList=new ArrayList<Record>();
+        
+        Record itemRec = new Record();
+        itemRec.set("ref_item_no", "123456");
+        itemRec.set("gate_out_amout", 5);
+        itemRec.set("stock_amount", 45);
+        
+        itemList.add(itemRec);
+        
+        jsonRec.set("item_list", itemList);
+        jsonRec.set("appkey", appKey);
+        jsonRec.set("salt", salt);
+        jsonRec.set("sign", sign);
+        
+        System.out.println("参数:"+jsonRec.toJson());
+        String returnMsg = EedaHttpKit.post(urlStr, jsonRec.toJson());
+        System.out.println("结果"+returnMsg);
+        
+        CustomJob.operationLog("gateOutOrder", jsonRec.toJson(), order_id, "gateOutNotify", LoginUserController.getLoginUserId(this).toString());
+        
+        renderJson(returnMsg);
+    }
+    
+    //当库存状态发生变化时, 调用第3方系统的API, 通知变化, 并返回库存
+    public void gateInNotifyCallback(){
+        String order_id = getPara("order_id");
+        Record rec = Db.findFirst("select * from sales_order where id=?", order_id);
+        String urlStr=PropKit.use("app_config.txt").get("ybcEdiUrl")+"/orderNotify";
+        String appKey =PropKit.use("app_config.txt").get("ybcAppKey");
+        long salt = new Date().getTime();
+        String paraStr = "ref_order_no="+rec.getStr("order_no")+"&appkey="+appKey+"&salt="+salt;
+        String sign = MD5Util.encodeByMD5(paraStr).toUpperCase();
+        
+        Record jsonRec = new Record();
+        jsonRec.set("ref_order_no", rec.get("ref_order_no", ""));//第3方销售订单号
+        
+        List<Record> itemList=new ArrayList<Record>();
+        
+        Record itemRec = new Record();
+        itemRec.set("ref_item_no", "123456");
+        itemRec.set("gate_in_amount", 5);
+        itemRec.set("stock_amount", 45);
+        
+        itemList.add(itemRec);
+        
+        jsonRec.set("item_list", itemList);
+        jsonRec.set("appkey", appKey);
+        jsonRec.set("salt", salt);
+        jsonRec.set("sign", sign);
+        
+        System.out.println("参数:"+jsonRec.toJson());
+        String returnMsg = EedaHttpKit.post(urlStr, jsonRec.toJson());
+        System.out.println("结果"+returnMsg);
+        
+        CustomJob.operationLog("gateInOrder", jsonRec.toJson(), order_id, "gateInNotify", LoginUserController.getLoginUserId(this).toString());
+        
+        renderJson(returnMsg);
+    }
 }
