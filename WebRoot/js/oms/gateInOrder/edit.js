@@ -109,7 +109,9 @@ $(document).ready(function() {
     	$.post('/gateInOrder/cancelOrder', {params:order_id}, function(data){
     		if(data.ID){
     			$('#status').val(data.STATUS);
-    			$('#saveBtn').attr('disabled', true);
+    			if($('#inspection_flag').val()=='Y'){
+    				$('#saveBtn').attr('disabled', true);
+    			}
     			$('#confirmBtn').attr('disabled', true);
     			$.scojs_message('取消成功', $.scojs_message.TYPE_OK);
     		}else{
@@ -125,7 +127,8 @@ $(document).ready(function() {
     if(order_id != ''){
     	if(status=='暂存'){
     		$('#saveBtn').attr('disabled', false);
-    		$('#confirmBtn').attr('disabled', false);
+    		if($('#inspection_flag').val()=='Y')
+    			$('#confirmBtn').attr('disabled', false);
     		$('#cancelBtn').attr('disabled', false);
     	}else if(status=='已确认'){
     		$('#cancelBtn').attr('disabled', false);
