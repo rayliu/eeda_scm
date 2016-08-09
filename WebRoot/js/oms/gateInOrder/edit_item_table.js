@@ -2,9 +2,10 @@
 $(document).ready(function() {
 
     var deletedTableIds=[];
+    var table_name = 'cargo_table';
 
     //删除一行
-    $("#cargo_table").on('click', '.delete', function(e){
+    $("#"+table_name).on('click', '.delete', function(e){
         e.preventDefault();
         var tr = $(this).parent().parent();
         deletedTableIds.push(tr.attr('id'))
@@ -13,13 +14,13 @@ $(document).ready(function() {
     }); 
 
     gateInOrder.buildCargoDetail=function(){
-        var cargo_table_rows = $("#cargo_table tr");
-        var cargo_items_array=[];
-        for(var index=0; index<cargo_table_rows.length; index++){
+        var item_table_rows = $("#"+table_name+" tr");
+        var items_array=[];
+        for(var index=0; index<item_table_rows.length; index++){
             if(index==0)
                 continue;
 
-            var row = cargo_table_rows[index];
+            var row = item_table_rows[index];
             var empty = $(row).find('.dataTables_empty').text();
             if(empty)
             	continue;
@@ -28,29 +29,18 @@ $(document).ready(function() {
             if(!id){
                 id='';
             }
-            var item={
-        		id: id,
-        		UPC: $(row.children[2]).find('input').val(),
-        		cargo_name: $(row.children[3]).find('input').val(),
-        		paln_amount: $(row.children[4]).find('input').val(),
-        		received_amount: $(row.children[5]).find('input').val(), 
-        		shelf_life: $(row.children[6]).find('input').val(),
-                carton_no: $(row.children[7]).find('input').val(), 
-                upstream_sku: $(row.children[8]).find('input').val(), 
-                custom_code: $(row.children[9]).find('input').val(),
-                item_code: $(row.children[10]).find('input').val(),
-                name_specifications: $(row.children[11]).find('input').val(),
-                color: $(row.children[12]).find('input').val(),
-                size: $(row.children[13]).find('input').val(), 
-                currency: $(row.children[14]).find('input').val(), 
-                unit_value: $(row.children[15]).find('input').val(),
-                packing_unit: $(row.children[16]).find('select').val(), 
-                packing_amount: $(row.children[17]).find('input').val(), 
-                damage_amount: $(row.children[18]).find('input').val(), 
-                remark: $(row.children[19]).find('input').val(), 
-                action: id.length>0?'UPDATE':'CREATE'
-            };
-            cargo_items_array.push(item);
+            
+            var item={}
+            item.id = id;
+            for(var i = 1; i < row.childNodes.length; i++){
+            	var name = $(row.childNodes[i]).find('input,select').attr('name');
+            	var value = $(row.childNodes[i]).find('input,select').val();
+            	if(name){
+            		item[name] = value;
+            	}
+            }
+            item.action = id.length > 0?'UPDATE':'CREATE';
+            items_array.push(item);
         }
 
         //add deleted items
@@ -60,10 +50,10 @@ $(document).ready(function() {
                 id: id,
                 action: 'DELETE'
             };
-            cargo_items_array.push(item);
+            items_array.push(item);
         }
         deletedTableIds = [];
-        return cargo_items_array;
+        return items_array;
     };
     
     var bindFieldEvent=function(){
@@ -74,11 +64,10 @@ $(document).ready(function() {
     	    $(".bootstrap-datetimepicker-widget").hide();   
     	    $(el).trigger('keyup');
     	});
-
     };
 
     //------------事件处理
-    var cargoTable = $('#cargo_table').DataTable({
+    var cargoTable = $("#"+table_name).DataTable({
         "processing": true,
         "searching": false,
         "paging": false,
@@ -108,32 +97,32 @@ $(document).ready(function() {
                     return meta.row+1;
                 }
             },
-            { "data": "UPC", "width": "120px", 
+            { "data": "CARGO_UPC", "width": "120px", 
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            		return '<input type="text" name="cargo_upc" value="'+data+'" class="form-control" required/>';
             	}
             },
             { "data": "CARGO_NAME",  "width": "200px",
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            		return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" required/>';
             	}
             },
             { "data": "PALN_AMOUNT", 
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            		return '<input type="text" name="paln_amount" value="'+data+'" class="form-control" required/>';
             	}
             },
             { "data": "RECEIVED_AMOUNT",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="received_amount" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "SHELF_LIFE", "width": "120px",
@@ -142,7 +131,8 @@ $(document).ready(function() {
             			data='';
             		var field_html = template('table_date_field_template',
 		                    {
-		                        id: 'SHELF_LIFE',
+		                        id: 'shelf_life',
+		                        name:'shelf_life',
 		                        value: data.substr(0,19)
 		                    }
 		                );
@@ -154,70 +144,14 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "UPSTREAM_SKU", 
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                    return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "CUSTOM_CODE" ,
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "ITEM_CODE",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "NAME_SPECIFICATIONS",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "COLOR",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "SIZE",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "CURRENCY",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
-                }
-            },
-            { "data": "UNIT_VALUE",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" name="carton_no" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "PACKING_UNIT","width": "60px",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   var str= '<select class="form-control search-control">'
+                   var str= '<select class="form-control search-control" name="packing_unit">'
             	   	   +'<option></option>'
             	   	   +'<option value="罐" '+ (data=='罐'?'selected':'') +'>罐</option>'
 	                   +'<option value="台" '+ (data=='台'?'selected':'') +'>台</option>'
@@ -248,7 +182,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="packing_amount" value="'+data+'" class="form-control" required/>';
                 }
             },
            
@@ -256,14 +190,70 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="damage_amount" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "UPSTREAM_SKU", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="upstream_sku" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "CUSTOM_CODE" ,
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="custom_code" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "ITEM_CODE",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="item_code" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "NAME_SPECIFICATIONS",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="name_specifications" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "COLOR",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="color" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "SIZE",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="size" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "CURRENCY",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="currency" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "UNIT_VALUE",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="unit_value" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "REMARK",
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" value="'+data+'" class="form-control" required/>';
+            		return '<input type="text" name="remark" value="'+data+'" class="form-control" required/>';
             	}
             }
         ]

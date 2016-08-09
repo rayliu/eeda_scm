@@ -156,6 +156,7 @@ public class GateInOrderController extends Controller {
         		inv.set("gate_in_stamp", gir.getTimestamp("gate_in_date"));
         		inv.set("cargo_name", re.getStr("cargo_name"));
         		inv.set("cargo_code", re.getStr("item_code"));
+        		inv.set("cargo_barcode", re.getStr("cargo_upc"));
         		inv.set("shelf_life", re.getStr("shelf_life"));
         		inv.set("shelves", null);
         		inv.set("unit", re.getStr("packing_unit"));
