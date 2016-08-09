@@ -190,22 +190,20 @@ public class CustomerController extends Controller {
 
         String id = getPara("party_id");
         Party party = null;
-        Contact contact = null;
         Date createDate = Calendar.getInstance().getTime();
         if (!"".equals(id) && id != null) {
             party = Party.dao.findById(id);
-            party.set("last_update_date", createDate);
             party.set("remark", getPara("remark"));
             party.set("payment", getPara("payment"));
             party.set("receipt", getPara("receipt"));
             party.set("charge_type", getPara("chargeType"));
-            party.set("is_auto_ps", getPara("isAutoPS"));
+//            party.set("is_auto_ps", getPara("isAutoPS"));
             party.set("default_loc_from", getPara("default_loc_from"));
-            if("Y".equals(getPara("isInventoryControl"))){
-            	party.set("is_inventory_control", true);
-            }else{
-            	party.set("is_inventory_control", false);
-            }
+//            if("Y".equals(getPara("isInventoryControl"))){
+//            	party.set("is_inventory_control", true);
+//            }else{
+//            	party.set("is_inventory_control", false);
+//            }
             if(getPara("insurance_rates") != ""){
             	party.set("insurance_rates", getPara("insurance_rates"));
             }
