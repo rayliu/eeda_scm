@@ -187,6 +187,23 @@ $(document).ready(function() {
     });
     
     //包裹重量更新
+    $('#pack_weight').on('blur',function(){
+    	var order_id = $('#order_id').val();
+    	var pack_weight = $('#pack_weight').val();
+    	
+    	if(order_id == '' || pack_weight == '')
+    		return false;
+    	$.post('/gateOutOrder/updateWeight',{order_id:order_id,pack_weight:pack_weight},function(data){
+    		debugger;
+    		if(data){
+    			$.scojs_message('更新包裹重量成功', $.scojs_message.TYPE_OK);
+    		}else{
+    			$.scojs_message('更新包裹重量失败',$scojs_massage.TYPE_ERROR);
+    		}
+    	})
+    })
+    
+    
     
     
 } );

@@ -292,6 +292,16 @@ public class GateOutOrderController extends Controller {
         renderJson(BillingOrderListMap); 
     }
     
-    
+    //更新称重重量
+    public void updateWeight() throws Exception{
+    	String order_id = getPara("order_id");
+    	String pack_weight = getPara("pack_weight");
+    	
+    	GateOutOrder order = GateOutOrder.dao.findById(order_id);
+    	order.set("pack_weight", pack_weight);
+    	order.update();
+    	
+    	renderJson(order);
+    }
 
 }
