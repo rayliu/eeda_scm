@@ -219,7 +219,7 @@ where order_no=$P{order_no};]]>
 				</textElement>
 				<text><![CDATA[制单人：]]></text>
 			</staticText>
-			<textField>
+			<textField isBlankWhenNull="true">
 				<reportElement x="65" y="66" width="70" height="16" uuid="9b467f44-c7e9-4562-bbd6-89a493ff5668"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
