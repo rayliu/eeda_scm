@@ -41,8 +41,7 @@ $(document).ready(function() {
             consignee_address: $('#consignee_address').val(),
             location: $('#location').val(),
             express_no: $('#express_no').val(),  
-            gross_weight: $('#gross_weight').val(),
-            net_weight: $('#net_weight').val(),  
+            pack_weight: $('#pack_weight').val(),  
             remark: $('#remark').val(),  
             status: $('#status').val()==''?'暂存':$('#status').val(), 
             item_list: items_array
@@ -186,5 +185,9 @@ $(document).ready(function() {
     	self.attr('disabled',false);
     	
     });
+    
+    //包裹重量更新
+    
+    
 } );
 

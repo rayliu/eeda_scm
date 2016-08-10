@@ -102,7 +102,7 @@ $(document).ready(function() {
                    return '<input type="text" name="packing_amount" value="'+data+'" class="form-control check" />';
                 }
             },
-            { "data": "SHELVES", "width": "100px",
+            { "data": "SHELVES", "width": "100px","visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
@@ -228,7 +228,10 @@ $(document).ready(function() {
     		if(data.RESULT!="ok"){
     			$.scojs_message(data.RESULT, $.scojs_message.TYPE_ERROR);
     		}else{
-    			$self.find('[name=unit]').val(data.ORDER.UNIT)
+    			debugger;
+    			$self.find('[name=packing_unit]').val(data.ORDER.UNIT);
+    			$self.find('[name=bar_code]').val(data.ORDER.CARGO_BARCODE);
+    			$self.find('[name=shelves]').val(data.ORDER.SHELVES);
     		}
     	})
     	
