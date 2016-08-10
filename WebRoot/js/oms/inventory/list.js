@@ -3,23 +3,30 @@ $(document).ready(function() {
 	document.title = '库存统计   | '+document.title;
 
     $('#menu_inventory').addClass('active').find('ul').addClass('in');
+    var showItem = 'N';
     
     $("#beginTime_filter").val(new Date().getFullYear()+'-'+ (new Date().getMonth()+1));
     
     var dataTable = eeda.dt({
         "id": "eeda-table",
+        "scrollY":"500px",
         "ajax": "/inventory/list",
         "columns": [
-            { "data": "CARGO_NAME"/*, 
-                "render": function ( data, type, full, meta ) {
-                    return "<a href='/gateInOrder/edit?id="+full.ID+"''>"+data+"</a>";
-                }*/
-            },
+            { "data": "CARGO_NAME"},
             { "data": "CARGO_BARCODE"},
             { "data": "CARGO_CODE"},
             { "data": "UNIT"},
             { "data": "CUSTOMER_NAME"},
-            { "data": "SHELVES"}, 
+            { "data": "SHELVES","width":"100px",
+            	"render": function ( data, type, full, meta ) {
+            		if(!data)
+                        data='';
+            		var value = '<input type="text" name="cargo_name" value="'+data+'" class="form-control shelves" />';
+            		if(showItem=='N')
+            			value = data;
+                    return value;
+            	}
+            },
             { "data": "SHELF_LIFE"}, 
             { "data": "GATE_IN_AMOUNT"}, 
             { "data": "LOCK_AMOUNT",
@@ -86,5 +93,14 @@ $(document).ready(function() {
     	var url = "/inventory/list?jsonStr="+JSON.stringify(itemJson)+"&showItem="+showItem;
         dataTable.ajax.url(url).load();
     };
+    
+    //动态更改单品库位
+    $('#eeda-table').on('blur','.shelves',function(){
+    	var shelves = $(this).val();
+    	debugger;
+    })
+    
+    
+    
     
 });
