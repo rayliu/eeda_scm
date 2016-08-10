@@ -5,10 +5,6 @@ $(document).ready(function() {
 
     $('#menu_incoming').addClass('active').find('ul').addClass('in');
     
-    $('#amount').blur(function(){
-        $('#total_amount').text($(this).val());
-    });
-    
     //------------save
     $('#saveBtn').click(function(e){
         //阻止a 的默认响应行为，不需要跳转
@@ -36,7 +32,6 @@ $(document).ready(function() {
             item_list:items_array
         };
 
-        var status = $('#status').val();
         //异步向后台提交数据
         $.post('/inspectionOrder/save', {params:JSON.stringify(order)}, function(data){
             var order = data;
@@ -60,15 +55,31 @@ $(document).ready(function() {
             $('#saveBtn').attr('disabled', false);
           });
     });  
+    
+    
+    //确认按钮
+    $('#confirmBtn').click(function(e){
+    	e.preventDefault();
+    	var self = $(this);
+    	self.attr('disabled',true);
+    	var order_id = $("#order_id").val();
+    	$.post('/inspectionOrder/confirmOrder', {params:order_id}, function(data){
+    		if(data.ID){
+    			$('#status').val(data.STATUS);
+    			$('#saveBtn').attr('disabled', true);
+    			$.scojs_message('确认成功', $.scojs_message.TYPE_OK);
+    		}else{
+    			$.scojs_message('确认失败', $.scojs_message.TYPE_ERROR);
+    			self.attr('disabled',false);
+    		}
+    	})
+    })
  
     //按钮控制
     var order_id = $("#order_id").val()
     if(order_id != ''){
-    	 $('#submitDingDanBtn').attr('disabled',false);
+    	 $('#confirmBtn').attr('disabled',false);
     }
-    
-    
- 
 
     $("#have_check").on("input",function(){
     	var can_check = $("#can_check").val()==''?'0':$("#can_check").val();

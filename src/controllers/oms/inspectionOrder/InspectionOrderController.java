@@ -12,8 +12,10 @@ import java.util.TreeMap;
 
 import models.UserLogin;
 import models.eeda.oms.GateInOrder;
+import models.eeda.oms.GateInOrderItem;
 import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.InspectionOrderItem;
+import models.eeda.oms.Inventory;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.profile.CustomCompany;
@@ -38,6 +40,7 @@ import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
+import controllers.yh.job.CustomJob;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -76,6 +79,9 @@ public class InspectionOrderController extends Controller {
    			inspectionOrder.set("update_by", user.getLong("id"));
    			inspectionOrder.set("update_stamp", new Date());
    			inspectionOrder.update();
+   			
+   		//保存job记录
+   	   		CustomJob.operationLog("InspectionOrder", jsonStr, id, "update", LoginUserController.getLoginUserId(this).toString());
    		} else {
    			//create 
    			DbUtils.setModelValues(dto, inspectionOrder);
@@ -87,12 +93,15 @@ public class InspectionOrderController extends Controller {
    			inspectionOrder.save();
    			
    			id = inspectionOrder.getLong("id").toString();
+   			//保存job记录
+   	   		CustomJob.operationLog("InspectionOrder", jsonStr, id, "create", LoginUserController.getLoginUserId(this).toString());
    		}
    		
    		String gate_in_order_id = (String) dto.get("gate_in_order_id");
    		if(StringUtils.isNotEmpty(gate_in_order_id)){
    			GateInOrder gor = GateInOrder.dao.findById(gate_in_order_id);
    	   		gor.set("inspection_flag", "Y");
+   	   		gor.set("status", "验货中");
    	   		gor.update();
    		}
    		
@@ -106,6 +115,80 @@ public class InspectionOrderController extends Controller {
    		r.set("creator_name", user_name);
    		renderJson(r);
    	}
+    
+    
+    @Before(Tx.class)
+    public void confirmOrder(){
+    	String order_id = getPara("params");
+    	InspectionOrder order = InspectionOrder.dao.findById(order_id);
+    	order.set("status","已确认").update();
+
+    	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+    	UserLogin user = LoginUserController.getLoginUser(this);
+   		Long operator = user.getLong("id");
+   		
+   		//保存job记录
+   		CustomJob.operationLog("InspectionOrder", null, order_id, "confirm", LoginUserController.getLoginUserId(this).toString());
+
+   		//更新入库单的数据
+   		long gate_in_order_id = order.getLong("gate_in_order_id");
+   		updateGateInItem(order_id,gate_in_order_id);
+   		
+    	renderJson(order);
+    }
+    
+    public void updateGateInItem(String order_id,long gate_in_order_id){
+    	List<Record> res = Db.find("select * from inspection_order_item where order_id = ?",order_id);
+
+    	for(Record re :res){
+    		long gate_in_item_id = re.getLong("gate_in_item_id");
+    		double plan_amount = re.getDouble("plan_amount");
+    		double amount = re.getDouble("amount");
+    		
+    		GateInOrderItem gii = GateInOrderItem.dao.findById(gate_in_item_id);
+    		gii.set("received_amount", amount);
+    		gii.set("damage_amount", plan_amount-amount);
+    		gii.update();
+    	}
+    	
+    	GateInOrder gio = GateInOrder.dao.findById(gate_in_order_id);
+    	gio.set("status", "已确认");
+    	gio.update();
+    	
+    	//确认时货品入库
+    	gateIn(gate_in_order_id);
+    }
+    
+    
+    
+    @Before(Tx.class)
+    public void gateIn(long order_id){
+    	GateInOrder gir = GateInOrder.dao.findById(order_id);
+    	List<Record> res = Db.find("select * from gate_in_order_item where order_id = ?",order_id);
+    	long user_id = LoginUserController.getLoginUserId(this);
+    	for(Record re :res){
+    		Inventory inv = null;
+    		Double amount = re.getDouble("received_amount");
+    		for (int i = 0; i < amount; i++) {
+    			inv = new Inventory();
+    			inv.set("gate_in_order_id", order_id);
+    			inv.set("customer_id", gir.getLong("customer_id"));
+        		inv.set("warehouse_id", gir.getLong("warehouse_id"));
+        		inv.set("gate_in_stamp", gir.getTimestamp("gate_in_date"));
+        		inv.set("cargo_name", re.getStr("cargo_name"));
+        		inv.set("cargo_code", re.getStr("item_code"));
+        		inv.set("cargo_barcode", re.getStr("cargo_upc"));
+        		inv.set("shelf_life", re.getDate("shelf_life"));
+        		inv.set("shelves", null);
+        		inv.set("unit", re.getStr("packing_unit"));
+        		inv.set("gate_in_amount", 1);
+        		inv.set("create_stamp", new Date());
+        		inv.set("create_by", user_id);
+        		inv.save();
+			}
+    	}
+    }
+    
     
     
     private List<Record> getInspectionItems(String orderId) {
@@ -207,9 +290,12 @@ public class InspectionOrderController extends Controller {
     public void getGateInOrderItem() throws Exception{
     	String gate_in_order_id = getPara("gate_in_order_id");
     	String bar_code = getPara("bar_code");
-    	Record record = new Record();
+    	Record record = null;;
     	if(StringUtils.isNotEmpty(gate_in_order_id) && StringUtils.isNotEmpty(bar_code))
     		record = Db.findFirst("select * from gate_in_order_item gioi where order_id = ? and cargo_upc = ?",gate_in_order_id,bar_code);
+    	
+    	if(record==null)
+    		record = new Record();
     	
     	renderJson(record);
     }

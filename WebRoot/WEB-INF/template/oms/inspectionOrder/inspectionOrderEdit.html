@@ -110,8 +110,8 @@
 						<%include("/yh/component/form/detailTable.html", {
 						id:'item_table', 
 						headers:['', 
-						'商品条码','商品名称','纸箱编号','货品代码','数量','保质日期','库位'],
-						field_list:['','bar_code','cargo_name','carton_no', 'item_code', 'amount','guarantee_date','shelves'], 
+						'商品条码','商品名称','纸箱编号','货品代码','保质日期','计划数量','实收数量','库位','item_id'],
+						field_list:['','bar_code','cargo_name','carton_no', 'item_code','guarantee_date', 'plan_amount','amount','shelves','gate_in_item_id'], 
 						value_list: itemList![] }){} %>
 					</div>
 				</div>
@@ -122,6 +122,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<a id='saveBtn' class="btn  btn-primary" href="#">保存</a> 
+			<a id='confirmBtn' class="btn  btn-primary" href="#">确认</a> 
 			<!-- <a id='submitDingDanBtn' class="btn  btn-primary" disabled>上报订单</a> 
 			<a id='submitYunDanBtn' class="btn  btn-primary" disabled>上报运单</a> -->
 			<button id="printBtn" type="button" class="btn  btn-primary"

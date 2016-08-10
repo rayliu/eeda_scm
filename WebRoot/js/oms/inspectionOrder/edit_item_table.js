@@ -103,21 +103,45 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" disabled/>';
                 }
             },
             { "data": "CARTON_NO", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="carton_no" value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="carton_no" value="'+data+'" class="form-control" disabled/>';
                 }
             },
             { "data": "ITEM_CODE", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="item_code"  value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="item_code"  value="'+data+'" class="form-control" disabled/>';
+                }
+            },
+            { "data": "GUARANTEE_DATE", 
+                "render": function ( data, type, full, meta ) {
+                	/*if(!data)
+                        data='';                    
+            		    var field_html = template('table_date_field_template',
+		                    {
+		                        id: 'GUARANTEE_DATE',
+		                        name:'guarantee_date',
+		                        value: data.substr(0,19)
+		                    }
+		                );
+	                    return field_html;*/
+                	if(!data)
+                        data='';
+                    return '<input type="text" name="GUARANTEE_DATE"  value="'+data+'" class="form-control" disabled/>';
+                }
+            },
+            { "data": "PLAN_AMOUNT", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="plan_amount" value="'+data+'" class="form-control" disabled/>';
                 }
             },
             { "data": "AMOUNT", 
@@ -127,25 +151,18 @@ $(document).ready(function() {
                     return '<input type="text" name="amount" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "GUARANTEE_DATE", 
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';                    
-            		    var field_html = template('table_date_field_template',
-		                    {
-		                        id: 'GUARANTEE_DATE',
-		                        name:'guarantee_date',
-		                        value: data.substr(0,19)
-		                    }
-		                );
-	                    return field_html;
-                }
-            },
             { "data": "SHELVES", "visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
                     return '<input type="text" name="shelves" value="'+data+'" class="form-control" />';
+                }
+            },
+            { "data": "GATE_IN_ITEM_ID","width":"20px",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="gate_in_item_id" value="'+data+'" style="width:10px;" class="form-control" disabled/>';
                 }
             }
         ]
@@ -171,9 +188,10 @@ $(document).ready(function() {
         	$this_row.find('[name=cargo_name]').val(data.CARGO_NAME);
         	$this_row.find('[name=carton_no]').val(data.CARTON_NO);
         	$this_row.find('[name=item_code]').val(data.ITEM_CODE);
-        	$this_row.find('[name=amount]').val(data.PLAN_AMOUNT);
+        	$this_row.find('[name=plan_amount]').val(data.PLAN_AMOUNT);
         	$this_row.find('[name=GUARANTEE_DATE]').val(data.SHELF_LIFE);
-        	
+        	$this_row.find('[name=gate_in_item_id]').val(data.ID);
+        	debugger;
         	if (key == 13) {
             	$('#'+addBtn_id).click();
             	$this_row.next().find('.bar_code').focus();
