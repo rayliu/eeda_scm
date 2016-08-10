@@ -66,8 +66,10 @@ $(document).ready(function() {
 				$('#status').val(order.STATUS);
 				contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
+                
                 $('#saveBtn').attr('disabled', false);
-                $('#confirmBtn').attr('disabled', false);
+                if($('#inspection_flag').val()=='Y')
+                	$('#confirmBtn').attr('disabled', false);
                 $('#cancelBtn').attr('disabled', false);
                 
                 //异步刷新字表
@@ -109,9 +111,7 @@ $(document).ready(function() {
     	$.post('/gateInOrder/cancelOrder', {params:order_id}, function(data){
     		if(data.ID){
     			$('#status').val(data.STATUS);
-    			if($('#inspection_flag').val()=='Y'){
-    				$('#saveBtn').attr('disabled', true);
-    			}
+    			$('#saveBtn').attr('disabled', true);
     			$('#confirmBtn').attr('disabled', true);
     			$.scojs_message('取消成功', $.scojs_message.TYPE_OK);
     		}else{

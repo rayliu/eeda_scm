@@ -134,39 +134,11 @@ public class GateInOrderController extends Controller {
    		Long operator = user.getLong("id");
     	OperationLog(order_id, order_id, operator,"confirm");
     	
-    	//确认时货品入库
-    	gateIn(order_id);
+    
     	
     	renderJson(gateInOrder);
     }
-    
-    @Before(Tx.class)
-    public void gateIn(String order_id){
-    	GateInOrder gir = GateInOrder.dao.findById(order_id);
-    	List<Record> res = Db.find("select * from gate_in_order_item where order_id = ?",order_id);
-    	long user_id = LoginUserController.getLoginUserId(this);
-    	for(Record re :res){
-    		Inventory inv = null;
-    		Double amount = re.getDouble("plan_amount");
-    		for (int i = 0; i < amount; i++) {
-    			inv = new Inventory();
-    			inv.set("gate_in_order_id", order_id);
-    			inv.set("customer_id", gir.getLong("customer_id"));
-        		inv.set("warehouse_id", gir.getLong("warehouse_id"));
-        		inv.set("gate_in_stamp", gir.getTimestamp("gate_in_date"));
-        		inv.set("cargo_name", re.getStr("cargo_name"));
-        		inv.set("cargo_code", re.getStr("item_code"));
-        		inv.set("cargo_barcode", re.getStr("cargo_upc"));
-        		inv.set("shelf_life", re.getStr("shelf_life"));
-        		inv.set("shelves", null);
-        		inv.set("unit", re.getStr("packing_unit"));
-        		inv.set("gate_in_amount", 1);
-        		inv.set("create_stamp", new Date());
-        		inv.set("create_by", user_id);
-        		inv.save();
-			}
-    	}
-    }
+
     
     @Before(Tx.class)
     public void cancelOrder(){

@@ -101,28 +101,28 @@ $(document).ready(function() {
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" name="cargo_upc" value="'+data+'" class="form-control" required/>';
+            		return '<input type="text" name="cargo_upc" value="'+data+'" class="form-control" />';
             	}
             },
             { "data": "CARGO_NAME",  "width": "200px",
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" required/>';
+            		return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" />';
             	}
             },
             { "data": "PLAN_AMOUNT", 
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" name="plan_amount" value="'+data+'" class="form-control" required/>';
+            		return '<input type="text" name="plan_amount" value="'+data+'" class="form-control" />';
             	}
             },
             { "data": "RECEIVED_AMOUNT",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="received_amount" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="received_amount" value="'+data+'" class="form-control" disabled/>';
                 }
             },
             { "data": "SHELF_LIFE", "width": "120px",
@@ -144,7 +144,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="carton_no" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" name="carton_no" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "PACKING_UNIT","width": "60px",
@@ -182,7 +182,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="packing_amount" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="packing_amount" value="'+data+'" class="form-control" />';
                 }
             },
            
@@ -190,70 +190,70 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="damage_amount" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="damage_amount" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "UPSTREAM_SKU", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="upstream_sku" value="'+data+'" class="form-control" required/>';
+                    return '<input type="text" name="upstream_sku" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "CUSTOM_CODE" ,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="custom_code" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="custom_code" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "ITEM_CODE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="item_code" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="item_code" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "NAME_SPECIFICATIONS",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="name_specifications" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="name_specifications" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "COLOR",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="color" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="color" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "SIZE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="size" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="size" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "CURRENCY",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="currency" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="currency" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "UNIT_VALUE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="unit_value" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="unit_value" value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "REMARK",
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" name="remark" value="'+data+'" class="form-control" required/>';
+            		return '<input type="text" name="remark" value="'+data+'" class="form-control" />';
             	}
             }
         ]
