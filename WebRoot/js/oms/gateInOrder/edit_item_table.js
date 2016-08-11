@@ -270,6 +270,37 @@ $(document).ready(function() {
     	var url = "/gateInOrder/tableList?order_id="+order_id;
     	cargoTable.ajax.url(url).load();
     }
+    
+    
+    //通过bargode 获取相对于的 信息
+    $('#'+table_name).on('keyup','input',function(e){
+    	var key = e.which;
+    	if (key == 13) {
+	    	var $self = $(this).parent().parent();
+	    	var cargo_upc = $self.find('[name=cargo_upc]').val();
+	    	var cargo_name = $self.find('[name=cargo_name]').val();
+	    	var value = '';
+	    	if(cargo_upc=='' && cargo_name==''){
+	    		return false;
+	    	}else if(cargo_upc != ''){
+	    		value = cargo_upc;
+	    	}else if(cargo_name != ''){
+	    		value = cargo_name;
+	    	}
+    	
+	    	$.post('/product/getProductByValue',{value:value},function(data){
+	    		if(data.ID>0){
+	    			$self.find('[name=cargo_upc]').val(data.SERIAL_NO);
+	    			$self.find('[name=cargo_name]').val(data.ITEM_NAME);
+	    			$self.find('[name=packing_unit]').val(data.ORDER.UNIT);
+	    			//$self.find('[name=packing_unit]').val(data.ORDER.UNIT);
+	    		}else{
+	    			$.scojs_message('对不起，基础信息里没有此商品，请维护', $.scojs_message.TYPE_ERROR);
+	    		}
+	    	})
+    	}
+    })
+    
 
 });   
 

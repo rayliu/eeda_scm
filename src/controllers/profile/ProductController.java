@@ -552,4 +552,16 @@ public class ProductController extends Controller {
 		List<Record> offices = Db.find("select * from unit");
 		renderJson(offices); 
     }
+    
+     public void getProductByValue(){
+    	 String value = getPara("value");
+    	 
+    	 Record list = Db.findFirst("select * from product where serial_no =? or item_name =?",value,value);
+    	 if(list == null){
+    		 list = new Record();
+    	 }
+    	 
+    	 renderJson(list);
+     }
+    
 }
