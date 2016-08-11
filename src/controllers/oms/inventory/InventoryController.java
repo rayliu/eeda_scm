@@ -158,30 +158,29 @@ public class InventoryController extends Controller {
     
     //出库库存校验
     public void check(){
-    	String name = getPara("name");
+    	String value = getPara("value");
     	String amount = getPara("amount");
     	
     	Record re = new Record();
     	String sql = "";
-    	if(StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(amount)){
-    		sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount) > 0 having count(*) >= ?"; 
-    		Record record = Db.findFirst(sql , name, amount);
-    		if(record != null){
+    	if(StringUtils.isNotEmpty(value) && StringUtils.isNotEmpty(amount)){
+    		sql = "select count(*) amount from inventory inv where cargo_name = ? or cargo_barcode = ?  and lock_amount = 0 and gate_out_amount = 0"; 
+    		Record record = Db.findFirst(sql , value, value);
+    		long total = record.getLong("amount");
+    		if(total >= Double.parseDouble(amount)){
     			re.set("order",record);
     			re.set("result", "ok");
     		}else{
-    			sql = "select count(*) amount from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount) > 0"; 
-    			record = Db.findFirst(sql , name);
-    			re.set("result", "此类商品库存数量只有"+record.getLong("amount"));
+    			re.set("result", "对不起，此商品库存数量只有"+total);
     		}
-    	}else if(StringUtils.isNotEmpty(name)){
-    		sql = "select * from inventory inv where cargo_name = ?"; 
-    		Record record = Db.findFirst(sql , name);
+    	}else if(StringUtils.isNotEmpty(value)){
+    		sql = "select * from inventory inv where cargo_name = ? or cargo_barcode = ?  limit 0,2"; 
+    		Record record = Db.findFirst(sql , value, value);
     		if(record != null){
     			re.set("order",record);
     			re.set("result", "ok");
     		}else{
-    			re.set("result", "库存不存在此类商品");
+    			re.set("result", "库存不存在此商品");
     		}
     	}
     	

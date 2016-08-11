@@ -172,12 +172,13 @@ $(document).ready(function() {
                    return '<input type="text" name="unit_value" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "PACKING_UNIT","width": "60px",
+            { "data": "PACKING_UNIT","width": "80px",
                 "render": function ( data, type, full, meta ) {
                 	if(!data)
                         data='';
                     var str= '<select class="form-control search-control" name="packing_unit">'
             	   	   +'<option></option>'
+            	   	   +'<option value="罐" '+ (data=='罐'?'selected':'') +'>罐</option>'
 	                   +'<option value="台" '+ (data=='台'?'selected':'') +'>台</option>'
 	                   +'<option value="件" '+ (data=='件'?'selected':'') +'>件</option>'
 	                   +'<option value="套" '+ (data=='套'?'selected':'') +'>套</option>'
@@ -216,25 +217,34 @@ $(document).ready(function() {
     	cargoTable.ajax.url(url).load();
     }
     
+
     //库存货品校验
-    $('#cargo_table').on('blur','.check',function(){
-    	var $self = $(this).parent().parent();
-    	var name = $self.find('[name=cargo_name]').val();
-    	var amount = $self.find('[name=packing_amount]').val();
-    	if(name=='')
-    		return false;
+    $('#cargo_table').on('blur','input',function(e){
+	    	var $self = $(this).parent().parent();
+	    	var bar_code = $self.find('[name=bar_code]').val();
+	    	var cargo_name = $self.find('[name=cargo_name]').val();
+	    	var amount = $self.find('[name=packing_amount]').val();
+	    	
+	    	var value = '';
+	    	if(bar_code=='' && cargo_name==''){
+	    		return false;
+	    	}else if(bar_code != ''){
+	    		value = bar_code;
+	    	}else if(cargo_name != ''){
+	    		value = cargo_name;
+	    	}
     	
-    	$.post('/inventory/check',{name:name,amount:amount},function(data){
-    		if(data.RESULT!="ok"){
-    			$.scojs_message(data.RESULT, $.scojs_message.TYPE_ERROR);
-    		}else{
-    			debugger;
-    			$self.find('[name=packing_unit]').val(data.ORDER.UNIT);
-    			$self.find('[name=bar_code]').val(data.ORDER.CARGO_BARCODE);
-    			$self.find('[name=shelves]').val(data.ORDER.SHELVES);
-    		}
-    	})
-    	
+	    	$.post('/inventory/check',{value:value,amount:amount},function(data){
+	    		if(data.RESULT != "ok"){
+	    			$.scojs_message(data.RESULT, $.scojs_message.TYPE_ERROR);
+	    		}else{
+	    			if(data.ORDER.ID>0){
+	    				$self.find('[name=packing_unit]').val(data.ORDER.UNIT);
+		    			$self.find('[name=bar_code]').val(data.ORDER.CARGO_BARCODE);
+		    			$self.find('[name=cargo_name]').val(data.ORDER.CARGO_NAME);
+	    			}
+	    		}
+	    	})
     })
     
     
