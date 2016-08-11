@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.eeda.OrderActionLog;
+import models.eeda.oms.Inventory;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -67,32 +68,84 @@ public class InventoryController extends Controller {
         }
         
         
-
+        String jsonStr = getPara("jsonStr");
+        String conditions = " where 1 = 1 ";
+        if(StringUtils.isNotEmpty(jsonStr)){
+        	 Gson gson = new Gson();  
+             Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
+             String customer_id = (String)dto.get("customer_id");
+             String cargo_name = (String)dto.get("cargo_name");
+             String cargo_status = (String)dto.get("cargo_status");
+             String gate_in_stamp_begin_time = (String)dto.get("gate_in_stamp_begin_time");
+             String gate_in_stamp_end_time = (String)dto.get("gate_in_stamp_end_time");
+             String gate_out_stamp_begin_time = (String)dto.get("gate_out_stamp_begin_time");
+             String gate_out_stamp_end_time = (String)dto.get("gate_out_stamp_end_time");
+             
+             if(StringUtils.isNotEmpty(customer_id)){
+             	conditions += " and inv.customer_id = "+customer_id;
+             }
+             if(StringUtils.isNotEmpty(cargo_name)){
+             	conditions += " and inv.cargo_name like '%"+customer_id+"%'";
+             }
+             if(StringUtils.isNotEmpty(cargo_status)){
+             	conditions += " and  (case "
+        		+ "  when (inv.lock_amount>0)"
+        		+ "  then '已锁定'"
+        		+ "  when (inv.gate_in_amount-inv.gate_out_amount)>0"
+        		+ "  then '在库'"
+        		+ "  else"
+        		+ "  '已出库' end) = '"+cargo_status+"'";
+             }
+             
+             if(StringUtils.isNotEmpty(gate_in_stamp_begin_time) && StringUtils.isNotEmpty(gate_in_stamp_end_time)){
+            	 if(StringUtils.isEmpty(gate_in_stamp_begin_time)){
+                  	gate_in_stamp_begin_time = "1970-1-1";
+                  }
+                  if(StringUtils.isEmpty(gate_in_stamp_end_time)){
+                  	gate_in_stamp_end_time = "2037-12-31";
+                  }else{
+                  	gate_in_stamp_end_time = gate_in_stamp_end_time +" 23:59:59" ;
+                  }
+                  conditions += " and gate_in_stamp between '"+gate_in_stamp_begin_time+"' and '"+gate_in_stamp_end_time+"'";
+             }
+             
+             if(StringUtils.isNotEmpty(gate_out_stamp_begin_time) && StringUtils.isNotEmpty(gate_out_stamp_end_time)){
+            	 if(StringUtils.isEmpty(gate_out_stamp_begin_time)){
+                  	gate_out_stamp_begin_time = "1970-1-1";
+                  }
+                  if(StringUtils.isEmpty(gate_out_stamp_end_time)){
+                  	gate_out_stamp_end_time = "2037-12-31";
+                  }else{
+                  	gate_out_stamp_end_time = gate_out_stamp_end_time +" 23:59:59" ;
+                  }
+                  conditions += " and gate_out_stamp between '"+gate_out_stamp_begin_time+"' and '"+gate_out_stamp_end_time+"'";
+             }
+             
+        }
+       
         String sql = "select * from ( SELECT inv.id,inv.cargo_name,inv.cargo_barcode,inv.cargo_code,inv.unit,inv.customer_id,inv.shelf_life ,"
         		+ "  inv.shelves, sum(inv.gate_in_amount) gate_in_amount, sum(inv.gate_out_amount) gate_out_amount,sum(inv.lock_amount) lock_amount,"
         		+ "  wh.warehouse_name,p.abbr customer_name,"
-        		+ "  (case when (inv.gate_in_amount-inv.gate_out_amount)>0"
+        		+ "  (case "
+        		+ "  when (inv.lock_amount>0)"
+        		+ "  then '已锁定'"
+        		+ "  when (inv.gate_in_amount-inv.gate_out_amount)>0"
         		+ "  then '在库'"
         		+ "  else"
         		+ "  '已出库' end) cargo_status"
     			+ "  from inventory inv "
     			+ "  left join warehouse wh on wh.id = inv.warehouse_id"
     			+ "  left join party p on p.id = inv.customer_id"
+    			+ conditions
     			+ group
-    			+ "  ) A where 1 = 1 ";
+    			+ "  ) A  ";
         
-        String condition = "";
-        String jsonStr = getPara("jsonStr");
-    	if(StringUtils.isNotEmpty(jsonStr)){
-    		Gson gson = new Gson(); 
-            Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
-            condition = DbUtils.buildConditions(dto);
-    	}
-    	
-        String sqlTotal = "select count(1) total from ("+ sql + condition +" ) B";
+           	
+    	String orderBy = " order by shelves,shelf_life ";
+        String sqlTotal = "select count(1) total from ("+ sql +" ) B";
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
-        List<Record> BillingOrders = Db.find(sql + condition +sLimit);
+        List<Record> BillingOrders = Db.find(sql + orderBy +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
@@ -133,6 +186,20 @@ public class InventoryController extends Controller {
     	}
     	
     	renderJson(re);
+    }
+    
+    @Before(Tx.class)
+    public void updateShelves() throws Exception{
+    	String id = getPara("order_id");
+    	String shelves = getPara("shelves");
+    	
+    	Inventory inv = Inventory.dao.findById(id);
+    	if(inv!=null){
+    		inv.set("shelves", shelves);
+        	inv.update();
+    	}
+
+    	renderJson(inv);
     }
 
 

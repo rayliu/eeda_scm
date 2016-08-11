@@ -12,7 +12,7 @@ $(document).ready(function() {
         "scrollY":"500px",
         "ajax": "/inventory/list",
         "columns": [
-            { "data": "CARGO_NAME"},
+            { "data": "CARGO_NAME","class":"cargo_name"},
             { "data": "CARGO_BARCODE"},
             { "data": "CARGO_CODE"},
             { "data": "UNIT"},
@@ -94,10 +94,26 @@ $(document).ready(function() {
         dataTable.ajax.url(url).load();
     };
     
+   
     //动态更改单品库位
-    $('#eeda-table').on('blur','.shelves',function(){
+    $('#eeda-table').on('keyup','.shelves',function(e){    	
     	var shelves = $(this).val();
-    	debugger;
+    	var order_id = $(this).parent().parent().attr("id");
+    	var cargo_name = $(this).parent().parent().find(".cargo_name").text();
+
+	    if(order_id=='' || shelves=='')
+	    	return false;
+    	
+    	var key = e.which;
+    	if (key == 13) {
+    		$.post('/inventory/updateShelves',{order_id:order_id,shelves:shelves},function(data){
+    			if(data){
+    				$.scojs_message(cargo_name +' 更新库位为：'+shelves+' 成功!', $.scojs_message.TYPE_OK);
+    			}else{
+    				$.scojs_message('更新失败', $.scojs_message.TYPE_ERROR);
+    			}
+    		});
+        }
     })
     
     
