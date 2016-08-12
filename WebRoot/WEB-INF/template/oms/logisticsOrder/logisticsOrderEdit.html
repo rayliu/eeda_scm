@@ -128,7 +128,7 @@
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputLocationField.html", {
 						id:'shipper_city', label:'发货人所在城市',value: order.shipper_city!'',
-						display_value:shipper_city_name!''  }){}%></div>
+						display_value:shipper_city_name!'' ,required:'required' }){}%></div>
 				<!-- /.col-lg-4 -->
 			</div>
 			<!-- /.row-->
@@ -137,17 +137,17 @@
 				<!--  第行  -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'shipper',
-					label:'发货人名称', value:order.shipper!''}){}%></div>
+					label:'发货人名称', value:order.shipper!'',required:'required'  }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'shipper_address', label:'发货人地址', value:order.shipper_address!''
+					id:'shipper_address', label:'发货人地址', value:order.shipper_address!'',required:'required'
 					}){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
 					id:'shipper_telephone', label:'发货人电话',
-					value:order.shipper_telephone!''}){}%></div>
+					value:order.shipper_telephone!'',required:'required' }){}%></div>
 				<!-- /.col-lg-4 -->
 			</div>
 			<!-- /.row-->
@@ -179,11 +179,11 @@
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'ship_name',
-					label:'运输工具名称', value:order.ship_name!'' }){}%></div>
+					label:'运输工具名称', value:order.ship_name!'',required:'required' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'freight',
-					label:'运费', value:order.freight!'' }){}%></div>
+					label:'运费', value:order.freight!'' ,required:'required'}){}%></div>
 				<!-- /.col-lg-4 -->
 			</div>
 			<!-- /.row-->
@@ -192,11 +192,11 @@
 				<!--  第行  -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'insure_fee',
-					label:'保价费', value:order.insure_fee!'' }){}%></div>
+					label:'保价费', value:order.insure_fee!'' ,required:'required'}){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'weight',
-					label:'毛重（Kg）', value:order.weight!'' }){}%></div>
+					label:'毛重（Kg）', value:order.weight!'',required:'required' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'netwt',
@@ -209,15 +209,15 @@
 				<!--  第行  -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'pack_no',
-					label:'件数', value:order.pack_no!'' }){}%></div>
+					label:'件数', value:order.pack_no!'' ,required:'required'}){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'parcel_info',
-					label:'包裹单信息', value:order.parcel_info!'' }){}%></div>
+					label:'包裹单信息', value:order.parcel_info!'',required:'required' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'goods_info',
-					label:'商品信息', value:order.goods_info!'' }){}%></div>
+					label:'商品信息', value:order.goods_info!'',required:'required' }){}%></div>
 				<!-- /.col-lg-4 -->
 			</div>
 			<!-- /.row-->
@@ -226,12 +226,12 @@
 				<!--  第行  -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'customs_code', label:'主管海关', value:order.customs_code!'' }){}%>
+					id:'customs_code', label:'主管海关', value:order.customs_code!'',required:'required' }){}%>
 				</div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'ciq_code',
-					label:'主管检验检疫机构代码', value:order.ciq_code!''}){}%></div>
+					label:'主管检验检疫机构代码', value:order.ciq_code!'',required:'required' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'port_code',
@@ -263,7 +263,7 @@
 				<!--  第4行  -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/dateInputField.html", { id:'ie_date',
-					label:'进出境日期', value:order.ie_date!''}){}%></div>
+					label:'进出境日期', value:order.ie_date!'',required:'required' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/dateInputField.html", {
 					id:'deliver_date', label:'出区日期', value:order.deliver_date!'' }){}%>
