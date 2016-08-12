@@ -24,6 +24,7 @@ import org.apache.shiro.subject.Subject;
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
@@ -201,7 +202,7 @@ public class LogisticsOrderController extends Controller {
     	 String order_id = getPara("order_id");
     	 String jsonMsg=setLogMsg(order_id);
          TreeMap<String, String> paramsMap = new TreeMap<String, String>();
-         String urlStr="http://test.szedi.cn:8088/phy-ceb-web/tgt/service/logistics_create.action";
+         String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/logistics_create.action";
          paramsMap.put("jsonMsg", jsonMsg);
          String PostData = "";
          PostData = paramsMap.toString().substring(1);
