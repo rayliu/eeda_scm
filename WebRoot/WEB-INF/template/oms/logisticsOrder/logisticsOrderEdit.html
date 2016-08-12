@@ -44,11 +44,16 @@
 					<%include("/yh/component/form/inputField.html", {
 					id:'consignee_id', label:'收货人证件号', value:salesOrder.consignee_id!'', disabled: 'disabled'
 					}){}%></div>
-				<!-- /.col-lg-4 -->
+
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'consignee_type', label:'收货人证件类型', value:salesOrder.consignee_type!'', disabled: 'disabled'
-					}){}%></div>
+				    <label class="search-label">收货人证件类型</label>
+				    <select id="consignee_type" name="consignee_type" disabled
+				    	class="form-control search-control" >
+				    		<option></option>
+		                    <option value='1' <%if(salesOrder.consignee_type!''=='1'){ %>selected<%}%>>1-身份证</option>
+		                    <option value='2' <%if(salesOrder.consignee_type!''=='2'){ %>selected<%}%>>2-其它</option>
+				    </select>
+				</div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'consignee',
@@ -70,7 +75,8 @@
 					    <label class="search-label">收货人地址（国）</label>
 					    <select id="consignee_country" name="consignee_country" disabled
 					    	class="form-control search-control" >
-			                    <option value='142'>中国</option>
+					    		<option></option>
+			                    <option value='142' <%if(salesOrder.consignee_country!''=='142'){ %>selected<%}%>>142-中国</option>
 					    </select>
 					</div>
 				</div>
@@ -85,7 +91,8 @@
 				    <label class="search-label">币制</label>
 				    <select id="currency" name="currency" disabled
 				    	class="form-control search-control" >
-		                    <option value='142'>人民币</option>
+		                    <option></option>
+			                <option value='142' <%if(salesOrder.currency!''=='142'){ %>selected<%}%>>142-人民币</option>
 				    </select>
 				</div>
 			</div>
@@ -101,30 +108,22 @@
 					<div class="form-group">
 					    <label class="search-label">起运国</label>
 					    <select id="country_code" name="country_code" 
-					    	field_type='list'
 					    	class="form-control search-control" >
-			                    <option value='142'>中国</option>
+					    		<option></option>
+			                	<option value='142' <%if(order.country_code!''=='142'){ %>selected<%}%>>142-中国</option>
 					    </select>
 					</div>
 				</div>
-				<!-- <div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'shipper_country', label:'发货人所在国',
-					value:order.shipper_country!'',required:'required' }){}%></div> -->
 				<div class="col-lg-4">
 					<div class="form-group">
 					    <label class="search-label">发货人所在国</label>
 					    <select id="shipper_country" name="shipper_country" 
 					    	class="form-control search-control" >
-			                    <option value='142'>中国</option>
+			                    <option></option>
+			                	<option value='142' <%if(order.shipper_country!''=='142'){ %>selected<%}%>>142-中国</option>
 					    </select>
 					</div>
 				</div>
-				<!-- /.col-lg-4 -->
-				<!-- <div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'shipper_city', label:'发货人所在城市',required:'required', value:order.shipper_city!''
-					}){}%></div> -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputLocationField.html", {
 						id:'shipper_city', label:'发货人所在城市',value: order.shipper_city!'',
@@ -158,22 +157,23 @@
 				    <label class="search-label">运输方式</label>
 				    <select id="traf_mode" name="traf_mode_name"
 				    	class="form-control search-control" >
-		                    <option value='0' <%if(order.traf_mode!''=='0'){ %>selected<%}%>>非保税区</option>
-		                    <option value='1' <%if(order.traf_mode!''=='1'){ %>selected<%}%>>监管仓库</option>
-		                    <option value='2' <%if(order.traf_mode!''=='2'){ %>selected<%}%>>水路运输</option>
-		                    <option value='3' <%if(order.traf_mode!''=='3'){ %>selected<%}%>>铁路运输</option>
-		                    <option value='4' <%if(order.traf_mode!'4'=='4'){ %>selected<%}%>>公路运输</option>
-		                    <option value='5' <%if(order.traf_mode!''=='5'){ %>selected<%}%>>航空运输</option>
-		                    <option value='6' <%if(order.traf_mode!''=='6'){ %>selected<%}%>>邮件运输</option>
-		                    <option value='7' <%if(order.traf_mode!''=='7'){ %>selected<%}%>>保税区</option>
-		                    <option value='8' <%if(order.traf_mode!''=='8'){ %>selected<%}%>>保税仓库</option>
-		                    <option value='9' <%if(order.traf_mode!''=='9'){ %>selected<%}%>>其它运输</option>
-		                    <option value='H' <%if(order.traf_mode!''=='H'){ %>selected<%}%>>边境特殊海关作业区</option>
-		                    <option value='T' <%if(order.traf_mode!''=='T'){ %>selected<%}%>>综合实验区</option>
-		                    <option value='W' <%if(order.traf_mode!''=='W'){ %>selected<%}%>>物流中心</option>
-		                    <option value='X' <%if(order.traf_mode!''=='X'){ %>selected<%}%>>物流园区</option>
-		                    <option value='Y' <%if(order.traf_mode!''=='Y'){ %>selected<%}%>>保税港区</option>
-		                    <option value='Z' <%if(order.traf_mode!''=='Z'){ %>selected<%}%>>出口加工区</option>
+				    		<option></option>
+		                    <option value='0' <%if(order.traf_mode!''=='0'){ %>selected<%}%>>0-非保税区</option>
+		                    <option value='1' <%if(order.traf_mode!''=='1'){ %>selected<%}%>>1-监管仓库</option>
+		                    <option value='2' <%if(order.traf_mode!''=='2'){ %>selected<%}%>>2-水路运输</option>
+		                    <option value='3' <%if(order.traf_mode!''=='3'){ %>selected<%}%>>3-铁路运输</option>
+		                    <option value='4' <%if(order.traf_mode!''=='4'){ %>selected<%}%>>4-公路运输</option>
+		                    <option value='5' <%if(order.traf_mode!''=='5'){ %>selected<%}%>>5-航空运输</option>
+		                    <option value='6' <%if(order.traf_mode!''=='6'){ %>selected<%}%>>6-邮件运输</option>
+		                    <option value='7' <%if(order.traf_mode!''=='7'){ %>selected<%}%>>7-保税区</option>
+		                    <option value='8' <%if(order.traf_mode!''=='8'){ %>selected<%}%>>8-保税仓库</option>
+		                    <option value='9' <%if(order.traf_mode!''=='9'){ %>selected<%}%>>9-其它运输</option>
+		                    <option value='H' <%if(order.traf_mode!''=='H'){ %>selected<%}%>>H-边境特殊海关作业区</option>
+		                    <option value='T' <%if(order.traf_mode!''=='T'){ %>selected<%}%>>T-综合实验区</option>
+		                    <option value='W' <%if(order.traf_mode!''=='W'){ %>selected<%}%>>W-物流中心</option>
+		                    <option value='X' <%if(order.traf_mode!''=='X'){ %>selected<%}%>>X-物流园区</option>
+		                    <option value='Y' <%if(order.traf_mode!''=='Y'){ %>selected<%}%>>Y-保税港区</option>
+		                    <option value='Z' <%if(order.traf_mode!''=='Z'){ %>selected<%}%>>Z-出口加工区</option>
 				    </select>
 				</div>
 				<!-- /.col-lg-4 -->
@@ -223,11 +223,14 @@
 			<!-- /.row-->
 
 			<div class="row">
-				<!--  第行  -->
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", {
-					id:'customs_code', label:'主管海关', value:order.customs_code!'',required:'required' }){}%>
-				</div>
+					<label class="search-label">主管海关</label>
+					<select id="customs_code" name="customs_code" 
+				    	class="form-control search-control" >
+				    	    <option></option>
+		                    <option value='5349' <%if(order.customs_code!''=='5349'){ %>selected<%}%>>5349-前海港区</option>
+				    </select>
+			    </div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'ciq_code',
@@ -237,7 +240,8 @@
 					<label class="search-label">进出口岸代码</label>
 					<select id="port_code" name="port_code" 
 				    	class="form-control search-control" >
-		                    <option value='5349' <%if(order.port_code!''=='5349'){ %>selected<%}%>>1-深圳前海湾保税港口</option>
+				    		<option></option>
+		                    <option value='5349' <%if(order.port_code!''=='5349'){ %>selected<%}%>>5349-深圳前海湾保税港区</option>
 				    </select>
 			    </div>
 				<!-- /.col-lg-4 -->
@@ -259,7 +263,8 @@
 					<label class="search-label">指/抵运港</label>
 					<select id="destination_port" name="destination_port" 
 				    	class="form-control search-control" >
-		                    <option value='5349' <%if(order.destination_port!''=='5349'){ %>selected<%}%>>1-深圳前海湾保税港口</option>
+				    		<option></option>
+		                    <option value='5349' <%if(order.destination_port!''=='5349'){ %>selected<%}%>>5349-深圳前海湾保税港区</option>
 				    </select>
 				</div>
 				<!-- /.col-lg-4 -->
@@ -286,8 +291,10 @@
 					<label class="search-label">境区类型</label>
 					<select id="ps_type" name="ps_type" 
 				    	class="form-control search-control" >
-		                    <option value='1' <%if(order.ps_type!''=='1'){ %>selected<%}%>>1-进/出区</option>
-		                    <option value='2' <%if(order.ps_type!''=='2'){ %>selected<%}%>>2-进/出区</option>
+				    		<option></option>
+		                    <option value='1' <%if(order.ps_type!''=='1'){ %>selected<%}%>>1-进出境,</option>
+		                    <option value='2' <%if(order.ps_type!''=='2'){ %>selected<%}%>>2-进出区</option>
+		                    <option value='3' <%if(order.ps_type!''=='3'){ %>selected<%}%>>3-区内结转</option>
 				    </select>
 				</div>
 				
@@ -296,18 +303,23 @@
 					<label class="search-label">成交方式</label>
 					<select id="trans_mode" name="trans_mode" 
 				    	class="form-control search-control" >
+				    		<option></option>
 		                    <option value='1' <%if(order.trans_mode!''=='1'){ %>selected<%}%>>1-CIF</option>
 		                    <option value='2' <%if(order.trans_mode!''=='2'){ %>selected<%}%>>2-C&F</option>
 		                    <option value='3' <%if(order.trans_mode!''=='3'){ %>selected<%}%>>3-FOB</option>
-		                    <option value='4' <%if(order.trans_mode!''=='4'){ %>selected<%}%>>4-C&I</option><option value='1' <%if(order.trans_mode!''=='0'){ %>selected<%}%>>0-否</option>
+		                    <option value='4' <%if(order.trans_mode!''=='4'){ %>selected<%}%>>4-C&I</option>
 		                    <option value='5' <%if(order.trans_mode!''=='5'){ %>selected<%}%>>5-市场价</option>
 		                    <option value='6' <%if(order.trans_mode!''=='6'){ %>selected<%}%>>6-垫仓</option>
 				    </select>
 				</div>
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'wrap_type',
-					label:'包装种类', value:order.wrap_type!'' }){}%></div>
-				<!-- /.col-lg-4 -->
+					<label class="search-label">包装种类</label>
+					<select id="wrap_type" name="wrap_type" 
+				    	class="form-control search-control" >
+				    		<option></option>
+		                    <option value='CT' <%if(order.wrap_type!''=='CT'){ %>selected<%}%>>CT-纸板箱</option>
+				    </select>
+				</div>
 			</div>
 
 			<div class="row">
@@ -315,13 +327,14 @@
 					<label class="search-label">征免性质</label>
 					<select id="cut_mode" name="cut_mode" 
 				    	class="form-control search-control" >
+				    		<option></option>
 		                    <option value='1' <%if(order.cut_mode!''=='1'){ %>selected<%}%>>1-照章征税</option>
 		                    <option value='2' <%if(order.cut_mode!''=='2'){ %>selected<%}%>>2-折半征税</option>
 		                    <option value='3' <%if(order.cut_mode!''=='3'){ %>selected<%}%>>3-全免</option>
-		                    <option value='4' <%if(order.cut_mode!''=='4'){ %>selected<%}%>>4-特案</option><option value='1' <%if(order.trans_mode!''=='0'){ %>selected<%}%>>0-否</option>
+		                    <option value='4' <%if(order.cut_mode!''=='4'){ %>selected<%}%>>4-特案</option>
 		                    <option value='5' <%if(order.cut_mode!''=='5'){ %>selected<%}%>>5-征免性质</option>
 		                    <option value='6' <%if(order.cut_mode!''=='6'){ %>selected<%}%>>6-保证金</option>
-		                    <option value='7' <%if(order.cut_mode!''=='7'){ %>selected<%}%>>7-保函</option><option value='1' <%if(order.trans_mode!''=='0'){ %>selected<%}%>>0-否</option>
+		                    <option value='7' <%if(order.cut_mode!''=='7'){ %>selected<%}%>>7-保函</option>
 		                    <option value='8' <%if(order.cut_mode!''=='8'){ %>selected<%}%>>8-折半补税</option>
 		                    <option value='9' <%if(order.cut_mode!''=='9'){ %>selected<%}%>>9-全额退税</option>
 				    </select>
