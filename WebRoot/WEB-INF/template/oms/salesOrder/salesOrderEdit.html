@@ -47,7 +47,9 @@
 							    <select id="currency" name="currency" 
 							    	field_type='list'
 							    	class="form-control search-control" >
-					                    <option value='142'>人民币</option>
+					                    <option value='156'>人民币</option>
+					                    <option value='344 '>港币</option>
+					                    <option value='840'>美元</option>
 							    </select>
 							</div>
 							
@@ -137,10 +139,22 @@
 							<%include("/yh/component/form/inputField.html", {
 							id:'payer_account', label:'支付人账号ID', 
 							value:order.payer_account!'' }){}%></div>
+						
+					</div>
+					
+					<div class="row">
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'payer_name',
 							label:'支付人名称', value:order.payer_name!''
 							}){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'payer_email',
+								label:'付款人邮箱', value:order.payer_email!''
+							}){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'payer_phone', label:'付款人电话',
+							value:order.payer_phone!'' }){}%></div>
 					</div>
 					
 					<div class="row">

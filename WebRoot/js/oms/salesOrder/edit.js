@@ -123,6 +123,8 @@ $(document).ready(function() {
             pay_platform: $('#pay_platform').val(), 
             payer_account: $('#payer_account').val(),  
             payer_name: $('#payer_name').val(),  
+            payer_email: $('#payer_email').val(),  
+            payer_phone: $('#payer_phone').val(),  
             is_pay_pass: $('#is_pay_pass').val(),
             pass_pay_no: $('#pass_pay_no').val(),
             pay_code: $('#pay_code').val(),

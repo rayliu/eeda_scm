@@ -23,14 +23,14 @@ $(document).ready(function() {
             merchantId: salesOrder.merchantId, //商户号
             //payerName: '飞龙',//付款人姓名
             payerName: $('#payer_name').val(),//付款人姓名
-            payerEmail: 'test@163.com', //付款人联系email
-            payerTelephone: '13123456789', //付款人电话
+            payerEmail: $('#payer_email').val(), //付款人联系email
+            payerTelephone: $('#payer_phone').val(), //付款人电话
             
             //payerIDCard: '', //付款人证件号
             payerIDCard: $('#payer_account').val(),
             pid: '', //合作伙伴商户号
             orderNo: $('#order_no').val(),//商户系统订单号
-            orderAmount: '1',//订单金额(单位分)
+            orderAmount: parseFloat($('#goods_value').val())*100,//订单金额(单位分)
             //orderCurrency: '0', //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
             orderCurrency: $('#currency').val(), //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
             //orderDatetime: '20160622103144',//商户的订单提交时间
@@ -45,7 +45,6 @@ $(document).ready(function() {
             //productId: 'Mars man', //商品标识
             productId: item[0].item_no, //商品标识
             //productId: item[0].item_no, //商品标识
-            productDesc: '火星人',//商品描述
             productDesc: item[0].item_desc,//商品描述
             ext1: '123',//扩展字段1
             ext2: '123',//扩展字段2
