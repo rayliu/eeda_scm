@@ -255,6 +255,7 @@ public class LogisticsOrderController extends Controller {
   		
   		log.setReport_pay_no(logisticsOrder.getStr("report_pay_no"));
   		log.setWeight(logisticsOrder.getDouble("weight"));
+  		log.setNetwt(logisticsOrder.getDouble("netwt"));
   		log.setLog_no(logisticsOrder.getStr("log_no"));
   		log.setCountry_code(logisticsOrder.getStr("country_code"));
   		log.setShipper(logisticsOrder.getStr("shipper"));
@@ -269,6 +270,18 @@ public class LogisticsOrderController extends Controller {
   		log.setCustoms_code(logisticsOrder.getStr("customs_code"));
   		log.setCiq_code(logisticsOrder.getStr("ciq_code"));
   		log.setParcel_info(logisticsOrder.getStr("parcel_info"));
+  		
+  		log.setPort_code(logisticsOrder.getStr("port_code"));
+  		log.setDecl_code(logisticsOrder.getStr("decl_code"));
+  		log.setSupervision_code(logisticsOrder.getStr("supervision_code"));
+  		log.setEms_no(logisticsOrder.getStr("ems_no"));
+  		log.setTrade_mode(logisticsOrder.getStr("trade_mode"));
+  		log.setDestination_port(logisticsOrder.getStr("destination_port"));
+  		log.setPs_type(logisticsOrder.getStr("ps_type"));
+  		log.setTrans_mode(logisticsOrder.getStr("trans_mode"));
+  		log.setCut_mode(logisticsOrder.getStr("cut_mode"));
+  		log.setWrap_type(logisticsOrder.getStr("wrap_type"));
+  		
   		String ie_date = logisticsOrder.getDate("ie_date").toString();
   		log.setIe_date(ie_date.substring(0, ie_date.length()-2));
 
