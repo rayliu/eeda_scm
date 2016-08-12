@@ -109,7 +109,7 @@ $(document).ready(function() {
             trade_mode: $('#trade_mode').val(),
             ps_type: $('#ps_type').val(),
             trans_mode: $('#trans_mode').val(),
-            warp_type: $('#warp_type').val(),
+            wrap_type: $('#wrap_type').val(),
             cut_mode: $('#cut_mode').val(),
             ems_no: $('#ems_no').val(),
             report_pay_no: $('#report_pay_no').val(),

@@ -134,6 +134,30 @@ public class SalesOrderController extends Controller {
         	logisticsOrder.set("status","新建");
     		logisticsOrder.set("create_by", LoginUserController.getLoginUserId(this));
     		logisticsOrder.set("create_stamp", new Date());
+    		
+    		//预填值
+    		logisticsOrder.set("country_code", "142");
+    		logisticsOrder.set("shipper_country", "142");
+    		logisticsOrder.set("shipper_city", "440305");
+    		logisticsOrder.set("shipper", "深圳前海德丰投资发展有限公司");
+    		logisticsOrder.set("shipper_address", "深圳前海湾保税港区W6仓");
+    		logisticsOrder.set("shipper_telephone", "075586968661");
+    		logisticsOrder.set("traf_mode", "4");
+    		logisticsOrder.set("ship_name", "汽车");
+    		logisticsOrder.set("parcel_info", "531895454390");
+    		logisticsOrder.set("customs_code", "5349");
+    		logisticsOrder.set("ciq_code", "471800");
+    		logisticsOrder.set("port_code", "5349");
+    		logisticsOrder.set("decl_code", "5349");
+    		logisticsOrder.set("supervision_code", "5349");
+    		logisticsOrder.set("ems_no", "I440366006516001");
+    		logisticsOrder.set("trade_mode", "1210");
+    		logisticsOrder.set("destination_port", "5349");
+    		logisticsOrder.set("ps_type", "2");
+    		logisticsOrder.set("trans_mode", "1");
+    		logisticsOrder.set("cut_mode", "1");
+    		logisticsOrder.set("wrap_type", "CT");
+    		
     		logisticsOrder.save();
     	}else{
     		logisticsOrder = LogisticsOrder.dao.findFirst("select * from logistics_order where sales_order_id = ?",sales_order_id);
