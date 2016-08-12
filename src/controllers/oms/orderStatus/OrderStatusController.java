@@ -18,6 +18,7 @@ import org.apache.shiro.subject.Subject;
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 
@@ -92,7 +93,7 @@ public class OrderStatusController extends Controller {
 	    String jsonMsg = setQueryMsg(orderNo);
 
         TreeMap<String, String> paramsMap = new TreeMap<String, String>();
-        String urlStr="http://test.szedi.cn:8088/phy-ceb-web/tgt/service/order_queryCustomsStatus.action";
+        String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/order_queryCustomsStatus.action";
         paramsMap.put("jsonMsg", jsonMsg);
         String PostData = "";
         PostData = paramsMap.toString().substring(1);
