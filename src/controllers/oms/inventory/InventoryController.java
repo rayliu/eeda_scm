@@ -85,7 +85,7 @@ public class InventoryController extends Controller {
              	conditions += " and inv.customer_id = "+customer_id;
              }
              if(StringUtils.isNotEmpty(cargo_name)){
-             	conditions += " and inv.cargo_name like '%"+customer_id+"%'";
+             	conditions += " and inv.cargo_name like '%"+cargo_name+"%'";
              }
              if(StringUtils.isNotEmpty(cargo_status)){
              	conditions += " and  (case "
