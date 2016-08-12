@@ -167,7 +167,7 @@ $(document).ready(function() {
             { "data": "CURRENCY",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='142';
+                        data='156';
                    return '<input type="text" name="item_currency" value="'+data+'" class="form-control" required/>';
                 }
             }
