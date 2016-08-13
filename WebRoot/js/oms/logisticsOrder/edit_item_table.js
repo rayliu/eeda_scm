@@ -99,7 +99,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    var str= '<select class="form-control search-control" name="unit">'
+                    var str= '<select class="form-control search-control" disabled name="unit">'
               	   	   +'<option></option>'
               	   	   +'<option value="6" '+ (data=='6'?'selected':'') +'>套</option>'
   	                   +'<option value="7" '+ (data=='7'?'selected':'') +'>个</option>'
