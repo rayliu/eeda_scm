@@ -144,7 +144,6 @@ public class SalesOrderController extends Controller {
     		logisticsOrder.set("shipper_telephone", "075586968661");
     		logisticsOrder.set("traf_mode", "4");
     		logisticsOrder.set("ship_name", "汽车");
-    		logisticsOrder.set("parcel_info", "531895454390");
     		logisticsOrder.set("customs_code", "5349");
     		logisticsOrder.set("ciq_code", "471800");
     		logisticsOrder.set("port_code", "5349");
@@ -157,6 +156,10 @@ public class SalesOrderController extends Controller {
     		logisticsOrder.set("trans_mode", "1");
     		logisticsOrder.set("cut_mode", "1");
     		logisticsOrder.set("wrap_type", "CT");
+    		logisticsOrder.set("freight", "0");
+    		logisticsOrder.set("insure_fee", "0");
+    		logisticsOrder.set("ie_date", new Date());
+    		logisticsOrder.set("deliver_date",  new Date());
     		
     		logisticsOrder.save();
     	}else{

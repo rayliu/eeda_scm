@@ -112,7 +112,7 @@ $(document).ready(function() {
             { "data": "QTY" ,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='1';
+                        data='';
                    return '<input type="text" name="qty" value="'+data+'" class="form-control calculate" required/>';
                 }
             },
@@ -151,7 +151,7 @@ $(document).ready(function() {
             { "data": "PRICE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='0';
+                        data='';
                    return '<input type="text" name="price" value="'+data+'" class="form-control calculate" required/>';
                 }
             },
@@ -199,8 +199,8 @@ $(document).ready(function() {
     
     $('#cargo_table').on('input','.calculate',function(){
     	var row = $(this).parent().parent();
-    	var sty = $(row.find('.calculate')[0]).val();
-    	var price = $(row.find('.calculate')[1]).val();
+    	var sty = $(row.find('.calculate')[0]).val()==''?'0':$(row.find('.calculate')[0]).val();
+    	var price = $(row.find('.calculate')[1]).val()==''?'0':$(row.find('.calculate')[1]).val();
     	var total = $(row.find('.calculate')[2]).val(parseFloat(sty)*parseFloat(price));
     })
 

@@ -25,7 +25,7 @@
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputCustomCompanyField.html", {
 							id:'custom_id', label:'报关企业', required:'required',
-							value:order.CUSTOM_ID!'', display_value: custom.shop_name!'' }){}
+							value:order.CUSTOM_ID!'9', display_value: custom.shop_name!'深圳前海德丰投资发展有限公司' }){}
 							%></div>
 					</div>
 		
@@ -200,8 +200,9 @@
 							    <select id="is_pay_pass" name="is_pay_pass_name" 
 							    	field_type='list'
 							    	class="form-control search-control" >
+							    		<option value='0' <%if(order.is_pay_pass!''=='0'){ %>selected<%}%>>否</option>
 					                    <option value='1' <%if(order.is_pay_pass!''=='1'){ %>selected<%}%>>是</option>
-					                    <option value='0' <%if(order.is_pay_pass!''=='0'){ %>selected<%}%>>否</option>
+					                    
 							    </select>
 							</div>
 						</div>
