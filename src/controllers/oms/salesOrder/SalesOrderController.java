@@ -128,8 +128,9 @@ public class SalesOrderController extends Controller {
     public Long createLogOrder(String sales_order_id,String action){
     	LogisticsOrder logisticsOrder = null;
     	if("create".equals(action)){
+    		String order_no = OrderNoGenerator.getNextOrderNo("YD")
     		logisticsOrder = new LogisticsOrder();
-        	logisticsOrder.set("log_no", OrderNoGenerator.getNextOrderNo("YD"));
+        	logisticsOrder.set("log_no", order_no);
         	logisticsOrder.set("sales_order_id",sales_order_id);
         	logisticsOrder.set("status","新建");
     		logisticsOrder.set("create_by", LoginUserController.getLoginUserId(this));
@@ -158,6 +159,7 @@ public class SalesOrderController extends Controller {
     		logisticsOrder.set("wrap_type", "CT");
     		logisticsOrder.set("freight", "0");
     		logisticsOrder.set("insure_fee", "0");
+    		logisticsOrder.set("parcel_info", order_no);
     		logisticsOrder.set("ie_date", new Date());
     		logisticsOrder.set("deliver_date",  new Date());
     		
