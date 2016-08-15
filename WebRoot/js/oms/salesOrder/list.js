@@ -17,7 +17,7 @@ $(document).ready(function() {
                 }
             },
             { "data": "SHOP_NAME"},
-            { "data": "PAYER_NAME"}, 
+            { "data": "CONSIGNEE"}, 
             { "data": "GOODS_VALUE"}, 
             { "data": null,
             	"render": function ( data, type, full, meta ) {
