@@ -128,7 +128,7 @@ public class SalesOrderController extends Controller {
     public Long createLogOrder(String sales_order_id,String action){
     	LogisticsOrder logisticsOrder = null;
     	if("create".equals(action)){
-    		String order_no = OrderNoGenerator.getNextOrderNo("YD")
+    		String order_no = OrderNoGenerator.getNextOrderNo("YD");
     		logisticsOrder = new LogisticsOrder();
         	logisticsOrder.set("log_no", order_no);
         	logisticsOrder.set("sales_order_id",sales_order_id);
