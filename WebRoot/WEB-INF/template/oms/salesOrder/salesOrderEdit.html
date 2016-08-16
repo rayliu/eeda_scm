@@ -36,7 +36,7 @@
 						</div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'goods_value',
-							label:'订单商品货款(元)', required:'required', value:order.goods_value!''
+							label:'订单商品货款(税后)', required:'required', value:order.goods_value!''
 							}){} %></div>
 						<div class="col-lg-4">
 							<!-- <%include("/yh/component/form/inputField.html", { id:'currency',
@@ -278,8 +278,10 @@
 				                    <%include("/yh/component/form/detailTable.html", 
 				                        {
 				                            id:'cargo_table', 
-				                            headers:['',  '货品名称', '产品描述','企业商品货号<span style="color:red";>*</span>', '海关正面清单货号', '数量<span style="color:red";>*</span>', '计量单位<span style="color:red";>*</span>', '单价<span style="color:red";>*</span>', '总价<span style="color:red";>*</span>', '是否赠品<span style="color:red";>*</span>', '币制代码<span style="color:red";>*</span>'],
-				                            field_list:['','item_name','item_desc' ,'item_no', 'cus_item_no', 'qty', 'unit', 'price', 'total', 'gift_flag', 'currency'],
+				                            headers:['',  '货品名称', '产品描述','企业商品货号<span style="color:red";>*</span>', '海关正面清单货号', '数量<span style="color:red";>*</span>', '计量单位<span style="color:red";>*</span>',
+				                             '单价<span style="color:red";>*</span>', '总价（税前）<span style="color:red";>*</span>', 
+				                             '税率<span style="color:red";>*</span>', '总价（税后）<span style="color:red";>*</span>', '是否赠品<span style="color:red";>*</span>', '币制代码<span style="color:red";>*</span>'],
+				                            field_list:['','item_name','item_desc' ,'item_no', 'cus_item_no', 'qty', 'unit', 'price', 'total','tax_rate','after_tax_total', 'gift_flag', 'currency'],
 				                            value_list: itemList![]
 				                        }){} %>
 				                </div>

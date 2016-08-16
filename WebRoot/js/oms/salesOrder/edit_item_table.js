@@ -88,7 +88,7 @@ $(document).ready(function() {
                     return '<input type="text" name="item_name" value="'+data+'" class="form-control"/>';
                 }
             },
-            { "data": "ITEM_DESC", 
+            { "data": "ITEM_DESC",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
@@ -102,7 +102,7 @@ $(document).ready(function() {
                     return '<input type="text" name="item_no" value="'+data+'" class="form-control" required/>';
                 }
             },
-            { "data": "CUS_ITEM_NO", 
+            { "data": "CUS_ITEM_NO", 'visible':false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
@@ -159,7 +159,21 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='0';
-                   return '<input type="text" name="total" value="'+data+'" class="form-control calculate" required/>';
+                   return '<input disabled type="text" name="total" value="'+data+'" class="form-control calculate"/>';
+                }
+            },
+            { "data": "TAX_RATE",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="tax_rate" value="'+data+'" class="form-control calculate" required/>';
+                }
+            },
+            { "data": "AFTER_TAX_TOTAL",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='0';
+                   return '<input type="text" name="after_tax_total" value="'+data+'" class="form-control calculate" required/>';
                 }
             },
             { "data": "GIFT_FLAG","width": "60px",
@@ -201,8 +215,23 @@ $(document).ready(function() {
     	var row = $(this).parent().parent();
     	var sty = $(row.find('.calculate')[0]).val()==''?'0':$(row.find('.calculate')[0]).val();
     	var price = $(row.find('.calculate')[1]).val()==''?'0':$(row.find('.calculate')[1]).val();
-    	var total = $(row.find('.calculate')[2]).val(parseFloat(sty)*parseFloat(price));
+    	var tax_rate = $(row.find('.calculate')[3]).val()==''?'1':$(row.find('.calculate')[3]).val();
+    	var total = parseFloat(sty)*parseFloat(price);
+    	$(row.find('.calculate')[2]).val(total);
+    	$(row.find('.calculate')[4]).val(total+total*parseFloat(tax_rate));
+    	calAmount();
     })
+    
+    
+    var calAmount= function(){
+    	var total_amount = 0;
+    	$('#cargo_table tr').each(function(){
+    		var total = $(this).find('[name=after_tax_total]').val();
+    		if(total)
+    			total_amount += parseFloat(total);
+    	})
+    	$('#goods_value').val(total_amount);
+    }
 
     $('#add_cargo').on('click', function(){
         var item={};
