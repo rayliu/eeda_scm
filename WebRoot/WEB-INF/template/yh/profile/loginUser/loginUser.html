@@ -89,7 +89,7 @@ $(document).ready(function() {
 				{ "mDataProp": "USER_NAME", "sWidth": "30%",
 					"fnRender":function(obj){
 						if(User.update){
-							return "<a  href='/loginUser/edit/"+obj.aData.ID+"' target='_blank' >" + obj.aData.USER_NAME + "</a>";
+							return "<a  href='/loginUser/edit?userId="+obj.aData.ID+"' target='_blank' >" + obj.aData.USER_NAME + "</a>";
 						}else{
 							return obj.aData.USER_NAME;
 						}
@@ -104,7 +104,7 @@ $(document).ready(function() {
 	                "fnRender": function(obj) {
 	                	var str = "<nobr>";
 	                	if(User.update){
-                			str = str + "<a class='btn  btn-primary btn-sm editbutton' href='/loginUser/edit/"+obj.aData.ID+"' target='_blank'>"+
+                			str = str + "<a class='btn  btn-primary btn-sm editbutton' href='/loginUser/edit?userId="+obj.aData.ID+"' target='_blank'>"+
                             		 "<i class='fa fa-edit'> </i>编辑</a> ";
                 		}
 	                	if(User.del){
