@@ -1,5 +1,8 @@
 <%layout("/yh/layout.html"){%>
-<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet">
+<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/yh/css/ui/jquery-ui.css">
+<link href="/yh/js/plugins/sco/css/sco.message.css" rel="stylesheet"> 
+<link href="/yh/js/plugins/datatables-1.10.9/css/jquery.dataTables.min.css" rel="stylesheet">
 	<div id="page-wrapper">
 		<div class="row">
              <div class="col-lg-12">  
@@ -8,7 +11,7 @@
                  	<div class="panel-heading">用户基本信息</div>
 	            		<div class="panel-body">
 	            			<div class="row">
-	            				<form id='leadsForm' name="leadsForm" action="/loginUser/saveUser" method="post">
+	            				<form id='leadsForm' name="leadsForm">
 	            				<div class="col-lg-6">
                                 	<input id="userId" name="userId" type="hidden" value="${lu.id!''}">
 			                        <div class="form-group">
@@ -112,24 +115,26 @@
 <!-- 引入校验的js 文件及其 中文 文件-->
 <script src="/yh/js/jquery.validate.min.js"></script>
 <script src="/yh/js/jvalidate.messages_cn.js"></script>
-
-<script src="/yh/js/profile/loginUser/add.js"></script>
-
 <script src="/yh/js/plugins/dataTables/jquery.dataTables.js"></script>
 <script src="/yh/js/plugins/dataTables/dataTables.bootstrap.js"></script>
+<script src="/yh/js/plugins/sco/js/sco.message.js"></script>
+<script src="/js/eeda/eeda-common.js"></script>
+<script src="/yh/js/profile/loginUser/add.js"></script>
 
 
 <script>
-	$(document).ready(function() {
-		if('${lu.user_name!''}'){
-			document.title ='${lu.user_name!''}'+' | '+document.title;
-		}
-		var name =$("#username").val();
-		jQuery.validator.addMethod("stringCheck", function(value, element) {
-			return this.optional(element) || ( /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/).test(value);
-			}, "登陆名格式不正确(邮箱格式)");
+$(document).ready(function() {
+	$('#menu_sys_profile').addClass('active').find('ul').addClass('in');
 
-    $('#menu_sys_profile').addClass('active').find('ul').addClass('in');
+	if('${lu.user_name!''}'){
+		document.title ='${lu.user_name!''}'+' | '+document.title;
+	}
+	var name =$("#username").val();
+	jQuery.validator.addMethod("stringCheck", function(value, element) {
+		return this.optional(element) || ( /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/).test(value);
+	}, "登陆名格式不正确(邮箱格式)");
+
+    
         $('#leadsForm').validate({
             rules: {
             	username: {
@@ -148,8 +153,7 @@
                     			}else{
                     				return $("#username").val();
                     			}
-                    		}
-                              
+                    		}   
                           },
                     }   
     
@@ -200,8 +204,5 @@
 		$('#message_trigger_err').on('click', function(e) {
 			e.preventDefault();
 		});
-		/* $("#saveBtn").on('click',function(){
-				$.scojs_message('保存成功', $.scojs_message.TYPE_OK);
-		}); */
     });
 </script>

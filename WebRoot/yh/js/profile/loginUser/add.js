@@ -218,6 +218,7 @@ $(document).ready(function(){
 	});
 	//点击保存按钮时，将用户网点和用户可见客户的值传到后台中
 	$("#saveBtn").click(function(){
+		var self = this;
 		//检测验证是否通过
 		if(!$("#leadsForm").valid()){
 			return false;
@@ -236,9 +237,20 @@ $(document).ready(function(){
    		});
 		$("#officeIds").val(officeIds.toString());
 		$("#customerIds").val(customerIds.toString());
-		
-		$("#leadsForm").submit();
+
+		$(self).attr('disabled',true);
+		$.post('/loginUser/saveUser',$("#leadsForm").serialize(),function(data){
+			if(data){
+				contactUrl("edit?userId",data.ID);
+	    		$.scojs_message('保存成功', $.scojs_message.TYPE_OK);
+			}else{
+				$.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
+			}
+			$(self).attr('disabled',false);
+		})
 	});
+	
+	
 	if($("#userId").val() != "" && $("#userId").val() != null){
 		$("#assigning_role").show();
 	}
