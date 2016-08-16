@@ -69,8 +69,6 @@ public class UserRoleController extends Controller {
 			totalWhere ="select count(1) total from user_role ur left join user_login ul on ur.user_name = ul.user_name where !isnull(ul.is_stop) != 1 and ul.office_id = " + pom.getCurrentOfficeId();
 			sql = "select ur.user_name,ul.c_name,group_concat(r.name separator '<br>') name,ur.remark,ur.role_code from user_role ur left join role r on r.code=ur.role_code left join user_login ul on ur.user_name = ul.user_name where !isnull(ul.is_stop) != 1 and ul.office_id = " + pom.getCurrentOfficeId() + " and r.office_id = " + parentID + " group by ur.user_name" + sLimit;
 		}
-		// 获取总条数
-       /* String sql = "select ur.user_name,group_concat(r.name separator '<br>') name,ur.remark,ur.role_code from user_role ur left join role r on r.code=ur.role_code group by ur.user_name" + sLimit;*/
 
 		Record rec = Db.findFirst(totalWhere);	
 		logger.debug("total records:" + rec.getLong("total"));
@@ -102,14 +100,8 @@ public class UserRoleController extends Controller {
 	public void addOrUpdate(){
 		String id = getPara("id");
 		UserLogin user = UserLogin.dao.findFirst("select * from user_login where id = ?",id);
-		List<UserRole> list = UserRole.dao.find("select * from user_role where user_name = ?",user.get("user_name"));
-		if(list.size()>0){
-			setAttr("user_name", user.get("user_name"));		
-			render("/yh/profile/userRole/assigning_roles.html");
-		}else{
-			render("/yh/profile/userRole/addRole.html");
-		}
-		
+		setAttr("user_name", user.get("user_name"));		
+		render("/yh/profile/userRole/assigning_roles.html");
 	}
 	/*列出没有角色的用户*/
 	@RequiresPermissions(value = {PermissionConstant.PERMSSION_UR_CREATE})

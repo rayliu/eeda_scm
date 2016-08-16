@@ -62,6 +62,7 @@ $(document).ready(function() {
         
         if(username != ""&&role.length!=0){
         	$.post('/userRole/saveUserRole?name='+username+'&roles='+roles, function(data){
+        		contactUrl("edit?id",order.ID);
         		$.scojs_message('保存成功', $.scojs_message.TYPE_OK);
         		$("#user_filter").empty();
         		queryUser();
