@@ -53,8 +53,8 @@
 			<form id="itemForm">
 				<%include("/yh/component/form/detailTable.html", {
 				id:'cargo_table', 
-				headers:['','序号', '出库单号' ,'销售订单号' , '商品条码','货品名称','货品编码' ,'数量' ,'库位'],
-				field_list:['','','gate_out_no','sales_order_no','cargo_bar_code','cargo_name','item_code','amount','shelves'], 
+				headers:['','序号', '出库单号' ,'销售订单号' , '商品条码','货品名称','货品编码' ,'数量' ,'库位','标记'],
+				field_list:['','','gate_out_no','sales_order_no','cargo_bar_code','cargo_name','item_code','amount','shelves','pickup_flag'], 
 				value_list: itemList![] }){} %>
 			</form>
 		</div>

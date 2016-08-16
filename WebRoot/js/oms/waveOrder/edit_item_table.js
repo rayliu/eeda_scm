@@ -128,7 +128,8 @@ $(document).ready(function() {
                         data='';
                     return '<input type="text" name="shelves" value="'+data+'" class="form-control" />';
                 }
-            }
+            },
+            { "data": "PICKUP_FLAG"}
         ]
     });
 
