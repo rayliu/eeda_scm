@@ -190,7 +190,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="damage_amount" value="'+data+'" class="form-control" />';
+                   return '<input type="text" name="damage_amount" disabled value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "UPSTREAM_SKU", 

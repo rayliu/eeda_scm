@@ -172,7 +172,7 @@
 				<!--  第4行  -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'pre_packing_no', label:'预计包装数', value:order.pre_packing_no!'5'}){}%></div>
+					id:'pre_packing_no', label:'预计包装数', value:order.pre_packing_no!''}){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputUnitField.html", {
 					id:'packing_unit', label:'包装单位', value:order.packing_unit!''}){}%></div>
@@ -264,7 +264,7 @@
 	<div class="row">
 		<div class="col-lg-12">
 			<a id='saveBtn' class="btn  btn-primary" href="#" disabled>保存</a> 
-			<a id='confirmBtn' class="btn  btn-primary" href="#" disabled>确认</a> 
+			<a id='confirmBtn' class="btn  btn-primary" style="display:none" href="#" disabled>确认</a> 
 			<a id='cancelBtn' class="btn  btn-primary" href="#" disabled>取消</a>
 			<button id="printBtn" type="button" class="btn  btn-primary"
 				data-toggle="modal" data-target=".bs-example-modal-sm">打印</button>
