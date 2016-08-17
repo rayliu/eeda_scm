@@ -353,37 +353,7 @@ public class MainController extends Controller {
         renderJson(orderMap);
     }
     
-    @Before(SetAttrLoginUserInterceptor.class)
-    public void module() {
-        String module_id = getPara(0);
-        String param1 = getPara(1);
-        
-        String page = "";
-        if(param1 == null){
-            page = "/yh/profile/module/searchOrder.html";
-        }else{
-            if(StringUtils.isNumeric(param1)){//edit
-                setAttr("order_id", param1);
-            }else if("add".equals(param1)){
-                
-            }
-            page = "/yh/profile/module/editOrder.html";
-        }
-
-        UserLogin user = LoginUserController.getLoginUser(this);
-        //查询当前用户菜单
-        String sql ="select distinct module.* from modules o, modules module "
-                +"where o.parent_id = module.id and o.office_id=? and o.status = '启用' order by seq";
-        List<Record> modules = Db.find(sql, user.get("office_id"));
-        for (Record module : modules) {
-            sql ="select * from modules where parent_id =? and status = '启用' order by seq";
-            List<Record> orders = Db.find(sql, module.get("id"));
-            module.set("orders", orders);
-        }
-        setAttr("modules", modules);
-        setAttr("module_id", module_id);
-        render(page);
-    }
+   
     
     @Before(Tx.class)
     public void m_save() {

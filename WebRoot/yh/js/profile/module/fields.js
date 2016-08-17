@@ -1,7 +1,7 @@
 
 
     
-//$(document).ready(function(template) {
+$(document).ready(function(template) {
 	document.title = '模块定义 | '+document.title;
     $('#menu_sys_profile').addClass('active').find('ul').addClass('in');
     $('[data-toggle=tooltip]').tooltip();
@@ -177,7 +177,7 @@
         ]
     };
 
-    var dataTable = $('#fields-table').DataTable(tableSetting);
+    var dataTable = null;//$('#fields-table').DataTable(tableSetting);
 
     //等页面组件装载完成后，再绑定事件
     var bindFieldTableEvent= function(){
@@ -357,13 +357,10 @@
 
     var saveAction=function(btn, is_start){
         is_start = is_start || false; 
-        var structure_list=buildStructureTableArray();
-        var action_list=buildActionArray();
 
         var dto = {
             module_id: $('#module_id').text(),
-            structure_list: structure_list,
-            action_list: action_list,
+            url: $('#module_url').val(),
             is_start: is_start
         };
 
@@ -374,7 +371,7 @@
         $.post('/module/saveStructure', {params:JSON.stringify(dto)}, function(data){
             var order = data;
             console.log(order);
-            if(order.MODULE_ID>0){
+            if(order.ID>0){
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 btn.attr('disabled', false);
             }else{
@@ -414,4 +411,4 @@
 
         saveAction($(this), true);
     });
-//});
+});

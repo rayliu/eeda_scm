@@ -14,7 +14,7 @@
         edit: {
             enable: true,
             editNameSelectAll: true,
-            //showRemoveBtn: showRemoveBtn,
+            showRemoveBtn: false,
             //showRenameBtn: showRenameBtn,
             renameTitle: "编辑",
             removeTitle: "删除",
@@ -41,10 +41,12 @@
 
     function dataFilter(treeId, parentNode, childNodes) {
         if (!childNodes) return null;
+        console.log(childNodes);
         for (var i=0, l=childNodes.length; i<l; i++) {
             childNodes[i].name = childNodes[i].MODULE_NAME.replace(/\.n/g, '.');
             childNodes[i].id = childNodes[i].ID;
             childNodes[i].parent_id = childNodes[i].PARENT_ID;
+            childNodes[i].url = childNodes[i].URL;
             if(childNodes[i].PARENT_ID>0){
                 childNodes[i].isParent=false;
             }
@@ -139,7 +141,10 @@
         }
         $("#module_id").text(treeNode.id);
         $("#order_name").val(treeNode.name);
+        $("#module_url").val(treeNode.url);
 
+        return;
+        
         $.post('/module/getOrderStructure', {module_id: treeNode.id}, function(json){
             console.log('getOrderStructure....');
             console.log(json);

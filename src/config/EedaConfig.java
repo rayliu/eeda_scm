@@ -41,6 +41,7 @@ import models.eeda.oms.WaveOrderItem;
 import models.eeda.profile.Country;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.LogisticsCustomCompany;
+import models.eeda.profile.Module;
 import models.eeda.profile.Product;
 import models.eeda.profile.Unit;
 import models.eeda.profile.Warehouse;
@@ -73,6 +74,7 @@ import com.jfinal.weixin.sdk.api.ApiConfigKit;
 
 import controllers.HomeController;
 import controllers.api.ApiController;
+import controllers.eeda.ModuleController;
 import controllers.eeda.report.ReportController;
 import controllers.oms.allinpay.AllinpayController;
 import controllers.oms.gateInOrder.GateInOrderController;
@@ -169,7 +171,7 @@ public class EedaConfig extends JFinalConfig {
 	private void setScmRoute(Routes me, String contentPath) {
 		// yh project controller
         me.add("/", controllers.profile.MainController.class, contentPath);
-       // me.add("/apidoc", controllers.eeda.DocController.class);
+        me.add("/module", ModuleController.class, contentPath);
         me.add("/debug", controllers.profile.LogController.class, contentPath);
         me.add("/warehouse",WarehouseController.class,contentPath);
         me.add("/loginUser", controllers.profile.LoginUserController.class, contentPath);
@@ -242,6 +244,7 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("permission", Permission.class);
         arp.addMapping("user_role", UserRole.class);
         arp.addMapping("role_permission", RolePermission.class);
+        arp.addMapping("eeda_modules", Module.class);
 
         arp.addMapping("party", Party.class);
         arp.addMapping("contact", Contact.class);       
