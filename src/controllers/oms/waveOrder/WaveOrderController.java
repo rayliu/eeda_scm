@@ -89,6 +89,7 @@ public class WaveOrderController extends Controller {
 				String gate_out_no = (String)item.get("gate_out_no");
 				GateOutOrder go = GateOutOrder.dao.findFirst("select * from gate_out_order where order_no = ?",gate_out_no);
 				go.set("wave_flag", "Y");
+				go.set("wave_id", id);
 				go.update();
 			}	
 		}
