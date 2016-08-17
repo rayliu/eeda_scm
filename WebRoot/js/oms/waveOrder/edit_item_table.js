@@ -129,7 +129,18 @@ $(document).ready(function() {
                     return '<input type="text" name="shelves" value="'+data+'" class="form-control" />';
                 }
             },
-            { "data": "PICKUP_FLAG"}
+            { "data": "PICKUP_FLAG",
+            	"render": function ( data, type, full, meta ) {
+                    if(data=='Y'){
+                    	data='<span style="color:green">已拣货</span>';
+                    } else if(data=='E'){
+                    	data='<span style="color:red">异常</span>';
+                    } else if(data=='N'){
+                    	data='<span style="color:blue">未拣货</span>';
+                    }
+                    return data;
+                }
+            }
         ]
     });
 

@@ -74,4 +74,15 @@ $(document).ready(function() {
     	});    	
     	self.attr('disabled',false);
     });
+    
+    //按钮控制
+    var order_id = $('#order_id').val();
+    if(order_id == ''){
+    	$('#saveBtn').attr('disabled',false);
+    }else{
+    	var status = $('#status').val();
+    	if(status == '新建'){
+    		$('#saveBtn').attr('disabled',false);
+    	}
+    }
 });
