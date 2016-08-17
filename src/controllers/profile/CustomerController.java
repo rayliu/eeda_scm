@@ -435,7 +435,7 @@ public class CustomerController extends Controller {
         }
         
         List<Record> locationList = Collections.EMPTY_LIST;
-        String sql = "select p.id, p.abbr from party p where p.type = 'CUSTOMER' "
+        String sql = "select p.id, p.abbr from party p where p.type = 'CUSTOMER' and is_stop=0 "
                 + " and p.id in (select customer_id from user_customer where user_name='"+currentUser.getPrincipal()+"') ";
                     
         if (customerName.trim().length() > 0) {
