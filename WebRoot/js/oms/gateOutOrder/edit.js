@@ -103,11 +103,11 @@ $(document).ready(function() {
     	self.attr('disabled',true);
     	var order_id = $("#order_id").val();
     	$.post('/gateOutOrder/checkOrder', {params:order_id}, function(data){
-    		if(data.ID){
-    			$('#status').val(data.STATUS);
+    		if(data.MSG=='success'){
+    			$('#status').val(data.ORDER.STATUS);
     			$.scojs_message('复核成功', $.scojs_message.TYPE_OK);
     		}else{
-    			$.scojs_message('复核失败', $.scojs_message.TYPE_ERROR);
+    			$.scojs_message(data.MSG, $.scojs_message.TYPE_ERROR);
     			self.attr('disabled',false);
     		}
     	})

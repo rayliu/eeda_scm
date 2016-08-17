@@ -14,6 +14,7 @@ import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.GateOutOrderItem;
 import models.eeda.oms.Inventory;
+import models.eeda.oms.WaveOrder;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.Warehouse;
 
@@ -132,16 +133,31 @@ public class GateOutOrderController extends Controller {
     public void checkOrder() throws Exception{
     	String order_id = getPara("params");
     	GateOutOrder gateOutOrder = GateOutOrder.dao.findById(order_id);
-    	gateOutOrder.set("status","已复核").update();
-    	renderJson(gateOutOrder);
     	
-    	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
-    	UserLogin user = LoginUserController.getLoginUser(this);
-   		Long operator = user.getLong("id");
-    	OperationLog(order_id, order_id, operator,"confirm");
+    	String msg = "此单据未调拨完成";
+    	if(gateOutOrder.getLong("wave_id") != null){
+    		long wave_id = gateOutOrder.getLong("wave_id");
+    		WaveOrder wo = WaveOrder.dao.findById(wave_id);
+    		String status = wo.getStr("status");
+    		if("已完成".equals(status)){
+    			msg = "success";
+    			gateOutOrder.set("status","已复核").update();
+    			
+    			//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
+    	    	UserLogin user = LoginUserController.getLoginUser(this);
+    	   		Long operator = user.getLong("id");
+    	    	OperationLog(order_id, order_id, operator,"confirm");
+    	    	
+    	    	//扣库存
+    	    	gateOut(order_id);	
+    		}
+    	}
     	
-    	//扣库存
-    	gateOut(order_id);	
+    	Record record = new Record();
+    	record.set("order", gateOutOrder);
+    	record.set("msg", msg);
+    	
+    	renderJson(record);
     }
     
     @Before(Tx.class)
