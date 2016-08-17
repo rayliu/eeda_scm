@@ -162,13 +162,12 @@ public class GateOutOrderController extends Controller {
     
     @Before(Tx.class)
     public void lockInventory(String order_id){
-    	GateOutOrder goo = GateOutOrder.dao.findById(order_id);
     	List<Record> res = Db.find("select * from gate_out_order_item where order_id = ?",order_id);
     	for(Record re :res){
-    		String cargo_name = re.getStr("cargo_name");
+    		String bar_code = re.getStr("bar_code");
     		int amount = ((int)(re.getDouble("packing_amount")*100))/100;
-    		String sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount - lock_amount) > 0 order by shelf_life limit 0,?";
-    		List<Inventory> invs = Inventory.dao.find(sql,cargo_name,amount);
+    		String sql = "select * from inventory inv where cargo_barcode = ? and (gate_in_amount - gate_out_amount - lock_amount) > 0 order by shelves,shelf_life limit 0,?";
+    		List<Inventory> invs = Inventory.dao.find(sql,bar_code,amount);
     		for(Inventory inv : invs){
     			inv.set("gate_out_order_id", order_id);
         		inv.set("lock_stamp", new Date());
@@ -182,18 +181,12 @@ public class GateOutOrderController extends Controller {
     @Before(Tx.class)
     public void gateOut(String order_id){
     	GateOutOrder goo = GateOutOrder.dao.findById(order_id);
-    	List<Record> res = Db.find("select * from gate_out_order_item where order_id = ?",order_id);
-    	for(Record re :res){
-    		String cargo_name = re.getStr("cargo_name");
-    		int amount = ((int)(re.getDouble("packing_amount")*100))/100;
-    		String sql = "select * from inventory inv where cargo_name = ? and (gate_in_amount - gate_out_amount) > 0 order by shelf_life  limit 0,?";
-    		List<Inventory> invs = Inventory.dao.find(sql,cargo_name,amount);
-    		for(Inventory inv : invs){
-    			inv.set("lock_amount", 0);
-        		inv.set("gate_out_stamp", goo.getTimestamp("gate_out_date"));
-        		inv.set("gate_out_amount", 1);
-        		inv.update();
-    		}
+    	List<Inventory> res = Inventory.dao.find("select * from inventory where gate_out_order_id = ?",order_id);
+    	for(Inventory inv :res){
+			inv.set("lock_amount", 0);
+    		inv.set("gate_out_stamp", goo.getTimestamp("gate_out_date"));
+    		inv.set("gate_out_amount", 1);
+    		inv.update();
     	}
     }
     
