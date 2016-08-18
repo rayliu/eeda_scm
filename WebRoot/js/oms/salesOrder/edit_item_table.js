@@ -215,10 +215,11 @@ $(document).ready(function() {
     	var row = $(this).parent().parent();
     	var sty = $(row.find('.calculate')[0]).val()==''?'0':$(row.find('.calculate')[0]).val();
     	var price = $(row.find('.calculate')[1]).val()==''?'0':$(row.find('.calculate')[1]).val();
-    	var tax_rate = $(row.find('.calculate')[3]).val()==''?'1':$(row.find('.calculate')[3]).val();
+    	var tax_rate = $(row.find('.calculate')[3]).val()==''?'0':$(row.find('.calculate')[3]).val();
     	var total = parseFloat(sty)*parseFloat(price);
     	$(row.find('.calculate')[2]).val(total);
-    	$(row.find('.calculate')[4]).val(total+total*parseFloat(tax_rate));
+    	if(tax_rate != 0)
+    		$(row.find('.calculate')[4]).val(total+total*parseFloat(tax_rate));
     	calAmount();
     })
     

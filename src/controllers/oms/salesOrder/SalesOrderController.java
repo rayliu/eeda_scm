@@ -132,7 +132,7 @@ public class SalesOrderController extends Controller {
     		logisticsOrder = new LogisticsOrder();
         	logisticsOrder.set("log_no", order_no);
         	logisticsOrder.set("sales_order_id",sales_order_id);
-        	logisticsOrder.set("status","新建");
+        	logisticsOrder.set("status","暂存");
     		logisticsOrder.set("create_by", LoginUserController.getLoginUserId(this));
     		logisticsOrder.set("create_stamp", new Date());
     		
