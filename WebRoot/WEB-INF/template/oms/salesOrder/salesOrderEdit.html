@@ -443,9 +443,9 @@
             <div class="row">
                 <div class="col-lg-12">
                 <% if(shiro.hasPermission("salesOrder.update")){ %>
-                    <a id='saveBtn' class="btn  btn-primary" href="#">保存</a>
+                    <a id='saveBtn' class="btn  btn-primary" disabled>保存</a>
                 <%}%>
-                    <a id='payBtn' class="btn  btn-primary">支付</a>
+                    <a id='payBtn' class="btn  btn-primary" disabled>支付</a>
                     <a id='submitDingDanBtn' class="btn  btn-primary" disabled >上报订单</a>
                     <a id='goYunDanBtn' class="btn  btn-primary" disabled >前往运单</a>
                      <button id="printBtn" type="button" class="btn  btn-primary" data-toggle="modal"  data-target=".bs-example-modal-sm">打印</button>

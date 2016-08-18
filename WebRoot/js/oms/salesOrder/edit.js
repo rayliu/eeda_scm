@@ -11,13 +11,12 @@ $(document).ready(function() {
     
     
 	$("#orderForm").validate({
-        rules: {//身份证
+        rules: {
         	consignee_id_name:{
-        		isIdCardNo:true
-        		
+        		isIdCardNo:true	
         	},
 			currency_name:{
-		 		rangelength:[3,3]				//输入长度最小是 10 的字符串
+		 		rangelength:[3,3]
 		 	},
 		 	consignee_country_name:{
 		 		rangelength:[3,3]
@@ -51,27 +50,6 @@ $(document).ready(function() {
 	});
 	
 	
-/*    $("#itemsForm").validate({
-        rules: {//身份证
-        	sty:{
-        		number:true
-        	},
-        	unit:{
-		 		rangelength:[3,3]				//输入长度最小是 10 的字符串
-		 	},
-		 	price:{
-		 		number:true
-		 	},
-		 	total:{
-		 		number:true
-	        },
-	        gift_flag:{
-	        	rangelength:[1,1],
-	        	digits:true
-	        }
-        }
-	});*/
-	
     $.extend($.validator.messages, {
 		rangelength: $.validator.format("长度必须为{0}位字符")
 	})
@@ -84,11 +62,7 @@ $(document).ready(function() {
         //提交前，校验数据
         if(!$("#orderForm").valid()){
             return;
-        }
-        
-//        if(!$("#itemsForm").valid()){
-//            return;
-//        }
+        } 
         
         $(this).attr('disabled', true);
         //分解收货人省市区的地址编码
@@ -165,14 +139,6 @@ $(document).ready(function() {
     });  
     
     
-/*    //刷新明细表
-    var refleshTable = function(order_id){
-    	var url = "/salesOrder/tableList?order_id="+order_id
-        +"&table_type=item";
-    	salesOrder.cargoTable.ajax.url(url).load();
-    }*/
-    
-    
     //上报订单
     $('#submitDingDanBtn').click(function(){
     	$('#submitDingDanBtn').attr('disabled',true);
@@ -228,10 +194,22 @@ $(document).ready(function() {
     }
     
     //按钮控制
-    var order_id = $("#order_id").val()
-    if(order_id != ''){
-    	 $('#submitDingDanBtn').attr('disabled',false);
-    	 $('#goYunDanBtn').attr('disabled',false);
+    var order_id = $("#order_id").val();
+    var status = $("#status").val();
+    var pay_no = $("#pay_no").val();
+    if(order_id == ''){
+    	 $('#saveBtn').attr('disabled',false);
+    }else{
+    	if(status=='未上报'){
+    		if(pay_no==''){
+    			$('#saveBtn').attr('disabled',false);
+    			$('#payBtn').attr('disabled',false);
+    		}else{
+    			$('#submitDingDanBtn').attr('disabled',false);
+    		}
+    	}else{
+    		$('#goYunDanBtn').attr('disabled',false);
+    	}
     }
     
   
