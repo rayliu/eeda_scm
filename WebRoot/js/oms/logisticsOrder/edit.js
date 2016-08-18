@@ -186,4 +186,16 @@ $(document).ready(function() {
     	})	
     }
     
+    //按钮控制
+    var order_id = $("#order_id").val();
+    var status = $("#status").val();
+    if(order_id == ''){
+    	 $('#saveBtn').attr('disabled',false);
+    }else{
+    	if(status=='未上报' || status=='暂存'){
+    		$('#saveBtn').attr('disabled',false);
+			$('#submitBtn').attr('disabled',false);
+    	}
+    }
+    
 } );
