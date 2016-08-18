@@ -31,12 +31,8 @@ public class MobileController extends Controller {
     }
     //拣货, 查询波次单
     public void searchWaveOrder() {
-
         String barcode = getPara();
-
-        String sql = "select order_no, status from wave_order "
-                + "	WHERE order_no= ?";
-
+        String sql = "select order_no, status from wave_order WHERE order_no= ?";
         Record rec = Db.findFirst(sql, barcode);
 
         if (rec != null) {
@@ -55,29 +51,26 @@ public class MobileController extends Controller {
 
         Record rec = new Record();
         if (count == 1) {
-            rec.set("status", "done");
+            rec = firstPickup(orderNo);
             renderJson(rec);
         } else {
             rec.set("status", "fail");
             renderJson(rec);
         }
-
-        firstPickup(orderNo);
     }
     //拣货, 查询波次单第一个商品
-    private void firstPickup(String orderNo) {
-        String pickupSql = "select wo.order_no, goi.id goi_id, ifnull(woi.cargo_name, goi.cargo_name) cargo_name1, woi.* from wave_order_item woi "
+    private Record firstPickup(String orderNo) {
+        String pickupSql = "select wo.order_no, p.item_name, woi.* from wave_order_item woi "
                 + " left join wave_order wo on woi.order_id = wo.id "
-                + " left join gate_out_order go on woi.gate_out_no = go.order_no "
-                + " left join gate_out_order_item goi on goi.order_id = go.id and woi.cargo_bar_code = goi.bar_code "
+                + " left join product p on woi.cargo_bar_code = p.serial_no "
                 + " where woi.pickup_flag='N' and wo.order_no=? order by woi.shelves";
         Record orderRec = Db.findFirst(pickupSql, orderNo);
         if (orderRec != null) {
-            renderJson(orderRec);
+            return orderRec;
         } else {
             orderRec = new Record();
-            orderRec.set("order_no", "done");
-            renderJson(orderRec);
+            orderRec.set("status", "done");
+            return orderRec;
         }
     }
     //拣货, 查询波次单下一个商品
@@ -85,14 +78,15 @@ public class MobileController extends Controller {
     public void nextPickup() {
         String barcode = getPara("barcode");
         String orderNo = getPara("orderNo");
+        String pickupFlag = getPara("pickupFlag");
+        String itemId = getPara("itemId");
         
-        Db.update("update wave_order_item set pickup_flag='Y' where cargo_bar_code=?"
-                + " and order_id=(select id from wave_order where order_no=?)", barcode, orderNo);
+        Db.update("update wave_order_item set pickup_flag='"+pickupFlag+"' where cargo_bar_code=?"
+                + " and id=?", barcode, itemId);
         
-        String pickupSql = "select wo.order_no, goi.id goi_id, ifnull(woi.cargo_name, goi.cargo_name) cargo_name1, woi.* from wave_order_item woi "
+        String pickupSql = "select wo.order_no, p.item_name, woi.* from wave_order_item woi "
                 + " left join wave_order wo on woi.order_id = wo.id "
-                + " left join gate_out_order go on woi.gate_out_no = go.order_no "
-                + " left join gate_out_order_item goi on goi.order_id = go.id and woi.cargo_bar_code = goi.bar_code "
+                + " left join product p on woi.cargo_bar_code = p.serial_no "
                 + " where woi.pickup_flag='N' and wo.order_no=? order by woi.shelves";
         Record orderRec = Db.findFirst(pickupSql, orderNo);
         if (orderRec != null) {
