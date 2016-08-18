@@ -336,8 +336,6 @@ public class MobileController extends Controller {
         if (count == 1) {
             rec.set("status", "ok");
         } else {
-        	if(flag<0)
-        		rec.set("msg", "系统库存所存在商品的数量不够！！！");
             rec.set("status", "fail");
             renderJson(rec);
         }

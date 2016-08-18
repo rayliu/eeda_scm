@@ -143,11 +143,11 @@ public class ApiController extends Controller {
         Record jsonRec = new Record();
         jsonRec.set("ref_order_no", rec.get("ref_order_no", ""));
         jsonRec.set("order_cus_status_code", rec.get("order_cus_status_code", ""));
-        jsonRec.set("order_cus_status_msg", CustomJob.statusShow(rec.get("order_cus_status_code", "").toString()));
+        jsonRec.set("order_cus_status_msg", CustomJob.statusShow(rec.get("order_cus_status_code", "").toString(),"order_cus_status_code"));
         jsonRec.set("order_ciq_status_code", rec.get("order_ciq_status_code", ""));
-        jsonRec.set("order_ciq_status_msg", CustomJob.statusShow(rec.get("order_ciq_status_code", "").toString()));
+        jsonRec.set("order_ciq_status_msg", CustomJob.statusShow(rec.get("order_ciq_status_code", "").toString(),"order_ciq_status_code"));
         jsonRec.set("order_pay_status_code", rec.get("order_pay_status_code", ""));
-        jsonRec.set("order_pay_status_msg", CustomJob.statusShow(rec.get("order_pay_status_code", "").toString()));
+        jsonRec.set("order_pay_status_msg", CustomJob.statusShow(rec.get("order_pay_status_code", "").toString(),"order_pay_status_code"));
         jsonRec.set("appkey", appKey);
         jsonRec.set("salt", salt);
         jsonRec.set("sign", sign);
