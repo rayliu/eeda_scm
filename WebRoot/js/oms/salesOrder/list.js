@@ -37,8 +37,8 @@ $(document).ready(function() {
             		var msg = '';
             		if(data == null){
             			msg = '未付款';
-            		}else if(data=='已接收'){
-            			msg = "<span style='color:green'>付款已接收</span>";
+            		}else if(data=='接收成功'){
+            			msg = "<span style='color:green'>付款已完成</span>";
             		}else{
             			msg = "<span style='color:red'>"+data+"</span>";
             		}
