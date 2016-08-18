@@ -181,7 +181,7 @@ public class GateOutOrderController extends Controller {
     @Before(Tx.class)
     public void gateOut(String order_id){
     	GateOutOrder goo = GateOutOrder.dao.findById(order_id);
-    	List<Inventory> res = Inventory.dao.find("select * from inventory where gate_out_order_id = ?",order_id);
+    	List<Inventory> res = Inventory.dao.find("select * from inventory where gate_out_order_id = ? and exception = 'N'",order_id);
     	for(Inventory inv :res){
 			inv.set("lock_amount", 0);
     		inv.set("gate_out_stamp", goo.getTimestamp("gate_out_date"));
