@@ -240,7 +240,9 @@ public class SalesOrderController extends Controller {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
         String sql = "select * from(SELECT sor.*, ifnull(u.c_name, u.user_name) creator_name ,"
+        		+ "  lor.logistics_ciq_status,lor.logistics_cus_status,lor.status log_status,"
     			+ "  c.shop_name from sales_order sor "
+    			+ "  LEFT JOIN logistics_order lor on lor.sales_order_id = sor.id"
     			+ "  left join custom_company c on c.id = sor.custom_id"
     			+ "  left join user_login u on u.id = sor.create_by"
     			+ "  ) A where 1 =1 ";

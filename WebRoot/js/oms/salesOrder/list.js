@@ -18,19 +18,47 @@ $(document).ready(function() {
             },
             { "data": "SHOP_NAME"},
             { "data": "CONSIGNEE"}, 
-            { "data": "GOODS_VALUE"}, 
-            { "data": null,
+            { "data": "GOODS_VALUE",'visible':false}, 
+            { "data": "STATUS",
             	"render": function ( data, type, full, meta ) {
-            		var order_cus_status = data.ORDER_CUS_STATUS;
-            		var order_ciq_status = data.ORDER_CIQ_STATUS;
-            		var pay_status = data.PAY_STATUS;
-            		
-            		if(order_cus_status=='接收成功' && order_ciq_status=='接收成功' && pay_status=='接收成功'){
-            			return '<span style="color:green">订单报关已完成</span>';
+            		var msg = '';
+            		if(data == '已通关'){
+            			msg = "<span style='color:green'>"+data+"</span>";
+            		}else if(data=='报关处理中'){
+            			msg = "<span style='color:red'>"+data+"</span>";
             		}else{
-            			return '<span style="color:red">订单报关处理中</span>';
+            			msg = data;
             		}
-            	}
+            		return msg;
+                }
+            }, 
+            { "data": "PAY_STATUS",
+            	"render": function ( data, type, full, meta ) {
+            		var msg = '';
+            		if(data == null){
+            			msg = '未付款';
+            		}else if(data=='已接收'){
+            			msg = "<span style='color:green'>付款已接收</span>";
+            		}else{
+            			msg = "<span style='color:red'>"+data+"</span>";
+            		}
+            		return msg;
+                }
+            }, 
+            {"data": "LOG_STATUS",
+            	"render": function ( data, type, full, meta ) {
+	        		var msg = '';
+	        		if(data==null){
+	        			msg = '运单不存在';
+	        		}if(data=='已通关'){
+	        			msg = "<span style='color:green'>"+data+"</span>";
+	        		}else if(data=='报关处理中'){
+	        			msg = "<span style='color:red'>"+data+"</span>";
+	        		}else{
+	        			msg = data;
+	        		}
+	        		return msg;
+                }
             }, 
             { "data": "CREATOR_NAME"}, 
             { "data": "CREATE_STAMP"}
