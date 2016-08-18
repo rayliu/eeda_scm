@@ -36,7 +36,11 @@ $(document).ready(function() {
             	"render": function ( data, type, full, meta ) {
             		var msg = '';
             		if(data == null){
-            			msg = '未付款';
+            			if(full.PAY_NO != null){
+            				msg = '<span style="color:blue">已支付，未申报</span>';
+            			}else{
+            				msg = '未付款';
+            			}
             		}else if(data=='接收成功'){
             			msg = "<span style='color:green'>付款已完成</span>";
             		}else{

@@ -123,6 +123,7 @@ $(document).ready(function() {
   	                   +'<option value="139" '+ (data=='139'?'selected':'') +'>粒</option>'
   	                   +'<option value="140" '+ (data=='140'?'selected':'') +'>盒</option>'
   	                   +'<option value="142" '+ (data=='142'?'selected':'') +'>瓶</option>'
+  	                   +'<option value="120" '+ (data=='120'?'selected':'') +'>箱</option>'
  	                   +'</select>';
                       return str;
                 }
