@@ -108,7 +108,7 @@ $(document).ready(function() {
                     return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" />';
                 }
             } ,
-            { "data": "ITEM_CODE", 
+            { "data": "ITEM_CODE", 'visible':false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';

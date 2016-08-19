@@ -206,7 +206,7 @@ public class WaveOrderController extends Controller {
     	if(StringUtils.isNotEmpty(order_id)){
     		list = getItems(order_id);
     	}else if(StringUtils.isNotEmpty(order_ids)){
-    		String sql = "SELECT NULL id, goo.order_no gate_out_no, inv.cargo_code cargo_bar_code,"
+    		String sql = "SELECT NULL id, goo.order_no gate_out_no, inv.cargo_barcode cargo_bar_code,inv.cargo_name,"
     				+ " goo.customer_refer_no sales_order_no, inv.shelves, inv.lock_amount amount,"
     				+ " null item_code, NULL order_no_code, 'N' pickup_flag"
     				+ " FROM inventory inv LEFT JOIN gate_out_order goo on goo.id = inv.gate_out_order_id"
