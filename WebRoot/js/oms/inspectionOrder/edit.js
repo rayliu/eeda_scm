@@ -43,6 +43,7 @@ $(document).ready(function() {
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
+                $('#confirmBtn').attr('disabled', false);
                 
                 //异步刷新明细表
                 itemOrder.refleshTable(order.ID);
@@ -76,9 +77,14 @@ $(document).ready(function() {
     })
  
     //按钮控制
-    var order_id = $("#order_id").val()
-    if(order_id != ''){
-    	 $('#confirmBtn').attr('disabled',false);
+    var order_id = $("#order_id").val();
+    var status = $("#status").val()
+    if(order_id == ''){
+    	 $('#saveBtn').attr('disabled',false);
+    }else{
+    	if(status != '已确认'){
+    		$('#confirmBtn').attr('disabled',false);
+    	}
     }
 
     $("#have_check").on("input",function(){
