@@ -81,8 +81,7 @@ public class MobileController extends Controller {
         String pickupFlag = getPara("pickupFlag");
         String itemId = getPara("itemId");
         
-        Db.update("update wave_order_item set pickup_flag='"+pickupFlag+"' where cargo_bar_code=?"
-                + " and id=?", barcode, itemId);
+        Db.update("update wave_order_item set pickup_flag='"+pickupFlag+"' where id=?", barcode, itemId);
         
         String pickupSql = "select wo.order_no, p.item_name, woi.* from wave_order_item woi "
                 + " left join wave_order wo on woi.order_id = wo.id "
