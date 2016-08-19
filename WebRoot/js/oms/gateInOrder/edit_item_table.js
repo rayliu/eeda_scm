@@ -292,8 +292,7 @@ $(document).ready(function() {
 	    		if(data.ID>0){
 	    			$self.find('[name=cargo_upc]').val(data.SERIAL_NO);
 	    			$self.find('[name=cargo_name]').val(data.ITEM_NAME);
-	    			$self.find('[name=packing_unit]').val(data.ORDER.UNIT);
-	    			//$self.find('[name=packing_unit]').val(data.ORDER.UNIT);
+	    			$self.find('[name=packing_unit]').val(data.UNIT);
 	    		}else{
 	    			$.scojs_message('对不起，基础信息里没有此商品，请维护', $.scojs_message.TYPE_ERROR);
 	    		}

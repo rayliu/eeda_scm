@@ -109,7 +109,7 @@ public class MobileController extends Controller {
         String sql = "select ioi.bar_code, ioi.shelves, gii.cargo_name from inspection_order_item ioi"
             +" left join inspection_order io on ioi.order_id=io.id "
             +" left join gate_in_order_item gii on io.gate_in_order_id = gii.order_id"
-            +" WHERE shelves is not null and bar_code= ?";
+            +" WHERE shelves is null and bar_code= ?";
         Record rec = Db.findFirst(sql, barcode);
         if (rec != null) {
             renderJson(rec);
