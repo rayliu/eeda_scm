@@ -139,7 +139,7 @@ public class MobileController extends Controller {
             renderJson(rec);
         } else {
         	if(flag<0)
-        		rec.set("msg", "系统库存所存在商品的数量不够！！！");
+        		rec.set("msg", "上架数量超过了验货数量, 不能上架!");
             rec.set("status", "fail");
             renderJson(rec);
         }
@@ -197,7 +197,7 @@ public class MobileController extends Controller {
             renderJson(rec);
         } else {
         	if(flag<0)
-        		rec.set("msg", "系统此库位不存在此商品！！！");
+        		rec.set("msg", "该库位不存在此商品！");
             rec.set("status", "fail");
             renderJson(rec);
         }
