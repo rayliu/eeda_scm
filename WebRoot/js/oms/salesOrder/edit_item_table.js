@@ -220,7 +220,7 @@ $(document).ready(function() {
     	var total = parseFloat(sty)*parseFloat(price);
     	$(row.find('.calculate')[2]).val(total);
     	if(tax_rate != 0)
-    		$(row.find('.calculate')[4]).val(total+total*parseFloat(tax_rate));
+    		$(row.find('.calculate')[4]).val((total+total*parseFloat(tax_rate)).toFixed(2));
     	calAmount();
     })
     
