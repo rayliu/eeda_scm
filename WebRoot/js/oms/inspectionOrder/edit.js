@@ -83,6 +83,7 @@ $(document).ready(function() {
     	 $('#saveBtn').attr('disabled',false);
     }else{
     	if(status != '已确认'){
+    		$('#saveBtn').attr('disabled',false);
     		$('#confirmBtn').attr('disabled',false);
     	}
     }
