@@ -124,6 +124,7 @@ $(document).ready(function() {
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
+                $('#payBtn').attr('disabled', false);
                 
                 //刷新明细表
                 salesOrder.refleshItemTable(order.ID);

@@ -32,16 +32,14 @@
 					<div class="row">
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'freight',
-							label:'订单商品运费(元)', required:'required', value:order.freight!'' }){}%>
+							label:'订单商品运费(元)', required:'required', value:order.freight!'0' }){}%>
 						</div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'goods_value',
 							label:'订单商品货款(税后)', required:'required', value:order.goods_value!''
 							}){} %></div>
 						<div class="col-lg-4">
-							<!-- <%include("/yh/component/form/inputField.html", { id:'currency',
-							label:'币制', required:'required', value:order.currency!'' }){}%> -->
-							
+							<input id="pay_currency" type="hidden" value="156">
 							<div class="form-group">
 							    <label class="search-label">币制</label>
 							    <select id="currency" name="currency" 

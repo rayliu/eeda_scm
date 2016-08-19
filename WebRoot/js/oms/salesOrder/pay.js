@@ -32,7 +32,7 @@ $(document).ready(function() {
             orderNo: $('#order_no').val(),//商户系统订单号
             orderAmount: parseFloat($('#goods_value').val())*100,//订单金额(单位分)
             //orderCurrency: '0', //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
-            orderCurrency: item[0].currency, //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
+            orderCurrency: $('#pay_currency').val(), //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
             //orderDatetime: '20160622103144',//商户的订单提交时间
             orderDatetime: datetime,//商户的订单提交时间
             orderExpireDatetime: '60', //订单过期时间
