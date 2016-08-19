@@ -148,7 +148,7 @@ public class MobileController extends Controller {
     public int updateInvShelves(String barcode, String cargoName, String shelves, Integer amount, String userId){
     	int flag = 1;
 		amount = ((int)(amount*100))/100;
-		String sql = "select * from inventory inv where shelves is null and shelves !='' and cargo_barcode = ? limit 0,?";
+		String sql = "select * from inventory inv where shelves is null and cargo_barcode = ? limit 0,?";
 		List<Inventory> invs = Inventory.dao.find(sql,barcode,amount);
 		
 		if(invs.size() == amount){
