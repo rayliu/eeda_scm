@@ -7,6 +7,7 @@ import java.util.List;
 import models.UserLogin;
 import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.Inventory;
+import models.eeda.oms.WaveOrderItem;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -81,24 +82,32 @@ public class MobileController extends Controller {
         String pickupFlag = getPara("pickupFlag");
         String itemId = getPara("itemId");
         
-        Db.update("update wave_order_item set pickup_flag='"+pickupFlag+"' where id=?", barcode, itemId);
-        
-        String pickupSql = "select wo.order_no, p.item_name, woi.* from wave_order_item woi "
-                + " left join wave_order wo on woi.order_id = wo.id "
-                + " left join product p on woi.cargo_bar_code = p.serial_no "
-                + " where woi.pickup_flag='N' and wo.order_no=? order by woi.shelves";
-        Record orderRec = Db.findFirst(pickupSql, orderNo);
-        if (orderRec != null) {
-            renderJson(orderRec);
-        } else {
-            orderRec = new Record();
-            orderRec.set("order_no", "done");
-            
-            //当拣完货后更新波次单状态
-            Db.update("update wave_order set status='已完成' where order_no = ?", orderNo);
-            
-            renderJson(orderRec);
+        Record orderRec;
+        String msg = null;
+       // Db.update("update wave_order_item set pickup_flag='"+pickupFlag+"' where id=?", barcode, itemId);
+        String updateSql = "select * from wave_order_item woi"
+        		+ " where woi.id = ? and woi.cargo_bar_code = ?";
+        WaveOrderItem waveOrderItem = WaveOrderItem.dao.findFirst(updateSql,itemId,barcode);
+        if(waveOrderItem != null){
+        	waveOrderItem.set("pickup_flag", pickupFlag).update();
+        	
+        	String pickupSql = "select wo.order_no, p.item_name, woi.* from wave_order_item woi "
+                    + " left join wave_order wo on woi.order_id = wo.id "
+                    + " left join product p on woi.cargo_bar_code = p.serial_no "
+                    + " where woi.pickup_flag='N' and wo.order_no=? order by woi.shelves";
+            orderRec = Db.findFirst(pickupSql, orderNo);
+            if (orderRec == null) {
+                orderRec = new Record();
+                orderRec.set("order_no", "done");
+                //当拣完货后更新波次单状态
+                Db.update("update wave_order set status='已完成' where order_no = ?", orderNo);   
+            }
+        }else{
+        	msg = "此商品不属于改波次单";
+        	orderRec = new Record();
+        	orderRec.set("msg", msg);	
         }
+        renderJson(orderRec);
     }
     
     //上架, 查询(验货单)商品条码推荐库位
