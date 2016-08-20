@@ -235,19 +235,19 @@ where order_no=$P{order_no};]]>
 					<pen lineWidth="1.0"/>
 				</graphicElement>
 			</line>
-			<textField pattern="yyyy-MM-dd" isBlankWhenNull="true">
-				<reportElement x="430" y="32" width="125" height="20" uuid="392e3cca-71b9-4611-880e-1e7bd6c5436a"/>
-				<textElement rotation="None">
-					<font fontName="宋体" pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-V"/>
-				</textElement>
-				<textFieldExpression><![CDATA[java.util.Calendar.getInstance().getTime()]]></textFieldExpression>
-			</textField>
 			<componentElement>
 				<reportElement x="163" y="50" width="212" height="23" uuid="3e128aca-ed78-4fce-ae61-af9668ca1470"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39" drawText="false" checksumRequired="false">
 					<jr:codeExpression><![CDATA[$F{order_no}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
+			<textField>
+				<reportElement x="430" y="32" width="125" height="20" uuid="53a976f8-4263-494a-be0e-836644c27b7f"/>
+				<textElement>
+					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
+				</textElement>
+				<textFieldExpression><![CDATA[java.util.Calendar.getInstance().getTime()]]></textFieldExpression>
+			</textField>
 		</band>
 	</pageHeader>
 	<columnHeader>
