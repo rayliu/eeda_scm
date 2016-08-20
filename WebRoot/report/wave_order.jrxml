@@ -241,7 +241,7 @@ where order_no=$P{order_no};]]>
 					<jr:codeExpression><![CDATA[$F{order_no}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
-			<textField>
+			<textField pattern="yyyy-MM-dd">
 				<reportElement x="430" y="32" width="125" height="20" uuid="53a976f8-4263-494a-be0e-836644c27b7f"/>
 				<textElement>
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
