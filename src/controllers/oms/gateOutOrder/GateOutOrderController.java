@@ -117,16 +117,23 @@ public class GateOutOrderController extends Controller {
     public void confirmOrder() throws Exception{
     	String order_id = getPara("params");
     	GateOutOrder gateOutOrder = GateOutOrder.dao.findById(order_id);
-    	gateOutOrder.set("status","已确认").update();
-    	renderJson(gateOutOrder);
-    	
+
     	//保存，更新操作的json插入到order_action_log,方便以后查找谁改了什么数据
     	UserLogin user = LoginUserController.getLoginUser(this);
    		Long operator = user.getLong("id");
     	OperationLog(order_id, order_id, operator,"confirm");
     	
     	//锁定库存
-    	lockInventory(order_id);
+    	Record record = lockInventory(order_id);
+    	Record re = new Record();
+    	if("1".equals(record.getStr("flag"))){
+    		gateOutOrder.set("status","已确认").update();
+    		re.set("msg", "success");
+    	}else{
+    		re.set("msg", "当前货架上能出库商品最大数量为："+record.getInt("amount")+"，请通知补货上架");
+    	}
+    	
+    	renderJson(re);
     }
     
     @Before(Tx.class)
@@ -161,20 +168,44 @@ public class GateOutOrderController extends Controller {
     }
     
     @Before(Tx.class)
-    public void lockInventory(String order_id){
+    public Record lockInventory(String order_id){
+    	Record record = new Record();
     	List<Record> res = Db.find("select * from gate_out_order_item where order_id = ?",order_id);
     	for(Record re :res){
     		String bar_code = re.getStr("bar_code");
     		int amount = ((int)(re.getDouble("packing_amount")*100))/100;
     		String sql = "select * from inventory inv where cargo_barcode = ? and shelves is not null and shelves != '' and (gate_in_amount - gate_out_amount - lock_amount) > 0 order by shelves,shelf_life limit 0,?";
     		List<Inventory> invs = Inventory.dao.find(sql,bar_code,amount);
-    		for(Inventory inv : invs){
-    			inv.set("gate_out_order_id", order_id);
-        		inv.set("lock_stamp", new Date());
-        		inv.set("lock_amount", 1);
-        		inv.update();
+    		if(amount == invs.size()){
+    			for(Inventory inv : invs){
+        			inv.set("gate_out_order_id", order_id);
+        			inv.set("lock_stamp", new Date());
+        			inv.set("lock_amount", 1);
+        			inv.update();
+        		}
+    			record.set("amount", invs.size());
+    			record.set("flag", "1");
+    		}else{
+    			record.set("amount", invs.size());
+    			record.set("flag","-1");
     		}
     	}
+    	//单出库单出库两种商品时，可以一下逻辑代码
+//    	if(flag == 1){
+//    		for(Record re :res){
+//        		String bar_code = re.getStr("bar_code");
+//        		int amount = ((int)(re.getDouble("packing_amount")*100))/100;
+//        		String sql = "select * from inventory inv where cargo_barcode = ? and shelves is not null and shelves != '' and (gate_in_amount - gate_out_amount - lock_amount) > 0 order by shelves,shelf_life limit 0,?";
+//        		List<Inventory> invs = Inventory.dao.find(sql,bar_code,amount);
+//        		for(Inventory inv : invs){
+//        			inv.set("gate_out_order_id", order_id);
+//        			inv.set("lock_stamp", new Date());
+//        			inv.set("lock_amount", 1);
+//        			inv.update();
+//        		}
+//        	}
+//    	}
+    	return record;
     }
     
     

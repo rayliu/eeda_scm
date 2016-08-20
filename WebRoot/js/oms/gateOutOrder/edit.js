@@ -84,13 +84,13 @@ $(document).ready(function() {
     	self.attr('disabled',true);
     	var order_id = $("#order_id").val();
     	$.post('/gateOutOrder/confirmOrder', {params:order_id}, function(data){
-    		if(data.ID){
-    			$('#status').val(data.STATUS);
+    		if(data.MSG=='success'){
+    			$('#status').val('已确认');
     			$('#saveBtn').attr('disabled', true);
     			$('#checkBtn').attr('disabled', false);
     			$.scojs_message('确认成功', $.scojs_message.TYPE_OK);
     		}else{
-    			$.scojs_message('确认失败', $.scojs_message.TYPE_ERROR);
+    			$.scojs_message(data.MSG, $.scojs_message.TYPE_ERROR);
     			self.attr('disabled',false);
     		}
     	})
