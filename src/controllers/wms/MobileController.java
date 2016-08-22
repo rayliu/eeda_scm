@@ -253,7 +253,7 @@ public class MobileController extends Controller {
     public void invTransferConfirm() {
         String barcode = getPara("cargoBarcode");
         String fromShelves = getPara("fromShelves");
-        String toShelves = getPara("fromShelves");
+        String toShelves = getPara("toShelves");
         Integer amount = getParaToInt("amount");
         String userId = getPara("userId");
         String sql = " insert into inventory_transfer_item_log(barcode, from_shelves, to_shelves, amount, creator_id, create_stamp) values (?, ?, ?, ?, ?, ?)";
