@@ -170,7 +170,23 @@ public class MobileController extends Controller {
         }
     }
     
-    
+    public int updateInvShelves(String barcode, String cargoName, String shelves, Integer amount, String userId){
+    	int flag = 1;
+		amount = ((int)(amount*100))/100;
+		String sql = "select * from inventory inv where shelves is null and cargo_barcode = ? limit 0,?";
+		List<Inventory> invs = Inventory.dao.find(sql,barcode,amount);
+		
+		if(invs.size() == amount){
+    		for(Inventory inv : invs){
+    			inv.set("shelves", shelves);
+        		inv.set("onshelves_stamp", new Date());
+        		inv.update();
+    		}
+		}else{
+			flag = -1;
+		}
+		return flag;
+    }
     
     //盘点, 查产品
     public void icSearchBarcode(){
@@ -189,13 +205,14 @@ public class MobileController extends Controller {
     //盘点确认, 记录商品条码, 数量, 库位\
     @Before(Tx.class)
     public void invCheckConfirm() {
-    	String ivnOrderNo = getPara("invCheckOrderNo");
-        String barcode = getPara("cargoBarcode");
+    	String ivnOrderNo = getPara("ivnOrderNo");
+        String barcode = getPara("barcode");
+        String cargoName = getPara("cargoName");
         String shelves = getPara("shelves");
         Integer amount = getParaToInt("amount");
         String userId = getPara("userId");
-        String sql = " insert into inventory_check_item_log(barcode, shelves, amount, creator_id, create_stamp) values (?, ?, ?, ?, ?, ?)";
-        int count= Db.update(sql, barcode, shelves, amount, userId, new Date());
+        String sql = " insert into inventory_check_item_log(barcode, cargo_name, shelves, amount, creator_id, create_stamp) values (?, ?, ?, ?, ?, ?)";
+        int count= Db.update(sql, barcode, cargoName, shelves, amount, userId, new Date());
         
         int flag = updateInvOrderItem(ivnOrderNo,barcode,shelves,amount);
         
@@ -210,27 +227,6 @@ public class MobileController extends Controller {
             renderJson(rec);
         }
     }
-    
-    public int updateInvOrderItem(String ivnOrderNo,String barcode,String shelves,Integer amount){
-    	int flag = 1;
-		String sql = "select * from inventory_order invo "
-				+ " left join inventory_order_item ioi on ioi.order_id = invo.id"
-				+ " where invo.order_no =? and ioi.cargo_code = ? and shelves = ?";
-		List<Inventory> invs = Inventory.dao.find(sql,ivnOrderNo,barcode);
-		
-		if(invs.size()>0){
-    		for(Inventory inv : invs){
-    			inv.set("check_amount", amount);
-        		inv.set("check_stamp", new Date());
-        		inv.update();
-    		}
-		}else{
-			flag = -1;
-		}
-		return flag;
-    }
-    
-    
     
     //移库确认, 记录商品条码, 数量, 库位
     public void invTransferConfirm() {
@@ -303,6 +299,7 @@ public class MobileController extends Controller {
 
     }
     
+    
     //盘点下一个
     public void invCheckNextItem() {
         String invCheckOrderNo = getPara("invCheckOrderNo");
@@ -321,10 +318,8 @@ public class MobileController extends Controller {
             String sql = " insert into inventory_check_item_log(order_no, barcode, shelves, amount, creator_id, create_stamp) values (?, ?, ?, ?, ?, ?)";
             count = Db.update(sql, invCheckOrderNo, barcode, shelves, amount, userId, new Date());
         }
-        
-        
+
         int flag = updateInvOrderItem(invCheckOrderNo,barcode,shelves,amount);
-        
         Record rec = new Record();
         if (count>0 && flag >0) {
             rec.set("status", "ok");
@@ -337,16 +332,18 @@ public class MobileController extends Controller {
         }
     }
     
-    public int updateInvShelves(String barcode, String cargoName, String shelves, Integer amount, String userId){
+    
+    public int updateInvOrderItem(String ivnOrderNo,String barcode,String shelves,Integer amount){
     	int flag = 1;
-		amount = ((int)(amount*100))/100;
-		String sql = "select * from inventory inv where shelves is null and cargo_barcode = ? limit 0,?";
-		List<Inventory> invs = Inventory.dao.find(sql,barcode,amount);
+		String sql = "select * from inventory_order invo "
+				+ " left join inventory_order_item ioi on ioi.order_id = invo.id"
+				+ " where invo.order_no =? and ioi.cargo_code = ? and shelves = ?";
+		List<Inventory> invs = Inventory.dao.find(sql,ivnOrderNo,barcode);
 		
-		if(invs.size() == amount){
+		if(invs.size()>0){
     		for(Inventory inv : invs){
-    			inv.set("shelves", shelves);
-        		inv.set("onshelves_stamp", new Date());
+    			inv.set("check_amount", amount);
+        		inv.set("check_stamp", new Date());
         		inv.update();
     		}
 		}else{
@@ -354,6 +351,8 @@ public class MobileController extends Controller {
 		}
 		return flag;
     }
+    
+    
     
     public void invCheckPreviousItem() {
         String invCheckOrderNo = getPara("orderNo");

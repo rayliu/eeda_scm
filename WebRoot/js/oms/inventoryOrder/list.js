@@ -12,7 +12,7 @@ $(document).ready(function() {
         "columns": [
             { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/gateInOrder/edit?id="+full.ID+"''>"+data+"</a>";
+                    return "<a href='/inventoryOrder/edit?id="+full.ID+"''>"+data+"</a>";
                 }
             },
             { "data": "WAREHOUSE_NAME"},
