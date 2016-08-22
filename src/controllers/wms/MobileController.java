@@ -267,10 +267,29 @@ public class MobileController extends Controller {
             renderJson(rec);
             renderJson(rec);
         } else {
+        	if(flag <0){
+        		rec.set("msg", "抱歉！此商品已被锁定，不能移库");
+        	}
             rec.set("status", "fail");
             renderJson(rec);
         }
     }
+    
+    public int updateShelves(String cargoBarcode,String fromShelves,String toShelves,Integer amount){
+		String sql = "select * from inventory inv where lock_amount = 0 cargo_barcode = ?  and shelves=? and gate_out_amount=0   limit 0,?";
+		List<Inventory> invs = Inventory.dao.find(sql,cargoBarcode,fromShelves,amount);
+		int flag = 1;
+		if(invs.size()==amount){
+			for(Inventory inv : invs){
+	    		inv.set("shelves", toShelves);
+	    		inv.update();
+			}
+		}else{
+			flag = -1;
+		}
+		return flag;
+    }
+
     
     public void searchInvCheckOrder(){
         String sql = "select order_no from inventory_order where status='新建'";
@@ -359,19 +378,5 @@ public class MobileController extends Controller {
         }
     }
     
-    public int updateShelves(String cargoBarcode,String fromShelves,String toShelves,Integer amount){
-		String sql = "select * from inventory inv where lock_amount = 0 cargo_barcode = ?  and shelves=? and (gate_in_amount - gate_out_amount) > 0  limit 0,?";
-		List<Inventory> invs = Inventory.dao.find(sql,cargoBarcode,fromShelves,amount);
-		int flag = 1;
-		if(invs.size()==amount){
-			for(Inventory inv : invs){
-	    		inv.set("shelves", toShelves);
-	    		inv.update();
-			}
-		}else{
-			flag = -1;
-		}
-		return flag;
-    }
-
+   
 }

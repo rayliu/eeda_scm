@@ -85,7 +85,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="bar_code" value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="bar_code" value="'+data+'" class="form-control check" />';
                 }
             },
             { "data": "CARGO_NAME", "width": "180px",
