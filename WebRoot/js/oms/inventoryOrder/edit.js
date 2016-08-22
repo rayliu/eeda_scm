@@ -14,6 +14,11 @@ $(document).ready(function() {
     		var name = orderForm[i].id;
         	var value =orderForm[i].value;
         	if(name){
+        		if(name == 'shelve_begin'){
+        			name = 'from_shelve';
+        		}else if(name == 'shelve_end'){
+        			name = 'to_shelve';
+        		}
         		order[name]=value;
         	}
     	}
@@ -33,7 +38,6 @@ $(document).ready(function() {
         var items_array = itemOrder.buildItemDetail();
         var order = {};
         order = buidOrder();
-        debugger
         order['item_list'] = items_array;
         
         //异步向后台提交数据

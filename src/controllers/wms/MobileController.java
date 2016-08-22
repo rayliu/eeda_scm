@@ -205,14 +205,13 @@ public class MobileController extends Controller {
     //盘点确认, 记录商品条码, 数量, 库位\
     @Before(Tx.class)
     public void invCheckConfirm() {
-    	String ivnOrderNo = getPara("ivnOrderNo");
-        String barcode = getPara("barcode");
-        String cargoName = getPara("cargoName");
+    	String ivnOrderNo = getPara("invCheckOrderNo");
+        String barcode = getPara("cargoBarcode");
         String shelves = getPara("shelves");
         Integer amount = getParaToInt("amount");
         String userId = getPara("userId");
-        String sql = " insert into inventory_check_item_log(barcode, cargo_name, shelves, amount, creator_id, create_stamp) values (?, ?, ?, ?, ?, ?)";
-        int count= Db.update(sql, barcode, cargoName, shelves, amount, userId, new Date());
+        String sql = " insert into inventory_check_item_log(barcode, shelves, amount, creator_id, create_stamp) values (?, ?, ?, ?, ?, ?)";
+        int count= Db.update(sql, barcode, shelves, amount, userId, new Date());
         
         int flag = updateInvOrderItem(ivnOrderNo,barcode,shelves,amount);
         

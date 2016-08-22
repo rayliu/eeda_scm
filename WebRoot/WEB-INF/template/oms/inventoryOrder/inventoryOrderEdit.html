@@ -33,6 +33,14 @@
 
 			<div class="row">	
 				<div class="col-lg-4">
+                    <%include("/yh/component/form/inputLimitField.html", 
+                                        {   id:'shelve', 
+                                            label:'库位', 
+                                            begin_value:order.from_shelve!'',
+                                            end_value:order.to_shelve!''
+                                        }){}%>
+                </div>     
+				<div class="col-lg-4">
 					<%include("/yh/component/form/dateInputField.html", { 
 					id:'check_date',
 					label:'盘点日期', 
