@@ -170,23 +170,7 @@ public class MobileController extends Controller {
         }
     }
     
-    public int updateInvShelves(String barcode, String cargoName, String shelves, Integer amount, String userId){
-    	int flag = 1;
-		amount = ((int)(amount*100))/100;
-		String sql = "select * from inventory inv where shelves is null and cargo_barcode = ? limit 0,?";
-		List<Inventory> invs = Inventory.dao.find(sql,barcode,amount);
-		
-		if(invs.size() == amount){
-    		for(Inventory inv : invs){
-    			inv.set("shelves", shelves);
-        		inv.set("onshelves_stamp", new Date());
-        		inv.update();
-    		}
-		}else{
-			flag = -1;
-		}
-		return flag;
-    }
+    
     
     //盘点, 查产品
     public void icSearchBarcode(){
@@ -319,6 +303,7 @@ public class MobileController extends Controller {
 
     }
     
+    //盘点下一个
     public void invCheckNextItem() {
         String invCheckOrderNo = getPara("invCheckOrderNo");
         String barcode = getPara("cargoBarcode");
@@ -336,14 +321,38 @@ public class MobileController extends Controller {
             String sql = " insert into inventory_check_item_log(order_no, barcode, shelves, amount, creator_id, create_stamp) values (?, ?, ?, ?, ?, ?)";
             count = Db.update(sql, invCheckOrderNo, barcode, shelves, amount, userId, new Date());
         }
+        
+        
+        int flag = updateInvOrderItem(invCheckOrderNo,barcode,shelves,amount);
+        
         Record rec = new Record();
-        if (count>0) {
+        if (count>0 && flag >0) {
             rec.set("status", "ok");
             renderJson(rec);
         } else {
+        	if(flag<0)
+        		rec.set("msg", "该库位不存在此商品！");
             rec.set("status", "fail");
             renderJson(rec);
         }
+    }
+    
+    public int updateInvShelves(String barcode, String cargoName, String shelves, Integer amount, String userId){
+    	int flag = 1;
+		amount = ((int)(amount*100))/100;
+		String sql = "select * from inventory inv where shelves is null and cargo_barcode = ? limit 0,?";
+		List<Inventory> invs = Inventory.dao.find(sql,barcode,amount);
+		
+		if(invs.size() == amount){
+    		for(Inventory inv : invs){
+    			inv.set("shelves", shelves);
+        		inv.set("onshelves_stamp", new Date());
+        		inv.update();
+    		}
+		}else{
+			flag = -1;
+		}
+		return flag;
     }
     
     public void invCheckPreviousItem() {
