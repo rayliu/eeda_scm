@@ -13,6 +13,18 @@ $(document).ready(function() {
         if(!$("#orderForm").valid()){
             return;
         }
+
+        //保质期，计划数量，商品条码必填
+        var iflag = 0;
+        $('#cargo_table [name=cargo_upc],[name=plan_amount],[name=shelf_life]').each(function(){
+        	if($.trim($(this).val())==''){
+        		iflag++;
+        	}
+        })
+        if(iflag>0){
+        	$.scojs_message('保存失败,请填写 商品UPC条码 ，计划数量，保质期', $.scojs_message.TYPE_ERROR);
+        }
+        else{
         
         $(this).attr('disabled', true);
 
@@ -82,6 +94,8 @@ $(document).ready(function() {
             $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
             $('#saveBtn').attr('disabled', false);
           });
+        
+        }
     });  
     
     //确认按钮

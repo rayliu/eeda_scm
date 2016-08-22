@@ -14,6 +14,18 @@ $(document).ready(function() {
             return;
         }
         
+        //商品条码，实收数量必填
+        var iflag = 0;
+        $('#item_table [name=bar_code],[name=amount]').each(function(){
+        	if($.trim($(this).val())==''){
+        		iflag++;
+        	}
+        })
+        if(iflag>0){
+        	$.scojs_message('保存失败,请填写 商品条码，实收数量', $.scojs_message.TYPE_ERROR);
+        }
+        else{
+        
         $(this).attr('disabled', true);
 
         var items_array = itemOrder.buildItemDetail();
@@ -55,6 +67,8 @@ $(document).ready(function() {
             $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
             $('#saveBtn').attr('disabled', false);
           });
+        
+        }
     });  
     
     

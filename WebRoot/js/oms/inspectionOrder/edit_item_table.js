@@ -96,7 +96,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="bar_code" value="'+data+'" class="form-control bar_code" />';
+                    return '<input type="text" name="bar_code" value="'+data+'" class="form-control bar_code"/>';
                 }
             },
             { "data": "CARGO_NAME", 
@@ -122,16 +122,6 @@ $(document).ready(function() {
             },
             { "data": "GUARANTEE_DATE", 
                 "render": function ( data, type, full, meta ) {
-                	/*if(!data)
-                        data='';                    
-            		    var field_html = template('table_date_field_template',
-		                    {
-		                        id: 'GUARANTEE_DATE',
-		                        name:'guarantee_date',
-		                        value: data.substr(0,19)
-		                    }
-		                );
-	                    return field_html;*/
                 	if(!data)
                         data='';
                     return '<input type="text" name="GUARANTEE_DATE"  value="'+data+'" class="form-control" disabled/>';
@@ -148,7 +138,7 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="amount" value="'+data+'" class="form-control" />';
+                    return '<input type="text" name="amount" value="'+data+'" class="form-control"/>';
                 }
             },
             { "data": "SHELVES", "visible":false,

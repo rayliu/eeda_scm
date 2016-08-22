@@ -132,7 +132,6 @@ $(document).ready(function() {
             		var field_html = template('table_date_field_template',
 		                    {
 		                        id: 'shelf_life',
-		                        name:'shelf_life',
 		                        value: data.substr(0,19)
 		                    }
 		                );
