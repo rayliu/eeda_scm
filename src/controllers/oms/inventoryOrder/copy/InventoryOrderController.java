@@ -225,5 +225,17 @@ public class InventoryOrderController extends Controller {
         renderJson(BillingOrderListMap); 
     }
     
+    @Before(Tx.class)
+    public void createOrderByshel(String fromShelve,String toShelve ){
+    	String sql = "select shelves,cargo_code,cargo_name,amount from inventory inv where shelves between ? and ? group by shelves";
+    	List<Record> res = Db.find(sql,fromShelve,toShelve);
+    	
+    	for(Record re: res){
+    		String shelves = re.getStr("shelves");
+    		String cargo_code = re.getStr("cargo_barcode");
+    		String cargo_name = re.getStr("cargo_name");
+    		String amount = re.getStr("amount");
+    	}
+    }
     
 }
