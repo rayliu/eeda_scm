@@ -219,7 +219,7 @@ $(document).ready(function() {
     
 
     //库存货品校验
-    $('#cargo_table').on('blur','input',function(e){
+    $('#cargo_table').on('keyup','input',function(e){
 	    	var $self = $(this).parent().parent();
 	    	var bar_code = $self.find('[name=bar_code]').val();
 	    	var cargo_name = $self.find('[name=cargo_name]').val();

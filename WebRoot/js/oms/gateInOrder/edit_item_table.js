@@ -274,8 +274,7 @@ $(document).ready(function() {
     
     //通过bargode 获取相对于的 信息
     $('#'+table_name).on('keyup','input',function(e){
-    	var key = e.which;
-    	if (key == 13) {
+
 	    	var $self = $(this).parent().parent();
 	    	var cargo_upc = $self.find('[name=cargo_upc]').val();
 	    	var cargo_name = $self.find('[name=cargo_name]').val();
@@ -297,7 +296,6 @@ $(document).ready(function() {
 	    			$.scojs_message('对不起，基础信息里没有此商品，请维护', $.scojs_message.TYPE_ERROR);
 	    		}
 	    	})
-    	}
     })
     
 
