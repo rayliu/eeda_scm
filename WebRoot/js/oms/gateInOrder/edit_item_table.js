@@ -101,14 +101,14 @@ $(document).ready(function() {
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" name="cargo_upc" value="'+data+'" class="form-control" />';
+            		return '<input type="text" name="cargo_upc" value="'+data+'" class="form-control load" />';
             	}
             },
             { "data": "CARGO_NAME",  "width": "200px",
             	"render": function ( data, type, full, meta ) {
             		if(!data)
             			data='';
-            		return '<input type="text" name="cargo_name" value="'+data+'" class="form-control" />';
+            		return '<input type="text" name="cargo_name" value="'+data+'" class="form-control load" />';
             	}
             },
             { "data": "PLAN_AMOUNT", 
@@ -273,7 +273,7 @@ $(document).ready(function() {
     
     
     //通过bargode 获取相对于的 信息
-    $('#'+table_name).on('keyup','input',function(e){
+    $('#'+table_name).on('blur','.load',function(e){
 
 	    	var $self = $(this).parent().parent();
 	    	var cargo_upc = $self.find('[name=cargo_upc]').val();

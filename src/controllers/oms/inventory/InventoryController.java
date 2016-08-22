@@ -164,7 +164,7 @@ public class InventoryController extends Controller {
     	Record re = new Record();
     	String sql = "";
     	if(StringUtils.isNotEmpty(value) && StringUtils.isNotEmpty(amount)){
-    		sql = "select count(*) amount from inventory inv where shelves is not null and shelves !='' and cargo_name = ? or cargo_barcode = ?  and lock_amount = 0 and gate_out_amount = 0"; 
+    		sql = "select count(*) amount from inventory inv where shelves is not null and shelves !='' and (cargo_name = ? or cargo_barcode = ?)  and lock_amount = 0 and gate_out_amount = 0"; 
     		Record record = Db.findFirst(sql , value, value);
     		long total = record.getLong("amount");
     		if(total >= Double.parseDouble(amount)){
