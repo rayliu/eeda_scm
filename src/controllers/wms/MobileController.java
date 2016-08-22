@@ -84,28 +84,44 @@ public class MobileController extends Controller {
         
         Record orderRec;
         String msg = null;
-       // Db.update("update wave_order_item set pickup_flag='"+pickupFlag+"' where id=?", barcode, itemId);
-        String updateSql = "select * from wave_order_item woi"
-        		+ " where woi.id = ? and woi.cargo_bar_code = ?";
-        WaveOrderItem waveOrderItem = WaveOrderItem.dao.findFirst(updateSql,itemId,barcode);
-        if(waveOrderItem != null){
-        	waveOrderItem.set("pickup_flag", pickupFlag).update();
-        	
-        	String pickupSql = "select wo.order_no, p.item_name, woi.* from wave_order_item woi "
+        if("E".equals(pickupFlag)){
+            Db.update("update wave_order_item set pickup_flag=? where id=?", pickupFlag, itemId);
+            
+            String pickupSql = "select wo.order_no, p.item_name, woi.* from wave_order_item woi "
                     + " left join wave_order wo on woi.order_id = wo.id "
                     + " left join product p on woi.cargo_bar_code = p.serial_no "
                     + " where woi.pickup_flag='N' and wo.order_no=? order by woi.shelves";
             orderRec = Db.findFirst(pickupSql, orderNo);
             if (orderRec == null) {
                 orderRec = new Record();
-                orderRec.set("order_no", "done");
+                orderRec.set("status", "done");
                 //当拣完货后更新波次单状态
                 Db.update("update wave_order set status='已完成' where order_no = ?", orderNo);   
             }
         }else{
-        	msg = "此商品不属于改波次单";
-        	orderRec = new Record();
-        	orderRec.set("msg", msg);	
+            String updateSql = "select * from wave_order_item woi"
+                    + " where woi.id = ? and woi.cargo_bar_code = ?";
+            WaveOrderItem waveOrderItem = WaveOrderItem.dao.findFirst(updateSql,itemId,barcode);
+            if(waveOrderItem != null){
+                waveOrderItem.set("pickup_flag", pickupFlag).update();
+                
+                String pickupSql = "select wo.order_no, p.item_name, woi.* from wave_order_item woi "
+                        + " left join wave_order wo on woi.order_id = wo.id "
+                        + " left join product p on woi.cargo_bar_code = p.serial_no "
+                        + " where woi.pickup_flag='N' and wo.order_no=? order by woi.shelves";
+                orderRec = Db.findFirst(pickupSql, orderNo);
+                if (orderRec == null) {
+                    orderRec = new Record();
+                    orderRec.set("status", "done");
+                    //当拣完货后更新波次单状态
+                    Db.update("update wave_order set status='已完成' where order_no = ?", orderNo);   
+                }
+            }else{
+                msg = "此商品不属于该波次单";
+                orderRec = new Record();
+                orderRec.set("status", "fail");
+                orderRec.set("msg", msg);	
+            }
         }
         renderJson(orderRec);
     }
