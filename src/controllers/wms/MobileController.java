@@ -8,6 +8,7 @@ import models.UserLogin;
 import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.Inventory;
 import models.eeda.oms.InventoryOrder;
+import models.eeda.oms.InventoryOrderItem;
 import models.eeda.oms.WaveOrderItem;
 
 import org.apache.shiro.SecurityUtils;
@@ -339,10 +340,10 @@ public class MobileController extends Controller {
 		String sql = "select ioi.* from inventory_order invo "
 				+ " left join inventory_order_item ioi on ioi.order_id = invo.id"
 				+ " where invo.order_no =? and ioi.cargo_code = ? and shelves = ?";
-		List<InventoryOrder> invs = InventoryOrder.dao.find(sql,ivnOrderNo,barcode);
+		List<InventoryOrderItem> invs = InventoryOrderItem.dao.find(sql,ivnOrderNo,barcode);
 		
 		if(invs.size()>0){
-    		for(InventoryOrder invorder : invs){
+    		for(InventoryOrderItem invorder : invs){
     			invorder.set("check_amount", amount);
     			invorder.set("check_stamp", new Date());
     			invorder.update();
