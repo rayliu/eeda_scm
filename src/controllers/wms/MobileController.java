@@ -276,7 +276,7 @@ public class MobileController extends Controller {
     }
     
     public int updateShelves(String cargoBarcode,String fromShelves,String toShelves,Integer amount){
-		String sql = "select * from inventory inv where lock_amount = 0 cargo_barcode = ?  and shelves=? and gate_out_amount=0   limit 0,?";
+		String sql = "select * from inventory inv where lock_amount = 0 and cargo_barcode = ?  and shelves=? and gate_out_amount=0   limit 0,?";
 		List<Inventory> invs = Inventory.dao.find(sql,cargoBarcode,fromShelves,amount);
 		int flag = 1;
 		if(invs.size()==amount){
