@@ -340,7 +340,7 @@ public class MobileController extends Controller {
 		String sql = "select ioi.* from inventory_order invo "
 				+ " left join inventory_order_item ioi on ioi.order_id = invo.id"
 				+ " where invo.order_no =? and ioi.cargo_code = ? and shelves = ?";
-		List<InventoryOrderItem> invs = InventoryOrderItem.dao.find(sql,ivnOrderNo,barcode);
+		List<InventoryOrderItem> invs = InventoryOrderItem.dao.find(sql,ivnOrderNo,barcode,shelves);
 		
 		if(invs.size()>0){
     		for(InventoryOrderItem invorder : invs){
