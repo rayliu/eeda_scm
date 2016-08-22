@@ -339,15 +339,14 @@ public class MobileController extends Controller {
     	int flag = 1;
 		String sql = "select ioi.* from inventory_order invo "
 				+ " left join inventory_order_item ioi on ioi.order_id = invo.id"
-				+ " where invo.order_no =? and ioi.cargo_code = ? and shelves = ?";
-		List<InventoryOrderItem> invs = InventoryOrderItem.dao.find(sql,ivnOrderNo,barcode,shelves);
+				+ " where invo.order_no =? and ioi.cargo_code = ? and ioi.shelves = ?";
+		InventoryOrderItem invs = InventoryOrderItem.dao.findFirst(sql,ivnOrderNo,barcode,shelves);
 		
-		if(invs.size()>0){
-    		for(InventoryOrderItem invorder : invs){
-    			invorder.set("check_amount", amount);
-    			invorder.set("check_stamp", new Date());
-    			invorder.update();
-    		}
+		if(invs != null){
+    		InventoryOrderItem invorder = InventoryOrderItem.dao.findById(invs.getLong("id"));
+			invorder.set("check_amount", amount);
+			invorder.set("check_stamp", new Date());
+			invorder.update();
 		}else{
 			flag = -1;
 		}
