@@ -120,17 +120,19 @@ public class MoveOrderController extends Controller {
     public void updateInventory(String order_id){
     	List<MoveOrderItem> item = MoveOrderItem.dao.find("select * from move_order_item where order_id = ?",order_id);
     	for(MoveOrderItem moi :item){
+    		String cargo_barcode= moi.getStr("cargo_bar_code");
     		String cargo_name= moi.getStr("cargo_name");
     		int amount= (int)(moi.getDouble("amount")*100/100);
     		String shelves= moi.getStr("shelves");
     		String to_shelves= moi.getStr("to_shelves");
-    		long warehouse= moi.getLong("warehouse_id");
-    		long to_warehouse= moi.getLong("to_warehouse_id");
+    		//long warehouse= moi.getLong("warehouse_id");
+    		//long to_warehouse= moi.getLong("to_warehouse_id");
     		
-    		String sql = "select * from inventory inv where lock_amount = 0 and cargo_name = ? and warehouse_id=? and shelves=? and (gate_in_amount - gate_out_amount) > 0 order by shelf_life limit 0,?";
-    		List<Inventory> invs = Inventory.dao.find(sql,cargo_name,warehouse,shelves,amount);
+    		String sql = "select * from inventory inv where lock_amount = 0 and (cargo_name = ? or cargo_barcode = ?) and shelves=? and gate_out_amount = 0 order by shelf_life limit 0,?";
+    		List<Inventory> invs = Inventory.dao.find(sql,cargo_name,cargo_barcode,shelves,amount);
+    		System.out.println("-----------------"+invs.size());
     		for(Inventory inv : invs){
-    			inv.set("warehouse_id", to_warehouse);
+    			//inv.set("warehouse_id", to_warehouse);
         		inv.set("shelves", to_shelves);
         		inv.update();
     		}

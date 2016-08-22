@@ -97,7 +97,7 @@ $(document).ready(function() {
                     return '<input type="text" name="amount" value="'+data+'" class="form-control" />';
                 }
             }, 
-            { "data": "WAREHOUSE_ID", 
+            { "data": "WAREHOUSE_ID", 'visible':false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
@@ -111,7 +111,7 @@ $(document).ready(function() {
                     return '<input type="text" name="shelves" value="'+data+'" class="form-control" />';
                 }
             }, 
-            { "data": "TO_WAREHOUSE_ID", 
+            { "data": "TO_WAREHOUSE_ID", 'visible':false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
