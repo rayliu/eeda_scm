@@ -17,7 +17,11 @@ $(document).ready(function() {
                 }
             },
             { "data": "WAREHOUSE_NAME"},
-            { "data": "ORDER_TYPE"}, 
+            { "data": "CARGO_BARCODE"}, 
+            { "data": "CARGO_TYPE"}, 
+            { "data": "EXPRESS_NO"}, 
+            { "data": "ORDER_TYPE"},
+            { "data": "CONSIGNEE"}, 
             { "data": "CREATOR_NAME"}, 
             { "data": "CREATE_STAMP"}, 
             { "data": "STATUS"}

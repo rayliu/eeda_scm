@@ -279,10 +279,13 @@ public class GateOutOrderController extends Controller {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
-        String sql = "select * from (SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
-    			+ "  from gate_out_order gio "
-    			+ "  left join warehouse wh on wh.id = gio.warehouse_id"
-    			+ "  left join user_login u on u.id = gio.create_by"
+        String sql = "select * from (SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name,"
+    			+ " GROUP_CONCAT(gooi.bar_code SEPARATOR ' ') cargo_barcode,if(count(gooi.bar_code)>1,'多品','单品') cargo_type "
+    			+ " from gate_out_order gio "
+    			+ " LEFT JOIN gate_out_order_item gooi on gooi.order_id = gio.id"
+    			+ " left join warehouse wh on wh.id = gio.warehouse_id"
+    			+ " left join user_login u on u.id = gio.create_by"
+    			+ " GROUP BY gio.id"
     			+ " ) A where 1 =1 ";
         
         String condition = "";

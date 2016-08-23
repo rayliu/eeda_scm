@@ -30,6 +30,29 @@
 								{id:'create_stamp', label:'创建时间', value:''}){} %>
 							</div>
 						</div>
+						<div class="row">
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:
+								'cargo_barcode', label: '商品条码', value: '' }){}%>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/selectField.html", { id:'cargo_type',
+								label:'商品类别', value: '', value_list:[ {code:'', value:''},
+								{code:'单品', value:'单品'}, {code:'多品', value:'多品'}] } ){} %>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:
+								'express_no', label: '商品条码', value: '' }){}%>
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="col-lg-4">
+								<%include("/yh/component/form/inputField.html", { id:
+								'consignee', label: '收货人', value: '' }){}%>
+							</div>
+							
+						</div>
 					</form>
 
 					<!-- buttom -->
@@ -45,7 +68,7 @@
 					<!-- table list -->
 					<div class="form-group">
 						<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
-						headers:['出库单号', '仓库', '业务类型', '创建人', '创建时间', '状态']
+						headers:['出库单号', '仓库','商品条码','商品类别','快递单号', '业务类型', '收货人', '创建人', '创建时间', '状态']
 						}){} %>
 					</div>
 				</div>
