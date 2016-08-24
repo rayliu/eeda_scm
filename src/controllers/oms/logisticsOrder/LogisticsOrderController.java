@@ -84,7 +84,7 @@ public class LogisticsOrderController extends Controller {
    			DbUtils.setModelValues(dto, logisticsOrder);
    			
    			//需后台处理的字段
-   			logisticsOrder.set("log_no", OrderNoGenerator.getNextOrderNo("YD"));
+   			logisticsOrder.set("log_no", OrderNoGenerator.getNextOrderNo("IYQHDF"));
    			logisticsOrder.set("create_by", user.getLong("id"));
    			logisticsOrder.set("create_stamp", new Date());
    			logisticsOrder.save();

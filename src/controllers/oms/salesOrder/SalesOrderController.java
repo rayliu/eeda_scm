@@ -100,7 +100,7 @@ public class SalesOrderController extends Controller {
    			DbUtils.setModelValues(dto, salesOrder);
    			
    			//需后台处理的字段
-   			salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
+   			salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("IDQHDF"));
    			salesOrder.set("create_by", user.getLong("id"));
    			salesOrder.set("create_stamp", new Date());
    			salesOrder.save();
