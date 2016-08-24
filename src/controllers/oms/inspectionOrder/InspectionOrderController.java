@@ -168,7 +168,8 @@ public class InspectionOrderController extends Controller {
     	long user_id = LoginUserController.getLoginUserId(this);
     	for(Record re :res){
     		Inventory inv = null;
-    		Double amount = re.getDouble("received_amount");
+    		Double amount = re.getDouble("plan_amount");
+    		Double damage_amount = re.getDouble("damage_amount");
     		for (int i = 0; i < amount; i++) {
     			inv = new Inventory();
     			inv.set("gate_in_order_id", order_id);
@@ -182,9 +183,13 @@ public class InspectionOrderController extends Controller {
         		inv.set("shelves", null);
         		inv.set("unit", re.getStr("packing_unit"));
         		inv.set("gate_in_amount", 1);
+        		if(damage_amount > 0)
+        			inv.set("damage_amount", 1);
         		inv.set("create_stamp", new Date());
         		inv.set("create_by", user_id);
         		inv.save();
+        		
+        		damage_amount--;
 			}
     	}
     }

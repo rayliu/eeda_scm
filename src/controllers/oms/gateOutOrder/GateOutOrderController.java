@@ -174,7 +174,8 @@ public class GateOutOrderController extends Controller {
     	for(Record re :res){
     		String bar_code = re.getStr("bar_code");
     		int amount = ((int)(re.getDouble("packing_amount")*100))/100;
-    		String sql = "select * from inventory inv where cargo_barcode = ? and shelves is not null and shelves != '' and (gate_in_amount - gate_out_amount - lock_amount) > 0 order by shelves,shelf_life limit 0,?";
+    		String sql = "select * from inventory inv where cargo_barcode = ? and shelves is not null and shelves != '' "
+    				+ " and gate_out_amount=0 and lock_amount=0 and damage_amount = 0 order by shelves,shelf_life limit 0,?";
     		List<Inventory> invs = Inventory.dao.find(sql,bar_code,amount);
     		if(amount == invs.size()){
     			for(Inventory inv : invs){

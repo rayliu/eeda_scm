@@ -29,6 +29,7 @@ $(document).ready(function() {
             },
             { "data": "SHELF_LIFE"}, 
             { "data": "GATE_IN_AMOUNT"}, 
+            { "data": "DAMAGE_AMOUNT"},
             { "data": "LOCK_AMOUNT",
             	"render": function ( data, type, full, meta ) {
             		if(data>0)
@@ -42,14 +43,14 @@ $(document).ready(function() {
             	"render": function ( data, type, full, meta ) {
             		var gate_out_amount = data.GATE_OUT_AMOUNT;
             		var gate_in_amount = data.GATE_IN_AMOUNT;
-            		var amount = gate_in_amount - gate_out_amount;
+            		var damage_amount = data.DAMAGE_AMOUNT;
+            		var amount = gate_in_amount - gate_out_amount- gate_out_amount-damage_amount;
             		if(amount>0)
             			return "<span style='color:red;font-weight:bold;'>"+amount+"</span>";
             		else
             			return amount;
                 }
-            },
-            { "data": "DAMAGE_AMOUNT"}
+            }
         ]
     });
 	  //datatable, 动态处理

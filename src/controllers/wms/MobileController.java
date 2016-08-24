@@ -175,7 +175,7 @@ public class MobileController extends Controller {
     public int updateInvShelves(String barcode, String cargoName, String shelves, Integer amount, String userId){
     	int flag = 1;
 		amount = ((int)(amount*100))/100;
-		String sql = "select * from inventory inv where shelves is null and cargo_barcode = ? limit 0,?";
+		String sql = "select * from inventory inv where shelves is null and damage_amount = 0 and cargo_barcode = ? limit 0,?";
 		List<Inventory> invs = Inventory.dao.find(sql,barcode,amount);
 		
 		if(invs.size() == amount){
@@ -193,7 +193,7 @@ public class MobileController extends Controller {
     //盘点, 查产品
     public void icSearchBarcode(){
         String barcode = getPara("barcode");
-        String sql = "select * from product  WHERE serial_no is not null and serial_no= ?";
+        String sql = "select * from product  WHERE serial_no is not null and damage_amount = 0 and serial_no= ?";
             Record rec = Db.findFirst(sql, barcode);
             if (rec != null) {
                 renderJson(rec);
@@ -257,7 +257,7 @@ public class MobileController extends Controller {
     }
     
     public int updateShelves(String cargoBarcode,String fromShelves,String toShelves,Integer amount){
-		String sql = "select * from inventory inv where lock_amount = 0 and cargo_barcode = ?  and shelves=? and gate_out_amount=0   limit 0,?";
+		String sql = "select * from inventory inv where lock_amount = 0 and gate_out_amount=0 and damage_amount = 0 and cargo_barcode = ?  and shelves=? limit 0,?";
 		List<Inventory> invs = Inventory.dao.find(sql,cargoBarcode,fromShelves,amount);
 		int flag = 1;
 		if(invs.size()==amount){
