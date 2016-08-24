@@ -44,7 +44,7 @@ $(document).ready(function() {
             		var gate_out_amount = data.GATE_OUT_AMOUNT;
             		var gate_in_amount = data.GATE_IN_AMOUNT;
             		var damage_amount = data.DAMAGE_AMOUNT;
-            		var amount = gate_in_amount - gate_out_amount- gate_out_amount-damage_amount;
+            		var amount = gate_in_amount - gate_out_amount-damage_amount;
             		if(amount>0)
             			return "<span style='color:red;font-weight:bold;'>"+amount+"</span>";
             		else

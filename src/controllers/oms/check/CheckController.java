@@ -91,19 +91,25 @@ public class CheckController extends Controller {
    	        			inv.set("shelf_life", shelf_life);
    	    			inv.set("customer_id", customer_id);
    	        		inv.set("warehouse_id", 52);
-   	        		inv.set("shelves", shelves);
+   	        		if(StringUtils.isNotEmpty(shelves))
+   	        			inv.set("shelves", shelves);
    	        		inv.set("unit", unit);
    	        		inv.set("gate_in_amount", 1);
-   	        		if(out_amount>0)
+   	        		if(out_amount>0){
    	        			inv.set("gate_out_amount", 1);
-   	        		if(dam_amount>0)
-   	        			inv.set("damage_amount", 1);
+   	        			out_amount --;
+   	        		}else{
+   	        			if(dam_amount>0){
+   	        				inv.set("damage_amount", 1);
+   	   	        			dam_amount --;
+   	        			}	
+   	        		}
    	        		inv.set("create_stamp", new Date());
    	        		inv.set("create_by", user_id);
    	        		inv.save();
    	        		
-   	        		out_amount --;
-   	        		dam_amount --;
+   	        		
+   	        		
    				}
    		} 
 
