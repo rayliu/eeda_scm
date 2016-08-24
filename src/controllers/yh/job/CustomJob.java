@@ -48,7 +48,8 @@ public class CustomJob implements Runnable {
 	        String pay_status = itemList.get(0).get("pay_status");
 	        String logistics_ciq_status = itemList.get(0).get("logistics_ciq_status");
 	        String logistics_cus_status = itemList.get(0).get("logistics_cus_status");
-	        
+	        String bill_cus_status = itemList.get(0).get("bill_cus_status");
+	        String bill_cus_result = itemList.get(0).get("bill_cus_result");
 	        
 	        System.out.println(message);
 	        
@@ -62,6 +63,8 @@ public class CustomJob implements Runnable {
 	        	so.set("order_cus_status", statusShow(order_cus_status,"order_cus_status"));
 	        	so.set("order_ciq_status", statusShow(order_ciq_status,"order_ciq_status"));
 	        	so.set("pay_status",statusShow(pay_status,"pay_status"));
+	        	so.set("bill_cus_status",statusShow(bill_cus_status,"bill_cus_status"));
+	        	so.set("bill_cus_result",bill_cus_result);
 	        	
 	        	if("30".equals(order_cus_status) && "30".equals(order_ciq_status)){
 	        		so.set("status", "已通关");

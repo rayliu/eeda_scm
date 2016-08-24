@@ -54,12 +54,25 @@ $(document).ready(function() {
 	        		var msg = '';
 	        		if(data==null){
 	        			msg = '运单不存在';
-	        		}if(data=='已通关'){
+	        		}else if(data=='已通关'){
 	        			msg = "<span style='color:green'>"+data+"</span>";
 	        		}else if(data=='报关处理中'){
 	        			msg = "<span style='color:red'>"+data+"</span>";
 	        		}else{
 	        			msg = data;
+	        		}
+	        		return msg;
+                }
+            }, 
+            {"data": "BILL_CUS_STATUS",
+            	"render": function ( data, type, full, meta ) {
+	        		var msg = '';
+	        		if(data==null){
+	        			msg = '清单不存在';
+	        		}else if(data=='接收成功'){
+	        			msg = "<span style='color:green'>"+data+"</span>";
+	        		}else {
+	        			msg = "<span style='color:red'>"+data+"</span>";
 	        		}
 	        		return msg;
                 }
