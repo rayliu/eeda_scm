@@ -1,4 +1,4 @@
-package controllers.oms.inventoryOrder.copy;
+package controllers.oms.inventoryOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
 

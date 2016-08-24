@@ -37,6 +37,10 @@ public class InventoryController extends Controller {
 		render("/oms/inventory/inventoryList.html");
 	}
 	
+	public void addInventory() {
+		render("/oms/check/checkEdit.html");
+	}
+	
     public void create() {
         render("/oms/inventory/inventoryEdit.html");
     }
@@ -124,7 +128,8 @@ public class InventoryController extends Controller {
         }
        
         String sql = "select * from ( SELECT inv.id,inv.cargo_name,inv.cargo_barcode,inv.cargo_code,inv.unit,inv.customer_id,inv.shelf_life ,"
-        		+ "  inv.shelves, sum(inv.gate_in_amount) gate_in_amount, sum(inv.gate_out_amount) gate_out_amount,sum(inv.lock_amount) lock_amount,"
+        		+ "  inv.shelves, sum(inv.gate_in_amount) gate_in_amount, sum(inv.gate_out_amount) gate_out_amount,"
+        		+ "  sum(inv.lock_amount) lock_amount,sum(inv.damage_amount) damage_amount,"
         		+ "  wh.warehouse_name,p.abbr customer_name,"
         		+ "  (case "
         		+ "  when (inv.lock_amount>0)"

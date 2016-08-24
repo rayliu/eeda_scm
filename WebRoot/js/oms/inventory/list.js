@@ -48,7 +48,8 @@ $(document).ready(function() {
             		else
             			return amount;
                 }
-            }
+            },
+            { "data": "DAMAGE_AMOUNT"}
         ]
     });
 	  //datatable, 动态处理
