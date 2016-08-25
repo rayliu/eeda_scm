@@ -9,44 +9,75 @@
 		<div class="col-lg-12">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<i class="fa fa-list fa-fw"></i>移库单列表
+					<i class="fa fa-list fa-fw"></i>复核操作
 				</div>
 				<!-- /.panel-heading -->
 				<div class="panel-body">
-					<!--  form row  -->
-					<form id="orderForm" class="form-group">
-						<div class="row">
-							<div class="col-lg-4">
-								<%include("/yh/component/form/inputField.html", { id:
-								'order_no', label: '移库单号', value: '' }){}%>
-							</div>
-							<div class="col-lg-4">
-								<%include("/yh/component/form/selectField.html", { id:'status',
-								label:'状态', value: '', value_list:[ {code:'', value:''},
-								{code:'新建', value:'新建'}, {code:'已完成', value:'已完成'} ] } ){} %>
-							</div>
-							<div class="col-lg-4">
-								<%include("/yh/component/form/inputDateQueryField.html",
-								{id:'create_stamp', label:'创建时间', value:''}){} %>
-							</div>
-						</div>
-					</form>
-
-					<!-- buttom -->
-					<div class="form-group button-bar">
-						<button id="searchBtn" class="btn btn-primary btn-sm"
-							type="button">查询</button>
-						<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
-						<a class="btn btn-success btn-sm" href="/moveOrder/create">新增移库单</a>
-					
-					</div>
-					
-					<!-- table list -->
 					<div class="form-group">
-						<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
-						headers:['移库单号', '仓库', '创建人', '创建时间','状态']
-						}){} %>
+						<ul id="orderTabs" class="nav nav-tabs">
+							<li class="active">
+								<a href="#waveCheck" data-toggle="tab">波次复核</a>
+							</li>
+							<li >
+								<a href="#orderCheck" data-toggle="tab">按单复核</a>
+							</li>
+						</ul>
 					</div>
+														
+					<div class="tab-content">
+				        <div class="tab-pane fade active in" id="waveCheck">
+				        	<form id="waveCheckForm">
+								<div class="row">
+									<div class="col-lg-4">
+										<%include("/yh/component/form/inputField.html", { id:
+										'wave_order', label: '波次单号', value: '' }){}%>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-lg-4">
+										<%include("/yh/component/form/inputField.html", { id:
+										'cargo_barcode', label: '商品SKU', value: '' }){}%>
+									</div>
+								</div>
+							</form>
+
+							<div class="form-group button-bar">
+								<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
+							</div>
+							
+							<!-- table list -->
+							<div class="form-group">
+								<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
+								headers:['','出库单号', '商品SKU', '数量', '状态']
+								}){} %>
+							</div>
+				        </div>
+				        
+				        
+				        <div class="tab-pane fade" id="orderCheck">
+				        	<form id="orderCheckForm">
+							<div class="row">
+								<div class="col-lg-4">
+									<%include("/yh/component/form/inputField.html", { id:
+									'gate_out_order', label: '出库单号', value: '' }){}%>
+								</div>
+							</div>
+							</form>
+							
+							<div class="form-group button-bar">
+								<button id="resetOFBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
+							</div>
+							
+							<!-- table list -->
+							<div class="form-group">
+								<%include("/yh/component/form/detailTable.html", { 
+								id:'order-table',
+								style:'width:1500px',
+								headers:['移库单号', '仓库', '创建人', '创建时间','状态']
+								}){} %>
+							</div>
+				        </div>
+				    </div>
 				</div>
 			</div>
 		</div>
@@ -63,4 +94,5 @@
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
 <script src="/js/eeda/eeda-common.js"></script>
 <script src="/js/oms/check/list.js"></script>
+<script src="/js/oms/check/order_list.js"></script>
 

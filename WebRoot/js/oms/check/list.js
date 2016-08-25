@@ -1,6 +1,6 @@
 
 $(document).ready(function() {
-	document.title = '移库单查询   | '+document.title;
+	document.title = '波次复核查询   | '+document.title;
 
     $('#menu_incoming').addClass('active').find('ul').addClass('in');
     
@@ -9,8 +9,13 @@ $(document).ready(function() {
 	  //datatable, 动态处理
     var dataTable = eeda.dt({
         "id": "eeda-table",
-        "ajax": "/moveOrder/list",
+        "ajax": "/check/waveCheckList",
         "columns": [
+			{ "width": "30px",
+			    "render": function ( data, type, full, meta ) {
+			    	return '<button type="button" class="comfirm btn btn-success btn-xs">确认复核</button> ';
+			    }
+			},
             { "data": "ORDER_NO", 
                 "render": function ( data, type, full, meta ) {
                     return "<a href='/moveOrder/edit?id="+full.ID+"' >"+data+"</a>";
@@ -25,11 +30,20 @@ $(document).ready(function() {
 
     
     $('#resetBtn').click(function(e){
-        $("#orderForm")[0].reset();
+        $("#waveCheckForm")[0].reset();
     });
 
-    $('#searchBtn').click(function(){
-        searchData(); 
+    $('#waveCheckForm').on('keydown','input',function(e){
+    	var key = e.which;
+    	if(key == 13){
+    		var id = $(this).attr('id');
+    		if(id == 'wave_order'){
+    			$('#cargo_barcode').focus();
+    		}else{
+    			if($('#wave_order').val()!='' && $('#cargo_barcode').val()!='')
+    				searchWaveData();
+    		}
+    	}
     })
 
     buildCondition=function(){
@@ -45,7 +59,7 @@ $(document).ready(function() {
         return item;
     };
 
-    var searchData=function(){
+    var searchWaveData=function(){
     	var itemJson = buildCondition();
     	var url = "/moveOrder/list?jsonStr="+JSON.stringify(itemJson);
         dataTable.ajax.url(url).load();

@@ -141,7 +141,7 @@ public class GateOutOrderController extends Controller {
     	String order_id = getPara("params");
     	GateOutOrder gateOutOrder = GateOutOrder.dao.findById(order_id);
     	
-    	String msg = "此单据未调拨完成";
+    	String msg = "此单据未拣货完成";
     	if(gateOutOrder.getLong("wave_id") != null){
     		long wave_id = gateOutOrder.getLong("wave_id");
     		WaveOrder wo = WaveOrder.dao.findById(wave_id);

@@ -106,10 +106,7 @@ public class CheckController extends Controller {
    	        		}
    	        		inv.set("create_stamp", new Date());
    	        		inv.set("create_by", user_id);
-   	        		inv.save();
-   	        		
-   	        		
-   	        		
+   	        		inv.save();	
    				}
    		} 
 
