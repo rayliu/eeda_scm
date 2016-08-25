@@ -193,7 +193,7 @@ public class MobileController extends Controller {
     //盘点, 查产品
     public void icSearchBarcode(){
         String barcode = getPara("barcode");
-        String sql = "select * from product  WHERE serial_no is not null and damage_amount = 0 and serial_no= ?";
+        String sql = "select * from product  WHERE serial_no is not null and serial_no= ?";
             Record rec = Db.findFirst(sql, barcode);
             if (rec != null) {
                 renderJson(rec);
