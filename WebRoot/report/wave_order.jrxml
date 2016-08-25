@@ -260,7 +260,7 @@ where order_no=$P{order_no};]]>
 				<textElement textAlignment="Center">
 					<font pdfFontName="STSong-Light" pdfEncoding="UniGB-UCS2-H"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{item_code}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cargo_bar_code}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
 				<reportElement x="308" y="6" width="41" height="20" uuid="d3d0b956-d883-47d4-b921-958f4ac2cb63"/>
@@ -272,7 +272,7 @@ where order_no=$P{order_no};]]>
 			<componentElement>
 				<reportElement x="99" y="6" width="115" height="18" uuid="df67b597-98f7-4782-bcf2-9a4c4db89b87"/>
 				<jr:barbecue xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" type="Code39" drawText="false" checksumRequired="false">
-					<jr:codeExpression><![CDATA[$F{item_code}]]></jr:codeExpression>
+					<jr:codeExpression><![CDATA[$F{cargo_bar_code}]]></jr:codeExpression>
 				</jr:barbecue>
 			</componentElement>
 			<textField isBlankWhenNull="true">
