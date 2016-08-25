@@ -69,7 +69,7 @@ $(document).ready(function() {
 	        		var msg = '';
 	        		if(data==null){
 	        			msg = '清单不存在';
-	        		}else if(data=='接收成功'){
+	        		}else if(data=='审批通过'){
 	        			msg = "<span style='color:green'>"+data+"</span>";
 	        		}else {
 	        			msg = "<span style='color:red'>"+data+"</span>";
