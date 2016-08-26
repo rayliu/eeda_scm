@@ -88,6 +88,7 @@ $(document).ready(function() {
     			$('#status').val('已确认');
     			$('#saveBtn').attr('disabled', true);
     			$('#checkBtn').attr('disabled', false);
+    		    $('#gateOutBtn').attr('disabled', false);
     			$.scojs_message('确认成功', $.scojs_message.TYPE_OK);
     		}else{
     			$.scojs_message(data.MSG, $.scojs_message.TYPE_ERROR);
@@ -112,6 +113,25 @@ $(document).ready(function() {
     		}
     	})
     })
+    
+    
+    //直接扣减按钮
+    $('#gateOutBtn').click(function(e){
+    	e.preventDefault();
+    	var self = $(this);
+    	self.attr('disabled',true);
+    	var order_id = $("#order_id").val();
+    	$.post('/gateOutOrder/reduceInv', {params:order_id}, function(data){
+    		if(data.ID){
+    			$('#status').val(data.STATUS);
+    			$.scojs_message('复核成功', $.scojs_message.TYPE_OK);
+    		}else{
+    			$.scojs_message('操作失败', $.scojs_message.TYPE_ERROR);
+    			self.attr('disabled',false);
+    		}
+    	})
+    })
+    
     
     //取消按钮
     $('#cancelBtn').click(function(e){
@@ -143,6 +163,7 @@ $(document).ready(function() {
     	}else if(status=='已确认'){
     		$('#checkBtn').attr('disabled', false);
     		$('#cancelBtn').attr('disabled', false);
+    		$('#gateOutBtn').attr('disabled', false);
     	}else if(status=='已复核'){
     		$('#cancelBtn').attr('disabled', false);
     	}
