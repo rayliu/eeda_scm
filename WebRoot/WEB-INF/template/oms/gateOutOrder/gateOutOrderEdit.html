@@ -62,7 +62,7 @@
 					value:order.consignee_id!'' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'consignee',
-					label:'收货人名称', value:order.consignee!'' }){}%>
+					label:'收货人名称', value:order.consignee!'', required:'required' }){}%>
 				</div>
 			</div>
 			
@@ -70,7 +70,7 @@
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
 					id:'consignee_telephone', label:'收货人电话',
-					value:order.consignee_telephone!'' }){}%></div>
+					value:order.consignee_telephone!'', required:'required' }){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
 					id:'consignee_address', label:'收件人地址',
@@ -94,7 +94,7 @@
 					display_value: location_name!''}){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", {
-					id:'express_no', label:'快递单号', 
+					id:'express_no', label:'快递单号', required:'required', 
 					value:order.express_no!'' }){}%></div>
 			</div>
 			
