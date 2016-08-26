@@ -162,10 +162,7 @@ $(document).ready(function() {
     		$('#cancelBtn').attr('disabled', false);
     	}else if(status=='已确认'){
     		$('#checkBtn').attr('disabled', false);
-    		$('#cancelBtn').attr('disabled', false);
     		$('#gateOutBtn').attr('disabled', false);
-    	}else if(status=='已复核'){
-    		$('#cancelBtn').attr('disabled', false);
     	}
     }else{
     	$('#saveBtn').attr('disabled', false);
@@ -202,7 +199,6 @@ $(document).ready(function() {
     		}
     		
     	});
-    	
     	self.attr('disabled',false);
     	
     });
