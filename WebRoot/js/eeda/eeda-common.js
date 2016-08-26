@@ -9,7 +9,7 @@ eeda.dt = function(opt){
         serverSide: opt.serverSide || true,
         scrollX: opt.scrollX || true,
         responsive: true,
-        scrollY: opt.scrollY || '300px', //"300px",
+        //scrollY: opt.scrollY || '300px', //"300px",
         scrollCollapse: opt.scrollCollapse || true,
         autoWidth: opt.autoWidth || false,
         aLengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
