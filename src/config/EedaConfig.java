@@ -10,6 +10,7 @@ import models.Account;
 import models.ArapAccountAuditLog;
 import models.Category;
 import models.Location;
+import models.ModuleRole;
 import models.Office;
 import models.Party;
 import models.Permission;
@@ -245,6 +246,7 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("role", Role.class);
         arp.addMapping("permission", Permission.class);
         arp.addMapping("user_role", UserRole.class);
+        arp.addMapping("module_role", ModuleRole.class);
         arp.addMapping("role_permission", RolePermission.class);
         arp.addMapping("eeda_modules", Module.class);
 
