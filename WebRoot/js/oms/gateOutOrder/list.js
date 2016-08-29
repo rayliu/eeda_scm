@@ -18,7 +18,7 @@ $(document).ready(function() {
             },
             { "data": "WAREHOUSE_NAME"},
             { "data": "CARGO_BARCODE"}, 
-            { "data": "CARGO_TYPE"}, 
+            { "data": "CUSTOMER_NAME"}, 
             { "data": "EXPRESS_NO"}, 
             { "data": "ORDER_TYPE"},
             { "data": "CONSIGNEE"}, 

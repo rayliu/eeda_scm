@@ -30,6 +30,7 @@ $(document).ready(function() {
             id: $('#order_id').val(),
             order_no: $('#order_no').val(),
             warehouse_id: $('#warehouse_id').val(),  
+            customer_id: $('#customer_id').val(),  
             customer_refer_no: $('#customer_refer_no').val(),
             order_type: $('#order_type').val(),  
             gate_out_date: $('#gate_out_date').val(),

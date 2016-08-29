@@ -8,9 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Party;
 import models.UserLogin;
 import models.eeda.OrderActionLog;
-import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.GateOutOrderItem;
 import models.eeda.oms.Inventory;
@@ -279,6 +279,10 @@ public class GateOutOrderController extends Controller {
     	Warehouse warehouse = Warehouse.dao.findById(gateOutOrder.getLong("warehouse_id"));
     	setAttr("warehouse", warehouse);
     	
+    	//仓库回显
+    	Party p = Party.dao.findById(gateOutOrder.getLong("customer_id"));
+    	setAttr("party", p);
+    	
     	//地址回显（省市区）
     	String location = gateOutOrder.getStr("location");
     	if(StringUtils.isNotEmpty(location)){
@@ -298,10 +302,11 @@ public class GateOutOrderController extends Controller {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
-        String sql = "select * from (SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name,"
+        String sql = "select * from (SELECT gio.*, ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name,p.abbr customer_name,"
     			+ " GROUP_CONCAT(gooi.bar_code SEPARATOR ' ') cargo_barcode,if(count(gooi.bar_code)>1,'多品','单品') cargo_type "
     			+ " from gate_out_order gio "
     			+ " LEFT JOIN gate_out_order_item gooi on gooi.order_id = gio.id"
+    			+ " left join party p on p.id = gio.customer_id"
     			+ " left join warehouse wh on wh.id = gio.warehouse_id"
     			+ " left join user_login u on u.id = gio.create_by"
     			+ " GROUP BY gio.id"

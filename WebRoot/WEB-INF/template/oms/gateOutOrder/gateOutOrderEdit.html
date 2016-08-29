@@ -38,6 +38,11 @@
 					<%include("/yh/component/form/inputField.html", {
 					id:'goods_type', label:'货品类型',
 					value:order.goods_type!'' }){}%></div>
+				<div class="col-lg-4">
+					<%include("/yh/component/form/inputCustomerField.html", {
+					id:'customer_id', label:'客户', required:'required',
+					value:order.customer_id!'', display_value: party.abbr!'' }){}
+					%></div>
 			</div>
 			<div class="row">
 				<div class="col-lg-12">
