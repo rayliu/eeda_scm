@@ -157,7 +157,7 @@ public class MoveOrderController extends Controller {
     	setAttr("itemList", getItems(id));
     	
     	//仓库回显
-    	Warehouse warehouse = Warehouse.dao.findById(order.getLong("warehouse_id"));
+    	Warehouse warehouse = Warehouse.dao.findById();
     	setAttr("warehouse", warehouse);
 
     	//用户信息

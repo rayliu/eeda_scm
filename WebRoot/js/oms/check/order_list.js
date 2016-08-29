@@ -3,13 +3,11 @@ $(document).ready(function() {
 	document.title = '波次复核查询   | '+document.title;
 
     $('#menu_incoming').addClass('active').find('ul').addClass('in');
-    
-    $("#beginTime_filter").val(new Date().getFullYear()+'-'+ (new Date().getMonth()+1));
-    
+
 	  //datatable, 动态处理
-    var dataTable = eeda.dt({
-        "id": "eeda-table",
-        "ajax": "/check/list?flag=wave",
+    var orderDataTable = eeda.dt({
+        "id": "order-table",
+        "ajax": "/check/list?flag=order",
         "columns": [
 			{ "width": "30px",
 			    "render": function ( data, type, full, meta ) {
@@ -18,10 +16,13 @@ $(document).ready(function() {
 			},
             { "data": "GATE_OUT_NO", 
                 "render": function ( data, type, full, meta ) {
-                    return "<a href='/waveOrder/edit?id="+full.WAVE_ID+"' >"+data+"</a>";
+                	if(full.GATE_OUT_ID)
+                		return "<a href='/gateOutOrder/edit?id="+full.GATE_OUT_ID+"' >"+data+"</a>";
+                	else
+                		return data;
                 }
-            }, 
-            { "data": null}, 
+            },
+            { "data": null},
             { "data": "PICKUP_FLAG",
             	"render": function ( data, type, full, meta ) {
                     var pickup_flag = data;
@@ -44,35 +45,26 @@ $(document).ready(function() {
 
     
     $('#resetBtn').click(function(e){
-        $("#waveCheckForm")[0].reset();
+        $("#orderCheckForm")[0].reset();
     });
 
-    $('#waveCheckForm').on('keydown','input',function(e){
+    $('#orderCheckForm').on('keydown','input',function(e){
     	var key = e.which;
     	if(key == 13){
-    		var id = $(this).attr('id');
-    		if(id == 'wave_order_no'){
-    			searchData();
-    			$('#cargo_bar_code').focus();
-    		}else{
-    			var wave_order_no = $('#wave_order_no').val().trim();
-    			var cargo_bar_code = $('#cargo_bar_code').val().trim();
-    			if(wave_order_no!='' && cargo_bar_code!=''){
-    				checkItem(wave_order_no,cargo_bar_code);
-    				$('#cargo_bar_code').val('');
-    			}	
-    		}
+			var gate_out_order_no = $('#gate_out_order_no').val().trim();
+			if(gate_out_order_no!='')
+				checkItem(gate_out_order_no);
     	}
     })
     
-    var checkItem = function(wave_order_no , cargo_bar_code){
-    	$.post('/check/checkOrder',{wave_order_no:wave_order_no, cargo_bar_code:cargo_bar_code},function(data){
+    var checkItem = function(gate_out_order_no){
+    	$.post('/check/checkOrder',{gate_out_order_no:gate_out_order_no},function(data){
     		var order = data;
             if(order.MSG =='success'){
                 $.scojs_message('复核成功', $.scojs_message.TYPE_OK);
                 searchData()
             }else{
-                $.scojs_message(order.MSG, $.scojs_message.TYPE_ERROR);
+                $.scojs_message('复核失败', $.scojs_message.TYPE_ERROR);
             }
     	}).fail(function() {
             $.scojs_message('复核失败,请联系管理员', $.scojs_message.TYPE_ERROR);
@@ -81,7 +73,7 @@ $(document).ready(function() {
 
     var buildCondition=function(){
     	var item = {};
-    	var orderForm = $('#waveCheckForm input,select');
+    	var orderForm = $('#orderCheckForm input,select');
     	for(var i = 0; i < orderForm.length; i++){
     		var name = orderForm[i].id;
         	var value =orderForm[i].value;
@@ -94,8 +86,8 @@ $(document).ready(function() {
 
     var searchData=function(){
     	var itemJson = buildCondition();
-    	var url = "/check/list?jsonStr="+JSON.stringify(itemJson)+"&flag=wave";
-        dataTable.ajax.url(url).load();
+    	var url = "/check/list?jsonStr="+JSON.stringify(itemJson)+"&flag=order";
+    	orderDataTable.ajax.url(url).load();
     };
     
 });

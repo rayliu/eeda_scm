@@ -30,13 +30,13 @@
 								<div class="row">
 									<div class="col-lg-4">
 										<%include("/yh/component/form/inputField.html", { id:
-										'wave_order', label: '波次单号', value: '' }){}%>
+										'wave_order_no', label: '波次单号', value: '' }){}%>
 									</div>
 								</div>
 								<div class="row">
 									<div class="col-lg-4">
 										<%include("/yh/component/form/inputField.html", { id:
-										'cargo_barcode', label: '商品SKU', value: '' }){}%>
+										'cargo_bar_code', label: '商品SKU', value: '' }){}%>
 									</div>
 								</div>
 							</form>
@@ -48,7 +48,7 @@
 							<!-- table list -->
 							<div class="form-group">
 								<%include("/yh/component/form/detailTable.html", { id:'eeda-table',
-								headers:['','出库单号', '商品SKU', '数量', '状态']
+								headers:['','出库单号','客户', '状态', '订单日期', '波次单号' , '商品条码（UPC）','商品名称', '数量']
 								}){} %>
 							</div>
 				        </div>
@@ -59,7 +59,7 @@
 							<div class="row">
 								<div class="col-lg-4">
 									<%include("/yh/component/form/inputField.html", { id:
-									'gate_out_order', label: '出库单号', value: '' }){}%>
+									'gate_out_order_no', label: '出库单号', value: '' }){}%>
 								</div>
 							</div>
 							</form>
@@ -72,8 +72,8 @@
 							<div class="form-group">
 								<%include("/yh/component/form/detailTable.html", { 
 								id:'order-table',
-								style:'width:1500px',
-								headers:['移库单号', '仓库', '创建人', '创建时间','状态']
+								style:'width:1400px',
+								headers:['','出库单号','客户', '状态', '订单日期', '波次单号' , '商品条码（UPC）','商品名称', '数量']
 								}){} %>
 							</div>
 				        </div>

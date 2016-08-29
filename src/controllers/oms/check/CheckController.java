@@ -19,6 +19,7 @@ import models.eeda.oms.MoveOrder;
 import models.eeda.oms.MoveOrderItem;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderGoods;
+import models.eeda.oms.WaveOrderItem;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.Warehouse;
 
@@ -211,19 +212,41 @@ public class CheckController extends Controller {
     }
     
     
-    public void list() {
+   
+    //异步刷新字表
+    public void tableList(){
+    	String order_id = getPara("order_id");
+    	List<Record> list = null;
+    	list = getItems(order_id);
+
+    	Map BillingOrderListMap = new HashMap();
+        BillingOrderListMap.put("sEcho", 1);
+        BillingOrderListMap.put("iTotalRecords", list.size());
+        BillingOrderListMap.put("iTotalDisplayRecords", list.size());
+
+        BillingOrderListMap.put("aaData", list);
+
+        renderJson(BillingOrderListMap); 
+    }
+    
+    public void list(){
     	String sLimit = "";
+    	String sql = "";
+    	String flag = getPara("flag");
     	String pageIndex = getPara("draw");
         if (getPara("start") != null && getPara("length") != null) {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
 
-        String sql = "select * from(SELECT mor.*,ifnull(u.c_name, u.user_name) creator_name ,wh.warehouse_name"
-    			+ "  from move_order mor "
-    			+ "  left join warehouse wh on wh.id = mor.warehouse_id"
-    			+ "  left join user_login u on u.id = mor.create_by"
+
+    	sql = "select * from(SELECT woi.*,goo.id gate_out_id,ifnull(u.c_name, u.user_name) creator_name,goo.order_no gate_out_order_no ,wo.order_no wave_order_no"
+    			+ "  from wave_order_item woi "
+    			+ "  left join wave_order wo on wo.id = woi.order_id "
+    			+ "  left join gate_out_order goo on goo.order_no = woi.gate_out_no "
+    			+ "  left join user_login u on u.id = goo.create_by"
+    			+ "  where woi.check_flag = 'N' "
     			+ "  ) A where 1 =1 ";
-        
+
         String condition = "";
         String jsonStr = getPara("jsonStr");
     	if(StringUtils.isNotEmpty(jsonStr)){
@@ -247,22 +270,38 @@ public class CheckController extends Controller {
         renderJson(BillingOrderListMap); 
     }
     
-    //异步刷新字表
-    public void tableList(){
-    	String order_id = getPara("order_id");
-    	List<Record> list = null;
-    	list = getItems(order_id);
+    @Before(Tx.class)
+    public void checkOrder() throws Exception{
+    	String msg = null;
+    	String sql = "";
+    	WaveOrderItem woi = null;
+    	String wave_order_no = getPara("wave_order_no");
+    	String cargo_bar_code = getPara("cargo_bar_code");
+    	String gate_out_order_no = getPara("gate_out_order_no");
+    	
+    	if(StringUtils.isEmpty(gate_out_order_no)){
+    		sql = "select woi.* from wave_order_item woi "
+                    + " left join wave_order wo on woi.order_id = wo.id "
+                    + " where woi.pickup_flag='Y' and check_flag = 'N' and wo.order_no=? and cargo_bar_code = ?";
+            woi = WaveOrderItem.dao.findFirst(sql, wave_order_no, cargo_bar_code);
+    	}else{
+    		sql = "select woi.* from wave_order_item woi "
+                    + " where woi.pickup_flag='Y' and check_flag = 'N' and woi.gate_out_no=?";
+            woi = WaveOrderItem.dao.findFirst(sql, gate_out_order_no);
+    	}
 
-    	Map BillingOrderListMap = new HashMap();
-        BillingOrderListMap.put("sEcho", 1);
-        BillingOrderListMap.put("iTotalRecords", list.size());
-        BillingOrderListMap.put("iTotalDisplayRecords", list.size());
-
-        BillingOrderListMap.put("aaData", list);
-
-        renderJson(BillingOrderListMap); 
+        if(woi != null){
+        	woi.set("check_flag","Y").update();
+        	msg = "success";
+        }else{
+        	msg = "此波次单不存在此商品";
+        }
+        
+        Record re = new Record();
+        re.set("msg", msg);
+        
+        renderJson(re);
     }
     
-
-    
+   
 }
