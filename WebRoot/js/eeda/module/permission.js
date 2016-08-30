@@ -66,12 +66,11 @@ $(document).ready(function(template) {
         "columns": [
             { "orderable":false, width: '7%',
                 "render": function ( data, type, full, meta ) {
-                  return '<a class="remove delete" href="javascript:void(0)" title="删除"><i class="glyphicon glyphicon-remove"></i> </a>&nbsp;&nbsp;'+
-                    '<a class="edit" href="javascript:void(0)" title="编辑"><i class="glyphicon glyphicon-edit"></i> </a>';
+                  return '<a class="remove delete" href="javascript:void(0)" title="删除"><i class="glyphicon glyphicon-remove"></i> </a>';
                 }
             },
             { "data": "ID", visible: false},
-            { "data": "CODE",  width: '15%',
+            { "data": "CODE",  width: '20%',
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
@@ -85,7 +84,7 @@ $(document).ready(function(template) {
                     return '<input type="text" name="name" value="'+data+'" class="form-control"/>';
                 }
             },
-            { "data": "URL", width: '65%',
+            { "data": "URL", width: '60%',
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';

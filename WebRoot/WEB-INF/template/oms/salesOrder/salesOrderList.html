@@ -37,11 +37,10 @@
 						<button id="searchBtn" class="btn btn-primary btn-sm"
 							type="button">查询</button>
 						<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
-						<% if(shiro.hasPermission("salesOrder.create")){ %> <a
+						<% if(shiro.hasPermission("salesOrder.add")){ %> <a
 							class="btn btn-success btn-sm" href="/salesOrder/create">新增订单</a>
 						<%}%>
 					</div>
-					
 					<!-- table list -->
 					<div class="form-group">
 						<%include("/yh/component/form/detailTable.html", { id:'eeda-table',

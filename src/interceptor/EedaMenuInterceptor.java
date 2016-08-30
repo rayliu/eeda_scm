@@ -38,12 +38,12 @@ public class EedaMenuInterceptor implements Interceptor {
         // 查询当前用户菜单
         String sql = "select distinct module.* from eeda_modules sub, eeda_modules module, permission p "
                 + " where sub.parent_id = module.id and sub.office_id=? "
-                + " and p.code ='list' and sub.id=p.module_id"
+                + " and p.code like '%list' and sub.id=p.module_id"
                 + " and sub.sys_only='N' order by seq";
         List<Record> modules = Db.find(sql, office_id);
         for (Record module : modules) {
             sql = "select m.*, p.url from eeda_modules m, permission p "
-                    + " where parent_id =? and office_id=? and p.code ='list' and m.id=p.module_id"
+                    + " where parent_id =? and office_id=? and p.code like '%list' and m.id=p.module_id"
                     + " order by seq";
 
             List<Record> orders = Db.find(sql, module.get("id"), office_id);
