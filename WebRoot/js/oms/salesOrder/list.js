@@ -1,8 +1,8 @@
 
 $(document).ready(function() {
 	document.title = '订单查询   | '+document.title;
-
-    $('#menu_order').addClass('active').find('ul').addClass('in');
+    
+    eeda.openMenu();
     
     $("#beginTime_filter").val(new Date().getFullYear()+'-'+ (new Date().getMonth()+1));
     

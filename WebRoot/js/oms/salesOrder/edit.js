@@ -3,12 +3,11 @@ $(document).ready(function() {
 
 	document.title = order_no + ' | ' + document.title;
 
-    $('#menu_order').addClass('active').find('ul').addClass('in');
+    eeda.openMenu();
     
     $('#amount').blur(function(){
         $('#total_amount').text($(this).val());
     });
-    
     
 	$("#orderForm").validate({
         rules: {

@@ -1,5 +1,14 @@
 var eeda={};
 window.eeda=eeda;
+
+eeda.openMenu = function(){
+    var moudleUrl = window.location.pathname.split('/')[1];
+    if(moudleUrl.length>0){
+        var menu_ul = $('#side-menu a[href="/'+moudleUrl+'"]').parent().parent().parent();
+        menu_ul.addClass('active').find('ul').addClass('in');
+    }
+}
+
 //dataTables builder for 1.10
 eeda.dt = function(opt){
     var option = {
