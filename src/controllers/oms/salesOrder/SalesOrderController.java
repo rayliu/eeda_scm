@@ -12,18 +12,16 @@ import java.util.TreeMap;
 
 import models.UserLogin;
 import models.eeda.oms.LogisticsOrder;
+import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
-import models.eeda.oms.SalesOrder;
 import models.eeda.profile.Country;
 import models.eeda.profile.CustomCompany;
-import models.eeda.profile.Warehouse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 
 import com.google.gson.Gson;
@@ -37,13 +35,11 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 import config.EedaConfig;
 import controllers.oms.custom.dto.DingDanBuilder;
 import controllers.oms.custom.dto.DingDanDto;
-import controllers.oms.custom.dto.DingDanGoodsDto;
 import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
-import controllers.util.PermissionConstant;
 import controllers.yh.job.CustomJob;
 
 @RequiresAuthentication

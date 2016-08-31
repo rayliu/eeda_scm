@@ -1,6 +1,7 @@
 package config;
 
 import handler.UrlHanlder;
+import interceptor.EedaMenuInterceptor;
 
 import java.lang.management.ManagementFactory;
 import java.sql.SQLException;
@@ -335,7 +336,8 @@ public class EedaConfig extends JFinalConfig {
     		logger.debug("is_check_permission = Y");
          	me.add(new ShiroInterceptor());
     	}
-        //me.add(new SetAttrLoginUserInterceptor());
+    	// 添加控制层全局拦截器, 每次进入页面时构造菜单项
+    	me.addGlobalActionInterceptor(new EedaMenuInterceptor());
     }
 
     @Override

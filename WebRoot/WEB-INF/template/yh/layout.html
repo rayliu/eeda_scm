@@ -88,6 +88,24 @@
 	                       <a href="/"><i class="fa fa-dashboard fa-fw"></i> 管理看板 </a>
 	                   </li>
                     <%}%>
+                    <%for(module in modules){ %>
+                        <li id="${module.id!}">
+                            <a href="#">${module.module_name!}<span class="fa arrow"></span></a>
+                            <% if(module.orders != null ){%>
+                                <ul class="nav nav-second-level">
+                                    <%
+                                    for(subModule in module.orders){
+                                    %>
+                                        <li id="${subModule.id}">
+                                            <a href="/${subModule.url!''}">${subModule.module_name!}</a>
+                                        </li>
+                                    <%}%>
+                                </ul>
+                            <%}%>
+                        </li>
+                    <%}%>
+
+
 
                     <%  
                     	var map = permissionMap;
@@ -104,7 +122,7 @@
                             nvl(logisticsOrderPermission, '') != '' ||
                             nvl(loadOrderPermission, '') != ''){
                     %>
-                        <li id="menu_order">
+                        <li id="menu_order" style="display: none;">
                             <a href="#"><i class="fa fa-cog fa-fw"></i> 订单管理<span class="fa arrow"></span></a>
                         
                             <ul class="nav nav-second-level">
@@ -132,7 +150,7 @@
                     	var customStatusPermission = map.CustomStatus_list;
                     	 if( nvl(customStatusPermission, '') != '') {
                        %>  
-                        <li id="menu_customs">
+                        <li id="menu_customs"  style="display: none;">
                             <a href="#"><i class="fa fa-cny fa-fw"></i> 报关管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                             <% if(customStatusPermission != ''){%>
@@ -155,7 +173,7 @@
                             nvl(gateOutOrderPermission, '') != '' ||
                             nvl(waveOrderPermission, '') != '' ) {	
                         %> 
-                        <li id="menu_incoming">
+                        <li id="menu_incoming" style="display: none;">
                         	<a href="#"><i class="fa fa-cog fa-fw"></i> 仓库管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                            		<% if(gateInOrderPermission != ''){%>
@@ -190,7 +208,7 @@
                         <% }%>
                         
                         
-                        <li id="menu_inventory">
+                        <li id="menu_inventory"  style="display: none;">
                         	<a href="#"><i class="fa fa-cog fa-fw"></i> 库存管理<span class="fa arrow"></span></a>
                             <ul class="nav nav-second-level">
                                 <li  style="display:none">  
@@ -209,7 +227,7 @@
 		               		var chunarijiPermission = map.PaymentCheckOrder_list;
 		               		if( nvl(chunarijiPermission, '') != '') {
 		               	%>
-                    <li id="menu_finance">
+                    <li id="menu_finance"  style="display: none;">
                         <a href="#"><i class="fa fa-cny fa-fw"></i> 财务管理<span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
                             <% if(chunarijiPermission != ''){%>

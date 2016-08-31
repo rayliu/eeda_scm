@@ -1,5 +1,6 @@
 package controllers.profile;
 
+import interceptor.EedaMenuInterceptor;
 import interceptor.SetAttrLoginUserInterceptor;
 
 import java.math.BigInteger;
@@ -49,6 +50,7 @@ import controllers.util.MD5Util;
 import controllers.util.ParentOffice;
 import controllers.util.getCurrentPermission;
 
+@Before(EedaMenuInterceptor.class)
 public class MainController extends Controller {
 	private Logger logger = Logger.getLogger(MainController.class);
     // in config route已经将路径默认设置为/yh
