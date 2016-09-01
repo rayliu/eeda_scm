@@ -6,6 +6,7 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 
 import models.DepartOrder;
+import models.eeda.profile.OrderNoSeq;
 import models.yh.profile.CustomizeField;
 
 /**
@@ -22,30 +23,38 @@ public class OrderNoGenerator {
 	//TODO：如果需要按每张单的前缀来生成序列号，可以多加一个Map来记录
 	
 	public synchronized static String getNextOrderNo(String orderPrefix) {
-		if("00000".equals(count)){
-			initCountFromDB();
-		}
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		String nowdate = sdf.format(new Date());
-		//日期不同, 则从新计数
-        if(!nowdate.equals(dateValue)){
-            dateValue=nowdate;
-            count = "00000";
+	    String orderNo = "";
+	    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        String nowdate = sdf.format(new Date());
+        
+		//1. 从数据库获取orderPrefix的最后号码, 没有该orderPrefix则新增一行记录
+        //2. 判断是否日期相同, 相同就累加, 不同就重新计数
+	    OrderNoSeq orderSeq = OrderNoSeq.dao.findFirst("select * from order_no_seq where prefix=?", orderPrefix);
+        if(orderSeq!=null){
+            String seq = "00000";
+            String lastOrderNo = orderSeq.get("last_order_no");
+            //不管前缀长度，后面的数字长度是 13， 2011010100001
+            String ymd = StringUtils.right(lastOrderNo, 13).substring(0, 8); // 获取年月日字符串
+            if(ymd.equals(nowdate)){//如果年月日 =今天， 获取流水号
+                seq = StringUtils.right(lastOrderNo, 5); // 获取流水号
+            }
+            orderNo = orderPrefix +nowdate+ getNo(seq);
+            orderSeq.set("last_order_no", orderNo).update();
+        }else{
+            orderSeq = new OrderNoSeq();
+            orderNo = orderPrefix +nowdate+ getNo("00000");
+            orderSeq.set("prefix", orderPrefix);
+            orderSeq.set("last_order_no", orderNo).save();
         }
-		String orderNo = orderPrefix +nowdate+ getNo(count);
 		
-		CustomizeField cf = CustomizeField.dao.findFirst("select * from customize_field where order_type='latestOrderNo'");
-		if(cf!=null){
-			cf.set("field_code", orderNo).update();
-		}
 		return orderNo;
 	}
 
-	public synchronized static void initCountFromDB() {
+	private synchronized static void initCountFromDB(String orderPrefix) {
 		String previousNo="";
-		CustomizeField cf = CustomizeField.dao.findFirst("select * from customize_field where order_type='latestOrderNo'");
-		if(cf!=null){
-			previousNo = cf.get("field_code");
+		OrderNoSeq orderSeq = OrderNoSeq.dao.findFirst("select * from order_no_seq where prefix=?", orderPrefix);
+		if(orderSeq!=null){
+			previousNo = orderSeq.get("last_order_no");
 			//不管前缀长度，后面的数字长度是 13， 2011010100001
 			String ymd = StringUtils.right(previousNo, 13).substring(0, 8); // 获取年月日字符串
 			
@@ -55,6 +64,10 @@ public class OrderNoGenerator {
 			if(ymd.equals(nowdate)){//如果年月日 =今天， 获取流水号
 				count = StringUtils.right(previousNo, 5); // 获取流水号
 			}
+		}else{
+		    orderSeq = new OrderNoSeq();
+		    orderSeq.set("prefix", orderPrefix);
+		    
 		}
         
 	}

@@ -44,6 +44,7 @@ import models.eeda.profile.Country;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.LogisticsCustomCompany;
 import models.eeda.profile.Module;
+import models.eeda.profile.OrderNoSeq;
 import models.eeda.profile.Product;
 import models.eeda.profile.Unit;
 import models.eeda.profile.Warehouse;
@@ -233,6 +234,11 @@ public class EedaConfig extends JFinalConfig {
 
         me.add(cp);
 
+        setDbMapping(me);
+
+    }
+
+    private void setDbMapping(Plugins me) {
         arp = new ActiveRecordPlugin(cp);
         arp.setShowSql(true);// 控制台打印Sql
         SqlReporter.setLogger(true);// log4j 打印Sql
@@ -262,7 +268,7 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("user_office", UserOffice.class);
         arp.addMapping("user_customer", UserCustomer.class);
         
-        arp.addMapping("customize_field", CustomizeField.class);
+        arp.addMapping("order_no_seq", OrderNoSeq.class);
         arp.addMapping("office_config", OfficeCofig.class);
         
         //中转仓
@@ -296,7 +302,6 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("inventory_order_item", InventoryOrderItem.class);
         arp.addMapping("move_order", MoveOrder.class);
         arp.addMapping("move_order_item", MoveOrderItem.class);
-
     }
 
     private void initDBconnector() {
