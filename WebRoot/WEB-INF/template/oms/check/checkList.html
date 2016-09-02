@@ -26,7 +26,6 @@
 														
 					<div class="tab-content">
 				        <div class="tab-pane fade active in" id="waveCheck">
-				        	<form id="waveCheckForm">
 								<div class="row">
 									<div class="col-lg-4">
 										<%include("/yh/component/form/inputField.html", { id:
@@ -39,7 +38,6 @@
 										'cargo_bar_code', label: '商品SKU', value: '' }){}%>
 									</div>
 								</div>
-							</form>
 
 							<div class="form-group button-bar">
 								<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
@@ -55,14 +53,12 @@
 				        
 				        
 				        <div class="tab-pane fade" id="orderCheck">
-				        	<form id="orderCheckForm">
 							<div class="row">
 								<div class="col-lg-4">
 									<%include("/yh/component/form/inputField.html", { id:
 									'gate_out_order_no', label: '出库单号', value: '' }){}%>
 								</div>
 							</div>
-							</form>
 							
 							<div class="form-group button-bar">
 								<button id="resetOFBtn" class="btn btn-default btn-sm" type="button">清空条件</button>

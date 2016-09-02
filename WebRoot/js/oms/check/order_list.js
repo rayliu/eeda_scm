@@ -48,12 +48,13 @@ $(document).ready(function() {
         $("#orderCheckForm")[0].reset();
     });
 
-    $('#orderCheckForm').on('keydown','input',function(e){
+    $('#gate_out_order_no').keydown(function(e){
     	var key = e.which;
     	if(key == 13){
-			var gate_out_order_no = $('#gate_out_order_no').val().trim();
-			if(gate_out_order_no!='')
+			var gate_out_order_no = $(this).val().trim();
+			if(gate_out_order_no!=''){
 				checkItem(gate_out_order_no);
+			}
     	}
     })
     
@@ -62,7 +63,9 @@ $(document).ready(function() {
     		var order = data;
             if(order.MSG =='success'){
                 $.scojs_message('复核成功', $.scojs_message.TYPE_OK);
-                searchData()
+                searchData();
+                $('#gate_out_order_no').val('');
+                $('#gate_out_order_no').focus();
             }else{
                 $.scojs_message('复核失败', $.scojs_message.TYPE_ERROR);
             }

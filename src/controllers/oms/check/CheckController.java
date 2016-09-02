@@ -239,7 +239,7 @@ public class CheckController extends Controller {
         }
 
 
-    	sql = "select * from(SELECT woi.*,goo.id gate_out_id,ifnull(u.c_name, u.user_name) creator_name,goo.order_no gate_out_order_no ,wo.order_no wave_order_no"
+    	sql = "select * from(SELECT woi.*,goo.id gate_out_id,ifnull(u.c_name, u.user_name) creator_name,goo.order_no gate_out_order_no, wo.id wave_id,wo.order_no wave_order_no"
     			+ "  from wave_order_item woi "
     			+ "  left join wave_order wo on wo.id = woi.order_id "
     			+ "  left join gate_out_order goo on goo.order_no = woi.gate_out_no "
