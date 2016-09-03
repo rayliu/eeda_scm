@@ -243,7 +243,9 @@ public class MainController extends Controller {
         currentUser.logout();
         redirect("/login");
     }
-
+    public void noPermission() {
+        render("/yh/noPermission.html");
+    }
     // 使用common-email, javamail
     public void testMail() throws Exception {
         Email email = new SimpleEmail();

@@ -21,6 +21,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 
 import com.google.gson.Gson;
@@ -43,38 +44,9 @@ public class ModuleController extends Controller {
     Subject currentUser = SecurityUtils.getSubject();
 
     // ParentOfficeModel pom = ParentOffice.getInstance().getOfficeId(this);
-
-    @Before(EedaMenuInterceptor.class)
+    @RequiresRoles("admin")
     public void index() {
-        // Long office_id =
-        // LoginUserController.getLoginUser(this).get("office_id");
-        // List<Record> viewsRecs =
-        // Db.find("select * from eeda_sql_views where office_id=?", office_id);
-        // setAttr("sqlViews", viewsRecs);
-        setActiveModules();
         render("/profile/module/moduleList.html");
-    }
-
-    private void setActiveModules() {
-        String sql = "select id, module_name, parent_id, office_id, seq from eeda_modules "
-                + "where status = '启用' and sys_only ='N' and office_id="
-                + LoginUserController.getLoginUser(this).get("office_id");
-
-        List<Record> modules = Db.find(sql);
-        if (modules == null) {
-            modules = Collections.EMPTY_LIST;
-        } else {
-            // for (Record module : modules) {
-            // String fieldSql =
-            // "select f.* from eeda_structure s, eeda_field f where  f.structure_id = s.id and s.parent_id is null and s.module_id=?";
-            // List<Record> fields = Db.find(fieldSql, module.get("id"));
-            // if(fields != null && fields.size()>0){
-            // module.set("field_list", fields);
-            // module.set("structure_id", fields.get(0).get("structure_id"));
-            // }
-            // }
-        }
-        setAttr("active_modules", modules);
     }
 
     public void getActiveModules() {

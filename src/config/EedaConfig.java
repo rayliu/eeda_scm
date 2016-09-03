@@ -66,6 +66,7 @@ import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
 import com.jfinal.ext.handler.UrlSkipHandler;
 import com.jfinal.ext.plugin.shiro.ShiroInterceptor;
+import com.jfinal.ext.plugin.shiro.ShiroKit;
 import com.jfinal.ext.plugin.shiro.ShiroPlugin;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.activerecord.CaseInsensitiveContainerFactory;
@@ -142,9 +143,10 @@ public class EedaConfig extends JFinalConfig {
         // 注册后，可以使beetl html中使用shiro tag
         BeetlRenderFactory.groupTemplate.registerFunctionPackage("shiro", new ShiroExt());
 
-        //没有权限时跳转到login
+        //没有登录时跳转到login
         me.setErrorView(401, "/yh/noLogin.html");//401 authenticate err
-        me.setErrorView(403, "/yh/noPermission.html");// authorization err
+        //没有权限时跳转到noPermission
+        me.setError403View("/yh/noPermission.html");
         
         //内部出错跳转到对应的提示页面，需要考虑提供更详细的信息。
         me.setError404View("/yh/err404.html");
@@ -340,6 +342,8 @@ public class EedaConfig extends JFinalConfig {
     	if("Y".equals(getProperty("is_check_permission"))){
     		logger.debug("is_check_permission = Y");
          	me.add(new ShiroInterceptor());
+            //针对shiro 设置错误页面
+            ShiroKit.setUnauthorizedUrl("/noPermission");
     	}
     	// 添加控制层全局拦截器, 每次进入页面时构造菜单项
     	me.addGlobalActionInterceptor(new EedaMenuInterceptor());
