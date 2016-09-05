@@ -118,6 +118,10 @@ public class MainController extends Controller {
             String savedRequestUrl = this.getSessionAttr(ShiroKit.getSavedRequestKey());
             if(savedRequestUrl!=null){
             	setSessionAttr(ShiroKit.getSavedRequestKey(), null);
+                int index = savedRequestUrl.indexOf("/edit");
+                if(index>0){
+                    savedRequestUrl = savedRequestUrl.substring(0, index);
+                }
             	redirect(savedRequestUrl);
             }else{
             	String officeConfig="select oc.index_page_path from office_config oc "
