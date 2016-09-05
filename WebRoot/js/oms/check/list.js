@@ -47,19 +47,23 @@ $(document).ready(function() {
         $("#waveCheckForm")[0].reset();
     });
     
-    $('#wave_order_no').keyup(function(){
-    	searchData();
-    	$('#cargo_bar_code').focus();
-    })
-    $('#cargo_bar_code').keydown(function(e){
+    
+    $('#waveCheckForm').on('keydown','input',function(e){
     	var key = e.which;
     	if(key == 13){
-	    	var wave_order_no = $('#wave_order_no').val().trim();
-			var cargo_bar_code = $('#cargo_bar_code').val().trim();
-			if(wave_order_no!='' && cargo_bar_code!=''){
-				checkItem(wave_order_no,cargo_bar_code);
-			}	
+            var id = $(this).attr('id');
+            if(id == 'wave_order_no'){
+                searchData();
+                $('#cargo_bar_code').focus();
+            }else{
+                var wave_order_no = $('#wave_order_no').val().trim();
+                var cargo_bar_code = $('#cargo_bar_code').val().trim();
+                if(wave_order_no!='' && cargo_bar_code!=''){
+                    checkItem(wave_order_no,cargo_bar_code);
+                }    
+            }
     	}
+
     })
     
     var checkItem = function(wave_order_no , cargo_bar_code){
@@ -68,8 +72,8 @@ $(document).ready(function() {
             if(order.MSG =='success'){
                 $.scojs_message('复核成功', $.scojs_message.TYPE_OK);
                 searchData();
-    			$('#cargo_bar_code').val('');
-    			$('#cargo_bar_code').focus();
+                $('#cargo_bar_code').val('');
+                $('#cargo_bar_code').focus();
             }else{
                 $.scojs_message(order.MSG, $.scojs_message.TYPE_ERROR);
             }

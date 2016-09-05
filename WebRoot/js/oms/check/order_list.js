@@ -45,14 +45,14 @@ $(document).ready(function() {
 
     
     $('#resetBtn').click(function(e){
-        $("#orderCheckForm")[0].reset();
+        $("#gate_out_order_no").val('');
     });
 
-    $('#gate_out_order_no').keydown(function(e){
+    $('#gate_out_order_no').on('keydown',function(e){
     	var key = e.which;
     	if(key == 13){
-			var gate_out_order_no = $(this).val().trim();
-			if(gate_out_order_no!=''){
+            var gate_out_order_no = $(this).val().trim();
+            if(gate_out_order_no!=''){
 				checkItem(gate_out_order_no);
 			}
     	}
@@ -64,14 +64,14 @@ $(document).ready(function() {
             if(order.MSG =='success'){
                 $.scojs_message('复核成功', $.scojs_message.TYPE_OK);
                 searchData();
-                $('#gate_out_order_no').val('');
-                $('#gate_out_order_no').focus();
+                $("#gate_out_order_no").val('');
+                $("#gate_out_order_no").focus();
             }else{
                 $.scojs_message('复核失败', $.scojs_message.TYPE_ERROR);
             }
     	}).fail(function() {
             $.scojs_message('复核失败,请联系管理员', $.scojs_message.TYPE_ERROR);
-       });
+        });
     }
 
     var buildCondition=function(){

@@ -26,6 +26,7 @@
 														
 					<div class="tab-content">
 				        <div class="tab-pane fade active in" id="waveCheck">
+				        	<form id="waveCheckForm">
 								<div class="row">
 									<div class="col-lg-4">
 										<%include("/yh/component/form/inputField.html", { id:
@@ -38,7 +39,7 @@
 										'cargo_bar_code', label: '商品SKU', value: '' }){}%>
 									</div>
 								</div>
-
+							</form>
 							<div class="form-group button-bar">
 								<button id="resetBtn" class="btn btn-default btn-sm" type="button">清空条件</button>
 							</div>
@@ -68,7 +69,6 @@
 							<div class="form-group">
 								<%include("/yh/component/form/detailTable.html", { 
 								id:'order-table',
-								style:'width:1400px',
 								headers:['','出库单号','客户', '状态', '订单日期', '波次单号' , '商品条码（UPC）','商品名称', '数量']
 								}){} %>
 							</div>
