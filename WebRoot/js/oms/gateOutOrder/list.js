@@ -20,7 +20,6 @@ $(document).ready(function() {
             { "data": "CARGO_BARCODE"}, 
             { "data": "CUSTOMER_NAME"}, 
             { "data": "EXPRESS_NO"}, 
-            { "data": "ORDER_TYPE"},
             { "data": "CONSIGNEE"}, 
             { "data": "CREATOR_NAME"}, 
             { "data": "CREATE_STAMP"}, 
