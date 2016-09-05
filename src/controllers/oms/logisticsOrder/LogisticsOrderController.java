@@ -2,6 +2,8 @@ package controllers.oms.logisticsOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import models.UserLogin;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.profile.CustomCompany;
+import net.sf.json.xml.XMLSerializer;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -29,13 +32,18 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
-import controllers.oms.custom.CustomManager;
-import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.custom.dto.YunDanDto;
-import controllers.oms.salesOrder.SalesOrderController;
+import controllers.oms.yunda.DataSecurity;
+import controllers.oms.yunda.Item;
+import controllers.oms.yunda.Items;
+import controllers.oms.yunda.Order;
+import controllers.oms.yunda.Orders;
+import controllers.oms.yunda.Receiver;
+import controllers.oms.yunda.Sender;
 import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
+import controllers.util.JaxbUtil;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
 import controllers.yh.job.CustomJob;
@@ -59,6 +67,8 @@ public class LogisticsOrderController extends Controller {
     @Before(Tx.class)
    	public void save() throws Exception {		
    		String jsonStr=getPara("params");
+   		String msg = null;
+   		String mail_no =null;
        	
        	Gson gson = new Gson();  
         Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
@@ -76,8 +86,30 @@ public class LogisticsOrderController extends Controller {
    			//需后台处理的字段
    			logisticsOrder.set("update_by", user.getLong("id"));
    			logisticsOrder.set("update_stamp", new Date());
-   			logisticsOrder.update();
    			
+   			//韵达下单
+//   			String xml = null;
+//   			String parcel_info = logisticsOrder.getStr("parcel_info");
+//   			if(!"YD".equals(parcel_info.substring(0, 2))){
+//   				xml = createYunda(dto , "update"); 
+//   			}else{
+//   				xml = createYunda(dto, "create"); 
+//   			} 
+//   	        String js = (JaxbUtil.xmltoJson(xml)).toString();
+//   	        System.out.println(js);
+//   	        Map<String, Map> xmlJson= gson.fromJson(js, HashMap.class);  
+//   	        Map responses = xmlJson.get("response");
+//   	        
+//   	        msg = responses.get("msg").toString();
+//   	        System.out.println("韵达快递单号："+msg);
+//   	        
+//   	        if("YD".equals(parcel_info.substring(0, 2))){
+//   	        	mail_no =  responses.get("mail_no").toString();
+//   	        	logisticsOrder.set("parcel_info",mail_no);
+//   	   	        
+//   	        }
+   	        
+   			logisticsOrder.update();
    			CustomJob.operationLog("logisticsOrder", jsonStr, id, "update", LoginUserController.getLoginUserId(this).toString());
    		} else {
    			//create 
@@ -96,13 +128,133 @@ public class LogisticsOrderController extends Controller {
    		long create_by = logisticsOrder.getLong("create_by");
    		String user_name = LoginUserController.getUserNameById(create_by);
 
-//   	List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
-//		DbUtils.handleList(itemList, id, Goods.class, "order_id");
    		Record r = logisticsOrder.toRecord();
    		r.set("create_by_name", user_name);
+   		r.set("msg",msg);
+   		r.set("mail_no",mail_no);
 
    		renderJson(r);
    	}
+    
+    @Before(Tx.class)
+    public String createYunda(Map<String, ?> dto,String action){
+    	String XmlValue = createXml(dto);
+    	String returnMsg = null;
+    	
+    	String partnerid ="7690811002";
+        String pwd = "uam4WYkE5GAyxjJC2XVMSTUh7r6gBD";
+        String version = "1.0";
+        
+        if("create".equals(action)){
+        	action = "interface_receive_order__mailno.php";//下单
+        }else if("update".equals(action)){
+        	action = "interface_modify_order.php";//更新
+        }
+        
+        String urlStr="http://orderdev.yundasys.com:10110/cus_order/order_interface/"+action;
+        
+        String data;
+		try {
+			data = DataSecurity.security(partnerid, pwd, XmlValue);
+			
+			System.out.println(data);
+			data += "&version=" + version + "&request=data";
+	        
+	        returnMsg = EedaHttpKit.post(urlStr, data);
+	        System.out.println("结果"+returnMsg);
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return returnMsg;
+    }
+    
+    public String createXml(Map<String, ?> dto){
+    	Orders orders = new Orders();
+    	Order order = new Order();
+    	
+    	String id = (String) dto.get("id");
+    	String order_no = (String) dto.get("order_no");
+    	String log_no = (String) dto.get("log_no");
+    	
+    	order.setOrder_serial_no(order_no);//订单号（必填）-------------------1
+    	order.setKhddh(order_no);//大客户系统订单的订单号（必填）
+    	order.setNbckh(id);//内部参考号-------------------1
+    	order.setOrder_type("");//运单类型
+
+    	//发货方信息
+    	String shipper = (String) dto.get("shipper");
+    	String shipper_city = ((String) dto.get("shipper_city_INPUT")).replaceAll("-", ",");
+    	String shipper_address = (String) dto.get("shipper_address");
+    	String shipper_telephone = (String) dto.get("shipper_telephone");
+    	
+    	Sender sender = new Sender();
+    	sender.setName(shipper);//姓名（必填）----------shipper
+    	sender.setCompany("");//公司名
+    	sender.setCity(shipper_city);//城市（上海市，上海市，青浦区）-----------------shipper_city
+    	sender.setAddress(shipper_address);//地址（上海市，上海市，青浦区XXX路XXX号）（必填）-----------------------shipper_address
+    	sender.setPostcode("");//邮编
+    	sender.setPhone(shipper_telephone);//固定电话（必填）----------------shipper_telephone
+    	sender.setMobile(shipper_telephone);//移动电话（必填）----------------------------shipper_telephone
+    	sender.setBranch("");//
+    	order.setSender(sender);
+    	
+    	//收货方信息
+    	String consignee = (String) dto.get("consignee");
+    	String sales_pro_ci_dis = ((String) dto.get("sales_pro_ci_dis_INPUT")).replaceAll("-", ",");
+    	String consignee_address = (String) dto.get("consignee_address");
+    	String consignee_telephone = (String) dto.get("consignee_telephone");
+    	
+    	Receiver receiver = new Receiver();
+    	receiver.setName(consignee);//------------------------consignee
+    	receiver.setCompany("");//
+    	receiver.setCity(sales_pro_ci_dis);//----------------------sales_pro_ci_dis
+    	receiver.setAddress(consignee_address);//-----------------consignee_address
+    	receiver.setPostcode("");//
+    	receiver.setPhone(consignee_telephone);//-------------------consignee_telephone
+    	receiver.setMobile(consignee_telephone);//-------------------consignee_telephone
+    	receiver.setBranch("");//
+    	order.setReceiver(receiver);
+    	//商品信息
+    	String weight = (String)dto.get("weight");
+
+    	order.setWeight(Double.parseDouble(weight));//物品重量--------
+    	order.setSize("");//尺寸
+    	//order.setValue(0);//货品金额
+    	//order.setCollection_value(1.0);//代收货款金额
+    	//order.setSpecial(2);//商品性质
+    	//子表
+    	List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("cargo_list");
+    	List<Item> item = new ArrayList<Item>();
+    	for(Map<String, String> list:itemList){
+    		String itemName = list.get("item_name");
+    		String itemAmount = list.get("sty");
+
+        	Item im = new Item();
+        	im.setName(itemName);//商品名称
+        	im.setNumber(Integer.parseInt(itemAmount));//商品数量
+        	im.setRemark("");//商品备注
+        	item.add(im);
+    	}
+    	Items items = new Items();
+    	items.setItem(item);
+    	
+    	String note = (String) dto.get("note");
+    	order.setRemark(note);//订单备注
+    	order.setCus_area1("");//自定义显示信息1
+    	order.setCus_area2("");//自定义显示信息2
+    	order.setCallback_id("");//接口异步回传的时候返回的ID
+    	order.setWave_no("");//客户波次好
+    	orders.setOrder(order);
+    	
+    	String str = JaxbUtil.convertToXml(orders);  
+        System.out.println(str); 
+        return str;
+    }
+    
    
     
     public List<Record> getSalesOrderGoods(long orderId) {

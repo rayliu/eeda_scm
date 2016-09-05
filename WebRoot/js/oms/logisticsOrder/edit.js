@@ -62,14 +62,23 @@ $(document).ready(function() {
     $.extend($.validator.messages, {
 		rangelength: $.validator.format("长度必须为{0}位字符")
 	})
+	
+	//构造主表json
+    var buildOrder = function(){
+    	var item = {};
+    	var orderForm = $('#orderForm input,select,textarea');
+    	for(var i = 0; i < orderForm.length; i++){
+    		var name = orderForm[i].id;
+        	var value =orderForm[i].value;
+        	if(name){
+        		item[name] = value;
+        	}
+    	}
+        return item;
+    }
 
     //------------save
-    $('#saveBtn').click(function(e){
-    	//提交前，校验数据
-        if(!$("#orderForm").valid()){
-            return;
-        }
-        
+    $('#saveBtn').click(function(e){    
         //阻止a 的默认响应行为，不需要跳转
         e.preventDefault();
         //提交前，校验数据
@@ -79,43 +88,10 @@ $(document).ready(function() {
         
         $(this).attr('disabled', true);
         //分解收货人省市区的地址编码
-        var cargo_items_array = salesOrder.buildCargoDetail();
-        var order = {
-            id: $('#order_id').val(),
-            log_no: $('#log_no').val(),  
-            country_code: $('#country_code').val(),  
-            shipper_country: $('#shipper_country').val(),
-            shipper_city: $('#shipper_city').val(),
-            shipper: $('#shipper').val(),
-            shipper_address: $('#shipper_address').val(),  
-            shipper_telephone: $('#shipper_telephone').val(),  
-            traf_mode: $('#traf_mode').val(),
-            ship_name: $('#ship_name').val(), 
-            freight: $('#freight').val(),  
-            insure_fee: $('#insure_fee').val(),  
-            weight: $('#weight').val(),
-            netwt: $('#netwt').val(),
-            pack_no: $('#pack_no').val(), 
-            parcel_info: $('#parcel_info').val(), 
-            goods_info: $('#goods_info').val(),  
-            customs_code: $('#customs_code').val(),  
-            ciq_code: $('#ciq_code').val(),
-            port_code: $('#port_code').val(),
-            decl_code: $('#decl_code').val(), 
-            supervision_code: $('#supervision_code').val(),  
-            destination_port: $('#destination_port').val(),  
-            ie_date: $('#ie_date').val(),
-            deliver_date: $('#deliver_date').val(),
-            trade_mode: $('#trade_mode').val(),
-            ps_type: $('#ps_type').val(),
-            trans_mode: $('#trans_mode').val(),
-            wrap_type: $('#wrap_type').val(),
-            cut_mode: $('#cut_mode').val(),
-            ems_no: $('#ems_no').val(),
-            report_pay_no: $('#report_pay_no').val(),
-            cargo_list: cargo_items_array
-        };
-
+        var cargo_items_array = itemOrder.buildCargoDetail();
+        var order = buildOrder();
+        order.id = $('#order_id').val();
+        order.cargo_list = cargo_items_array
 
         //异步向后台提交数据
         $.post('/logisticsOrder/save', {params:JSON.stringify(order)}, function(data){
@@ -125,9 +101,13 @@ $(document).ready(function() {
                 $("#create_stamp").val(order.CREATE_STAMP);
                 $("#order_id").val(order.ID);
                 $("#log_no").val(order.LOG_NO);
+
+                //韵达快递下单
+                if(order.MAIL_NO!='' && order.MAIL_NO!=null)
+                	$("#parcel_info").val(order.MAIL_NO);
+                
                 contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
-                
                 $('#saveBtn').attr('disabled', false);
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
@@ -139,6 +119,7 @@ $(document).ready(function() {
           });
     });  
     
+
     
     //上报运单
     $('#submitBtn').click(function(){

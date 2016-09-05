@@ -213,7 +213,7 @@
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'parcel_info',
-					label:'包裹单信息', value:order.parcel_info!'',required:'required' }){}%></div>
+					label:'包裹单信息', value:order.parcel_info!'',required:'required',disabled:'disabled' }){}%></div>
 				<!-- /.col-lg-4 -->
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputField.html", { id:'goods_info',
@@ -409,8 +409,8 @@
 					<div class="col-lg-12">
 						<!-- <button class="btn btn-success btn-xs" id="add_cargo">添加</button> -->
 						<%include("/yh/component/form/detailTable.html", {
-						id:'cargo_table', headers:[ '企业商品货号', '数量', '计量单位', '单价',
-						'总价'], field_list:[ 'item_no', 'qty', 'unit', 'price',
+						id:'cargo_table', headers:[ '企业商品货号','商品名称', '数量', '计量单位', '单价',
+						'总价'], field_list:[ 'item_no','item_name', 'qty', 'unit', 'price',
 						'total'], value_list: itemList![] }){} %>
 					</div>
 				</div>
@@ -534,7 +534,7 @@
 <script src="/js/checkUtil.js"></script>
 <script>
     var order_no = '${order.order_no!'新建销售订单'}'; 
-    var salesOrder = {};
+    var itemOrder = {};
 </script>
 <script src="/js/oms/logisticsOrder/edit_item_table.js"></script>
 <script src="/js/oms/logisticsOrder/edit.js"></script>
