@@ -39,6 +39,7 @@ $(document).ready(function() {
             consignee_id: $('#consignee_id').val(),
             consignee: $('#consignee').val(),
             consignee_telephone: $('#consignee_telephone').val(),
+            consignee_country: $('#consignee_country').val(),
             consignee_address: $('#consignee_address').val(),
             location: $('#location').val(),
             express_no: $('#express_no').val(),  

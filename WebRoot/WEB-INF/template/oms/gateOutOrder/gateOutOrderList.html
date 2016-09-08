@@ -85,6 +85,14 @@
 						<% if(true){ %> <a
 							class="btn btn-success btn-sm" href="/gateOutOrder/create">新增出库单</a>
 						<%}%>
+						
+						<input id="uploadBtn" type="button" class="btn btn-primary btn-sm" value="导入出库单"/>
+                        
+                        <!-- <sub><a id="dowmload" href="javascript:void(0)"  target='_blank'>下载导入模板</a></sub> -->
+                        <form id="toFileUploadForm" method="post" action="/transferOrder/intoTransferOrder" enctype="multipart/form-data">
+						     <input type="file" id="toFileUpload" name="files[]" 
+						     style="position:absolute; filter:alpha(opacity=0); opacity:0; width:30px; " size="1" data-url="/importOrder/importGOOrder">
+						</form>
 					</div>
 					
 					<!-- table list -->
@@ -93,6 +101,23 @@
 						headers:['出库单号', '仓库','商品条码','客户','快递单号', '收货人', '创建人', '创建时间', '状态']
 						}){} %>
 					</div>
+					
+					
+					<div class="panel-heading">
+                       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static">
+                         <div class="modal-dialog">
+                           <div class="modal-content">
+                               <div class="modal-body" align="center">
+                               	<center id="centerBody"></center>
+                               </div>
+                               <div class="modal-footer" id="footer" aria-hidden="true">
+                               	<button type="button" class="btn  btn-primary" id="confirm" style="display:none">确认</button>
+						       	<button type="button" class="btn  btn-primary" data-dismiss="modal" id="cancel">关闭</button>
+						     	</div>
+                           </div>
+                         </div>
+                       </div>
+                   </div>
 				</div>
 			</div>
 		</div>
@@ -102,11 +127,16 @@
 
 <!-- Page-Level Plugin Scripts - Tables -->
 <script src="/yh/js/plugins/datatables-1.10.9/js/jquery.dataTables.js"></script>
-<script
-	src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
+<script src="/yh/js/plugins/datatables-1.10.9/js/dataTables.bootstrap.js"></script>
 <script src="/yh/js/bootstrap-datetimepicker.min.js"></script>
 <script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
 <script src="/js/eeda/eeda-common.js"></script>
+
+<script src="/yh/js/plugins/jQuery-File-Upload-9.5.7/jquery.ui.widget.js"></script>
+<script src="/yh/js/plugins/jQuery-File-Upload-9.5.7/jquery.iframe-transport.js"></script> 
+<script src="/yh/js/plugins/jQuery-File-Upload-9.5.7/jquery.fileupload.js"></script>
+
 <script src="/js/oms/gateOutOrder/list.js"></script>
+<script src="/js/oms/gateOutOrder/upload.js"></script>
 

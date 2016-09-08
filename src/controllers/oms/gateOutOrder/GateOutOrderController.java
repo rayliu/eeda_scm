@@ -91,7 +91,7 @@ public class GateOutOrderController extends Controller {
    			DbUtils.setModelValues(dto, gateOutOrder);
    			
    			//需后台处理的字段
-   			gateOutOrder.set("order_no", OrderNoGenerator.getNextOrderNo("CKTZ"));
+   			gateOutOrder.set("order_no", OrderNoGenerator.getNextOrderNo("CK"));
    			gateOutOrder.set("create_by", operator);
    			gateOutOrder.set("create_stamp", new Date());
    			gateOutOrder.save();

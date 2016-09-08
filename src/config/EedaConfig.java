@@ -84,6 +84,7 @@ import controllers.oms.allinpay.AllinpayController;
 import controllers.oms.check.CheckController;
 import controllers.oms.gateInOrder.GateInOrderController;
 import controllers.oms.gateOutOrder.GateOutOrderController;
+import controllers.oms.importOrder.ImportOrder;
 import controllers.oms.inspectionOrder.InspectionOrderController;
 import controllers.oms.inventory.InventoryController;
 import controllers.oms.inventoryOrder.InventoryOrderController;
@@ -212,6 +213,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/searchStatus", OrderStatusController.class, contentPath);
 		me.add("/report", ReportController.class, contentPath);
 		me.add("/check", CheckController.class, contentPath);
+		me.add("/importOrder", ImportOrder.class, contentPath);
 		
 		//库存管理
 		me.add("/inventory", InventoryController.class, contentPath);
