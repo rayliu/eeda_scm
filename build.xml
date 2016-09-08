@@ -98,5 +98,9 @@
             <fileset dir="/root/.jenkins/jobs/TMS-DailyBuild/workspace/WebRoot/WEB-INF/classes" includes="**/*.class" />
         </copy>
     </target>
-
+	<target name="copyAppletClasses" >
+        <copy todir="WebRoot/applet">
+            <fileset dir="WebRoot/WEB-INF/classes/applet" includes="**/*.class" />
+        </copy>
+	</target>
 </project>

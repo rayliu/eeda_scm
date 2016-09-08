@@ -399,4 +399,12 @@ public class MainController extends Controller {
         Map map= EedaCommonHandler.searchOrder(paraNames, getRequest());
         renderJson(map);
     }
+    
+    public void hello(){
+        renderJsp("/WEB-INF/template/applet/hello.jsp");
+    }
+    
+    public void print(){
+        renderJsp("/WEB-INF/template/applet/print.jsp");
+    }
 }

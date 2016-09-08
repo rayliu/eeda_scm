@@ -2,8 +2,6 @@
 $(document).ready(function() {
 	document.title = '订单查询   | '+document.title;
     
-    eeda.openMenu();
-    
     $("#beginTime_filter").val(new Date().getFullYear()+'-'+ (new Date().getMonth()+1));
     
 	  //datatable, 动态处理
