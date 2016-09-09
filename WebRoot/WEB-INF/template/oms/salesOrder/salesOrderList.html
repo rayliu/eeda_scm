@@ -40,6 +40,11 @@
 						<% if(shiro.hasPermission("salesOrder.add")){ %> <a
 							class="btn btn-success btn-sm" href="/salesOrder/create">新增订单</a>
 						<%}%>
+						<input id="uploadBtn" type="button" class="btn btn-primary btn-sm" value="导入订单"/>
+                        
+                        <!-- <sub><a id="dowmload" href="javascript:void(0)"  target='_blank'>下载导入模板</a></sub> -->
+                        <input type="file" id="toFileUpload" name="files[]" 
+						     style="position:absolute;  opacity:0;" data-url="/importOrder/importOrder?order_type=salesOrder">
 					</div>
 					<!-- table list -->
 					<div class="form-group">
@@ -47,6 +52,22 @@
 						headers:['订单号', '报关企业', '订单收货人', '订单商品货款', '销售订单状态','支付状态','运单状态','清单状态','创建人', '创建时间']
 						}){} %>
 					</div>
+					
+					<div class="panel-heading">
+                       <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false" data-backdrop="static">
+                         <div class="modal-dialog">
+                           <div class="modal-content">
+                               <div class="modal-body" align="center">
+                               	<center id="centerBody"></center>
+                               </div>
+                               <div class="modal-footer" id="footer" aria-hidden="true">
+                               	<button type="button" class="btn  btn-primary" id="confirm" style="display:none">确认</button>
+						       	<button type="button" class="btn  btn-primary" data-dismiss="modal" id="cancel">关闭</button>
+						     	</div>
+                           </div>
+                         </div>
+                       </div>
+                   </div>
 				</div>
 			</div>
 		</div>
@@ -62,5 +83,10 @@
 <script src="/yh/js/bootstrap-datetimepicker.zh-CN.js"></script>
 <script src="/yh/js/plugins/sco/js/sco.message.js"></script>
 
+<script src="/yh/js/plugins/jQuery-File-Upload-9.5.7/jquery.ui.widget.js"></script>
+<script src="/yh/js/plugins/jQuery-File-Upload-9.5.7/jquery.iframe-transport.js"></script> 
+<script src="/yh/js/plugins/jQuery-File-Upload-9.5.7/jquery.fileupload.js"></script>
+
 <script src="/js/oms/salesOrder/list.js"></script>
+<script src="/js/oms/salesOrder/upload.js"></script>
 

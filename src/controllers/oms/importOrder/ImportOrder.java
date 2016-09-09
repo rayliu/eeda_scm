@@ -59,8 +59,10 @@ public class ImportOrder extends Controller {
 		render("/oms/check/checkList.html");
 	}
 
-	// 导入入库单
-	public void importGOOrder() {
+	// 导入出库单
+	public void importOrder() {
+		String Order_type = getPara("order_type");
+		
 		UploadFile uploadFile = getFile();
 		File file = uploadFile.getFile();
 		String fileName = file.getName();
@@ -85,17 +87,23 @@ public class ImportOrder extends Controller {
 			//导入模板表头（标题）校验
 			if (title != null && content.size() > 0) {
 				CheckOrder checkOrder = new CheckOrder();
-				if (checkOrder.checkoutExeclTitle(title, "gateOutOrder")) {
-					/**
-					 * 内容校验
-					 */
-					resultMap = checkOrder.importCheck(content);
-					
-					/**
-					 * 内容开始导入
-					 */
-					if(resultMap.get("result")){
-						resultMap = checkOrder.importValue(content);
+				if (checkOrder.checkoutExeclTitle(title, Order_type)) {
+					if("gateOutOrder".equals(Order_type)){
+						// 内容校验
+						resultMap = checkOrder.importGOCheck(content);
+						
+						// 内容开始导入
+						if(resultMap.get("result")){
+							resultMap = checkOrder.importGOValue(content);
+						}
+					}else if("salesOrder".equals(Order_type)){
+						// 内容校验
+						resultMap = checkOrder.importSOCheck(content);
+						
+						// 内容开始导入
+						if(resultMap.get("result")){
+							resultMap = checkOrder.importSOValue(content);
+						}
 					}
 				} else {
 					resultMap.set("result", false);

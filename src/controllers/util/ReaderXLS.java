@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDataFormat;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
@@ -21,6 +22,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFCellUtil;
 import org.apache.poi.poifs.filesystem.POIFSFileSystem;
+import org.apache.poi.ss.usermodel.Cell;
 @SuppressWarnings({"rawtypes","unused","deprecation"})
 public class ReaderXLS{
 	private POIFSFileSystem fs;
@@ -91,7 +93,23 @@ public class ReaderXLS{
                 // "-";
                 //str += getCellFormatValue(row.getCell((short) j)).trim() + "    ";
                 //j++;
-        		rowData.put(xlsTitle[j], getCellFormatValue(row.getCell((short) j)).trim());
+            	HSSFCell value = row.getCell((short) j);
+            	String inputValue = null;// 单元格值  
+            	if(value != null){
+                	if(StringUtils.isNotEmpty(value.toString())){
+                		if(value.toString().indexOf(".") != -1 && value.toString().indexOf("E") == -1){
+                        	if(row.getCell((short) j).getCellType() == Cell.CELL_TYPE_NUMERIC) {  
+                        		inputValue = (row.getCell((short) j)).toString();   
+                        	}else{
+                        		inputValue = getCellFormatValue(row.getCell((short) j)).trim();
+                        	}
+                    	}else{
+                    		inputValue = getCellFormatValue(row.getCell((short) j)).trim();
+                    	}
+                	}
+            	}
+            	
+        		rowData.put(xlsTitle[j], inputValue==null?"":inputValue);
             	j++;
             	
             }

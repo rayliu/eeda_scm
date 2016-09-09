@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -91,7 +93,27 @@ public class ReaderXlSX {
             int j = 0;
             while (j < colNum) {
         		//rowData.put(xlsxTitle[j], row.getCell((short) j).getStringCellValue().trim());
-        		rowData.put(xlsxTitle[j], getCellFormatValue(row.getCell((short) j),xlsxTitle[j]).trim());
+            	
+            	XSSFCell value = row.getCell((short) j);
+            	String inputValue = null;// 单元格值  
+            	if(value != null){
+                	if(StringUtils.isNotEmpty(value.toString())){
+                		if(value.toString().indexOf(".") != -1 && value.toString().indexOf("E") == -1){
+                        	if(row.getCell((short) j).getCellType() == Cell.CELL_TYPE_NUMERIC) {  
+                        		inputValue = (row.getCell((short) j)).toString();   
+                        	}else{
+                        		inputValue = getCellFormatValue(row.getCell((short) j),xlsxTitle[j]).trim();
+                        	}
+                    	}else{
+                    		inputValue = getCellFormatValue(row.getCell((short) j),xlsxTitle[j]).trim();
+                    	}
+                	}
+            	}
+            	
+        		rowData.put(xlsxTitle[j], inputValue==null?"":inputValue);
+            	
+            	
+        		//rowData.put(xlsxTitle[j], getCellFormatValue(row.getCell((short) j),xlsxTitle[j]).trim());
             	j++;
             	
             }

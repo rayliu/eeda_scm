@@ -89,10 +89,8 @@
 						<input id="uploadBtn" type="button" class="btn btn-primary btn-sm" value="导入出库单"/>
                         
                         <!-- <sub><a id="dowmload" href="javascript:void(0)"  target='_blank'>下载导入模板</a></sub> -->
-                        <form id="toFileUploadForm" method="post" action="/transferOrder/intoTransferOrder" enctype="multipart/form-data">
-						     <input type="file" id="toFileUpload" name="files[]" 
-						     style="position:absolute; filter:alpha(opacity=0); opacity:0; width:30px; " size="1" data-url="/importOrder/importGOOrder">
-						</form>
+                        <input type="file" id="toFileUpload" name="files[]" 
+						     style="position:absolute;  opacity:0;" data-url="/importOrder/importOrder?order_type=gateOutOrder">
 					</div>
 					
 					<!-- table list -->
