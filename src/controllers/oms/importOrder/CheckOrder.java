@@ -35,6 +35,7 @@ import models.eeda.oms.GateOutOrderItem;
 import models.eeda.oms.InspectionOrder;
 import models.eeda.oms.InspectionOrderItem;
 import models.eeda.oms.Inventory;
+import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.MoveOrder;
 import models.eeda.oms.MoveOrderItem;
 import models.eeda.oms.SalesOrder;
@@ -75,7 +76,7 @@ import controllers.util.ReaderXlSX;
 public class CheckOrder extends Controller {
 	private Logger logger = Logger.getLogger(CheckOrder.class);
 	Subject currentUser = SecurityUtils.getSubject();
-	
+	Long user_id = null;
 	
 	/**
 	 * 校验表头是否和数据库的相符
@@ -608,7 +609,7 @@ public class CheckOrder extends Controller {
 		String name = (String) currentUser.getPrincipal();
 		List<UserLogin> users = UserLogin.dao
 				.find("select * from user_login where user_name='" + name + "'");
-		long user_id = users.get(0).getLong("id");
+		user_id = users.get(0).getLong("id");
 		try {
 			for (Map<String, String> line :lines) {
 				String ref_order_no = line.get("订单编号").trim();
@@ -725,6 +726,13 @@ public class CheckOrder extends Controller {
 				sog.set("order_id",so.get("id"));
 				sog.set("currency",142);
 				sog.save();
+				
+				//生成一张对应的运输单
+				String transf_id = createLogOrder(so.getLong("id").toString(),line);
+				if(StringUtils.isEmpty(transf_id)){
+					throw new Exception("生成运输单失败");
+				}
+				
 				rowNumber++;
 			}
 			result.set("cause","成功导入( "+(rowNumber-1)+" )条数据！");
@@ -744,7 +752,68 @@ public class CheckOrder extends Controller {
 	}
 
 
-
+	//自动生成运输单
+    @Before(Tx.class)
+    public String createLogOrder(String sales_order_id,Map<String, String> line){
+    	String express_no = line.get("快递信息").trim();
+    	String netwt = line.get("净重").trim();
+		String weight = line.get("毛重").trim(); 
+		String freight = line.get("运费").trim(); 
+		
+    	LogisticsOrder logisticsOrder = null;
+    	if(StringUtils.isNotEmpty(sales_order_id)){
+    		String order_no = OrderNoGenerator.getNextOrderNo("YD");
+    		logisticsOrder = new LogisticsOrder();
+        	logisticsOrder.set("log_no", order_no);
+        	logisticsOrder.set("status","暂存");
+    		logisticsOrder.set("create_by", user_id);
+    		logisticsOrder.set("create_stamp", new Date());
+    		
+    		//预填值
+    		logisticsOrder.set("country_code", "142");
+    		logisticsOrder.set("shipper_country", "142");
+    		logisticsOrder.set("shipper_city", "440305");
+    		logisticsOrder.set("shipper", "深圳前海德丰投资发展有限公司");
+    		logisticsOrder.set("shipper_address", "深圳前海湾保税港区W6仓");
+    		logisticsOrder.set("shipper_telephone", "075586968661");
+    		logisticsOrder.set("traf_mode", "4");
+    		logisticsOrder.set("ship_name", "汽车");
+    		logisticsOrder.set("customs_code", "5349");
+    		logisticsOrder.set("ciq_code", "471800");
+    		logisticsOrder.set("port_code", "5349");
+    		logisticsOrder.set("decl_code", "5349");
+    		logisticsOrder.set("supervision_code", "5349");
+    		logisticsOrder.set("ems_no", "I440366006516001");
+    		logisticsOrder.set("trade_mode", "1210");
+    		logisticsOrder.set("destination_port", "5349");
+    		logisticsOrder.set("ps_type", "2");
+    		logisticsOrder.set("trans_mode", "1");
+    		logisticsOrder.set("cut_mode", "1");
+    		logisticsOrder.set("wrap_type", "CT");
+    		logisticsOrder.set("ie_date", new Date());
+    		logisticsOrder.set("deliver_date",  new Date());
+    		
+    		if(StringUtils.isNotEmpty(freight)){
+    			logisticsOrder.set("freight", freight);  //运费
+			}
+    		logisticsOrder.set("insure_fee", "0");
+    		if(StringUtils.isNotEmpty(express_no)){
+    			logisticsOrder.set("parcel_info",express_no );
+    		}
+    		if(StringUtils.isNotEmpty(netwt)){
+    			logisticsOrder.set("netwt",netwt );
+    		}
+    		if(StringUtils.isNotEmpty(weight)){
+    			logisticsOrder.set("weight",weight );
+    		}
+    		if(StringUtils.isNotEmpty(sales_order_id)){
+        		logisticsOrder.set("sales_order_id",sales_order_id);
+        	}
+    		
+    		logisticsOrder.save();
+    	}
+		return logisticsOrder.getLong("id").toString();
+    }
 	
 	
 }
