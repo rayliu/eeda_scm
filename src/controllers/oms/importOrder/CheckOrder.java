@@ -902,6 +902,7 @@ public class CheckOrder extends Controller {
 		String consignee = line.get("收货人姓名").trim();
 		String consignee_telephone = line.get("收货人电话").trim();
 		String consignee_address = line.get("收货人详细地址").trim();
+		String unit = line.get("单位").trim(); 
 		
 		String location = line.get("收货人地区编码").trim();
 		String consignee_id = line.get("身份证号码").trim();
@@ -956,6 +957,10 @@ public class CheckOrder extends Controller {
 			if(StringUtils.isNotEmpty(cargo_name)){
 				gooi.set("cargo_name", cargo_name);//名称
 			}
+		}
+		
+		if(StringUtils.isNotEmpty(unit)){
+			gooi.set("packing_unit", unit);
 		}
 		
 		if(StringUtils.isNotEmpty(amount)){
