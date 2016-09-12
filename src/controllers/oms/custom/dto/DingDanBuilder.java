@@ -49,7 +49,14 @@ public class DingDanBuilder {
         order.setPayer_account(salesOrder.getStr("payer_account"));//支付人帐号ID
         order.setPayer_name(salesOrder.getStr("payer_name"));//支付人名称
         String order_time = salesOrder.getDate("create_stamp").toString();
-        String pay_time = salesOrder.getDate("pay_time").toString();
+        
+        
+        String pay_time = null;
+        if(salesOrder.getDate("pay_time") == null){
+        	pay_time = order_time;
+        }else{
+        	pay_time = salesOrder.getDate("pay_time").toString();
+        }
         order.setOrder_time(order_time.substring(0, pay_time.length()-2));//
         //order.setOrder_time("2016-05-13 13:49:50");
         
