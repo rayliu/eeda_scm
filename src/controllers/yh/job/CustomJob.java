@@ -32,7 +32,7 @@ public class CustomJob implements Runnable {
 	public void run() {
 	    logger.debug("更新单据状态开始.....");
 	    
-	    List<Record> record = Db.find("select * from sales_order where status != '接收成功' and status != '未上报'");
+	    List<Record> record = Db.find("select * from sales_order where status != '已通关' and status != '未上报'");
 	    for(Record re : record){
 	    	String order_no = re.getStr("order_no");
 	    	String order_id = re.getLong("id").toString();
