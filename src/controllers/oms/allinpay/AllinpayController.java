@@ -1,5 +1,7 @@
 package controllers.oms.allinpay;
 
+import java.util.Date;
+
 import models.eeda.oms.SalesOrder;
 
 import com.allinpay.ets.client.SecurityUtil;
@@ -173,6 +175,7 @@ public class AllinpayController extends Controller {
 	    
 	    SalesOrder so = SalesOrder.dao.findFirst("select * from sales_order where order_no=?", orderNo);
 	    if(so!=null){
+	    	so.set("pay_time", new Date());
 	        so.set("pay_no", getPara("paymentOrderId")).update();
 	    }
 	    renderJson();

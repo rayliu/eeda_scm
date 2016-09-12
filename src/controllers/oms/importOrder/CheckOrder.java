@@ -183,7 +183,6 @@ public class CheckOrder extends Controller {
 	 * @param value
 	 * @return
 	 */
-	 
 	public boolean checkUpc(String value){
 		boolean flag = true;
 		Product p = Product.dao.findFirst("select * from product where serial_no = ?",value);
@@ -193,6 +192,21 @@ public class CheckOrder extends Controller {
 	    return flag;
 	}
 	
+	
+	/**
+	 * upc条码取出对应的值
+	 * @param value
+	 * @return
+	 */
+	public String getCargoName(String value){
+		String cargoName = null;
+		Product p = Product.dao.findFirst("select * from product where serial_no = ?",value);
+		if(p != null){
+			cargoName = p.getStr("item_name");  
+		}
+	    return cargoName;
+	}
+	
 
 
 	/**
@@ -200,7 +214,6 @@ public class CheckOrder extends Controller {
 	 * @param value
 	 * @return
 	 */
-	 
 	public boolean checkLocation (String value){
 		boolean flag = true;
 		if(value.length()<20){
@@ -347,6 +360,7 @@ public class CheckOrder extends Controller {
 	
 	@Before(Tx.class)
 	public Record importGOValue( List<Map<String, String>> lines) {
+		Connection conn = null;
 		Record result = new Record();
 		result.set("result",true);
 		
@@ -358,6 +372,10 @@ public class CheckOrder extends Controller {
 				.find("select * from user_login where user_name='" + name + "'");
 		long user_id = users.get(0).getLong("id");
 		try {
+			conn = DbKit.getConfig().getDataSource().getConnection();
+			DbKit.getConfig().setThreadLocalConnection(conn);
+			conn.setAutoCommit(false);// 自动提交变成false
+			
 			for (Map<String, String> line :lines) {
 				String order_no = line.get("订单编号").trim();
 				String upc = line.get("商品条码（UPC）").trim();
@@ -431,13 +449,30 @@ public class CheckOrder extends Controller {
 			System.out.println("导入操作异常！");
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+			
+			try {
+				if (null != conn)
+					conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 
 			result.set("result", false);
 			
 			result.set("cause", "导入失败<br/>数据导入至第" + (rowNumber)
 						+ "行时出现异常:" + e.getMessage() + "<br/>导入数据已取消！");
 			
-		} 
+		} finally {
+			try {
+				if (null != conn) {
+					conn.close();
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			} finally {
+				DbKit.getConfig().removeThreadLocalConnection();
+			}
+		}
 		
 		return result;
 	}
@@ -600,9 +635,11 @@ public class CheckOrder extends Controller {
 	 */
 	@Before(Tx.class)
 	public Record importSOValue( List<Map<String, String>> lines) {
+		Connection conn = null;
 		Record result = new Record();
 		result.set("result",true);
 		
+
 		//importResult = validatingOrderNo(lines);校验是否存在隔单
 		//if ("true".equals(importResult.get("result"))) {
 		int rowNumber = 1;
@@ -611,6 +648,10 @@ public class CheckOrder extends Controller {
 				.find("select * from user_login where user_name='" + name + "'");
 		user_id = users.get(0).getLong("id");
 		try {
+			conn = DbKit.getConfig().getDataSource().getConnection();
+			DbKit.getConfig().setThreadLocalConnection(conn);
+			conn.setAutoCommit(false);// 自动提交变成false
+			
 			for (Map<String, String> line :lines) {
 				String ref_order_no = line.get("订单编号").trim();
 				String upc = line.get("商品条码（UPC）").trim();
@@ -686,13 +727,15 @@ public class CheckOrder extends Controller {
 				SalesOrderGoods sog = new SalesOrderGoods();
 				if(StringUtils.isNotEmpty(upc)){
 					sog.set("bar_code", upc);   //条码
+					cargo_name = getCargoName(upc);
+					if(StringUtils.isNotEmpty(cargo_name)){
+						sog.set("item_name", cargo_name);//名称
+					}
 				}
 				if(StringUtils.isNotEmpty(item_no)){
 					sog.set("item_no", item_no); //商品货号
 				}
-				if(StringUtils.isNotEmpty(cargo_name)){
-					sog.set("item_name", cargo_name);//名称
-				}
+				
 				if(StringUtils.isNotEmpty(amount)){
 					sog.set("qty", amount);   //数量
 				}
@@ -728,25 +771,58 @@ public class CheckOrder extends Controller {
 				sog.save();
 				
 				//生成一张对应的运输单
-				String transf_id = createLogOrder(so.getLong("id").toString(),line);
-				if(StringUtils.isEmpty(transf_id)){
-					throw new Exception("生成运输单失败");
+				try{
+					String transf_id = createLogOrder(so.getLong("id").toString(),line);
+					if(StringUtils.isEmpty(transf_id)){
+						throw new Exception("生成相应的运输单失败");
+					}
+				}catch (Exception e) {
+					throw new Exception("生成相应的运输单失败");
+				}
+				
+				
+				try{
+					String gateOut_id = createGOOrder(so.getLong("id").toString(),line);
+					if(StringUtils.isEmpty(gateOut_id)){
+						throw new Exception("生成相应的出库单失败");
+					}
+				}catch (Exception e) {
+					throw new Exception("生成相应的出库单失败");
 				}
 				
 				rowNumber++;
 			}
+			
+			conn.commit();
 			result.set("cause","成功导入( "+(rowNumber-1)+" )条数据！");
 		} catch (Exception e) {
 			System.out.println("导入操作异常！");
 			System.out.println(e.getMessage());
 			e.printStackTrace();
+			
+			try {
+				if (null != conn)
+					conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
 
 			result.set("result", false);
 			
 			result.set("cause", "导入失败<br/>数据导入至第" + (rowNumber)
 						+ "行时出现异常:" + e.getMessage() + "<br/>导入数据已取消！");
 			
-		} 
+		} finally {
+			try {
+				if (null != conn) {
+					conn.close();
+				}
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			} finally {
+				DbKit.getConfig().removeThreadLocalConnection();
+			}
+		}
 		
 		return result;
 	}
@@ -813,6 +889,82 @@ public class CheckOrder extends Controller {
     		logisticsOrder.save();
     	}
 		return logisticsOrder.getLong("id").toString();
+    }
+    
+    
+    //自动生成出库单
+    @Before(Tx.class)
+    public String createGOOrder(String sales_order_id,Map<String, String> line){
+    	String order_no = line.get("订单编号").trim();
+		String upc = line.get("商品条码（UPC）").trim();
+		String cargo_name = line.get("中文名称").trim();
+		String amount = line.get("商品数量").trim();
+		String consignee = line.get("收货人姓名").trim();
+		String consignee_telephone = line.get("收货人电话").trim();
+		String consignee_address = line.get("收货人详细地址").trim();
+		
+		String location = line.get("收货人地区编码").trim();
+		String consignee_id = line.get("身份证号码").trim();
+		String express_no = line.get("快递信息").trim();
+
+		//默认值带入
+		GateOutOrder goo = new GateOutOrder();
+		goo.set("warehouse_id", 52);  //前海保税区仓库
+		goo.set("customer_id", 3);  //候鸟电商
+		goo.set("consignee_country", 142);  //身份证
+		goo.set("order_no", OrderNoGenerator.getNextOrderNo("CK"));  //身份证
+		goo.set("status", "暂存");  //
+		goo.set("create_by", user_id);  //
+		goo.set("create_stamp", new Date()); 
+		goo.set("gate_out_date", new Date());//出库时间
+		goo.set("remark", "导入数据");  //
+		
+		if(StringUtils.isNotEmpty(location)){
+			String[] values = location.split("#");
+			String province = values[0];//省
+			String city = values[1];//市
+			String qv = values[2];//区
+			
+			goo.set("location", qv);
+		}
+		
+		if(StringUtils.isNotEmpty(order_no)){
+			goo.set("customer_refer_no", order_no);
+		}
+		if(StringUtils.isNotEmpty(consignee)){
+			goo.set("consignee", consignee);
+		}
+		if(StringUtils.isNotEmpty(consignee_telephone)){
+			goo.set("consignee_telephone", consignee_telephone);
+		}
+		if(StringUtils.isNotEmpty(consignee_address)){
+			goo.set("consignee_address", consignee_address);
+		}
+		if(StringUtils.isNotEmpty(consignee_id)){
+			goo.set("consignee_id", consignee_id);
+		}
+		if(StringUtils.isNotEmpty(express_no)){
+			goo.set("express_no", express_no);
+		}
+		goo.save();	
+		
+		//字表数据保存
+		GateOutOrderItem gooi = new GateOutOrderItem();
+		if(StringUtils.isNotEmpty(upc)){
+			gooi.set("bar_code", upc);
+			cargo_name = getCargoName(upc);
+			if(StringUtils.isNotEmpty(cargo_name)){
+				gooi.set("cargo_name", cargo_name);//名称
+			}
+		}
+		
+		if(StringUtils.isNotEmpty(amount)){
+			gooi.set("packing_amount", amount);
+		}
+		gooi.set("order_id",goo.get("id"));
+		gooi.save();
+		
+		return gooi.getLong("id").toString();
     }
 	
 	

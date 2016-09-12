@@ -129,6 +129,7 @@
 					</div>
 					<div class="row">
 						<div class="col-lg-4">
+							<input type="hidden" id="pay_time" value="${order.pay_time!''}">
 							<%include("/yh/component/form/inputField.html", { id:'pay_no',
 								label:'原始支付单交易编号', value:order.pay_no!'', disabled: 'disabled'
 							}){}%></div>
