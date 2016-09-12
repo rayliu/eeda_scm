@@ -30,6 +30,7 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.util.SavedRequest;
@@ -85,7 +86,7 @@ public class MainController extends Controller {
     	
         return true;
     }
-
+    
     public void index() {
     	setSysTitle();
         if (isAuthenticated()) {
@@ -128,7 +129,12 @@ public class MainController extends Controller {
             			+ " where oc.office_id =?";
             	Record rec = Db.findFirst(officeConfig, user.getLong("office_id"));
             	if(rec == null || rec.getStr("index_page_path") == null){
-            		render("/yh/index.html");
+            	    if(getAttr("modules")==null){
+            	        redirect("/");
+            	    }else{
+            	        render("/yh/index.html");
+            	    }
+            		
             	}else{
             		render(rec.getStr("index_page_path"));
             	}
