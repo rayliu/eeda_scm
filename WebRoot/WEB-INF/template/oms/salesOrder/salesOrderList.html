@@ -40,11 +40,11 @@
 						<% if(shiro.hasPermission("salesOrder.add")){ %> <a
 							class="btn btn-success btn-sm" href="/salesOrder/create">新增订单</a>
 						<%}%>
-						<input id="uploadBtn" type="button" class="btn btn-primary btn-sm" value="导入订单"/>
+						<input id="uploadBtn" type="hidden" class="btn btn-primary btn-sm" value="导入订单"/>
                         
                         <!-- <sub><a id="dowmload" href="javascript:void(0)"  target='_blank'>下载导入模板</a></sub> -->
                         <input type="file" id="toFileUpload" name="files[]" 
-						     style="position:absolute;  opacity:0;" data-url="/importOrder/importOrder?order_type=salesOrder">
+						     style="position:absolute;;  opacity:0;" data-url="/importOrder/importOrder?order_type=salesOrder">
 					</div>
 					<!-- table list -->
 					<div class="form-group">
