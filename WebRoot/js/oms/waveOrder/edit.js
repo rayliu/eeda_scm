@@ -41,7 +41,7 @@ $(document).ready(function() {
                 $("#status").val(order.STATUS);
                 $("#creator_name").val(order.CREATOR_NAME);
                 $("#create_stamp").val(order.CREATE_STAMP);
-                contactUrl("edit?id",order.ID);
+                eeda.contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
                 

@@ -48,7 +48,7 @@ $(document).ready(function() {
         	}
        };
        
-     var contactUrl=function(str,id){
+     eeda.contactUrl=function(str,id){
     	 refreshUrl(window.location.protocol + "//" + window.location.host+window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/')+1)+str+"="+id);
      };
 

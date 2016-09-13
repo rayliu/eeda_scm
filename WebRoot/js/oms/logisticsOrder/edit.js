@@ -106,7 +106,7 @@ $(document).ready(function() {
                 if(order.MAIL_NO!='' && order.MAIL_NO!=null)
                 	$("#parcel_info").val(order.MAIL_NO);
                 
-                contactUrl("edit?id",order.ID);
+                eeda.contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
             }else{

@@ -76,7 +76,7 @@ $(document).ready(function() {
                 $("#order_id").val(order.ID);
                 $("#order_no").val(order.ORDER_NO);
 				$('#status').val(order.STATUS);
-				contactUrl("edit?id",order.ID);
+				eeda.contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 
                 $('#saveBtn').attr('disabled', false);

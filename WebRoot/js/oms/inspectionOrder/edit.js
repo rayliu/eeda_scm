@@ -52,7 +52,7 @@ $(document).ready(function() {
                 $("#create_stamp").val(order.CREATE_STAMP);
                 $("#order_id").val(order.ID);
                 $("#status").val(order.STATUS);
-                contactUrl("edit?id",order.ID);
+                eeda.contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
                 $('#confirmBtn').attr('disabled', false);

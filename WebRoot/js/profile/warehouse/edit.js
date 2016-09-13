@@ -36,7 +36,7 @@ $(document).ready(function() {
     	$.post('/warehouse/save',{params:JSON.stringify(order)},function(data){
     		if(data){
     			$.scojs_message('保存成功', $.scojs_message.TYPE_OK);
-    			contactUrl("edit?id",data.ID);
+    			eeda.contactUrl("edit?id",data.ID);
     			$('#order_id').val(data.ID);
     		}else{
     			$.scojs_message('保存失败', $.scojs_message.TYPE_FALSE);
