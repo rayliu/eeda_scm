@@ -758,13 +758,12 @@ public class CheckOrder extends Controller {
 				
 				if(StringUtils.isNotEmpty(price)&&StringUtils.isNotEmpty(amount)&&StringUtils.isNotEmpty(tax_rate)){
 					DecimalFormat df = new DecimalFormat("#.00");
-					String total = df.format(Double.parseDouble(price)*Double.parseDouble(amount));
-					String tax_total = df.format(Double.parseDouble(total)*Double.parseDouble(tax_rate));
-					sog.set("after_tax_total", tax_total);   //税后总价
+					String tax_total = changeNum(Double.parseDouble(price)*Double.parseDouble(amount)*(Double.parseDouble(tax_rate)+1));
 					
-					if(StringUtils.isEmpty(goods_value)){
-						so.set("goods_value", tax_total).update();   //税后总价
-					}	
+					sog.set("after_tax_total", changeNum(Double.parseDouble(tax_total)));   //税后总价
+
+					so.set("goods_value", changeNum(Double.parseDouble(tax_total))).update();   //税后总价
+	
 				}
 				sog.set("order_id",so.get("id"));
 				sog.set("currency",142);
@@ -827,7 +826,16 @@ public class CheckOrder extends Controller {
 		return result;
 	}
 
-
+    /**
+     * 四舍五入
+     * @param number
+     * @return
+     */
+	public String changeNum(Double number){
+		return String.format("%.2f", number);
+	}
+	
+	
 	//自动生成运输单
     @Before(Tx.class)
     public String createLogOrder(String sales_order_id,Map<String, String> line){
@@ -835,6 +843,7 @@ public class CheckOrder extends Controller {
     	String netwt = line.get("净重").trim();
 		String weight = line.get("毛重").trim(); 
 		String freight = line.get("运费").trim(); 
+		String cargo_name = line.get("中文名称").trim();
 		
     	LogisticsOrder logisticsOrder = null;
     	if(StringUtils.isNotEmpty(sales_order_id)){
@@ -868,7 +877,9 @@ public class CheckOrder extends Controller {
     		logisticsOrder.set("wrap_type", "CT");
     		logisticsOrder.set("ie_date", new Date());
     		logisticsOrder.set("deliver_date",  new Date());
-    		
+    		if(StringUtils.isNotEmpty(cargo_name)){
+    			logisticsOrder.set("goods_info", cargo_name);  //运费
+			}
     		if(StringUtils.isNotEmpty(freight)){
     			logisticsOrder.set("freight", freight);  //运费
 			}
