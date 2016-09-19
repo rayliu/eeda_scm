@@ -57,7 +57,7 @@ public class DingDanBuilder {
         }else{
         	pay_time = salesOrder.getDate("pay_time").toString();
         }
-        order.setOrder_time(order_time.substring(0, pay_time.length()-2));//
+        order.setOrder_time(pay_time.substring(0, pay_time.length()-2));//
         //order.setOrder_time("2016-05-13 13:49:50");
         
         if(customCompany!=null){
