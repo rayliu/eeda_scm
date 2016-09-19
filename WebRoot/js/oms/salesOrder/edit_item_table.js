@@ -210,15 +210,22 @@ $(document).ready(function() {
         ]
     });
     
+    
+    function decimal(num,v)  
+    {  
+        var vv = Math.pow(10,2);  
+        return Math.round(num*vv)/vv;  
+    }
+    
     $('#cargo_table').on('input','.calculate',function(){
     	var row = $(this).parent().parent();
     	var sty = $(row.find('.calculate')[0]).val()==''?'0':$(row.find('.calculate')[0]).val();
     	var price = $(row.find('.calculate')[1]).val()==''?'0':$(row.find('.calculate')[1]).val();
     	var tax_rate = $(row.find('.calculate')[3]).val()==''?'0':$(row.find('.calculate')[3]).val();
     	var total = parseFloat(sty)*parseFloat(price);
-    	$(row.find('.calculate')[2]).val(total);
+    	$(row.find('.calculate')[2]).val(decimal(total));
     	if(tax_rate != 0)
-    		$(row.find('.calculate')[4]).val((total+total*parseFloat(tax_rate)).toFixed(2));
+    		$(row.find('.calculate')[4]).val(decimal(total*(parseFloat(tax_rate)+1)));
     	calAmount();
     })
     
@@ -230,7 +237,7 @@ $(document).ready(function() {
     		if(total)
     			total_amount += parseFloat(total);
     	})
-    	$('#goods_value').val(total_amount);
+    	$('#goods_value').val(decimal(total_amount));
     }
 
     $('#add_cargo').on('click', function(){
