@@ -170,6 +170,7 @@ public class AllinpayController extends Controller {
 	    //payResult=1  支付成功
 	    String orderNo=getPara("orderNo");
 	    String payResult = getPara("payResult");
+	    System.out.println("result---------:"+payResult);
 	    if(!"1".equals(payResult))
 	        return;
 	    
