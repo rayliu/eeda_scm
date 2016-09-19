@@ -211,7 +211,7 @@ $(document).ready(function() {
     });
     
     
-    function decimal(num,v)  
+    var decimal =  function(num)  
     {  
         var vv = Math.pow(10,2);  
         return Math.round(num*vv)/vv;  

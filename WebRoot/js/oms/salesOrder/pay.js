@@ -9,7 +9,7 @@ $(document).ready(function() {
     	}
     	
     	var item = salesOrder.buildCargoDetail();
-    	
+    	var amount = Math.round(parseFloat($('#goods_value').val())*100);
         var allinpayServer = salesOrder.allinpayServer;
         var callbackServer = salesOrder.allinpayCallbackServer;
         var formObj = {
@@ -30,7 +30,7 @@ $(document).ready(function() {
             payerIDCard: $('#payer_account').val(),
             pid: '', //合作伙伴商户号
             orderNo: $('#order_no').val(),//商户系统订单号
-            orderAmount: parseFloat($('#goods_value').val())*100,//订单金额(单位分)
+            orderAmount: amount,//订单金额(单位分)
             //orderCurrency: '0', //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
             orderCurrency: $('#pay_currency').val(), //订单金额币种类型: 0, 156 人民币；  344 港币； 840 美元
             //orderDatetime: '20160622103144',//商户的订单提交时间
@@ -55,7 +55,6 @@ $(document).ready(function() {
             tradeNature: 'GOODS', //贸易类型:  GOODS表示实物类型，SERVICES表示服务类型
             key: '1234567890', //key, 用于计算signMsg的key值
         }
-
         
         $('#payForm [name=serverUrl]').val(formObj.serverUrl);
         $('#payForm [name=inputCharset]').val(formObj.inputCharset);
