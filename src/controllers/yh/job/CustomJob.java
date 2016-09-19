@@ -33,8 +33,10 @@ public class CustomJob implements Runnable {
 	    logger.debug("更新单据状态开始.....");
 	    
 	    List<Record> record = Db.find("select * from sales_order where "
-	    		+ " (order_cus_status != '接收成功' or order_ciq_status != '接收成功'"
-	    		+ " or bill_cus_status != '审批通过' or pay_status != '接收成功')"
+	    		+ " (ifnull(order_cus_status,'') != '接收成功' "
+	    		+ " or ifnull(order_ciq_status,'') != '接收成功'"
+	    		+ " or ifnull(bill_cus_status,'') != '审批通过'"
+	    		+ " or ifnull(pay_status,'') != '接收成功')"
 	    		+ " and status != '未上报'");
 	    for(Record re : record){
 	    	String order_no = re.getStr("order_no");
