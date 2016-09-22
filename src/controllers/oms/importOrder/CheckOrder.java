@@ -862,6 +862,7 @@ public class CheckOrder extends Controller {
     		logisticsOrder.set("shipper_address", "深圳前海湾保税港区W6仓");
     		logisticsOrder.set("shipper_telephone", "075586968661");
     		logisticsOrder.set("traf_mode", "4");
+    		logisticsOrder.set("pack_no", 1);
     		logisticsOrder.set("ship_name", "汽车");
     		logisticsOrder.set("customs_code", "5349");
     		logisticsOrder.set("ciq_code", "471800");
@@ -878,7 +879,7 @@ public class CheckOrder extends Controller {
     		logisticsOrder.set("ie_date", new Date());
     		logisticsOrder.set("deliver_date",  new Date());
     		if(StringUtils.isNotEmpty(cargo_name)){
-    			logisticsOrder.set("goods_info", cargo_name);  //运费
+    			logisticsOrder.set("goods_info", cargo_name); 
 			}
     		if(StringUtils.isNotEmpty(freight)){
     			logisticsOrder.set("freight", freight);  //运费
