@@ -161,7 +161,6 @@ public class CheckOrder extends Controller {
 	}
 
 
-
 	/**
 	 * 校验是否为double类型
 	 * @param value
@@ -209,32 +208,7 @@ public class CheckOrder extends Controller {
 	
 
 
-	/**
-	 *  收货人地区编码
-	 * @param value
-	 * @return
-	 */
-	public boolean checkLocation (String value){
-		boolean flag = true;
-		if(value.length()<20){
-			flag = false;
-		}else{
-			String[] values = value.split("#");
-			String province = values[0];
-			String city = values[1];
-			String qv = values[2];
-			Location lo = Location.dao.findFirst("select * from location where code = ? and pcode = ?",city,province);
-			if(lo == null){
-				flag = false;
-			}
-			
-			Location lo2 = Location.dao.findFirst("select * from location where (code = ? and pcode = ?) or (code = ? and pcode = ?)",qv,city,qv,province);
-			if(lo2 == null){
-				flag = false;
-			}
-		}
-	    return flag;
-	}
+
 	
 	/**
 	 * 订单编号重复校验
@@ -276,6 +250,103 @@ public class CheckOrder extends Controller {
 		}
 	    return flag;
 	}
+	
+	
+	
+	/**
+	 * 
+	 * 校验地址
+	 * 
+	 */
+//	int i = 0;
+//	public boolean checkAddress (String value){
+//		boolean flag = true;
+//		String city = null;
+//		String province = value.substring(0, value.indexOf("省")+1);
+//		if(StringUtils.isEmpty(province)){
+//			province = value.substring(0, value.indexOf("市")+1); 
+//			value = value.substring(value.indexOf("市")+1,value.length());
+//			
+//			if(StringUtils.isEmpty(province)){
+//				province = value.substring(0, value.indexOf("自治区")+1); 
+//				value = value.substring(value.indexOf("自治区")+1,value.length());
+//			}
+//		}else{
+//			value = value.substring(value.indexOf("省")+1,value.length());
+//		}
+//		
+//		city = value.substring(0, value.indexOf("市")+1);
+//		value = value.substring(value.indexOf("市")+1,value.length());
+//		
+//		String qv = value.substring(0, value.indexOf("区")+1);
+//		if(StringUtils.isEmpty(qv)){
+//			qv = value.substring(0, value.indexOf("县")+1);
+//		}
+//		
+//		System.out.println(province+city+qv);
+//		
+//		i++;
+//		
+//		if(i==8){
+//			flag = false;
+//		}
+//	    return flag;
+//	}
+	
+	/**
+	 * 地区编码自动识别
+	 */
+	public String changeAddres (String value){
+		String [] valueArra = value.split(" ");
+		String provinceCode = null;
+		String cityCode = null;
+		String qvCode = null;
+		
+		if(valueArra.length>=4){
+			String province = valueArra[0];
+		    String city = valueArra[1];
+		    String qv = valueArra[2];
+			
+			List<Record> pros = Db.find("select * from location where name = ?",province);
+			for(Record pro : pros){
+				if("1".equals(pro.getStr("level"))){
+					provinceCode = pro.getStr("code");//省
+					
+					List<Record> cis = Db.find("select * from location where name = ?",city);
+					for(Record ci : cis){
+						if(provinceCode.equals(ci.getStr("pcode"))){
+							cityCode = ci.getStr("code");//市
+							
+							List<Record> qs = Db.find("select * from location where name = ?",qv);
+							for(Record q : qs){
+								if(q.getStr("pcode").equals(cityCode) || q.getStr("pcode").equals(provinceCode)){
+									qvCode = q.getStr("code");//区
+								}
+							}
+						}
+					}
+				}
+			}	
+		}
+		
+		System.out.println(provinceCode+"#"+cityCode+"#"+qvCode);
+	    return provinceCode+"#"+cityCode+"#"+qvCode;
+	}
+	
+	/**
+	 *  收货人地区编码
+	 * @param value
+	 * @return
+	 */
+	public boolean checkLocation (String value){
+		boolean flag = true;
+		if(value.length()<20){
+			flag = false;
+		}
+	    return flag;
+	}
+
+
 	
 	
 	/**
@@ -330,15 +401,14 @@ public class CheckOrder extends Controller {
 						}
 					}
 					
+					
 					if(StringUtils.isEmpty(consignee)){
 						throw new Exception("【收货人姓名】不能为空");
 					}
 					if(StringUtils.isEmpty(consignee_telephone)){
 						throw new Exception("【收货人电话】不能为空");			
 					}
-					if(StringUtils.isEmpty(consignee_address)){
-						throw new Exception("【收货人详细地址】不能为空");
-					}
+					
 					
 					rowNumber++;
 				}
@@ -585,8 +655,6 @@ public class CheckOrder extends Controller {
 						if(!checkLocation(location)){
 							throw new Exception("【收货人地区编码】("+location+")有误，找不到对应编码的城市，请参考标准城市编码");
 						}
-					}else{
-						throw new Exception("【收货人地区编码】不能为空");
 					}
 					
 					if(StringUtils.isNotEmpty(ref_order_no)){
@@ -594,6 +662,16 @@ public class CheckOrder extends Controller {
 							throw new Exception("此【订单编号】("+ref_order_no+")已存在，请核实是否有重复导入");
 						}
 					}
+					
+					if(StringUtils.isNotEmpty(consignee_address)){
+						String addressCode = changeAddres(consignee_address);
+						if(!checkLocation(addressCode)){
+							throw new Exception("<br/>【收货人地区编码】("+consignee_address+")有误<br/>请按照【xx省 xx市 xx区/县 xxxxx】格式填写地址<br/>省市区中间必须已空格隔开");
+						}
+					}else{
+						throw new Exception("【收货人详细地址】不能为空");
+					}
+					
 					if(StringUtils.isEmpty(item_no)){
 						throw new Exception("【商品货号】不能为空");
 					}
@@ -699,7 +777,18 @@ public class CheckOrder extends Controller {
 					so.set("province", province);
 					so.set("city", city);
 					so.set("district", qv);
+				}else{
+					String addressCode = changeAddres(consignee_address);
+					String[] values = addressCode.split("#");
+					String province = values[0];//省
+					String city = values[1];//市
+					String qv = values[2];//区
+					
+					so.set("province", province);
+					so.set("city", city);
+					so.set("district", qv);
 				}
+				
 				if(StringUtils.isNotEmpty(ref_order_no)){
 					so.set("ref_order_no", ref_order_no);  //运费
 				}
@@ -854,7 +943,7 @@ public class CheckOrder extends Controller {
     		logisticsOrder.set("create_by", user_id);
     		logisticsOrder.set("create_stamp", new Date());
     		
-    		//预填值
+    		//预填值gln368
     		logisticsOrder.set("country_code", "142");
     		logisticsOrder.set("shipper_country", "142");
     		logisticsOrder.set("shipper_city", "440305");

@@ -252,7 +252,7 @@ public class ServiceProviderController extends Controller {
     }
 
     public void province() {
-        List<Record> locationList = Db.find("select * from location where pcode ='1'");
+        List<Record> locationList = Db.find("select * from location where pcode ='0'");
         renderJson(locationList);
     }
 
