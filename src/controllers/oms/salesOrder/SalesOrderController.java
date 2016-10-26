@@ -240,27 +240,49 @@ public class SalesOrderController extends Controller {
         if (getPara("start") != null && getPara("length") != null) {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
-        String sql = "select * from(SELECT sor.*, ifnull(u.c_name, u.user_name) creator_name ,"
-        		+ "  lor.logistics_ciq_status,lor.logistics_cus_status,lor.status log_status,"
-    			+ "  c.shop_name from sales_order sor "
-    			+ "  LEFT JOIN logistics_order lor on lor.sales_order_id = sor.id"
-    			+ "  left join custom_company c on c.id = sor.custom_id"
-    			+ "  left join user_login u on u.id = sor.create_by"
-    			+ "  ) A where 1 =1 ";
         
-        String condition = "";
+        String condition = " where 1 = 1 ";
         String jsonStr = getPara("jsonStr");
     	if(StringUtils.isNotEmpty(jsonStr)){
     		Gson gson = new Gson(); 
             Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
-            condition = DbUtils.buildConditions(dto);
+            String order_no = (String)dto.get("order_no");
+            String status = (String)dto.get("status");
+            String create_stamp_begin_time = (String)dto.get("create_stamp_begin_time");
+            String create_stamp_end_time = (String)dto.get("create_stamp_end_time");
+            
+            //condition = DbUtils.buildConditions(dto);
+            if(StringUtils.isNotEmpty(order_no)){
+            	condition += " and sor.order_no like '%"+order_no+"%'";
+            }
+            if(StringUtils.isNotEmpty(status)){
+            	condition += " and sor.status = '"+status+"'";
+            }
+            if(StringUtils.isEmpty(create_stamp_begin_time)){
+            	create_stamp_begin_time = " 1970-01-01 00:00:00";
+            }
+            if(StringUtils.isNotEmpty(create_stamp_end_time)){
+            	create_stamp_end_time = create_stamp_end_time+" 23:59:59";
+            }else{
+            	create_stamp_end_time = "2037-12-31 23:59:59";
+            }
+            condition += " and sor.create_stamp between '"+create_stamp_begin_time+"' and '"+create_stamp_end_time+"'";
     	}
-
-        String sqlTotal = "select count(1) total from ("+sql+ condition+") B";
+    	
+    	String coulmns = "select sor.*, ifnull(u.c_name, u.user_name) creator_name ,"
+        		+ "  lor.logistics_ciq_status,lor.logistics_cus_status,lor.status log_status,"
+    			+ "  c.shop_name ";
+    	
+        String sql = " from sales_order sor  LEFT JOIN logistics_order lor on lor.sales_order_id = sor.id"
+    			+ "  left join custom_company c on c.id = sor.custom_id"
+    			+ "  left join user_login u on u.id = sor.create_by"
+    			+ condition;
+        
+        String sqlTotal = "select count(1) total "+sql ;
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
         
-        List<Record> BillingOrders = Db.find(sql+ condition + " order by create_stamp desc" +sLimit);
+        List<Record> BillingOrders = Db.find(coulmns + sql + " order by create_stamp desc" +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
