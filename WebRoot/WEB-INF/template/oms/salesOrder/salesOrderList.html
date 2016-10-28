@@ -22,12 +22,49 @@
 							</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/selectField.html", { id:'status',
-								label:'状态', value: '', value_list:[ {code:'', value:''},
-								{code:'未上报', value:'未上报'}, {code:'报关状态已完成', value:'报关状态已完成'} ] } ){} %>
+								label:'总状态', value: '', value_list:[ 
+								{code:'', value:''},
+								{code:'未上报', value:'未上报'}, 
+								{code:'报关三单已通关', value:'报关三单已通关'} ] } ){} %>
 							</div>
 							<div class="col-lg-4">
 								<%include("/yh/component/form/inputDateQueryField.html",
 								{id:'create_stamp', label:'创建时间', value:''}){} %>
+							</div>
+						</div>
+						<div  class="row">
+							<div class="col-lg-4">
+								<%include("/yh/component/form/selectField.html", { id:'sales_status',
+								label:'订单状态', value: '', value_list:[ 
+								{code:'', value:''},
+								{code:'未上报', value:'未上报'}, 
+								{code:'报关处理中', value:'报关处理中'}, 
+								{code:'已通关', value:'已通关'} ] } ){} %>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/selectField.html", { id:'pay_status',
+								label:'支付状态', value: '', value_list:[ 
+								{code:'', value:''},
+								{code:'未支付', value:'未支付'}, 
+								{code:'已支付未申报', value:'已支付，未申报'},
+								{code:'付款已完成', value:'付款已完成'} ] } ){} %>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/selectField.html", { id:'log_status',
+								label:'运单状态', value: '', value_list:[ 
+								{code:'', value:''},
+								{code:'运单未创建', value:'运单未创建'},
+								{code:'未上报', value:'未上报'}, 
+								{code:'报关处理中', value:'报关处理中'}, 
+								{code:'已通关', value:'已通关'} ] } ){} %>
+							</div>
+							<div class="col-lg-4">
+								<%include("/yh/component/form/selectField.html", { id:'bill_status',
+								label:'清单状态', value: '', value_list:[ 
+								{code:'', value:''},
+								{code:'审批中', value:'审批中'},
+								{code:'审批不通过', value:'审批不通过'},
+								{code:'审批通过', value:'审批通过'} ] } ){} %>
 							</div>
 						</div>
 					</form>

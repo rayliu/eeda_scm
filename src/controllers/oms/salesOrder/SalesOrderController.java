@@ -248,10 +248,57 @@ public class SalesOrderController extends Controller {
             Map<String, String> dto= gson.fromJson(jsonStr, HashMap.class);  
             String order_no = (String)dto.get("order_no");
             String status = (String)dto.get("status");
+            String sales_status = (String)dto.get("sales_status");
+            String pay_status = (String)dto.get("pay_status");
+            String log_status = (String)dto.get("log_status");
+            String bill_status = (String)dto.get("bill_status");
             String create_stamp_begin_time = (String)dto.get("create_stamp_begin_time");
             String create_stamp_end_time = (String)dto.get("create_stamp_end_time");
             
-            //condition = DbUtils.buildConditions(dto);
+            //订单状态
+            if(StringUtils.isNotEmpty(sales_status)){
+            	condition += " and sor.status = '"+sales_status+"'";
+            }
+            //支付状态
+            if(StringUtils.isNotEmpty(pay_status)){
+            	if("未支付".equals(pay_status)){
+            		condition += " and sor.pay_no is null";
+            	}else if("已支付未申报".equals(pay_status)){
+            		condition += " and sor.pay_no is not null and sor.status ='未上报'";
+            	}else{
+            		condition += " and sor.pay_status = '接收成功'";
+            	}
+            }
+            //运单状态
+            if(StringUtils.isNotEmpty(log_status)){
+            	if("运单未创建".equals(log_status)){
+            		condition += " and (select status from logistics_order where sales_order_id = sor.id ) is null";
+            	}else{
+            		condition += " and (select status from logistics_order where sales_order_id = sor.id ) = '"+log_status+"'";
+            	}
+            }
+            //清单状态
+            if(StringUtils.isNotEmpty(bill_status)){
+            	condition += " and sor.bill_cus_status = '"+bill_status+"'";
+            }
+            
+            //总状态
+            if(StringUtils.isNotEmpty(status)){
+            	if("未上报".equals(status)){
+            		condition += " and sor.status = '"+status+"'";
+            	}else if("处理中".equals(status)){
+            		condition += " and !(sor.status = '已通关' "
+            				+ " and (select status from logistics_order where sales_order_id = sor.id ) = '已通关'"
+            				+ " and sor.bill_cus_status = '审批通过') "
+            				+ " and sor.status != '未上报'";
+            	}else{
+            		condition += " and sor.status = '已通关' "
+            				+ " and (select status from logistics_order where sales_order_id = sor.id ) = '已通关'"
+            				+ " and sor.bill_cus_status = '审批通过'";
+            	}
+            	
+            }
+            
             if(StringUtils.isNotEmpty(order_no)){
             	condition += " and sor.order_no like '%"+order_no+"%'";
             }
@@ -270,10 +317,12 @@ public class SalesOrderController extends Controller {
     	}
     	
     	String coulmns = "select sor.*, ifnull(u.c_name, u.user_name) creator_name ,"
-        		+ "  lor.logistics_ciq_status,lor.logistics_cus_status,lor.status log_status,"
+        		+ " (select logistics_ciq_status from logistics_order where sales_order_id = sor.id ) logistics_ciq_status,"
+        		+ " (select logistics_cus_status from logistics_order where sales_order_id = sor.id ) logistics_cus_status,"
+        		+ " (select status from logistics_order where sales_order_id = sor.id ) log_status,"
     			+ "  c.shop_name ";
     	
-        String sql = " from sales_order sor  LEFT JOIN logistics_order lor on lor.sales_order_id = sor.id"
+        String sql = " from sales_order sor  "
     			+ "  left join custom_company c on c.id = sor.custom_id"
     			+ "  left join user_login u on u.id = sor.create_by"
     			+ condition;
@@ -282,7 +331,7 @@ public class SalesOrderController extends Controller {
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
         
-        List<Record> BillingOrders = Db.find(coulmns + sql + " order by create_stamp desc" +sLimit);
+        List<Record> BillingOrders = Db.find(coulmns + sql+" order by sor.create_stamp desc " +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
