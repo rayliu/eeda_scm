@@ -334,7 +334,7 @@ public class CheckOrder extends Controller {
 	}
 	
 	/**
-	 *  收货人地区编码
+	 *  收货人（转化后的）地区编码
 	 * @param value
 	 * @return
 	 */
@@ -345,6 +345,34 @@ public class CheckOrder extends Controller {
 		}
 	    return flag;
 	}
+
+	
+	/**
+	 *  收货人(纯编码)地区编码
+	 * @param value
+	 * @return
+	 */
+    public boolean checkCode (String value){
+        boolean flag = true;
+        if(value.length()<20){
+            flag = false;
+        }else{
+            String[] values = value.split("#");
+            String province = values[0];
+            String city = values[1];
+            String qv = values[2];
+            Location lo = Location.dao.findFirst("select * from location where code = ? and pcode = ?",city,province);
+            if(lo == null){
+                flag = false;
+            }
+            
+            Location lo2 = Location.dao.findFirst("select * from location where (code = ? and pcode = ?) or (code = ? and pcode = ?)",qv,city,qv,province);
+            if(lo2 == null){
+                flag = false;
+            }
+        }
+        return flag;
+    }
 
 
 	
@@ -390,7 +418,7 @@ public class CheckOrder extends Controller {
 					}
 					
 					if(StringUtils.isNotEmpty(location)){
-						if(!checkLocation(location)){
+						if(!checkCode(location)){
 							throw new Exception("【收货人地区编码】("+location+")有误，找不到对应编码的城市，请参考标准城市编码");
 						}
 					}
@@ -652,24 +680,24 @@ public class CheckOrder extends Controller {
 					}
 					
 					if(StringUtils.isNotEmpty(location)){
-						if(!checkLocation(location)){
+						if(!checkCode(location)){
 							throw new Exception("【收货人地区编码】("+location+")有误，找不到对应编码的城市，请参考标准城市编码");
 						}
+					}else{
+						String addressCode = changeAddres(consignee_address);
+						if(!checkCode(addressCode)){
+							throw new Exception("<br/>【收货人详细地址】("+consignee_address+")有误<br/>请检测录入的省市区地址是否正确<br/><br/><br/><br/>注意：请按照【xx省 xx市 xx区/县 xxxxx】格式填写地址<br/>省市区中间必须以空格隔开");
+						}
+					}
+					
+					if(StringUtils.isEmpty(consignee_address)){
+						throw new Exception("【收货人详细地址】不能为空");
 					}
 					
 					if(StringUtils.isNotEmpty(ref_order_no)){
 						if(!checkRefOrderNo(ref_order_no)){
 							throw new Exception("此【订单编号】("+ref_order_no+")已存在，请核实是否有重复导入");
 						}
-					}
-					
-					if(StringUtils.isNotEmpty(consignee_address)){
-						String addressCode = changeAddres(consignee_address);
-						if(!checkLocation(addressCode)){
-							throw new Exception("<br/>【收货人地区编码】("+consignee_address+")有误<br/>请按照【xx省 xx市 xx区/县 xxxxx】格式填写地址<br/>省市区中间必须已空格隔开");
-						}
-					}else{
-						throw new Exception("【收货人详细地址】不能为空");
 					}
 					
 					if(StringUtils.isEmpty(item_no)){
@@ -697,7 +725,7 @@ public class CheckOrder extends Controller {
 
 				result.set("result", false);
 				
-				result.set("cause", "校验失败<br/>"+"数据校验至第" + (rowNumber)
+				result.set("cause", "校验失败<br/>"+"数据校验至第" + (rowNumber+1)
 							+ "行时出现异常:" + e.getMessage() );
 				
 				return result;
@@ -897,7 +925,7 @@ public class CheckOrder extends Controller {
 
 			result.set("result", false);
 			
-			result.set("cause", "导入失败<br/>数据导入至第" + (rowNumber)
+			result.set("cause", "导入失败<br/>数据导入至第" + (rowNumber+1)
 						+ "行时出现异常:" + e.getMessage() + "<br/>导入数据已取消！");
 			
 		} finally {
