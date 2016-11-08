@@ -366,19 +366,25 @@ $(document).ready(function() {
 	   		}
    	    },'json');
     };
-    $("#item_no_update,#size_update,#width_update,#height_update,#volume_update,#weight_update,#insurance_amount_update").on('keyup click', function(){
-    	var item_no_update=$("#item_no_update").val();
+    $("#serial_no_update,#item_name_update,#size_update,#width_update,#height_update,#volume_update,#weight_update,#insurance_amount_update").on('keyup click', function(){
+    	var item_no_update=$("#serial_no_update").val();
+    	var item_name_update=$("#item_name_update").val();
     	var size_update=$("#size_update").val();
     	var width_update=$("#width_update").val();
     	var height_update=$("#height_update").val();
     	var volume_update=$("#volume_update").val();
     	var weight_update=$("#weight_update").val();
     	var insurance_amount_update=$("#insurance_amount_update").val();
-    	if(item_no_update!=""){
-    		$("#item_no_err").hide();
-    	}else{
-    		$("#item_no_err").show();
-    	}
+//    	if(item_no_update!=""){
+//    		$("#item_no_err").hide();
+//    	}else{
+//    		$("#item_no_err").show();
+//    	}
+//    	if(item_name_update!=""){
+//    		$("#item_name_err").hide();
+//    	}else{
+//    		$("#item_name_err").show();
+//    	}
     	if(!isNaN(size_update)){
     		$("#size_err").hide();
     	}else{
@@ -412,17 +418,22 @@ $(document).ready(function() {
     });
     // 新增或者编辑产品 
     $('#productSave').on('click', function() { 
-    	var item_no_update=$("#item_no_update").val();
+    	//提交前，校验数据
+        if(!$("#itemForm").valid()){
+            return;
+        }
+    	
+    	var item_no_update=$("#serial_no_update").val();
     	var size_update=$("#size_update").val();
     	var width_update=$("#width_update").val();
     	var height_update=$("#height_update").val();
     	var volume_update=$("#volume_update").val();
     	var weight_update=$("#weight_update").val();
     	var insurance_amount_update=$("#insurance_amount_update").val();
-    	if(item_no_update==""){
-    		$("#item_no_err").show();
-    		return false;
-    	}
+//    	if(item_no_update==""){
+//    		$("#item_no_err").show();
+//    		return false;
+//    	}
     	if(isNaN(size_update)){
     		$("#size_err").show();
     		return false;
@@ -449,7 +460,7 @@ $(document).ready(function() {
 		}	
  		$.post('/product/productSave',$("#itemForm").serialize(), function(data){
  			if(data=="item_no"){
- 				$.scojs_message('该型号已存在', $.scojs_message.TYPE_ERROR);			
+ 				$.scojs_message('该产品已存在', $.scojs_message.TYPE_ERROR);			
             }else{
                 $.scojs_message('数据保存成功', $.scojs_message.TYPE_OK);
  				$('#addOrder').modal('hide')

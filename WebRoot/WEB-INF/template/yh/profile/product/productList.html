@@ -43,12 +43,12 @@
 				      			<div class="form-group ">
 								<label class="control-label" for="inputSuccess">型号</label> <input
 									id="item_no" class="form-control" type="text"
-									name="item_no">
+									name="item_no" required>
 								</div>
 								<div class="form-group ">
 								<label class="control-label" for="inputSuccess">产品名称</label> <input
 									id="item_name" class="form-control" type="text"
-									name="item_name">
+									name="item_name" required>
 								</div>
 								<div class="form-group ">
 								<label class="control-label" for="inputSuccess">产品长度(mm)</label> <input
@@ -73,7 +73,7 @@
 								</div>
 								<div class="form-group ">
 								<label class="control-label" for="inputSuccess">产品单位</label> <input
-									id="unit" class="form-control" type="text"
+									id="unit" class="form-control" type="text" required
 									name="unit">
 								</div> 
 								<div class="form-group ">
@@ -143,18 +143,20 @@
 					      		<input id="itemId" type="hidden" name="itemId" />
 					      		<input id="item_no_hidden" type="hidden" name="item_no_hidden" />
 					      		<input id="category_UpdateId" type="hidden" name="category_UpdateId" />
-								<div class="form-group ">
-									<label class="control-label" for="inputSuccess">产品型号</label>
-									<input id="item_no_update" class="form-control dropdown-toggle" placeholder="请输入产品型号" type="text" name="item_no_update" data-toggle="dropdown"><span id="item_no_err" style="display:none;color:red">请输入产品型号</span>
-								</div>
+								
 								<div class="form-group">
 									<label class="control-label" for="inputWarning">产品条码</label> <input
-										id="serial_no_update" class="form-control" type="text" name="serial_no_update">
+										id="serial_no_update" class="form-control" type="text" name="serial_no_update" required>
+										<span id="item_no_err" style="display:none;color:red">请输入产品条码</span>
 								</div>
 								<div class="form-group">
 									<label class="control-label" for="inputWarning">产品名称</label> 
-									<!-- <input id="uom" class="form-control" type="text" name=uom value="${height!''}"> -->
-									<input id="item_name_update" class="form-control" name="item_name_update">
+									<input id="item_name_update" class="form-control" name="item_name_update" required>
+									<span id="item_name_err" style="display:none;color:red">请输入产品条码</span>
+								</div>
+								<div class="form-group ">
+									<label class="control-label" for="inputSuccess">产品货号</label>
+									<input id="item_no_update" class="form-control dropdown-toggle" placeholder="请输入产品型号" type="text" name="item_no_update" data-toggle="dropdown">
 								</div>
 								<div class="form-group">
 									<label class="control-label" for="inputSuccess">长度(mm)</label> 
@@ -180,8 +182,8 @@
 									<input id="category_update" disabled="disabled" class="form-control" type="text" name="category_update">
 								</div>
 								<div class="form-group ">
-										<%include("/yh/component/form/inputUnitField.html", {
-										id:'unit_update', label:'包装单位',class:'form-control', value:unit!''}){}%>
+										<%include("/yh/component/form/inputunitfield.html", {
+										id:'unit_update', label:'包装单位',class:'form-control', value:unit!'',required:'required'}){}%>
 								</div>
 								<div class="form-group">
 									<label class="control-label" for="inputWarning">体积(m³)</label> 
@@ -265,7 +267,8 @@
 <script type="text/javascript" src="/yh/js/plugins/zTree_v3/js/jquery.ztree.core-3.5.js"></script>
 <script type="text/javascript" src="/yh/js/plugins/zTree_v3/js/jquery.ztree.excheck-3.5.js"></script>
 <script type="text/javascript" src="/yh/js/plugins/zTree_v3/js/jquery.ztree.exedit-3.5.js"></script>
-
+<!-- 引入校验的js 文件及其 中文 文件-->
+<script src="/yh/js/jquery.validate.min.js"></script>
 <script src="/yh/js/plugins/dataTables/jquery.dataTables.editable.js" type="text/javascript"></script>
 <script src="/yh/js/plugins/dataTables/jquery.jeditable.js" type="text/javascript"></script>
 <script src="/yh/css/ui/jquery-ui.js"></script>

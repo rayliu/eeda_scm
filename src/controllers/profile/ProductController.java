@@ -430,8 +430,8 @@ public class ProductController extends Controller {
         	}
         }else{
         	Record rec = Db.findFirst("select c.customer_id from category c where c.id =?", category_id);
-            String findSame = "select c.customer_id, p.* from product p, category c where p.category_id=c.id and item_no =? and c.customer_id=?";
-            Record sameRec = Db.findFirst(findSame, item_no.trim(), rec.get("customer_id"));
+            String findSame = "select c.customer_id, p.* from product p, category c where p.category_id=c.id and serial_no =? and c.customer_id=?";
+            Record sameRec = Db.findFirst(findSame, serial_no.trim(), rec.get("customer_id"));
             if(sameRec != null){
             	status="item_no";
             }else{
