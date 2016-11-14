@@ -166,7 +166,7 @@ public class CheckOrder extends Controller {
 	 * @param value
 	 * @return
 	 */
-	public boolean checkDouble(String value){
+	public static boolean checkDouble(String value){
 		boolean flag = true;
 		for (int i = value.length();--i>=0;){    
 		   if (!Character.isDigit(value.charAt(i)) && !String.valueOf(value.charAt(i)).equals(".")){  
@@ -182,7 +182,7 @@ public class CheckOrder extends Controller {
 	 * @param value
 	 * @return
 	 */
-	public boolean checkUpc(String value){
+	public static boolean checkUpc(String value){
 		boolean flag = true;
 		Product p = Product.dao.findFirst("select * from product where serial_no = ?",value);
 		if(p == null){
@@ -197,7 +197,7 @@ public class CheckOrder extends Controller {
 	 * @param value
 	 * @return
 	 */
-	public String getCargoName(String value){
+	public static String getCargoName(String value){
 		String cargoName = null;
 		Product p = Product.dao.findFirst("select * from product where serial_no = ?",value);
 		if(p != null){
@@ -213,7 +213,7 @@ public class CheckOrder extends Controller {
 	/**
 	 * 订单编号重复校验
 	 */
-	public boolean checkOrderNo (String value){
+	public static boolean checkOrderNo (String value){
 		boolean flag = true;
 		
 		GateOutOrder goo = GateOutOrder.dao.findFirst("select * from gate_out_order where customer_refer_no = ?",value);
@@ -226,7 +226,7 @@ public class CheckOrder extends Controller {
 	/**
 	 * 订单编号重复校验
 	 */
-	public boolean checkRefOrderNo (String value){
+	public static boolean checkRefOrderNo (String value){
 		boolean flag = true;
 		
 		SalesOrder so = SalesOrder.dao.findFirst("select * from sales_order where ref_order_no = ?",value);
@@ -241,7 +241,7 @@ public class CheckOrder extends Controller {
 	 * @param value
 	 * @return
 	 */
-	public boolean checkUnit (String value){
+	public static boolean checkUnit (String value){
 		boolean flag = true;
 		
 		Unit goo = Unit.dao.findFirst("select * from unit where name = ?",value);

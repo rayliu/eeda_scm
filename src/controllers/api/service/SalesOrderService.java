@@ -10,6 +10,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import models.Party;
+import models.UserLogin;
 import models.eeda.OrderActionLog;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
@@ -109,6 +110,7 @@ public class SalesOrderService {
             return;// 注意这里一定要返回,否则会继续往下执行
         }
         
+        UserLogin ul = UserLogin.dao.findFirst("select * from user_login where user_name = ?","interface@defeng.com");
         SalesOrder salesOrder = new SalesOrder();
 
         //需后台处理的字段
@@ -121,7 +123,8 @@ public class SalesOrderService {
         salesOrder.set("pro_remark", "无");//优惠说明
         salesOrder.set("pay_channel", "01");//优惠说明
         salesOrder.set("create_stamp", new Date());  //操作时间
-        salesOrder.set("note", "导入数据");  //备注
+        salesOrder.set("create_by", ul.getLong("id"));  //操作人
+        salesOrder.set("note", "接口数据");  //备注
         salesOrder.set("office_id", office_id);
         DbUtils.setModelValues(soDto, salesOrder);
 
@@ -131,16 +134,21 @@ public class SalesOrderService {
         
         List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)soDto.get("goods");
 		DbUtils.handleList(itemList, id, SalesOrderGoods.class, "order_id");
-		String cargo_name = itemList.get(0).get("cargo_name").trim();
-		
+		String cargo_name = itemList.get(0).get("item_name").trim();
 		//创建对应运单
-	    String log_id = createLogOrder(id,soDto,cargo_name);
+	    String log_id = createLogOrder(id,soDto,cargo_name,ul);
 		
 		String orgCode = soDto.get("org_code").toString();
         DingDanDto returnSoDto= DingDanBuilder.buildDingDanDto(id, orgCode);
         Record r = new Record();
-        r.set("code", "0");
-        r.set("msg", "请求已成功处理!");
+       
+        if(StringUtils.isNotEmpty(log_id)){
+        	r.set("code", "0");
+        	r.set("msg", "请求已成功处理!");
+        } else{
+        	r.set("code", "-1");
+        	r.set("msg", "请求创建运单失败!");
+        }
         r.set("data", returnSoDto);
         controller.renderJson(r);
     }
@@ -148,7 +156,7 @@ public class SalesOrderService {
   
    //自动生成运输单
     @Before(Tx.class)
-    public String createLogOrder(String sales_order_id,Map<String, ?> soDto,String cargo_name){
+    public String createLogOrder(String sales_order_id,Map<String, ?> soDto,String cargo_name,UserLogin ul){
     	String express_no = soDto.get("express_no").toString().trim();
     	String netwt = soDto.get("netwt").toString().trim();
 		String weight = soDto.get("weight").toString().trim();
@@ -161,7 +169,7 @@ public class SalesOrderService {
     		logisticsOrder = new LogisticsOrder();
         	logisticsOrder.set("log_no", order_no);
         	logisticsOrder.set("status","暂存");
-    		//logisticsOrder.set("create_by", user_id);
+    		logisticsOrder.set("create_by", ul.getLong("id"));
     		logisticsOrder.set("create_stamp", new Date());
     		
     		//预填值gln368
@@ -213,52 +221,7 @@ public class SalesOrderService {
 		return logisticsOrder.getLong("id").toString();
     }
     
-    //自动生成运输单
-    @Before(Tx.class)
-    public Long createLogOrder1(String sales_order_id,String action){
-    	LogisticsOrder logisticsOrder = null;
-    	if("create".equals(action)){
-    		String order_no = OrderNoGenerator.getNextOrderNo("YD");
-    		logisticsOrder = new LogisticsOrder();
-        	logisticsOrder.set("log_no", order_no);
-        	logisticsOrder.set("sales_order_id",sales_order_id);
-        	logisticsOrder.set("status","暂存");
-    		//logisticsOrder.set("create_by", LoginUserController.getLoginUserId(this));
-    		logisticsOrder.set("create_stamp", new Date());
-    		
-    		//预填值
-    		logisticsOrder.set("country_code", "142");
-    		logisticsOrder.set("shipper_country", "142");
-    		logisticsOrder.set("shipper_city", "440305");
-    		logisticsOrder.set("shipper", "深圳前海德丰投资发展有限公司");
-    		logisticsOrder.set("shipper_address", "深圳前海湾保税港区W6仓");
-    		logisticsOrder.set("shipper_telephone", "075586968661");
-    		logisticsOrder.set("traf_mode", "4");
-    		logisticsOrder.set("ship_name", "汽车");
-    		logisticsOrder.set("customs_code", "5349");
-    		logisticsOrder.set("ciq_code", "471800");
-    		logisticsOrder.set("port_code", "5349");
-    		logisticsOrder.set("decl_code", "5349");
-    		logisticsOrder.set("supervision_code", "5349");
-    		logisticsOrder.set("ems_no", "I440366006516001");
-    		logisticsOrder.set("trade_mode", "1210");
-    		logisticsOrder.set("destination_port", "5349");
-    		logisticsOrder.set("ps_type", "2");
-    		logisticsOrder.set("trans_mode", "1");
-    		logisticsOrder.set("cut_mode", "1");
-    		logisticsOrder.set("wrap_type", "CT");
-    		logisticsOrder.set("freight", "0");
-    		logisticsOrder.set("insure_fee", "0");
-    		logisticsOrder.set("parcel_info", order_no);
-    		logisticsOrder.set("ie_date", new Date());
-    		logisticsOrder.set("deliver_date",  new Date());
-    		
-    		logisticsOrder.save();
-    	}else{
-    		logisticsOrder = LogisticsOrder.dao.findFirst("select * from logistics_order where sales_order_id = ?",sales_order_id);
-    	}
-		return logisticsOrder.getLong("id");
-    }
+    
     
     public void querySo(){
         String orderJsonStr = controller.getPara("orderQuery");//form 提交
@@ -323,9 +286,39 @@ public class SalesOrderService {
         
         SalesOrder so = SalesOrder.dao.findFirst("select * from sales_order where ref_order_no = ?", ref_order_no);
         if(so !=null){
-            DingDanDto soDto= DingDanBuilder.buildDingDanDto(so.getLong("id").toString(), "123456");
+            DingDanDto soDto= DingDanBuilder.buildDingDanDto(so.getLong("id").toString(), "");
+            
+            LogisticsOrder lo = LogisticsOrder.dao.findFirst("select * from logistics_order where sales_order_id = ?",so.getLong("id"));
+            String logistics_ciq_status = null;
+            String logistics_cus_status = null;
+            String log_status = null;
+            if(lo != null){
+            	log_status = lo.getStr("status");
+            	logistics_ciq_status = lo.getStr("logistics_ciq_status");
+            	logistics_cus_status = lo.getStr("logistics_cus_status");
+            }
+            
+            String status = so.getStr("status");
+            String order_cus_status = so.getStr("order_cus_status");
+            String order_ciq_status = so.getStr("order_ciq_status");
+            String pay_status = so.getStr("pay_status");
+            String bill_cus_status = so.getStr("bill_cus_status");
+            String bill_cus_result = so.getStr("bill_cus_result");
+            
             Record r = new Record();
             r.set("code", "0");
+            r.set("status",status);
+            r.set("order_cus_status",order_cus_status);
+            r.set("order_ciq_status",order_ciq_status);
+            r.set("pay_status",pay_status);
+            r.set("bill_cus_status",bill_cus_status);
+            r.set("bill_cus_result",bill_cus_result);
+            
+            //运单
+            r.set("log_status",log_status);
+            r.set("logistics_ciq_status",logistics_ciq_status);
+            r.set("logistics_cus_status",logistics_cus_status);
+
             r.set("msg", "请求已成功处理!");
             r.set("data", soDto);
             controller.renderJson(r);            
