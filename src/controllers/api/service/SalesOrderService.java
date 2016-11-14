@@ -15,6 +15,7 @@ import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderGoods;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.google.gson.Gson;
@@ -26,6 +27,7 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 import controllers.api.ApiController;
 import controllers.oms.custom.dto.DingDanBuilder;
 import controllers.oms.custom.dto.DingDanDto;
+import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
@@ -43,6 +45,7 @@ public class SalesOrderService {
         this.requestMethod = controller.getRequest().getMethod();
     }
     
+    @Before(Tx.class)
     public void saveSo() throws InstantiationException, IllegalAccessException{
         String orderJsonStr = controller.getPara("order");
         
@@ -107,24 +110,34 @@ public class SalesOrderService {
         }
         
         SalesOrder salesOrder = new SalesOrder();
-      //create 
-        DbUtils.setModelValues(soDto, salesOrder);
-        
+
         //需后台处理的字段
-        salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("DD"));
-        salesOrder.set("pay_channel", "01");//默认是网上支付
+        salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("IDQHDF"));   
+        salesOrder.set("custom_id", 9);  //深圳前海德丰投资发展有限公司
+        salesOrder.set("status", "未上报");  //状态
+        salesOrder.set("currency", 142);  //币制
+        salesOrder.set("consignee_type", 1);  //证件类型
+        salesOrder.set("consignee_country", 142);//国
+        salesOrder.set("pro_remark", "无");//优惠说明
+        salesOrder.set("pay_channel", "01");//优惠说明
+        salesOrder.set("create_stamp", new Date());  //操作时间
+        salesOrder.set("note", "导入数据");  //备注
         salesOrder.set("office_id", office_id);
-//        salesOrder.set("create_by", );
-        salesOrder.set("create_stamp", new Date());
+        DbUtils.setModelValues(soDto, salesOrder);
+
         salesOrder.save();
-        
         String id = salesOrder.getLong("id").toString();
-        Long log_id = createLogOrder(id);
+       
         
         List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)soDto.get("goods");
-        DbUtils.handleList(itemList, id, SalesOrderGoods.class, "order_id");
-
-        DingDanDto returnSoDto= DingDanBuilder.buildDingDanDto(id, "123456");
+		DbUtils.handleList(itemList, id, SalesOrderGoods.class, "order_id");
+		String cargo_name = itemList.get(0).get("cargo_name").trim();
+		
+		//创建对应运单
+	    String log_id = createLogOrder(id,soDto,cargo_name);
+		
+		String orgCode = soDto.get("org_code").toString();
+        DingDanDto returnSoDto= DingDanBuilder.buildDingDanDto(id, orgCode);
         Record r = new Record();
         r.set("code", "0");
         r.set("msg", "请求已成功处理!");
@@ -133,18 +146,118 @@ public class SalesOrderService {
     }
 
   
-    
-  //自动生成运输单
+   //自动生成运输单
     @Before(Tx.class)
-    private Long createLogOrder(String sales_order_id){
-        LogisticsOrder logisticsOrder = new LogisticsOrder();
-        logisticsOrder.set("log_no", OrderNoGenerator.getNextOrderNo("YD"));
-        logisticsOrder.set("sales_order_id",sales_order_id);
-        logisticsOrder.set("status","新建");
-//        logisticsOrder.set("create_by", LoginUserController.getLoginUserId(this));
-        logisticsOrder.set("create_stamp", new Date());
-        logisticsOrder.save();
-        return logisticsOrder.getLong("id");
+    public String createLogOrder(String sales_order_id,Map<String, ?> soDto,String cargo_name){
+    	String express_no = soDto.get("express_no").toString().trim();
+    	String netwt = soDto.get("netwt").toString().trim();
+		String weight = soDto.get("weight").toString().trim();
+		String freight = soDto.get("freight").toString().trim();
+		
+		
+    	LogisticsOrder logisticsOrder = null;
+    	if(StringUtils.isNotEmpty(sales_order_id)){
+    		String order_no = OrderNoGenerator.getNextOrderNo("YD");
+    		logisticsOrder = new LogisticsOrder();
+        	logisticsOrder.set("log_no", order_no);
+        	logisticsOrder.set("status","暂存");
+    		//logisticsOrder.set("create_by", user_id);
+    		logisticsOrder.set("create_stamp", new Date());
+    		
+    		//预填值gln368
+    		logisticsOrder.set("country_code", "142");
+    		logisticsOrder.set("shipper_country", "142");
+    		logisticsOrder.set("shipper_city", "440305");
+    		logisticsOrder.set("shipper", "深圳前海德丰投资发展有限公司");
+    		logisticsOrder.set("shipper_address", "深圳前海湾保税港区W6仓");
+    		logisticsOrder.set("shipper_telephone", "075586968661");
+    		logisticsOrder.set("traf_mode", "4");
+    		logisticsOrder.set("pack_no", 1);
+    		logisticsOrder.set("ship_name", "汽车");
+    		logisticsOrder.set("customs_code", "5349");
+    		logisticsOrder.set("ciq_code", "471800");
+    		logisticsOrder.set("port_code", "5349");
+    		logisticsOrder.set("decl_code", "5349");
+    		logisticsOrder.set("supervision_code", "5349");
+    		logisticsOrder.set("ems_no", "I440366006516001");
+    		logisticsOrder.set("trade_mode", "1210");
+    		logisticsOrder.set("destination_port", "5349");
+    		logisticsOrder.set("ps_type", "2");
+    		logisticsOrder.set("trans_mode", "1");
+    		logisticsOrder.set("cut_mode", "1");
+    		logisticsOrder.set("wrap_type", "CT");
+    		logisticsOrder.set("ie_date", new Date());
+    		logisticsOrder.set("deliver_date",  new Date());
+    		if(StringUtils.isNotEmpty(cargo_name)){
+    			logisticsOrder.set("goods_info", cargo_name); 
+			}
+    		if(StringUtils.isNotEmpty(freight)){
+    			logisticsOrder.set("freight", freight);  //运费
+			}
+    		logisticsOrder.set("insure_fee", "0");
+    		if(StringUtils.isNotEmpty(express_no)){
+    			logisticsOrder.set("parcel_info",express_no );
+    		}
+    		if(StringUtils.isNotEmpty(netwt)){
+    			logisticsOrder.set("netwt",netwt );
+    		}
+    		if(StringUtils.isNotEmpty(weight)){
+    			logisticsOrder.set("weight",weight );
+    		}
+    		if(StringUtils.isNotEmpty(sales_order_id)){
+        		logisticsOrder.set("sales_order_id",sales_order_id);
+        	}
+    		
+    		logisticsOrder.save();
+    	}
+		return logisticsOrder.getLong("id").toString();
+    }
+    
+    //自动生成运输单
+    @Before(Tx.class)
+    public Long createLogOrder1(String sales_order_id,String action){
+    	LogisticsOrder logisticsOrder = null;
+    	if("create".equals(action)){
+    		String order_no = OrderNoGenerator.getNextOrderNo("YD");
+    		logisticsOrder = new LogisticsOrder();
+        	logisticsOrder.set("log_no", order_no);
+        	logisticsOrder.set("sales_order_id",sales_order_id);
+        	logisticsOrder.set("status","暂存");
+    		//logisticsOrder.set("create_by", LoginUserController.getLoginUserId(this));
+    		logisticsOrder.set("create_stamp", new Date());
+    		
+    		//预填值
+    		logisticsOrder.set("country_code", "142");
+    		logisticsOrder.set("shipper_country", "142");
+    		logisticsOrder.set("shipper_city", "440305");
+    		logisticsOrder.set("shipper", "深圳前海德丰投资发展有限公司");
+    		logisticsOrder.set("shipper_address", "深圳前海湾保税港区W6仓");
+    		logisticsOrder.set("shipper_telephone", "075586968661");
+    		logisticsOrder.set("traf_mode", "4");
+    		logisticsOrder.set("ship_name", "汽车");
+    		logisticsOrder.set("customs_code", "5349");
+    		logisticsOrder.set("ciq_code", "471800");
+    		logisticsOrder.set("port_code", "5349");
+    		logisticsOrder.set("decl_code", "5349");
+    		logisticsOrder.set("supervision_code", "5349");
+    		logisticsOrder.set("ems_no", "I440366006516001");
+    		logisticsOrder.set("trade_mode", "1210");
+    		logisticsOrder.set("destination_port", "5349");
+    		logisticsOrder.set("ps_type", "2");
+    		logisticsOrder.set("trans_mode", "1");
+    		logisticsOrder.set("cut_mode", "1");
+    		logisticsOrder.set("wrap_type", "CT");
+    		logisticsOrder.set("freight", "0");
+    		logisticsOrder.set("insure_fee", "0");
+    		logisticsOrder.set("parcel_info", order_no);
+    		logisticsOrder.set("ie_date", new Date());
+    		logisticsOrder.set("deliver_date",  new Date());
+    		
+    		logisticsOrder.save();
+    	}else{
+    		logisticsOrder = LogisticsOrder.dao.findFirst("select * from logistics_order where sales_order_id = ?",sales_order_id);
+    	}
+		return logisticsOrder.getLong("id");
     }
     
     public void querySo(){
