@@ -1,6 +1,7 @@
 package controllers.api.service;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ import models.eeda.OrderActionLog;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderGoods;
+import models.eeda.profile.Product;
+import models.eeda.profile.Unit;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -84,6 +87,17 @@ public class SalesOrderService {
         return flag;
     }
     
+    
+    public boolean checkBarFromName(String bar_code,String name){
+    	boolean flag = true;
+    	Product p = Product.dao.findFirst("select * from product where serial_no = ? and item_name = ?",bar_code,name);
+    	if(p==null){
+    		flag = false;
+    	}
+    	
+    	return flag;
+    }
+    
     public Record checkConfig(Map<String, ?> soDto){
     	// 校验sign
     	Record r = new Record();
@@ -150,9 +164,21 @@ public class SalesOrderService {
 			String qty = itemList.get("qty");
 			String price = itemList.get("price");
 			
+			if(StringUtils.isEmpty(name)){
+				msg += "【商品名称】不能为空";
+			}
+			
 			if(StringUtils.isNotEmpty(qty)){
 				if(!CheckOrder.checkDouble(qty)){
 					msg += "【商品数量】("+qty+")格式类型有误";
+				}
+			}else{
+				msg += "【商品数量】不能为空";
+			}
+			
+			if(StringUtils.isNotEmpty(currency)){
+				if(!CheckOrder.checkDouble(currency)){
+					msg += "【币制】("+qty+")格式类型有误";
 				}
 			}else{
 				msg += "【商品数量】不能为空";
@@ -198,6 +224,14 @@ public class SalesOrderService {
 			if(StringUtils.isEmpty(item_no)){
 				msg += "【商品货号】不能为空";
 			}
+			
+			if(StringUtils.isNotEmpty(bar_code) && StringUtils.isNotEmpty(name)){
+				if(!checkBarFromName(bar_code,name)){
+					msg += "【商品条码】和【商品名称】不匹配";
+				}
+				
+			}
+			
 			
 		}
 		
@@ -297,13 +331,6 @@ public class SalesOrderService {
         }
         
         
-        OrderActionLog log = new OrderActionLog();
-        log.set("order_type", "api_so_post");
-        log.set("action", "post");
-        log.set("json", orderJsonStr);
-        log.set("time_stamp", new Date());
-        log.save();
-        //这里将json字符串转化成javabean对象
         //开始生成so
         Map<String, ?> soDto= new Gson().fromJson(orderJsonStr, HashMap.class);
         Long office_id = null;
@@ -343,10 +370,64 @@ public class SalesOrderService {
         salesOrder.save();
         String id = salesOrder.getLong("id").toString();
        
-        
-        List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)soDto.get("goods");
-		DbUtils.handleList(itemList, id, SalesOrderGoods.class, "order_id");
-		String cargo_name = itemList.get(0).get("item_name").trim();
+    	//明细表
+    	List<Map<String, String>> itemLists = (ArrayList<Map<String, String>>)soDto.get("goods");
+    	String cargo_name = null;
+		for(Map<String, String> itemList:itemLists){
+			String action = itemList.get("action");
+			String bar_code = itemList.get("bar_code");
+			String item_no = itemList.get("item_no");
+			String unit = itemList.get("unit");
+			String name = itemList.get("name");
+			String currency = itemList.get("currency");
+			String tax_rate = itemList.get("tax_rate");
+			String qty = itemList.get("qty");
+			String price = itemList.get("price");
+			
+			SalesOrderGoods sog = new SalesOrderGoods();
+			if(StringUtils.isNotEmpty(bar_code)){
+				sog.set("bar_code", bar_code);   //条码
+				cargo_name = CheckOrder.getCargoName(bar_code);
+				if(StringUtils.isNotEmpty(cargo_name)){
+					sog.set("item_name", cargo_name);//名称
+				}
+			}
+			
+			sog.set("item_no", item_no); //商品货号
+			sog.set("qty", qty);   //数量
+			sog.set("unit",unit);   //单位
+			sog.set("price", price);   //单位
+			
+			if(StringUtils.isNotEmpty(price)&&StringUtils.isNotEmpty(qty)){
+				DecimalFormat df = new DecimalFormat("#.00");
+				String total = df.format(Double.parseDouble(price)*Double.parseDouble(qty));
+				sog.set("total", total);   //总价
+			}
+			if(StringUtils.isNotEmpty(tax_rate)){
+				sog.set("tax_rate", tax_rate);   //税率
+			}
+			
+			if(StringUtils.isNotEmpty(price)&&StringUtils.isNotEmpty(qty)&&StringUtils.isNotEmpty(tax_rate)){
+				DecimalFormat df = new DecimalFormat("#.00");
+				String tax_total = CheckOrder.changeNum(Double.parseDouble(price)*Double.parseDouble(qty)*(Double.parseDouble(tax_rate)+1));
+				
+				sog.set("after_tax_total", CheckOrder.changeNum(Double.parseDouble(tax_total)));   //税后总价
+				if(salesOrder.getDouble("goods_value")==0){
+					salesOrder.set("goods_value", CheckOrder.changeNum(Double.parseDouble(tax_total))).update();   //税后总价
+				}
+			}
+			sog.set("order_id",id);
+			sog.set("currency",142);
+			sog.save();
+		}
+		
+		OrderActionLog log = new OrderActionLog();
+        log.set("order_type", "api_so_post");
+        log.set("action", "post");
+        log.set("json", orderJsonStr);
+        log.set("time_stamp", new Date());
+        log.save();
+			
 		//创建对应运单
 	    String log_id = createLogOrder(id,soDto,cargo_name,ul);
 		

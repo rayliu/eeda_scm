@@ -963,7 +963,7 @@ public class CheckOrder extends Controller {
      * @param number
      * @return
      */
-	public String changeNum(Double number){
+	public static String changeNum(Double number){
 		return String.format("%.2f", number);
 	}
 	
