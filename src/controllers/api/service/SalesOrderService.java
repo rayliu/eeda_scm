@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import models.Location;
 import models.Party;
 import models.UserLogin;
 import models.eeda.OrderActionLog;
@@ -28,6 +29,7 @@ import com.jfinal.plugin.activerecord.tx.Tx;
 import controllers.api.ApiController;
 import controllers.oms.custom.dto.DingDanBuilder;
 import controllers.oms.custom.dto.DingDanDto;
+import controllers.oms.importOrder.CheckOrder;
 import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.MD5Util;
@@ -46,6 +48,238 @@ public class SalesOrderService {
         this.requestMethod = controller.getRequest().getMethod();
     }
     
+    
+    public boolean checkCode (String value){
+        boolean flag = true;
+        if(value.length()<6){
+            flag = false;
+        }else{
+            Location lo = Location.dao.findFirst("select * from location where code = ?",value);
+            if(lo == null){
+                flag = false;
+            }
+        }
+        return flag;
+    }
+    
+    public boolean checkAllCode (String value){
+        boolean flag = true;
+        if(value.length()<20){
+            flag = false;
+        }else{
+            String[] values = value.split("#");
+            String province = values[0];
+            String city = values[1];
+            String qv = values[2];
+            Location lo = Location.dao.findFirst("select * from location where code = ? and pcode = ?",city,province);
+            if(lo == null){
+                flag = false;
+            }
+            
+            Location lo2 = Location.dao.findFirst("select * from location where (code = ? and pcode = ?) or (code = ? and pcode = ?)",qv,city,qv,province);
+            if(lo2 == null){
+                flag = false;
+            }
+        }
+        return flag;
+    }
+    
+    public Record checkConfig(Map<String, ?> soDto){
+    	// 校验sign
+    	Record r = new Record();
+    	r.set("code", "0");
+    	String ref_order_no = soDto.get("ref_order_no").toString();
+        String appkey = soDto.get("appkey").toString();
+        String salt = new BigDecimal((Double) soDto.get("salt")).toString();
+        String sign = soDto.get("sign").toString();
+        
+        String paraStr = "ref_order_no="+ref_order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
+        logger.debug("paraStr=" + paraStr);
+        int signIndex = paraStr.indexOf("sign");
+        if (signIndex == -1) {
+            r.set("code", "2");
+            r.set("msg", "请求中sign不存在!");
+        }
+        
+        //appkey
+        Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
+        if (party == null) {
+            r.set("code", "2");
+            r.set("msg", "请求中appkey不正确!");
+        }else{
+        	Long office_id=party.getLong("office_id");//属于哪个公司的
+            SalesOrder sCheck = SalesOrder.dao.findFirst("select * from sales_order where ref_order_no=? and office_id=?", ref_order_no, office_id);
+            if (sCheck != null) {
+                r.set("code", "5");
+                r.set("msg", "ref_order_no:"+ref_order_no+"已存在!");
+            }else{
+                r.set("office_id", office_id);
+            }
+        }
+        return r;
+    }
+    
+    
+    public Record checkOrder(Map<String, ?> soDto){
+    	Record r = new Record();
+    	String msg = "";
+    	
+    	String goods_value = soDto.get("goods_value").toString();
+    	String consignee = soDto.get("consignee").toString();
+    	String consignee_id = soDto.get("consignee_id").toString();
+    	String consignee_address = soDto.get("consignee_address").toString();
+    	String consignee_telephone = soDto.get("consignee_telephone").toString();
+    	String province = soDto.get("province").toString();
+    	String city = soDto.get("city").toString();
+    	String district = soDto.get("district").toString();
+    	String netwt = soDto.get("netwt").toString();
+    	String weight = soDto.get("weight").toString();
+    	String freight = soDto.get("freight").toString();
+    	
+        
+    	//明细表
+    	List<Map<String, String>> itemLists = (ArrayList<Map<String, String>>)soDto.get("goods");
+		for(Map<String, String> itemList:itemLists){
+			String action = itemList.get("action");
+			String bar_code = itemList.get("bar_code");
+			String item_no = itemList.get("item_no");
+			String unit = itemList.get("unit");
+			String name = itemList.get("name");
+			String currency = itemList.get("currency");
+			String tax_rate = itemList.get("tax_rate");
+			String qty = itemList.get("qty");
+			String price = itemList.get("price");
+			
+			if(StringUtils.isNotEmpty(qty)){
+				if(!CheckOrder.checkDouble(qty)){
+					msg += "【商品数量】("+qty+")格式类型有误";
+				}
+			}else{
+				msg += "【商品数量】不能为空";
+			}
+			
+			if(StringUtils.isNotEmpty(unit)){
+				if(!CheckOrder.checkUnitCode(unit)){
+					msg += "【单位】("+unit+")有误，系统不存在此单位编码，请参照标准报关单位编码填写";
+				}
+			}else{
+				msg += "【商品数量】不能为空";
+			}
+			
+			if(StringUtils.isNotEmpty(price)){
+				if(!CheckOrder.checkDouble(price)){
+					msg +=  "【单价】("+price+")格式类型有误";
+				}
+			}else{
+				msg += "【单价】不能为空";
+			}
+			
+			if(StringUtils.isNotEmpty(bar_code)){
+				if(!CheckOrder.checkUpc(bar_code)){
+					msg += "【商品条码（UPC）】("+bar_code+")有误，系统产品信息不存在此upc";
+				}
+			}else{
+				msg += "【商品条码(UPC)】不能为空";
+			}
+			
+			//【税率】和【含税总价】不能同时为空
+			if(StringUtils.isNotEmpty(goods_value)){
+				if(!CheckOrder.checkDouble(goods_value)){
+					msg += "【含税总价】("+goods_value+")格式类型有误";
+				}
+			}else if(StringUtils.isNotEmpty(tax_rate)){
+				if(!CheckOrder.checkDouble(tax_rate)){
+					msg += "【税率】("+tax_rate+")格式类型有误";
+				}
+			}else{
+				msg += "【税率】和【含税总价】不能同时为空";
+			}
+			
+			if(StringUtils.isEmpty(item_no)){
+				msg += "【商品货号】不能为空";
+			}
+			
+		}
+		
+		
+		if(StringUtils.isNotEmpty(netwt)){
+			if(!CheckOrder.checkDouble(netwt)){
+				msg += "【净重】("+netwt+")格式类型有误";
+			}
+		}
+		
+		if(StringUtils.isNotEmpty(weight)){
+			if(!CheckOrder.checkDouble(weight)){
+				msg += "【毛重】("+weight+")格式类型有误";
+			}
+		}
+		
+		if(StringUtils.isNotEmpty(freight)){
+			if(!CheckOrder.checkDouble(freight)){
+				msg += "【运费】("+freight+")格式类型有误";
+			}
+		}
+		
+		//省
+		if(StringUtils.isNotEmpty(province)){
+			if(!checkCode(province)){
+				msg += "【省级】("+freight+")行政编码有误";
+			}
+		}else{
+			msg += "【省级】不能为空";
+		}
+		
+		//市
+		if(StringUtils.isNotEmpty(city)){
+			if(!checkCode(city)){
+				msg += "【市级】("+freight+")行政编码有误";
+			}
+		}else{
+			msg += "【市级】不能为空";
+		}
+		
+		//区
+		if(StringUtils.isNotEmpty(district)){
+			if(checkCode(district)){
+				msg += "【区级】("+freight+")行政编码有误";
+			}
+		}else{
+			msg += "【区级】不能为空";
+		}
+		
+		//省市区总
+		if(StringUtils.isNotEmpty(province) && StringUtils.isNotEmpty(city) && StringUtils.isNotEmpty(district)){
+			String value = province+"#"+city+"#"+district;
+			if(!checkAllCode(value)){
+				msg += "【省市区级】不存在上下级关系，请参考标准城市编码";
+			}
+		}
+		
+		if(StringUtils.isEmpty(consignee_address)){
+			msg += "【收货人详细地址】不能为空";
+		}
+		
+		
+		if(StringUtils.isEmpty(consignee)){
+			msg += "【收货人姓名】不能为空";
+		}
+		if(StringUtils.isEmpty(consignee_telephone)){
+			msg += "【收货人电话】不能为空";			
+		}
+		if(StringUtils.isEmpty(consignee_address)){
+			msg += "【收货人详细地址】不能为空";
+		}
+		if(StringUtils.isEmpty(consignee_id)){
+			msg += "【身份证号码】不能为空";
+		}
+		
+		if(StringUtils.isNotEmpty(msg)){
+			r.set("code", "6");
+			r.set("msg", msg);
+		}
+    	return r;
+    }
+    
     @Before(Tx.class)
     public void saveSo() throws InstantiationException, IllegalAccessException{
         String orderJsonStr = controller.getPara("order");
@@ -61,7 +295,7 @@ public class SalesOrderService {
             controller.renderJson(r);
             return;
         }
-            
+        
         
         OrderActionLog log = new OrderActionLog();
         log.set("order_type", "api_so_post");
@@ -72,43 +306,21 @@ public class SalesOrderService {
         //这里将json字符串转化成javabean对象
         //开始生成so
         Map<String, ?> soDto= new Gson().fromJson(orderJsonStr, HashMap.class);
-        
-     // 校验sign
-        String ref_order_no = soDto.get("ref_order_no").toString();
-        String appkey = soDto.get("appkey").toString();
-        String salt = new BigDecimal((Double) soDto.get("salt")).toString();
-        String sign = soDto.get("sign").toString();
-        
-        String paraStr = "ref_order_no="+ref_order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
-        logger.debug("paraStr=" + paraStr);
-        int signIndex = paraStr.indexOf("sign");
-        if (signIndex == -1) {
-            Record r = new Record();
-            r.set("code", "2");
-            r.set("msg", "请求中sign不存在!");
-            controller.renderJson(r);
+        Long office_id = null;
+        //数据校验
+        Record configR = checkConfig(soDto);
+        if("0".equals(configR.getStr("code"))){
+        	office_id = configR.getLong("office_id");
+        	Record errorR = checkOrder(soDto);
+        	if(errorR!=null){
+            	controller.renderJson(errorR);
+                return;// 注意这里一定要返回,否则会继续往下执行
+        	}
+        }else{
+        	controller.renderJson(configR);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
         
-        //appkey
-        Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
-        if (party == null) {
-            Record r = new Record();
-            r.set("code", "2");
-            r.set("msg", "请求中appkey不正确!");
-            controller.renderJson(r);
-            return;// 注意这里一定要返回,否则会继续往下执行
-        }
-        Long office_id=party.getLong("office_id");//属于哪个公司的
-        
-        SalesOrder sCheck = SalesOrder.dao.findFirst("select * from sales_order where ref_order_no=? and office_id=?", ref_order_no, office_id);
-        if (sCheck != null) {
-            Record r = new Record();
-            r.set("code", "5");
-            r.set("msg", "ref_order_no:"+ref_order_no+"已存在!");
-            controller.renderJson(r);
-            return;// 注意这里一定要返回,否则会继续往下执行
-        }
         
         UserLogin ul = UserLogin.dao.findFirst("select * from user_login where user_name = ?","interface@defeng.com");
         SalesOrder salesOrder = new SalesOrder();

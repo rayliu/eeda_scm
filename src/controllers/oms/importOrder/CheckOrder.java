@@ -251,6 +251,21 @@ public class CheckOrder extends Controller {
 	    return flag;
 	}
 	
+	/**
+	 * 单位Code校验
+	 * @param value
+	 * @return
+	 */
+	public static boolean checkUnitCode (String value){
+		boolean flag = true;
+		
+		Unit goo = Unit.dao.findFirst("select * from unit where code = ?",value);
+		if(goo == null){
+			flag = false;
+		}
+	    return flag;
+	}
+	
 	
 	
 	/**
