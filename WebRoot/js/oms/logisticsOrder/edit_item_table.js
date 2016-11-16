@@ -115,6 +115,7 @@ $(document).ready(function() {
 	                   +'<option value="083" '+ (data=='083'?'selected':'') +'>毫升</option>'
 	                   +'<option value="094" '+ (data=='094'?'selected':'') +'>箱</option>'
 	                   +'<option value="096" '+ (data=='096'?'selected':'') +'>罐</option>'
+	                   +'<option value="097" '+ (data=='097'?'selected':'') +'>桶</option>'
 	                   +'<option value="099" '+ (data=='099'?'selected':'') +'>包</option>'
 	                   +'<option value="108" '+ (data=='108'?'selected':'') +'>枚</option>'
 	                   +'<option value="110" '+ (data=='110'?'selected':'') +'>袋</option>'
