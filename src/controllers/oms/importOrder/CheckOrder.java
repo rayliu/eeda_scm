@@ -615,6 +615,7 @@ public class CheckOrder extends Controller {
 					String location = line.get("收货人地区编码").trim();
 					String ref_order_no = line.get("订单编号").trim();
 					String consignee_id = line.get("身份证号码").trim();
+					String express_no = line.get("快递信息").trim();
 					String netwt = line.get("净重").trim();
 					String weight = line.get("毛重").trim(); 
 					String freight = line.get("运费").trim(); 
@@ -729,6 +730,9 @@ public class CheckOrder extends Controller {
 					}
 					if(StringUtils.isEmpty(consignee_id)){
 						throw new Exception("【身份证号码】不能为空");
+					}
+					if(StringUtils.isEmpty(express_no)){
+						throw new Exception("【快递信息】不能为空");
 					}
 					
 					
