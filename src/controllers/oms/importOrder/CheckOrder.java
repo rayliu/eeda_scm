@@ -625,6 +625,14 @@ public class CheckOrder extends Controller {
 					String tax_rate = line.get("税率").trim(); 
 					
 					
+					if(StringUtils.isNotEmpty(ref_order_no)){
+						if(!checkRefOrderNo(ref_order_no)){
+							throw new Exception("此【订单编号】("+ref_order_no+")已存在，请核实是否有重复导入");
+						}
+					}else{
+						throw new Exception("【订单编号】不能为空");
+					}
+					
 					if(StringUtils.isNotEmpty(amount)){
 						if(!checkDouble(amount)){
 							throw new Exception("【商品数量】("+amount+")格式类型有误");
@@ -708,12 +716,6 @@ public class CheckOrder extends Controller {
 					
 					if(StringUtils.isEmpty(consignee_address)){
 						throw new Exception("【收货人详细地址】不能为空");
-					}
-					
-					if(StringUtils.isNotEmpty(ref_order_no)){
-						if(!checkRefOrderNo(ref_order_no)){
-							throw new Exception("此【订单编号】("+ref_order_no+")已存在，请核实是否有重复导入");
-						}
 					}
 					
 					if(StringUtils.isEmpty(item_no)){
