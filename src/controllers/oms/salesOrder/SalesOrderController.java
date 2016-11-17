@@ -77,7 +77,7 @@ public class SalesOrderController extends Controller {
    		String id = (String) dto.get("id");
    		
    		UserLogin user = LoginUserController.getLoginUser(this);
-   		
+        Long office_id = user.getLong("office_id");
    		if (StringUtils.isNotEmpty(id)) {
    			//update
    			salesOrder = SalesOrder.dao.findById(id);
@@ -99,6 +99,7 @@ public class SalesOrderController extends Controller {
    			salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("IDQHDF"));
    			salesOrder.set("create_by", user.getLong("id"));
    			salesOrder.set("create_stamp", new Date());
+   			salesOrder.set("office_id", office_id);
    			salesOrder.save();
    			
    			//生成对应的运输单
@@ -241,7 +242,9 @@ public class SalesOrderController extends Controller {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
         
-        String condition = " where 1 = 1 ";
+        UserLogin user = LoginUserController.getLoginUser(this);
+        Long office_id = user.getLong("office_id");
+        String condition = " where 1 = 1 and sor.office_id="+office_id;
         String jsonStr = getPara("jsonStr");
     	if(StringUtils.isNotEmpty(jsonStr)){
     		Gson gson = new Gson(); 

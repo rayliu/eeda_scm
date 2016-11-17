@@ -764,10 +764,11 @@ public class CheckOrder extends Controller {
 		//importResult = validatingOrderNo(lines);校验是否存在隔单
 		//if ("true".equals(importResult.get("result"))) {
 		int rowNumber = 1;
-		String name = (String) currentUser.getPrincipal();
-		List<UserLogin> users = UserLogin.dao
-				.find("select * from user_login where user_name='" + name + "'");
-		user_id = users.get(0).getLong("id");
+		UserLogin user = LoginUserController.getLoginUser(this);
+		user_id = user.getLong("id");
+        Long office_id = user.getLong("office_id");
+		
+
 		try {
 			conn = DbKit.getConfig().getDataSource().getConnection();
 			DbKit.getConfig().setThreadLocalConnection(conn);
@@ -809,6 +810,7 @@ public class CheckOrder extends Controller {
 				so.set("create_by", user_id);  //操作人
 				so.set("create_stamp", new Date());  //操作时间
 				so.set("note", "导入数据");  //备注
+				so.set("office_id", office_id); 
 				
 				
 				if(StringUtils.isNotEmpty(location)){
@@ -977,11 +979,14 @@ public class CheckOrder extends Controller {
 		String freight = line.get("运费").trim(); 
 		String cargo_name = line.get("中文名称").trim();
 		
+		UserLogin user = LoginUserController.getLoginUser(this);
+        Long office_id = user.getLong("office_id");
     	LogisticsOrder logisticsOrder = null;
     	if(StringUtils.isNotEmpty(sales_order_id)){
     		String order_no = OrderNoGenerator.getNextOrderNo("YD");
     		logisticsOrder = new LogisticsOrder();
         	logisticsOrder.set("log_no", order_no);
+        	logisticsOrder.set("office_id", office_id);
         	logisticsOrder.set("status","暂存");
     		logisticsOrder.set("create_by", user_id);
     		logisticsOrder.set("create_stamp", new Date());

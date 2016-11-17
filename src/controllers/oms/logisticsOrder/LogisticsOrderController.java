@@ -313,13 +313,14 @@ public class LogisticsOrderController extends Controller {
         if (getPara("start") != null && getPara("length") != null) {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
-
+        UserLogin user = LoginUserController.getLoginUser(this);
+        Long office_id = user.getLong("office_id");
         String sql = "select * from(SELECT lor.*,ccy.shop_name custom_name, ifnull(u.c_name, u.user_name) creator_name "
     			+ "  from logistics_order lor "
     			+ "  left join sales_order sor on sor.id = lor.sales_order_id "
     			+ "  left join custom_company ccy on ccy.id = sor.custom_id "
     			+ "  left join user_login u on u.id = lor.create_by"
-    			+ "  ) A where 1 =1 ";
+    			+ "  ) A where 1 =1 and office_id="+office_id;
         
         String condition = "";
         String jsonStr = getPara("jsonStr");

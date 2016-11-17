@@ -47,7 +47,7 @@ public class EedaMenuInterceptor implements Interceptor {
                 + "        and rp.role_id in ("
                 + "             select r.id from role r, user_role ur "
                 + "             where ur.role_code=r.code and ur.user_name=?)"
-                + " ) order by seq";
+                + " )  order by seq";
         List<Record> modules = Db.find(sql, office_id, username);
         for (Record module : modules) {
             sql = "select sub.id, sub.module_name, p.url, rp.permission_code, rp.is_authorize, rp.role_code from eeda_modules sub "
@@ -60,7 +60,7 @@ public class EedaMenuInterceptor implements Interceptor {
                     + "     and rp.role_id in ( "
                     + "       select r.id from role r, user_role ur  "
                     + "     where ur.role_code=r.code and ur.user_name=?) "
-                    + "  order by sub.seq";
+                    + "  group by id order by sub.seq";
 
             List<Record> orders = Db.find(sql, module.get("id"), office_id, username);
             module.set("orders", orders);

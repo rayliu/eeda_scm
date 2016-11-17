@@ -33,7 +33,7 @@ import controllers.util.PermissionConstant;
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
 public class UserRoleController extends Controller {
-	private Logger logger = Logger.getLogger(PrivilegeController.class);
+	private Logger logger = Logger.getLogger(UserRoleController.class);
 	Subject currentUser = SecurityUtils.getSubject();
 	
 	ParentOfficeModel pom = ParentOffice.getInstance().getOfficeId(this);
@@ -108,6 +108,8 @@ public class UserRoleController extends Controller {
 	public void userList(){
 		String sql = "";
 		Long parentID = pom.getBelongOffice();
+		logger.debug("office_id:"+parentID);
+		logger.debug("getParentOfficeId:"+pom.getParentOfficeId());
 		//系统管理员
 		if(parentID == null || "".equals(parentID)){
 			sql = "select u.*, ur.role_code from user_login u left join office o on u.office_id = o.id left join user_role ur on u.user_name = ur.user_name where ur.role_code is null and (o.id = " + pom.getParentOfficeId() +" or o.belong_office= "+ pom.getParentOfficeId() +")";
