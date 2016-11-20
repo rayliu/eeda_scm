@@ -68,6 +68,9 @@ public class ImportOrder extends Controller {
 		String fileName = file.getName();
 		String strFile = file.getPath();
 
+		UserLogin user = LoginUserController.getLoginUser(this);
+        Long userId = user.getLong("id");
+        Long officeId = user.getLong("office_id");
 		Record resultMap = new Record();
 		try {
 			String[] title = null;
@@ -102,7 +105,7 @@ public class ImportOrder extends Controller {
 						
 						// 内容开始导入
 						if(resultMap.get("result")){
-							resultMap = checkOrder.importSOValue(content);
+							resultMap = checkOrder.importSOValue(content, userId, officeId);
 						}
 					}
 				} else {
