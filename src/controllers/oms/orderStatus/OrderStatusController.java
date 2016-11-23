@@ -97,10 +97,10 @@ public class OrderStatusController extends Controller {
         paramsMap.put("jsonMsg", jsonMsg);
         String PostData = "";
         PostData = paramsMap.toString().substring(1);
-        System.out.println("参数"+PostData);
+//        System.out.println("参数"+PostData);
         String returnMsg = EedaHttpKit.post(urlStr, PostData);
         //String returnMsg = InUtil.getResult(urlStr, PostData);
-        System.out.println("结果"+returnMsg);
+//        System.out.println("结果"+returnMsg);
         return returnMsg;
 	}
     
