@@ -37,7 +37,7 @@ public class CustomJob implements Runnable {
 	    		+ " or ifnull(order_ciq_status,'') != '接收成功'"
 	    		+ " or ifnull(bill_cus_status,'') != '审批通过'"
 	    		+ " or ifnull(pay_status,'') != '接收成功')"
-	    		+ " and status != '未上报'");
+	    		+ " and status != '未上报' order by id desc limit 200");
 	    for(Record re : record){
 	    	String order_no = re.getStr("order_no");
 	    	String order_id = re.getLong("id").toString();
