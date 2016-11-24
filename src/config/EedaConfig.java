@@ -182,6 +182,7 @@ public class EedaConfig extends JFinalConfig {
         me.add("/debug", controllers.profile.LogController.class, contentPath);
         me.add("/warehouse",WarehouseController.class,contentPath);
         me.add("/loginUser", controllers.profile.LoginUserController.class, contentPath);
+        me.add("/sys", controllers.eeda.SysInfoController.class, contentPath);
         //register loginUser
         me.add("/register",controllers.profile.RegisterUserController.class,contentPath);
         me.add("/reset",controllers.profile.ResetPassWordController.class,contentPath);
