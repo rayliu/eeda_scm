@@ -76,7 +76,7 @@ import controllers.util.ReaderXlSX;
 public class CheckOrder extends Controller {
 	private Logger logger = Logger.getLogger(CheckOrder.class);
 	Subject currentUser = SecurityUtils.getSubject();
-	Long user_id = null;
+	//Long user_id = null;
 	
 	/**
 	 * 校验表头是否和数据库的相符
@@ -472,7 +472,7 @@ public class CheckOrder extends Controller {
 	
 	
 	@Before(Tx.class)
-	public Record importGOValue( List<Map<String, String>> lines) {
+	public Record importGOValue( List<Map<String, String>> lines, long user_id, long office_id) {
 		Connection conn = null;
 		Record result = new Record();
 		result.set("result",true);
@@ -480,10 +480,7 @@ public class CheckOrder extends Controller {
 		//importResult = validatingOrderNo(lines);校验是否存在隔单
 		//if ("true".equals(importResult.get("result"))) {
 		int rowNumber = 1;
-		String name = (String) currentUser.getPrincipal();
-		List<UserLogin> users = UserLogin.dao
-				.find("select * from user_login where user_name='" + name + "'");
-		long user_id = users.get(0).getLong("id");
+		
 		try {
 			conn = DbKit.getConfig().getDataSource().getConnection();
 			DbKit.getConfig().setThreadLocalConnection(conn);
@@ -809,7 +806,7 @@ public class CheckOrder extends Controller {
 				so.set("consignee_country", 142);//国
 				so.set("pro_remark", "无");//优惠说明
 				so.set("pay_channel", "01");//优惠说明
-				so.set("create_by", user_id);  //操作人
+				so.set("create_by", userId);  //操作人
 				so.set("create_stamp", new Date());  //操作时间
 				so.set("note", "导入数据");  //备注
 				so.set("office_id", officeId); 
@@ -907,7 +904,7 @@ public class CheckOrder extends Controller {
 				
 				//生成一张对应的运输单
 				try{
-					String transf_id = createLogOrder(so.getLong("id").toString(),line, officeId);
+					String transf_id = createLogOrder(so.getLong("id").toString(),line, userId, officeId);
 					if(StringUtils.isEmpty(transf_id)){
 						throw new Exception("生成相应的运输单失败");
 					}
@@ -917,7 +914,7 @@ public class CheckOrder extends Controller {
 				
 				
 				try{
-					String gateOut_id = createGOOrder(so.getLong("id").toString(),line, officeId);
+					String gateOut_id = createGOOrder(so.getLong("id").toString(),line, userId, officeId);
 					if(StringUtils.isEmpty(gateOut_id)){
 						throw new Exception("生成相应的出库单失败");
 					}
@@ -974,7 +971,7 @@ public class CheckOrder extends Controller {
 	
 	//自动生成运输单
     @Before(Tx.class)
-    public String createLogOrder(String sales_order_id,Map<String, String> line, long office_id){
+    public String createLogOrder(String sales_order_id, Map<String, String> line, long user_id, long office_id){
     	String express_no = line.get("快递信息").trim();
     	String netwt = line.get("净重").trim();
 		String weight = line.get("毛重").trim(); 
@@ -1045,7 +1042,7 @@ public class CheckOrder extends Controller {
     
     //自动生成出库单
     @Before(Tx.class)
-    public String createGOOrder(String sales_order_id,Map<String, String> line, long office_id){
+    public String createGOOrder(String sales_order_id,Map<String, String> line, long user_id, long office_id){
     	String order_no = line.get("订单编号").trim();
 		String upc = line.get("商品条码（UPC）").trim();
 		String cargo_name = line.get("中文名称").trim();

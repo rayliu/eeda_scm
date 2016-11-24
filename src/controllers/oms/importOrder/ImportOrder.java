@@ -97,7 +97,7 @@ public class ImportOrder extends Controller {
 						
 						// 内容开始导入
 						if(resultMap.get("result")){
-							resultMap = checkOrder.importGOValue(content);
+							resultMap = checkOrder.importGOValue(content, userId, officeId);
 						}
 					}else if("salesOrder".equals(Order_type)){
 						// 内容校验
