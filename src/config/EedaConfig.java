@@ -245,7 +245,7 @@ public class EedaConfig extends JFinalConfig {
 
     private void setDbMapping(Plugins me) {
         arp = new ActiveRecordPlugin(cp);
-        arp.setShowSql(true);// 控制台打印Sql
+        arp.setShowSql(false);// 控制台打印Sql
         SqlReporter.setLogger(true);// log4j 打印Sql
         me.add(arp);
 

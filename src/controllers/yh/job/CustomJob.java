@@ -5,13 +5,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import models.eeda.OrderActionLog;
-import models.eeda.oms.InspectionOrderItem;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
+
+import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
@@ -21,17 +21,22 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
 import controllers.oms.orderStatus.OrderStatusController;
-import controllers.profile.LoginUserController;
-import controllers.util.DbUtils;
 
 public class CustomJob implements Runnable {
 	private Logger logger = Logger.getLogger(CustomJob.class);
 
+	public static boolean isRunning=false;
+	
 	@Override
 	@Before(Tx.class)
 	public void run() {
 	    logger.debug("更新单据状态开始.....");
 	    
+	    if(isRunning){
+	        logger.debug("last job still running, skip job.");
+	        return;
+	    }
+	    isRunning = true;
 	    List<Record> record = Db.find("select * from sales_order where "
 	    		+ " (ifnull(order_cus_status,'') != '接收成功' "
 	    		+ " or ifnull(order_ciq_status,'') != '接收成功'"
@@ -46,7 +51,7 @@ public class CustomJob implements Runnable {
                 e.printStackTrace();
             } 
 	    }
-	    
+	    isRunning= false;
 	    logger.debug("更新单据状态结束");
 	}
 
