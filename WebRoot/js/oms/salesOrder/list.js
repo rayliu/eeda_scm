@@ -108,4 +108,13 @@ $(document).ready(function() {
         dataTable.ajax.url(url).load();
     };
     
+    $('#downloadBtn').click(function(e){
+        var itemJson = buildCondition();
+        var url = "/salesOrder/downloadList?jsonStr="+JSON.stringify(itemJson);
+        $.post(url, function(data){
+            if(data)
+                window.open(data);
+        });
+    });
+    
 });

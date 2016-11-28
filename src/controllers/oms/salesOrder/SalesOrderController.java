@@ -40,6 +40,7 @@ import controllers.util.DbUtils;
 import controllers.util.EedaHttpKit;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
+import controllers.util.PoiUtils;
 import controllers.yh.job.CustomJob;
 
 @RequiresAuthentication
@@ -235,6 +236,24 @@ public class SalesOrderController extends Controller {
         render("/oms/salesOrder/salesOrderEdit.html");
     }
     
+    public void downloadList(){
+        String sql = buildSql();
+        
+        String coulmns = "select sor.*, ifnull(u.c_name, u.user_name) creator_name ,"
+                + " (select logistics_ciq_status from logistics_order where sales_order_id = sor.id ) logistics_ciq_status,"
+                + " (select logistics_cus_status from logistics_order where sales_order_id = sor.id ) logistics_cus_status,"
+                + " (select status from logistics_order where sales_order_id = sor.id ) log_status,"
+                + "  c.shop_name "; 
+        String exportSql = coulmns+sql+" order by sor.create_stamp desc ";
+        //List<String> headers = new ArrayList<String>();
+        String[] headers = new String[]{"订单号", "报关企业", "订单收货人", "订单商品货款", 
+                    "销售订单状态","支付状态","运单状态","清单状态","创建人", "创建时间"};
+        String[] fields = new String[]{"order_no", "SHOP_NAME", "CONSIGNEE", "GOODS_VALUE",
+                "STATUS", "PAY_STATUS", "LOG_STATUS", "BILL_CUS_STATUS", "CREATOR_NAME", "CREATE_STAMP"};
+        String fileName = PoiUtils.generateExcel(headers, fields, exportSql);
+        renderText(fileName);
+    }
+    
     public void list() {
     	String sLimit = "";
     	String pageIndex = getPara("draw");
@@ -242,6 +261,30 @@ public class SalesOrderController extends Controller {
             sLimit = " LIMIT " + getPara("start") + ", " + getPara("length");
         }
         
+        String sql = buildSql();
+    	
+    	String coulmns = "select sor.*, ifnull(u.c_name, u.user_name) creator_name ,"
+        		+ " (select logistics_ciq_status from logistics_order where sales_order_id = sor.id ) logistics_ciq_status,"
+        		+ " (select logistics_cus_status from logistics_order where sales_order_id = sor.id ) logistics_cus_status,"
+        		+ " (select status from logistics_order where sales_order_id = sor.id ) log_status,"
+    			+ "  c.shop_name ";
+        
+        String sqlTotal = "select count(1) total "+sql ;
+        Record rec = Db.findFirst(sqlTotal);
+        logger.debug("total records:" + rec.getLong("total"));
+        
+        List<Record> BillingOrders = Db.find(coulmns + sql+" order by sor.create_stamp desc " +sLimit);
+        Map BillingOrderListMap = new HashMap();
+        BillingOrderListMap.put("sEcho", pageIndex);
+        BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
+        BillingOrderListMap.put("iTotalDisplayRecords", rec.getLong("total"));
+
+        BillingOrderListMap.put("aaData", BillingOrders);
+
+        renderJson(BillingOrderListMap); 
+    }
+
+    private String buildSql() {
         UserLogin user = LoginUserController.getLoginUser(this);
         Long office_id = user.getLong("office_id");
         String condition = " where 1 = 1 and sor.office_id="+office_id;
@@ -318,31 +361,11 @@ public class SalesOrderController extends Controller {
             }
             condition += " and sor.create_stamp between '"+create_stamp_begin_time+"' and '"+create_stamp_end_time+"'";
     	}
-    	
-    	String coulmns = "select sor.*, ifnull(u.c_name, u.user_name) creator_name ,"
-        		+ " (select logistics_ciq_status from logistics_order where sales_order_id = sor.id ) logistics_ciq_status,"
-        		+ " (select logistics_cus_status from logistics_order where sales_order_id = sor.id ) logistics_cus_status,"
-        		+ " (select status from logistics_order where sales_order_id = sor.id ) log_status,"
-    			+ "  c.shop_name ";
-    	
-        String sql = " from sales_order sor  "
-    			+ "  left join custom_company c on c.id = sor.custom_id"
-    			+ "  left join user_login u on u.id = sor.create_by"
-    			+ condition;
-        
-        String sqlTotal = "select count(1) total "+sql ;
-        Record rec = Db.findFirst(sqlTotal);
-        logger.debug("total records:" + rec.getLong("total"));
-        
-        List<Record> BillingOrders = Db.find(coulmns + sql+" order by sor.create_stamp desc " +sLimit);
-        Map BillingOrderListMap = new HashMap();
-        BillingOrderListMap.put("sEcho", pageIndex);
-        BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
-        BillingOrderListMap.put("iTotalDisplayRecords", rec.getLong("total"));
-
-        BillingOrderListMap.put("aaData", BillingOrders);
-
-        renderJson(BillingOrderListMap); 
+    	String sql = " from sales_order sor  "
+                + "  left join custom_company c on c.id = sor.custom_id"
+                + "  left join user_login u on u.id = sor.create_by"
+                + condition;
+        return sql;
     }
     
     public void getCustomCompany() {

@@ -7,11 +7,14 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
@@ -19,6 +22,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
+
+import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 
 public class PoiUtils {
 	static SimpleDateFormat sFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -34,7 +40,7 @@ public class PoiUtils {
 		/**
 		 * 写文件
 		 */
-		//testWrite("D:/a.xls","D:/b.xls");
+		//testWrite("/Users/a13570610691/workspace/test.xls","D:/b.xls");
 	}
 	
 	/**
@@ -128,38 +134,47 @@ public class PoiUtils {
 	 * 写内容到excel中
 	 * @throws IOException 
 	 */
-	public static void testWrite(String srcFilePath,String tarFilePath){
-		FileOutputStream out = null;
-		try {
-			Workbook book = getExcelWorkbook(srcFilePath);
-			Sheet sheet = getSheetByNum(book,1);
-			
-			Map<String,String> map = new HashMap<String, String>();
-			List<Map<String,String>> list = new LinkedList<Map<String,String>>();
-			/*map.put("A", "4,INT");
-			map.put("B", "小红,GENERAL");
-			map.put("C", "18,INT");
-			map.put("D", "1990-03-10,DATE");
-			map.put("E", "0.056,PERCENT");
-			map.put("F", "4800,DOUBLE");*/
-			list.add(map);
-			
-			int startRow = 6;
-			boolean result = writeToExcel(list, sheet,startRow);
-			if(result){
-				out = new FileOutputStream(tarFilePath);
-				book.write(out);
-				System.out.println("文件写入完成！");
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				out.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
+	public static String generateExcel(String[] headers, String[] fields, String sql){
+	    String fileName="";
+	    try {
+	        String filePath = "WebRoot/download/list";
+	        File file = new File(filePath);
+	        if(!file.exists()){
+	         file.mkdir();
+	        }
+	        Date date = new Date();
+	        SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+	        String outFileName = "searchResult-" + format.format(date) + ".xls";
+            //String filename = srcFilePath;//"C:/NewExcelFile.xls" ;
+            HSSFWorkbook workbook = new HSSFWorkbook();
+            HSSFSheet sheet = workbook.createSheet("FirstSheet");  
+
+            HSSFRow rowhead = sheet.createRow((short)0);
+            for (int i = 0; i < headers.length; i++) {
+                rowhead.createCell((short)i).setCellValue(headers[i]);
+            }
+
+            List<Record> recs = Db.find(sql);
+            if(recs!=null){
+                for (int j = 1; j <= recs.size(); j++) {
+                    HSSFRow row = sheet.createRow((short)j);
+                    Record rec = recs.get(j-1);
+                    for (int k = 0; k < fields.length;k++){
+                        row.createCell((short)k).setCellValue(rec.get(fields[k]).toString());
+                    }
+                }
+            }
+
+            fileName = filePath+"/"+outFileName;
+            FileOutputStream fileOut = new FileOutputStream(fileName);
+            workbook.write(fileOut);
+            fileOut.close();
+            System.out.println("Your excel file has been generated!");
+            fileName = "/download/list/"+outFileName;
+        } catch ( Exception ex ) {
+            ex.printStackTrace();
+        }
+	    return fileName;
 	}
 	
 	/**
