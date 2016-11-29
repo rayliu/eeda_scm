@@ -22,6 +22,7 @@ import models.UserLogin;
 import models.UserOffice;
 import models.UserRole;
 import models.eeda.OrderActionLog;
+import models.eeda.oms.CustomInventory;
 import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateInOrderItem;
 import models.eeda.oms.GateOutOrder;
@@ -40,6 +41,8 @@ import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.WaveOrder;
 import models.eeda.oms.WaveOrderItem;
+import models.eeda.oms.CustomGateInOrder;
+import models.eeda.oms.CustomGateInItem;
 import models.eeda.profile.Country;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.LogisticsCustomCompany;
@@ -82,6 +85,8 @@ import controllers.eeda.ModuleController;
 import controllers.eeda.report.ReportController;
 import controllers.oms.allinpay.AllinpayController;
 import controllers.oms.check.CheckController;
+import controllers.oms.customGateInOrder.CustomGateInOrderController;
+import controllers.oms.customGateInOrder.CustomInventoryController;
 import controllers.oms.gateInOrder.GateInOrderController;
 import controllers.oms.gateOutOrder.GateOutOrderController;
 import controllers.oms.importOrder.ImportOrder;
@@ -221,6 +226,10 @@ public class EedaConfig extends JFinalConfig {
         me.add("/inventoryOrder", InventoryOrderController.class, contentPath);
         me.add("/moveOrder", MoveOrderController.class, contentPath);
 		me.add("/m", MobileController.class, contentPath);
+		
+		//报关库存管理
+		 me.add("/customGateInOrder", CustomGateInOrderController.class, contentPath);
+		 me.add("/customInventory", CustomInventoryController.class, contentPath);
 	}
 
     @Override
@@ -307,6 +316,11 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("inventory_order_item", InventoryOrderItem.class);
         arp.addMapping("move_order", MoveOrder.class);
         arp.addMapping("move_order_item", MoveOrderItem.class);
+        
+        //报关库存管理
+        arp.addMapping("custom_gate_in_order", CustomGateInOrder.class);
+        arp.addMapping("custom_gate_in_item", CustomGateInItem.class);
+        arp.addMapping("custom_inventory", CustomInventory.class);
     }
 
     private void initDBconnector() {

@@ -1,0 +1,1 @@
+package models.eeda.oms;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class CustomGateInOrder extends Model<CustomGateInOrder> {	public static final CustomGateInOrder dao = new CustomGateInOrder();}

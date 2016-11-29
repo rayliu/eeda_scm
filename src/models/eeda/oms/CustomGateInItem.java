@@ -1,0 +1,1 @@
+package models.eeda.oms;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class CustomGateInItem extends Model<CustomGateInItem> {	public static final CustomGateInItem dao = new CustomGateInItem();}

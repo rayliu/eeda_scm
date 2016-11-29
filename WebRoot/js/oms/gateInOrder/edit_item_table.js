@@ -83,7 +83,8 @@ $(document).ready(function() {
         },
         "createdRow": function ( row, data, index ) {
             $(row).attr('id', data.ID);
-        },"drawCallback": function( settings ) {
+        },
+        "drawCallback": function( settings ) {
 	        bindFieldEvent();
 	    },
         "columns": [
