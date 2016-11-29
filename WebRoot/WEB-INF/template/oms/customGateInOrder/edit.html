@@ -16,13 +16,13 @@
 		<form id="orderForm">
 			<div class="row">
 				<div class="col-lg-4">
-					<%include("/yh/component/form/inputField.html", { id:'order_no',
+					<%include("/yh/component/form/inputfield.html", { id:'order_no',
 					label:'单号', value:order.order_no!'',disabled: 'disabled'
 					}){}%></div>
 				<div class="col-lg-4">
 					<%include("/yh/component/form/inputCustomerField.html", {
-					id:'customer_id', label:'客户', 
-					value:order.warehouse_id!'', display_value: warehouse.warehouse_name!'' }){}
+					id:'customer_id', label:'客户', required:'required',
+					value:order.warehouse_id!'', display_value: party.abbr!'' }){}
 					%></div>
 			</div>
 			
@@ -73,8 +73,8 @@
 						</a>
 						<%include("/yh/component/form/detailTable.html", {
 						id:'cargo_table', 
-						headers:['','商品名称','入库数量','调整数量','备注','item_name'],
-						field_list:['id','product_id', 'amount','change_amount','remark','item_name'], 
+						headers:['','商品名称','现有库存','入库数量','调整数量（加/减数量）','备注','item_name','status'],
+						field_list:['id','product_id','inventory', 'amount','change_amount','remark','item_name','status'], 
 						value_list: itemList![] }){} %>
 					</div>
 				</div>

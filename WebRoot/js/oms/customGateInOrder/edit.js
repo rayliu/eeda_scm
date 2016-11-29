@@ -77,6 +77,9 @@ $(document).ready(function() {
     			$('#status').val(data.STATUS);
     			//$('#saveBtn').attr('disabled', true);
     			$.scojs_message('确认成功', $.scojs_message.TYPE_OK);
+    			
+    			//异步刷新字表
+                itemOrder.refleshTable(data.ID);
     		}else{
     			$.scojs_message('确认失败', $.scojs_message.TYPE_ERROR);
     			self.attr('disabled',false);

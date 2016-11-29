@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.Party;
 import models.UserLogin;
 import models.eeda.oms.CustomGateInItem;
 import models.eeda.oms.CustomGateInOrder;
@@ -140,29 +141,29 @@ public class CustomGateInOrderController extends Controller {
    		}
    		
    		List<Map<String, String>> itemList = (ArrayList<Map<String, String>>)dto.get("item_list");
-		//DbUtils.handleList(itemList, id , CustomGateInItem.class, "order_id");
+		DbUtils.handleList(itemList, id , CustomGateInItem.class, "order_id");
 		
-		for(Map item:itemList){
-			String itemId = (String)item.get("id");
-			CustomGateInItem ggi = null;
-			if("".equals(itemId)){
-				ggi = new CustomGateInItem();
-				ggi.set("product_id", (String)item.get("product_id"));
-				ggi.set("amount", (String)item.get("amount"));
-				ggi.set("change_amount", (String)item.get("change_amount"));
-				ggi.set("remark", (String)item.get("remark"));
-				ggi.set("order_id", id);
-				ggi.save();
-			}else{
-				ggi = CustomGateInItem.dao.findById(itemId);
-				ggi.set("product_id", (String)item.get("product_id"));
-				ggi.set("amount", (String)item.get("amount"));
-				ggi.set("change_amount", (String)item.get("change_amount"));
-				ggi.set("remark", (String)item.get("remark"));
-				ggi.set("order_id", id);
-				ggi.update();
-			}
-		}
+//		for(Map item:itemList){
+//			String itemId = (String)item.get("id");
+//			CustomGateInItem ggi = null;
+//			if("".equals(itemId)){
+//				ggi = new CustomGateInItem();
+//				ggi.set("product_id", (String)item.get("product_id"));
+//				ggi.set("amount", (String)item.get("amount"));
+//				ggi.set("change_amount", (String)item.get("change_amount"));
+//				ggi.set("remark", (String)item.get("remark"));
+//				ggi.set("order_id", id);
+//				ggi.save();
+//			}else{
+//				ggi = CustomGateInItem.dao.findById(itemId);
+//				ggi.set("product_id", (String)item.get("product_id"));
+//				ggi.set("amount", (String)item.get("amount"));
+//				ggi.set("change_amount", (String)item.get("change_amount"));
+//				ggi.set("remark", (String)item.get("remark"));
+//				ggi.set("order_id", id);
+//				ggi.update();
+//			}
+//		}
 		
 		long create_by = order.getLong("create_by");
    		String user_name = LoginUserController.getUserNameById(create_by);
@@ -206,15 +207,11 @@ public class CustomGateInOrderController extends Controller {
     			inv.set("nopush_amount", amount);
     			inv.set("remark", remark);
     			inv.save();
-    			
     		}else{  //更新库存
-    			
-    			if((change_amount - amount) != 0){
-    				inv.set("amount", inv.getDouble("amount") + total);
-    				inv.set("nopush_amount", inv.getDouble("nopush_amount") + total);
-        			inv.set("remark", remark);
-        			inv.update();
-    			}
+    			inv.set("amount", inv.getDouble("amount") + total);
+				inv.set("nopush_amount", inv.getDouble("nopush_amount") + total);
+    			inv.set("remark", remark);
+    			inv.update();
     		}
     		
     		//更新入库明细状态
@@ -227,8 +224,11 @@ public class CustomGateInOrderController extends Controller {
     
     
     private List<Record> getItems(String orderId) {
-		String itemSql = "select cgi.*,p.item_name from  custom_gate_in_item cgi"
-				+ "	left join product p on p.id = cgi.product_id where cgi.order_id=? ";
+		String itemSql = "select cgi.*,p.item_name,ci.nopush_amount inventory "
+				+ " from  custom_gate_in_item cgi"
+				+ "	left join product p on p.id = cgi.product_id "
+				+ " left join custom_inventory ci on ci.product_id = cgi.product_id"
+				+ " where cgi.order_id=? ";
 		List<Record> itemList = Db.find(itemSql, orderId);
 		return itemList;
 	}
@@ -239,6 +239,9 @@ public class CustomGateInOrderController extends Controller {
     	String id = getPara("id");
     	CustomGateInOrder order = CustomGateInOrder.dao.findById(id);
     	setAttr("order", order);
+    	
+    	Party p = Party.dao.findById(order.getLong("customer_id"));
+    	setAttr("party", p);
     	
     	//获取明细表信息
     	setAttr("itemList", getItems(id));

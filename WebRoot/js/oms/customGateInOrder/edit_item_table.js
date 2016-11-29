@@ -91,33 +91,55 @@ $(document).ready(function() {
                 	return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
                 }
             },
-            { "data": "PRODUCT_ID","width": "200px",
+            { "data": "PRODUCT_ID",
                 "render": function ( data, type, full, meta ) {
                 		if(!data)
                             data='';
+                		
+                		var show = ''
+                        if(full.STATUS=='已入库'){
+                        	show = 'disabled'
+                        }
                         var field_html = template('table_dropdown_template',
                             {
                                 id: 'product_id',
                                 value: data,
                                 display_value: full.ITEM_NAME,
-                                style:'width:200px'
+                                disabled:show
                             }
                         );
                         return field_html;
                 }
             }, 
-            { "data": "AMOUNT", "width": "300px",
+            { "data": "INVENTORY", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                    return '<input type="text" name="amount" value="'+data+'" class="form-control" />';
+                    return '<input type="text" disabled value="'+data+'" class="form-control" />';
+                }
+            },
+            { "data": "AMOUNT", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    
+                    var show = ''
+                    if(full.STATUS=='已入库'){
+                    	show = 'disabled'
+                    }
+                    
+                    return '<input type="text" name="amount" '+show+' value="'+data+'" class="form-control" />';
                 }
             },
             { "data": "CHANGE_AMOUNT" ,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='0';
-                    return '<input type="text" name="change_amount" value="'+data+'" class="form-control" />';
+                    var show = 'disabled'
+                    if(full.STATUS=='已入库'){
+                    	show = ''
+                    }
+                    return '<input type="text" name="change_amount" '+show+' value="'+data+'" class="form-control" />';
                 }
             }, 
             { "data": "REMARK",
@@ -128,6 +150,13 @@ $(document).ready(function() {
                 }
             },
             { "data": "ITEM_NAME" ,"visible":false,
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="item_name" value="'+data+'" class="form-control" />';
+                }
+            },
+            { "data": "STATUS" ,"visible":false,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
