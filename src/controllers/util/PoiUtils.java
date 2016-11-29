@@ -137,7 +137,8 @@ public class PoiUtils {
 	public static String generateExcel(String[] headers, String[] fields, String sql){
 	    String fileName="";
 	    try {
-	        String filePath = "WebRoot/download/list";
+	        System.out.println("generateExcel begin...");
+	        String filePath = "/home/default/ROOT/download/list";//"WebRoot/download/list";
 	        File file = new File(filePath);
 	        if(!file.exists()){
 	         file.mkdir();
@@ -166,11 +167,12 @@ public class PoiUtils {
             }
 
             fileName = filePath+"/"+outFileName;
+            System.out.println("fileName: "+fileName);
             FileOutputStream fileOut = new FileOutputStream(fileName);
             workbook.write(fileOut);
             fileOut.close();
             System.out.println("Your excel file has been generated!");
-            fileName = "/download/list/"+outFileName;
+            fileName = "download/list/"+outFileName;
         } catch ( Exception ex ) {
             ex.printStackTrace();
         }
