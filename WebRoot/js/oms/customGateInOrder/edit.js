@@ -54,6 +54,7 @@ $(document).ready(function() {
                 $('#'+confirmBtn).attr('disabled', false);
                 $('#cancelBtn').attr('disabled', false);
                 
+                itemOrder.flag = 'save';
                 //异步刷新字表
                 itemOrder.refleshTable(order.ID);
             }else{
@@ -78,6 +79,7 @@ $(document).ready(function() {
     			//$('#saveBtn').attr('disabled', true);
     			$.scojs_message('确认成功', $.scojs_message.TYPE_OK);
     			
+    			itemOrder.flag = 'confirm';
     			//异步刷新字表
                 itemOrder.refleshTable(data.ID);
     		}else{

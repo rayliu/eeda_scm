@@ -4,6 +4,7 @@ $(document).ready(function() {
     var deletedTableIds=[];
     var table_name = 'cargo_table';
     var addBtn_id = 'add_cargo';
+    itemOrder.flag = 'save';
 
     //删除一行
     $("#"+table_name).on('click', '.delete', function(e){
@@ -88,7 +89,11 @@ $(document).ready(function() {
         "columns": [
             { "width": "30px",
                 "render": function ( data, type, full, meta ) {
-                	return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
+                	var show = ''
+                    if(full.STATUS=='已入库'){
+                    	show = 'disabled'
+                    }
+                	return '<button type="button" '+show+' class="delete btn btn-default btn-xs">删除</button> ';
                 }
             },
             { "data": "PRODUCT_ID",
@@ -135,11 +140,15 @@ $(document).ready(function() {
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='0';
-                    var show = 'disabled'
+                    var show = 'disabled';
                     if(full.STATUS=='已入库'){
-                    	show = ''
+                    	show = '';
                     }
-                    return '<input type="text" name="change_amount" '+show+' value="'+data+'" class="form-control" />';
+                    if(itemOrder.flag == 'confirm'){
+                    	return '<input type="text" name="change_amount" '+show+' value="'+0+'" class="form-control" />';
+                    }else{
+                    	return '<input type="text" name="change_amount" '+show+' value="'+data+'" class="form-control" />';
+                    }
                 }
             }, 
             { "data": "REMARK",

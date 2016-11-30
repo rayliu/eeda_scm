@@ -188,7 +188,7 @@ public class CustomGateInOrderController extends Controller {
     		String remark = re.getStr("remark");
     		CustomInventory inv = CustomInventory.dao.findFirst("select * from custom_inventory where product_id = ?",prod_id);
     		Double total = 0.0;
-			if("暂存".equals(re.getStr("stauts"))){
+			if("暂存".equals(re.getStr("status"))){
 				total = change_amount + amount;
 			}else{
 				total = change_amount;
@@ -208,10 +208,12 @@ public class CustomGateInOrderController extends Controller {
     			inv.set("remark", remark);
     			inv.save();
     		}else{  //更新库存
-    			inv.set("amount", inv.getDouble("amount") + total);
-				inv.set("nopush_amount", inv.getDouble("nopush_amount") + total);
-    			inv.set("remark", remark);
-    			inv.update();
+    			if(total != 0){
+    				inv.set("amount", inv.getDouble("amount") + total);
+    				inv.set("nopush_amount", inv.getDouble("nopush_amount") + total);
+        			inv.set("remark", remark);
+        			inv.update();
+    			}
     		}
     		
     		//更新入库明细状态
