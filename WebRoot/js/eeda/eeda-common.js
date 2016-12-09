@@ -322,7 +322,7 @@ $(document).ready(function() {
        					  tableFieldList.append("<li tabindex='"+i+"'><a class='fromLocationItem' dataId='"+data[i].ID
        							  +"' item_name='"+data[i].ITEM_NAME+"' serial_no='"+data[i].SERIAL_NO+"' item_no='"+data[i].ITEM_NO+"'>"+data[i].ITEM_NAME+"\t"+data[i].SERIAL_NO+"</a></li>");
        				  if(data.length==0){
-       					tableFieldList.append("<li tabindex='"+i+"' style='text-align:center'>若无您要找产品，请自行添加维护</li>");
+       					tableFieldList.append("<li tabindex='"+i+"' style='text-align:center'>无您要找的产品，请自行添加维护</li>");
        				  }
        					  
        				  tableFieldList.css({ 

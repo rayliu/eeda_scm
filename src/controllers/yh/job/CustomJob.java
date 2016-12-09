@@ -76,7 +76,7 @@ public class CustomJob implements Runnable {
         //System.out.println(message);
         
         //保存查询log
-        operationLog("customStatus",jsonMsg,order_id,"get",null);
+        //operationLog("customStatus",jsonMsg,order_id,"get",null);
         
         
         if(!"订单不存在！".equals(message)){
