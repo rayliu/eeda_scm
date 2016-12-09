@@ -15,6 +15,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.apache.poi.ss.formula.FormulaParseException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
@@ -87,33 +88,24 @@ public class ReaderXlSX {
         */
         int colNum = row.getPhysicalNumberOfCells();
         // 正文内容应该从第二行开始,第一行为表头的标题
-        for (int i = 1; i <= rowNum; i++) {
+        for (int i = 1; i < rowNum; i++) {
+        	System.out.println("----------------------解析到"+(i+1)+"行");
         	Map<String, String> rowData = new HashMap<String, String>();
             row = sheet.getRow(i);
             int j = 0;
             while (j < colNum) {
         		//rowData.put(xlsxTitle[j], row.getCell((short) j).getStringCellValue().trim());
-            	
+            	System.out.println("第【"+xlsxTitle[j]+"】列");
             	XSSFCell value = row.getCell((short) j);
             	String inputValue = null;// 单元格值  
             	if(value != null){
                 	if(StringUtils.isNotEmpty(value.toString())){
-                		if(value.toString().indexOf(".") != -1 && value.toString().indexOf("E") == -1){
-                        	if(row.getCell((short) j).getCellType() == Cell.CELL_TYPE_NUMERIC) {  
-                        		inputValue = (row.getCell((short) j)).toString();   
-                        	}else{
-                        		inputValue = getCellFormatValue(row.getCell((short) j),xlsxTitle[j]).trim();
-                        	}
-                    	}else{
-                    		inputValue = getCellFormatValue(row.getCell((short) j),xlsxTitle[j]).trim();
-                    	}
+                		inputValue = getCellFormatValue(value,xlsxTitle[j]).trim();
                 	}
             	}
+        		rowData.put(xlsxTitle[j], inputValue);
             	
-        		rowData.put(xlsxTitle[j], inputValue==null?"":inputValue);
             	
-            	
-        		//rowData.put(xlsxTitle[j], getCellFormatValue(row.getCell((short) j),xlsxTitle[j]).trim());
             	j++;
             	
             }
@@ -135,6 +127,18 @@ public class ReaderXlSX {
         
         return xlsxContent;
     }
+    
+    
+    
+    public String subZeroAndDot(String s){    
+        if(s.indexOf(".") > 0){    
+            s = s.replaceAll("0+?$", "");//去掉多余的0    
+            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉    
+        }    
+        return s;    
+    }   
+    
+
 	/**
      * 根据XSSFCell类型设置数据
      * @param cell
@@ -161,8 +165,11 @@ public class ReaderXlSX {
                     cellvalue = sdf.format(date);
                 } else {// 如果是纯数字
                     // 取得当前Cell的数值,返回：3.000008976E8
-                    //cellvalue = String.valueOf(cell.getNumericCellValue());
-                	cellvalue = String.format("%.0f", cell.getNumericCellValue());
+                	if(!"NaN".equals(String.format("%f",cell.getNumericCellValue()))){
+                		cellvalue = subZeroAndDot(String.format("%f",cell.getNumericCellValue()));
+                	} else{
+                		cellvalue = String.format(cell.getStringCellValue());
+                	}
                 }
                 break;
             }

@@ -116,7 +116,7 @@ public class ImportOrder extends Controller {
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultMap.set("result", false);
-			resultMap.set("cause","导入失败，请选择正确的excel文件<br/>（建议使用Microsoft Office Excel软件操作数据）");
+			resultMap.set("cause","导入失败，请检测excel内容是否填写规范（尽量避免函数求值列内容）<br/>（建议使用Microsoft Office Excel软件操作数据）");
 		}
 		logger.debug("result:" + resultMap.get("result") + ",cause:"
 				+ resultMap.get("cause"));

@@ -49,7 +49,7 @@ public class ReaderXLS{
         // 标题总列数
         int colNum = row.getPhysicalNumberOfCells();
         System.out.println("colNum:" + colNum);
-        //String[] title = new String[colNum];
+        String[] title = new String[colNum];
         xlsTitle = new String[colNum];
         for (int i = 0; i < colNum; i++) {
             //title[i] = getStringCellValue(row.getCell((short) i));
@@ -82,11 +82,13 @@ public class ReaderXLS{
         */
         int colNum = row.getPhysicalNumberOfCells();
         // 正文内容应该从第二行开始,第一行为表头的标题
-        for (int i = 1; i <= rowNum; i++) {
+        for (int i = 1; i < rowNum; i++) {
+        	System.out.println("-----------------------解析到"+(i+1)+"行");
         	Map<String, String> rowData = new HashMap<String, String>();
             row = sheet.getRow(i);
             int j = 0;
             while (j < colNum) {
+            	System.out.println("第【"+xlsTitle[j]+"】列");
                 // 每个单元格的数据内容用"-"分割开，以后需要时用String类的replace()方法还原数据
                 // 也可以将每个单元格的数据设置到一个javabean的属性中，此时需要新建一个javabean
                 // str += getStringCellValue(row.getCell((short) j)).trim() +
@@ -97,19 +99,11 @@ public class ReaderXLS{
             	String inputValue = null;// 单元格值  
             	if(value != null){
                 	if(StringUtils.isNotEmpty(value.toString())){
-                		if(value.toString().indexOf(".") != -1 && value.toString().indexOf("E") == -1){
-                        	if(row.getCell((short) j).getCellType() == Cell.CELL_TYPE_NUMERIC) {  
-                        		inputValue = (row.getCell((short) j)).toString();   
-                        	}else{
-                        		inputValue = getCellFormatValue(row.getCell((short) j)).trim();
-                        	}
-                    	}else{
-                    		inputValue = getCellFormatValue(row.getCell((short) j)).trim();
-                    	}
+                    	inputValue = getCellFormatValue(value).trim();
                 	}
             	}
             	
-        		rowData.put(xlsTitle[j], inputValue==null?"":inputValue);
+        		rowData.put(xlsTitle[j], inputValue);
             	j++;
             	
             }
@@ -194,6 +188,14 @@ public class ReaderXLS{
         }
         return result;
     }
+	
+	public String subZeroAndDot(String s){    
+        if(s.indexOf(".") > 0){    
+            s = s.replaceAll("0+?$", "");//去掉多余的0    
+            s = s.replaceAll("[.]$", "");//如最后一位是.则去掉    
+        }    
+        return s;    
+    }   
 
     /**
      * 根据HSSFCell类型设置数据
@@ -217,16 +219,14 @@ public class ReaderXLS{
                     Date date = cell.getDateCellValue();
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
                     cellvalue = sdf.format(date);
-                }   
-                // 如果是纯数字
+                }  // 如果是纯数字
                 else {
                     // 取得当前Cell的数值,返回：3.000008976E8
                     //cellvalue = String.valueOf(cell.getNumericCellValue());
-                	if(!"NaN".equals(String.format("%.0f", cell.getNumericCellValue()))){
-                		cellvalue = String.format("%.0f", cell.getNumericCellValue());
-                	}
-                	else{
-                	cellvalue = String.format( cell.getStringCellValue());
+                	if(!"NaN".equals(String.format("%f",cell.getNumericCellValue()))){
+                		cellvalue = subZeroAndDot(String.format("%f",cell.getNumericCellValue()));
+                	} else{
+                		cellvalue = String.format( cell.getStringCellValue());
                 	}
                 }
                 break;

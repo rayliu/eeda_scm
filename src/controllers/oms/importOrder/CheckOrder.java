@@ -344,7 +344,6 @@ public class CheckOrder extends Controller {
 			}	
 		}
 		
-		System.out.println(provinceCode+"#"+cityCode+"#"+qvCode);
 	    return provinceCode+"#"+cityCode+"#"+qvCode;
 	}
 	
@@ -597,6 +596,7 @@ public class CheckOrder extends Controller {
 	public Record importSOCheck( List<Map<String, String>> lines) {
 		Record result = new Record();
 		result.set("result",true);
+		String errorMsg = "";
 		//importResult = validatingOrderNo(lines);校验是否存在隔单
 		//if ("true".equals(importResult.get("result"))) {
 			int rowNumber = 1;
@@ -609,13 +609,13 @@ public class CheckOrder extends Controller {
 					String consignee = line.get("收货人姓名").trim();
 					String consignee_telephone = line.get("收货人电话").trim();
 					String consignee_address = line.get("收货人详细地址").trim();
-					String location = line.get("收货人地区编码").trim();
+					//String location = line.get("收货人地区编码").trim();
 					String ref_order_no = line.get("订单编号").trim();
 					String consignee_id = line.get("身份证号码").trim();
 					String express_no = line.get("快递信息").trim();
 					String netwt = line.get("净重").trim();
 					String weight = line.get("毛重").trim(); 
-					String freight = line.get("运费").trim(); 
+					//String freight = line.get("运费").trim(); 
 					String goods_value = line.get("含税总价").trim(); 
 					String price = line.get("单价").trim(); 
 					String unit = line.get("单位").trim(); 
@@ -624,131 +624,143 @@ public class CheckOrder extends Controller {
 					
 					if(StringUtils.isNotEmpty(ref_order_no)){
 						if(!checkRefOrderNo(ref_order_no)){
-							throw new Exception("此【订单编号】("+ref_order_no+")已存在，请核实是否有重复导入");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:此【订单编号】("+ref_order_no+")已存在，请核实是否有重复导入<br/><br/>");
 						}
 					}else{
-						throw new Exception("【订单编号】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【订单编号】不能为空<br/><br/>");
 					}
 					
 					if(StringUtils.isNotEmpty(amount)){
 						if(!checkDouble(amount)){
-							throw new Exception("【商品数量】("+amount+")格式类型有误");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【商品数量】("+amount+")格式类型有误<br/><br/>");
 						}
 					}else{
-						throw new Exception("【商品数量】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【商品数量】不能为空<br/><br/>");
 					}
 					
 					if(StringUtils.isNotEmpty(netwt)){
 						if(!checkDouble(netwt)){
-							throw new Exception("【净重】("+netwt+")格式类型有误");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【净重】("+netwt+")格式类型有误<br/><br/>");
 						}
 					}
 					
 					if(StringUtils.isNotEmpty(weight)){
 						if(!checkDouble(weight)){
-							throw new Exception("【毛重】("+weight+")格式类型有误");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【毛重】("+weight+")格式类型有误<br/><br/>");
 						}
 					}
 					
 					if(StringUtils.isNotEmpty(unit)){
 						if(!checkUnit(unit)){
-							throw new Exception("【单位】("+unit+")有误，系统不存在此单位名称，请联系管理员维护");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【单位】("+unit+")有误，系统不存在此单位名称，请联系管理员维护<br/><br/>");
 						}
+					}else{
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【单位】不能为空<br/><br/>");
 					}
 					
 					if(StringUtils.isNotEmpty(tax_rate)){
 						if(!checkDouble(tax_rate)){
-							throw new Exception("【税率】("+tax_rate+")格式类型有误");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【税率】("+tax_rate+")格式类型有误<br/><br/>");
 						}
 					}
 					
 					if(StringUtils.isNotEmpty(goods_value)){
 						if(!checkDouble(goods_value)){
-							throw new Exception("【含税总价】("+goods_value+")格式类型有误");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【含税总价】("+goods_value+")格式类型有误<br/><br/>");
 						}
 					}else if(StringUtils.isEmpty(tax_rate)){
-						throw new Exception("【税率】和【含税总价】不能同时为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【税率】和【含税总价】不能同时为空<br/><br/>");
 					}
 					
 					if(StringUtils.isNotEmpty(price)){
 						if(!checkDouble(price)){
-							throw new Exception("【单价】("+price+")格式类型有误");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【单价】("+price+")格式类型有误<br/><br/>");
 						}
 					}else{
-						throw new Exception("【单价】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【单价】不能为空<br/><br/>");
 					}
 					
-					if(StringUtils.isNotEmpty(freight)){
-						if(!checkDouble(freight)){
-							throw new Exception("【运费】("+freight+")格式类型有误");
-						}
-					}
+//					if(StringUtils.isNotEmpty(freight)){
+//						if(!checkDouble(freight)){
+//							throw new Exception("数据校验至第" + (rowNumber+1) + "行时出现异常:【运费】("+freight+")格式类型有误<br/>");
+//						}
+//					}
 					
 					if(StringUtils.isNotEmpty(amount)){
 						if(!checkDouble(amount)){
-							throw new Exception("【商品数量】("+amount+")格式类型有误");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【商品数量】("+amount+")格式类型有误<br/><br/>");
 						}
 					}else{
-						throw new Exception("【商品数量】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【商品数量】不能为空<br/><br/>");
 					}
 					
 					if(StringUtils.isNotEmpty(upc)){
 						if(!checkUpc(upc)){
-							throw new Exception("【商品条码（UPC）】("+upc+")有误，系统产品信息不存在此upc");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【商品条码（UPC）】("+upc+")有误，系统产品信息不存在此upc<br/><br/>");
 						}
 					}else{
-						throw new Exception("【商品条码(UPC)】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【商品条码(UPC)】不能为空<br/><br/>");
 					}
 					
-					if(StringUtils.isNotEmpty(location)){
-						if(!checkCode(location)){
-							throw new Exception("【收货人地区编码】("+location+")有误，找不到对应编码的城市，请参考标准城市编码");
-						}
+//					if(StringUtils.isNotEmpty(location)){
+//						if(!checkCode(location)){
+//							throw new Exception("数据校验至第" + (rowNumber+1) + "行时出现异常:【收货人地区编码】("+location+")有误，找不到对应编码的城市，请参考标准城市编码<br/>");
+//						}
+//					}else{
+//						String addressCode = changeAddres(consignee_address);
+//						if(!checkCode(addressCode)){
+//							throw new Exception("数据校验至第" + (rowNumber+1) + "行时出现异常:【收货人详细地址】("+consignee_address+")有误<br/>请检测录入的省市区地址是否正确<br/><br/><br/><br/>注意：请按照【xx省 xx市 xx区/县 xxxxx】格式填写地址<br/>省市区中间必须以空格隔开<br/>");
+//						}
+//					}
+					
+					if(StringUtils.isEmpty(consignee_address)){
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【收货人详细地址】不能为空<br/><br/>");
 					}else{
 						String addressCode = changeAddres(consignee_address);
 						if(!checkCode(addressCode)){
-							throw new Exception("<br/>【收货人详细地址】("+consignee_address+")有误<br/>请检测录入的省市区地址是否正确<br/><br/><br/><br/>注意：请按照【xx省 xx市 xx区/县 xxxxx】格式填写地址<br/>省市区中间必须以空格隔开");
+							errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:<br/>【收货人详细地址】("+consignee_address+")有误<br/>请检测录入的省市区地址是否正确<br/>注意：请按照【xx省 xx市 xx区/县 xxxxx】格式填写地址，省市区中间必须以空格隔开<br/><br/>");
 						}
 					}
 					
-					if(StringUtils.isEmpty(consignee_address)){
-						throw new Exception("【收货人详细地址】不能为空");
-					}
-					
 					if(StringUtils.isEmpty(item_no)){
-						throw new Exception("【商品货号】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【商品货号】不能为空<br/><br/>");
 					}
 					if(StringUtils.isEmpty(consignee)){
-						throw new Exception("【收货人姓名】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【收货人姓名】不能为空<br/><br/>");
 					}
 					if(StringUtils.isEmpty(consignee_telephone)){
-						throw new Exception("【收货人电话】不能为空");			
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【收货人电话】不能为空<br/><br/>");			
 					}
 					if(StringUtils.isEmpty(consignee_address)){
-						throw new Exception("【收货人详细地址】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【收货人详细地址】不能为空<br/><br/>");
 					}
 					if(StringUtils.isEmpty(consignee_id)){
-						throw new Exception("【身份证号码】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【身份证号码】不能为空<br/><br/>");
 					}
 					if(StringUtils.isEmpty(express_no)){
-						throw new Exception("【快递信息】不能为空");
+						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【快递信息】不能为空<br/><br/>");
 					}
 					
-					
 					rowNumber++;
+					System.out.println("校验完"+(rowNumber)+"行");
 				}
+				
+				if(StringUtils.isNotEmpty(errorMsg)){
+					throw new Exception(errorMsg);
+				}
+				
 			} catch (Exception e) {
-				System.out.println("导入操作异常！");
+				System.out.println("校验操作异常！");
 				System.out.println(e.getMessage());
-
+				
 				result.set("result", false);
-				
-				result.set("cause", "校验失败<br/>"+"数据校验至第" + (rowNumber+1)
-							+ "行时出现异常:" + e.getMessage() );
-				
-				return result;
+				result.set("cause", e.getMessage());	
 			} 
-		return result;
+			
+			
+				
+			return result;
+		
 	}
 	
 	
@@ -782,19 +794,18 @@ public class CheckOrder extends Controller {
 				String consignee_telephone = line.get("收货人电话").trim();
 				String consignee_address = line.get("收货人详细地址").trim();
 				
-				String location = line.get("收货人地区编码").trim();
+				//String location = line.get("收货人地区编码").trim();
 				String consignee_id = line.get("身份证号码").trim();
 				String express_no = line.get("快递信息").trim();
 				
 				String item_no = line.get("商品货号").trim();
 				String netwt = line.get("净重").trim();
 				String weight = line.get("毛重").trim(); 
-				String freight = line.get("运费").trim(); 
+				//String freight = line.get("运费").trim(); 
 				String goods_value = line.get("含税总价").trim(); 
 				String price = line.get("单价").trim(); 
 				String unit = line.get("单位").trim(); 
 				String tax_rate = line.get("税率").trim(); 
-				//NumberCell numberCell = line.getDouble("税率").trim();
 
 				//默认值带入
 				SalesOrder so = new SalesOrder();
@@ -812,16 +823,28 @@ public class CheckOrder extends Controller {
 				so.set("office_id", officeId); 
 				
 				
-				if(StringUtils.isNotEmpty(location)){
-					String[] values = location.split("#");
-					String province = values[0];//省
-					String city = values[1];//市
-					String qv = values[2];//区
-					
-					so.set("province", province);
-					so.set("city", city);
-					so.set("district", qv);
-				}else{
+//				if(StringUtils.isNotEmpty(location)){
+//					String[] values = location.split("#");
+//					String province = values[0];//省
+//					String city = values[1];//市
+//					String qv = values[2];//区
+//					
+//					so.set("province", province);
+//					so.set("city", city);
+//					so.set("district", qv);
+//				}else{
+//					String addressCode = changeAddres(consignee_address);
+//					String[] values = addressCode.split("#");
+//					String province = values[0];//省
+//					String city = values[1];//市
+//					String qv = values[2];//区
+//					
+//					so.set("province", province);
+//					so.set("city", city);
+//					so.set("district", qv);
+//				}
+				
+				if(StringUtils.isNotEmpty(consignee_address)){
 					String addressCode = changeAddres(consignee_address);
 					String[] values = addressCode.split("#");
 					String province = values[0];//省
@@ -836,9 +859,9 @@ public class CheckOrder extends Controller {
 				if(StringUtils.isNotEmpty(ref_order_no)){
 					so.set("ref_order_no", ref_order_no);  //运费
 				}
-				if(StringUtils.isNotEmpty(freight)){
-					so.set("freight", freight);  //运费
-				}
+//				if(StringUtils.isNotEmpty(freight)){
+//					so.set("freight", freight);  //运费
+//				}
 				if(StringUtils.isNotEmpty(goods_value)){
 					so.set("goods_value", goods_value);  //税后总价
 				}
@@ -975,7 +998,7 @@ public class CheckOrder extends Controller {
     	String express_no = line.get("快递信息").trim();
     	String netwt = line.get("净重").trim();
 		String weight = line.get("毛重").trim(); 
-		String freight = line.get("运费").trim(); 
+		//String freight = line.get("运费").trim(); 
 		String cargo_name = line.get("中文名称").trim();
 		
 //		UserLogin user = LoginUserController.getLoginUser(this);
@@ -1017,9 +1040,9 @@ public class CheckOrder extends Controller {
     		if(StringUtils.isNotEmpty(cargo_name)){
     			logisticsOrder.set("goods_info", cargo_name); 
 			}
-    		if(StringUtils.isNotEmpty(freight)){
-    			logisticsOrder.set("freight", freight);  //运费
-			}
+//    		if(StringUtils.isNotEmpty(freight)){
+//    			logisticsOrder.set("freight", freight);  //运费
+//			}
     		logisticsOrder.set("insure_fee", "0");
     		if(StringUtils.isNotEmpty(express_no)){
     			logisticsOrder.set("parcel_info",express_no );
@@ -1051,8 +1074,6 @@ public class CheckOrder extends Controller {
 		String consignee_telephone = line.get("收货人电话").trim();
 		String consignee_address = line.get("收货人详细地址").trim();
 		String unit = line.get("单位").trim(); 
-		
-		String location = line.get("收货人地区编码").trim();
 		String consignee_id = line.get("身份证号码").trim();
 		String express_no = line.get("快递信息").trim();
 
@@ -1068,12 +1089,21 @@ public class CheckOrder extends Controller {
 		goo.set("gate_out_date", new Date());//出库时间
 		goo.set("remark", "导入数据");  //
 		
-		if(StringUtils.isNotEmpty(location)){
-			String[] values = location.split("#");
+//		if(StringUtils.isNotEmpty(location)){
+//			String[] values = location.split("#");
+//			String province = values[0];//省
+//			String city = values[1];//市
+//			String qv = values[2];//区
+//			
+//			goo.set("location", qv);
+//		}
+		if(StringUtils.isNotEmpty(consignee_address)){
+			String addressCode = changeAddres(consignee_address);
+			String[] values = addressCode.split("#");
 			String province = values[0];//省
 			String city = values[1];//市
 			String qv = values[2];//区
-			
+
 			goo.set("location", qv);
 		}
 		
