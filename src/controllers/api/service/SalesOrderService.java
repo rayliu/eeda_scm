@@ -98,6 +98,17 @@ public class SalesOrderService {
     	return flag;
     }
     
+    
+    public boolean checkExpressNo(String value){
+    	boolean flag = true;
+    	LogisticsOrder log = LogisticsOrder.dao.findFirst("select * from logistics_order where parcel_info = ?",value);
+    	if(log!=null){
+    		flag = false;
+    	}
+    	
+    	return flag;
+    }
+    
     public Record checkConfig(Map<String, ?> soDto){
     	// 校验sign
     	Record r = new Record();
@@ -149,8 +160,9 @@ public class SalesOrderService {
     	String netwt = soDto.get("netwt").toString();
     	String weight = soDto.get("weight").toString();
     	String freight = soDto.get("freight").toString();
+    	String express_no = soDto.get("express_no").toString();
     	
-        
+    	
     	//明细表
     	List<Map<String, String>> itemLists = (ArrayList<Map<String, String>>)soDto.get("goods");
 		for(Map<String, String> itemList:itemLists){
@@ -158,14 +170,14 @@ public class SalesOrderService {
 			String bar_code = itemList.get("bar_code");
 			String item_no = itemList.get("item_no");
 			String unit = itemList.get("unit");
-			String name = itemList.get("name");
+			String item_name = itemList.get("item_name");
 			String currency = itemList.get("currency");
 			String tax_rate = itemList.get("tax_rate");
 			String qty = itemList.get("qty");
 			String price = itemList.get("price");
 			
-			if(StringUtils.isEmpty(name)){
-				msg += "【商品名称】不能为空";
+			if(StringUtils.isEmpty(item_name)){
+				msg += "【商品名称】不能为空；";
 			}
 			
 			if(StringUtils.isNotEmpty(qty)){
@@ -173,61 +185,61 @@ public class SalesOrderService {
 					msg += "【商品数量】("+qty+")格式类型有误";
 				}
 			}else{
-				msg += "【商品数量】不能为空";
+				msg += "【商品数量】不能为空；";
 			}
 			
 			if(StringUtils.isNotEmpty(currency)){
 				if(!CheckOrder.checkDouble(currency)){
-					msg += "【币制】("+qty+")格式类型有误";
+					msg += "【币制】("+qty+")格式类型有误；";
 				}
 			}else{
-				msg += "【商品数量】不能为空";
+				msg += "【商品数量】不能为空；";
 			}
 			
 			if(StringUtils.isNotEmpty(unit)){
 				if(!CheckOrder.checkUnitCode(unit)){
-					msg += "【单位】("+unit+")有误，系统不存在此单位编码，请参照标准报关单位编码填写";
+					msg += "【单位】("+unit+")有误，系统不存在此单位编码，请参照标准报关单位编码填写；";
 				}
 			}else{
-				msg += "【商品数量】不能为空";
+				msg += "【商品数量】不能为空；";
 			}
 			
 			if(StringUtils.isNotEmpty(price)){
 				if(!CheckOrder.checkDouble(price)){
-					msg +=  "【单价】("+price+")格式类型有误";
+					msg +=  "【单价】("+price+")格式类型有误；";
 				}
 			}else{
-				msg += "【单价】不能为空";
+				msg += "【单价】不能为空；";
 			}
 			
 			if(StringUtils.isNotEmpty(bar_code)){
 				if(!CheckOrder.checkUpc(bar_code)){
-					msg += "【商品条码（UPC）】("+bar_code+")有误，系统产品信息不存在此upc";
+					msg += "【商品条码（UPC）】("+bar_code+")有误，系统产品信息不存在此upc；";
 				}
 			}else{
-				msg += "【商品条码(UPC)】不能为空";
+				msg += "【商品条码(UPC)】不能为空；";
 			}
 			
 			//【税率】和【含税总价】不能同时为空
 			if(StringUtils.isNotEmpty(goods_value)){
 				if(!CheckOrder.checkDouble(goods_value)){
-					msg += "【含税总价】("+goods_value+")格式类型有误";
+					msg += "【含税总价】("+goods_value+")格式类型有误；";
 				}
 			}else if(StringUtils.isNotEmpty(tax_rate)){
 				if(!CheckOrder.checkDouble(tax_rate)){
-					msg += "【税率】("+tax_rate+")格式类型有误";
+					msg += "【税率】("+tax_rate+")格式类型有误；";
 				}
 			}else{
-				msg += "【税率】和【含税总价】不能同时为空";
+				msg += "【税率】和【含税总价】不能同时为空；";
 			}
 			
 			if(StringUtils.isEmpty(item_no)){
-				msg += "【商品货号】不能为空";
+				msg += "【商品货号】不能为空；";
 			}
 			
-			if(StringUtils.isNotEmpty(bar_code) && StringUtils.isNotEmpty(name)){
-				if(!checkBarFromName(bar_code,name)){
-					msg += "【商品条码】和【商品名称】不匹配";
+			if(StringUtils.isNotEmpty(bar_code) && StringUtils.isNotEmpty(item_name)){
+				if(!checkBarFromName(bar_code,item_name)){
+					msg += "【商品条码】和【商品名称】不匹配；";
 				}
 				
 			}
@@ -238,26 +250,26 @@ public class SalesOrderService {
 		
 		if(StringUtils.isNotEmpty(netwt)){
 			if(!CheckOrder.checkDouble(netwt)){
-				msg += "【净重】("+netwt+")格式类型有误";
+				msg += "【净重】("+netwt+")格式类型有误；";
 			}
 		}
 		
 		if(StringUtils.isNotEmpty(weight)){
 			if(!CheckOrder.checkDouble(weight)){
-				msg += "【毛重】("+weight+")格式类型有误";
+				msg += "【毛重】("+weight+")格式类型有误；";
 			}
 		}
 		
 		if(StringUtils.isNotEmpty(freight)){
 			if(!CheckOrder.checkDouble(freight)){
-				msg += "【运费】("+freight+")格式类型有误";
+				msg += "【运费】("+freight+")格式类型有误；";
 			}
 		}
 		
 		//省
 		if(StringUtils.isNotEmpty(province)){
 			if(!checkCode(province)){
-				msg += "【省级】("+freight+")行政编码有误";
+				msg += "【省级】("+province+")行政编码有误；";
 			}
 		}else{
 			msg += "【省级】不能为空";
@@ -266,7 +278,7 @@ public class SalesOrderService {
 		//市
 		if(StringUtils.isNotEmpty(city)){
 			if(!checkCode(city)){
-				msg += "【市级】("+freight+")行政编码有误";
+				msg += "【市级】("+city+")行政编码有误；";
 			}
 		}else{
 			msg += "【市级】不能为空";
@@ -274,8 +286,8 @@ public class SalesOrderService {
 		
 		//区
 		if(StringUtils.isNotEmpty(district)){
-			if(checkCode(district)){
-				msg += "【区级】("+freight+")行政编码有误";
+			if(!checkCode(district)){
+				msg += "【区级】("+freight+")行政编码有误；";
 			}
 		}else{
 			msg += "【区级】不能为空";
@@ -285,26 +297,31 @@ public class SalesOrderService {
 		if(StringUtils.isNotEmpty(province) && StringUtils.isNotEmpty(city) && StringUtils.isNotEmpty(district)){
 			String value = province+"#"+city+"#"+district;
 			if(!checkAllCode(value)){
-				msg += "【省市区级】不存在上下级关系，请参考标准城市编码";
+				msg += "【省市区级】不存在上下级关系，请参考标准城市编码；";
 			}
 		}
 		
 		if(StringUtils.isEmpty(consignee_address)){
-			msg += "【收货人详细地址】不能为空";
+			msg += "【收货人详细地址】不能为空；";
 		}
 		
 		
 		if(StringUtils.isEmpty(consignee)){
-			msg += "【收货人姓名】不能为空";
+			msg += "【收货人姓名】不能为空；";
 		}
 		if(StringUtils.isEmpty(consignee_telephone)){
-			msg += "【收货人电话】不能为空";			
+			msg += "【收货人电话】不能为空；";			
 		}
 		if(StringUtils.isEmpty(consignee_address)){
-			msg += "【收货人详细地址】不能为空";
+			msg += "【收货人详细地址】不能为空；";
 		}
 		if(StringUtils.isEmpty(consignee_id)){
-			msg += "【身份证号码】不能为空";
+			msg += "【身份证号码】不能为空；";
+		}
+		if(StringUtils.isNotEmpty(express_no)){
+			if(!checkExpressNo(express_no)){
+				msg += "【快递单号】已存在；";
+			}
 		}
 		
 		if(StringUtils.isNotEmpty(msg)){
@@ -378,21 +395,15 @@ public class SalesOrderService {
 			String bar_code = itemList.get("bar_code");
 			String item_no = itemList.get("item_no");
 			String unit = itemList.get("unit");
-			String name = itemList.get("name");
+			String item_name = itemList.get("item_name");
 			String currency = itemList.get("currency");
 			String tax_rate = itemList.get("tax_rate");
 			String qty = itemList.get("qty");
 			String price = itemList.get("price");
 			
 			SalesOrderGoods sog = new SalesOrderGoods();
-			if(StringUtils.isNotEmpty(bar_code)){
-				sog.set("bar_code", bar_code);   //条码
-				cargo_name = CheckOrder.getCargoName(bar_code);
-				if(StringUtils.isNotEmpty(cargo_name)){
-					sog.set("item_name", cargo_name);//名称
-				}
-			}
-			
+			sog.set("bar_code", bar_code);   //条码
+			sog.set("item_name", cargo_name);//名称
 			sog.set("item_no", item_no); //商品货号
 			sog.set("qty", qty);   //数量
 			sog.set("unit",unit);   //单位
