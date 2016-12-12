@@ -300,6 +300,8 @@ public class SalesOrderController extends Controller {
             String bill_status = (String)dto.get("bill_status");
             String create_stamp_begin_time = (String)dto.get("create_stamp_begin_time");
             String create_stamp_end_time = (String)dto.get("create_stamp_end_time");
+            String order_no_begin = (String)dto.get("order_no_begin");
+            String order_no_end = (String)dto.get("order_no_end");
             
             //订单状态
             if(StringUtils.isNotEmpty(sales_status)){
@@ -348,6 +350,25 @@ public class SalesOrderController extends Controller {
             if(StringUtils.isNotEmpty(order_no)){
             	condition += " and sor.order_no like '%"+order_no+"%'";
             }
+            
+            if(StringUtils.isNotEmpty(order_no_begin)){
+            	if(StringUtils.isNotEmpty(order_no_end)){
+            		condition += " and sor.order_no between '"+order_no_begin+"' and '"+order_no_end+"'";
+            	}else{
+            		condition += " and sor.order_no like '%"+order_no_begin+"%'";
+            	}
+            }else{
+            	if(StringUtils.isNotEmpty(order_no_end)){
+            		condition += " and sor.order_no like '%"+order_no_end+"%'";
+            	}
+            }
+            
+            if(StringUtils.isNotEmpty(order_no_end)){
+            	order_no_end = order_no_end+" 23:59:59";
+            }else{
+            	order_no_end = "2037-12-31 23:59:59";
+            }
+           
             if(StringUtils.isNotEmpty(status)){
             	condition += " and sor.status = '"+status+"'";
             }
