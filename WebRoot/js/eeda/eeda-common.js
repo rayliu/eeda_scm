@@ -23,7 +23,7 @@ $(document).ready(function() {
             //scrollY: opt.scrollY || '300px', //"300px",
             scrollCollapse: opt.scrollCollapse || true,
             autoWidth: opt.autoWidth || false,
-            aLengthMenu: [ [10, 25, 50, 100, -1], [10, 25, 50, 100, "All"] ],
+            aLengthMenu: [ [10, 25, 50, 100,500,1000, -1], [10, 25, 50, 100,500,1000,"All"] ],
             language: {
                 "url": "/js/lib/datatables-1.10.9/i18n/Chinese.json"
             },
