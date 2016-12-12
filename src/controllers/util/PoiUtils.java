@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -134,11 +135,12 @@ public class PoiUtils {
 	 * 写内容到excel中
 	 * @throws IOException 
 	 */
-	public static String generateExcel(String[] headers, String[] fields, String sql){
+	@SuppressWarnings("deprecation")
+    public static String generateExcel(String[] headers, String[] fields, String sql){
 	    String fileName="";
 	    try {
 	        System.out.println("generateExcel begin...");
-	        String filePath = "/home/default/ROOT/download/list";//"WebRoot/download/list";
+	        String filePath = "WebRoot/download/list";//;"/home/default/ROOT/download/list"
 	        File file = new File(filePath);
 	        if(!file.exists()){
 	         file.mkdir();
@@ -161,7 +163,12 @@ public class PoiUtils {
                     HSSFRow row = sheet.createRow((short)j);
                     Record rec = recs.get(j-1);
                     for (int k = 0; k < fields.length;k++){
-                        row.createCell((short)k).setCellValue(rec.get(fields[k]).toString());
+                        Object obj = rec.get(fields[k]);
+                        String strValue = "";
+                        if(obj != null){
+                            strValue =obj.toString();
+                        }
+                        row.createCell((short)k).setCellValue(strValue);
                     }
                 }
             }
