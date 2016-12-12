@@ -87,6 +87,8 @@ public class CustomJob implements Runnable {
         	so.set("pay_status",statusShow(pay_status,"pay_status"));
         	so.set("bill_cus_status",statusShow(bill_cus_status,"bill_cus_status"));
         	so.set("bill_cus_result",bill_cus_result);
+        	so.set("logistics_ciq_status", statusShow(logistics_ciq_status,"logistics_ciq_status"));
+        	so.set("logistics_cus_status", statusShow(logistics_cus_status,"logistics_cus_status"));
         	
         	if("30".equals(order_cus_status) && "30".equals(order_ciq_status)){
         		so.set("status", "已通关");
@@ -108,6 +110,12 @@ public class CustomJob implements Runnable {
         		lo.set("status","报关处理中");
         	}
         	lo.update();
+        }else{
+        	SalesOrder so = SalesOrder.dao.findById(order_id);
+        	if(so != null){
+        		so.set("status", "未上报");
+            	so.update();
+        	}
         }
     }
 	
