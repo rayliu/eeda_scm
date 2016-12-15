@@ -82,7 +82,7 @@ public class ReaderXLS{
         */
         int colNum = row.getPhysicalNumberOfCells();
         // 正文内容应该从第二行开始,第一行为表头的标题
-        for (int i = 1; i < rowNum; i++) {
+        for (int i = 1; i <= rowNum; i++) {
         	System.out.println("-----------------------解析到"+(i+1)+"行");
         	Map<String, String> rowData = new HashMap<String, String>();
             row = sheet.getRow(i);

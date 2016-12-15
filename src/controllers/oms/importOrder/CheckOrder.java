@@ -594,6 +594,7 @@ public class CheckOrder extends Controller {
 	 */
 	@Before(Tx.class)
 	public Record importSOCheck( List<Map<String, String>> lines) {
+		System.out.println("一共要导入"+lines.size()+"行数据");
 		Record result = new Record();
 		result.set("result",true);
 		String errorMsg = "";
