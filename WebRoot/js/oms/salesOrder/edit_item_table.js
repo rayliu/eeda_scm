@@ -102,13 +102,6 @@ $(document).ready(function() {
                     return '<input type="text" name="item_no" value="'+data+'" class="form-control" required/>';
                 }
             },
-            { "data": "CUS_ITEM_NO", 'visible':false,
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='';
-                    return '<input type="text" name="cus_item_no" value="'+data+'" class="form-control"/>';
-                }
-            },
             { "data": "QTY" ,
                 "render": function ( data, type, full, meta ) {
                     if(!data)
@@ -146,7 +139,6 @@ $(document).ready(function() {
  	                   +'<option value="111" '+ (data=='111'?'selected':'') +'>粒</option>'
  	                   +'<option value="112" '+ (data=='112'?'selected':'') +'>盒</option>'
  	                   +'<option value="114" '+ (data=='114'?'selected':'') +'>瓶</option>'
- 	                   
 	                   +'</select>';
                      return str;
                 }
@@ -179,15 +171,11 @@ $(document).ready(function() {
                    return '<input type="text" name="after_tax_total" value="'+data+'" class="form-control calculate" required/>';
                 }
             },
-            { "data": "GIFT_FLAG","width": "60px",
+            { "data": "GCODE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='0';
-                    var str= '<select class="form-control search-control" name="gift_flag">'
-              	   	   +'<option value="0" '+ (data=='0'?'selected':'') +'>否</option>'
-  	                   +'<option value="1" '+ (data=='1'?'selected':'') +'>是</option>'
-  	                   +'</select>';
-                    return str;
+                   return '<input type="text" name="gcode" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "CURRENCY","width": "60px",
@@ -207,6 +195,20 @@ $(document).ready(function() {
    	                   +'</select>';
                     return str;
                 }
+            },
+            { "data": "G_MODEL",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="g_model" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "CIQ_GMODEL",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="ciq_gmodel" value="'+data+'" class="form-control" required/>';
+                }
             }
         ]
     });
@@ -225,20 +227,24 @@ $(document).ready(function() {
     	var tax_rate = $(row.find('.calculate')[3]).val()==''?'0':$(row.find('.calculate')[3]).val();
     	var total = parseFloat(sty)*parseFloat(price);
     	$(row.find('.calculate')[2]).val(decimal(total));
-    	if(tax_rate != 0)
-    		$(row.find('.calculate')[4]).val(decimal(total*(parseFloat(tax_rate)+1)));
+    	$(row.find('.calculate')[4]).val(decimal(total*(parseFloat(tax_rate)+1)));
     	calAmount();
     })
     
     
     var calAmount= function(){
     	var total_amount = 0;
+    	var after_total_amount = 0;
     	$('#cargo_table tr').each(function(){
-    		var total = $(this).find('[name=after_tax_total]').val();
+    		var after_tax_total = $(this).find('[name=after_tax_total]').val();
+    		var total = $(this).find('[name=total]').val();
     		if(total)
     			total_amount += parseFloat(total);
+    		if(after_tax_total)
+    			after_total_amount += parseFloat(after_tax_total);
     	})
     	$('#goods_value').val(decimal(total_amount));
+    	$('#actural_paid').val(decimal(after_total_amount));
     }
 
     $('#add_cargo').on('click', function(){

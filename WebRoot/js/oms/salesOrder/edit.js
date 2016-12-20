@@ -11,7 +11,7 @@ $(document).ready(function() {
     
 	$("#orderForm").validate({
         rules: {
-        	consignee_id_name:{
+        	buyer_id_number_name:{
         		isIdCardNo:true	
         	},
 			currency_name:{
@@ -37,6 +37,18 @@ $(document).ready(function() {
 	        },
 	        pro_amount_name:{
 	        	number:true
+	        },
+	        weight_name:{
+	        	number:true
+	        },
+	        net_weight_name:{
+	        	number:true
+	        },
+	        insure_fee_name:{
+	        	number:true
+	        },
+	        pack_no_name:{
+	        	number:true
 	        }
         },
         messages: {
@@ -52,6 +64,21 @@ $(document).ready(function() {
     $.extend($.validator.messages, {
 		rangelength: $.validator.format("长度必须为{0}位字符")
 	})
+	
+	//构造主表json
+    var buildOrder = function(){
+    	var item = {};
+    	item.id = $('#order_id').val();
+    	var orderForm = $('#orderForm input,#orderForm select,#orderForm textarea');
+    	for(var i = 0; i < orderForm.length; i++){
+    		var name = orderForm[i].id;
+        	var value =orderForm[i].value;
+        	if(name){
+        		item[name] = value;
+        	}
+    	}
+        return item;
+    }
 
 
     //------------save
@@ -60,6 +87,7 @@ $(document).ready(function() {
         e.preventDefault();
         //提交前，校验数据
         if(!$("#orderForm").valid()){
+        	$.scojs_message('必填字段未填写完整' , $.scojs_message.TYPE_ERROR);
             return;
         } 
         
@@ -70,42 +98,13 @@ $(document).ready(function() {
         var city = pro_ci_dis.substring(7,13);
         var district = pro_ci_dis.substring(14,21);
 
-        var cargo_items_array = salesOrder.buildCargoDetail();
-        var order = {
-            id: $('#order_id').val(),
-            order_no: $('#order_no').val(),  
-            custom_id: $('#custom_id').val(),  
-            order_time: $('#order_time').val(),  
-            goods_value: $('#goods_value').val(),
-            freight: $('#freight').val(),
-            currency: $('#currency').val(),  
-            consignee_id: $('#consignee_id').val(),  
-            consignee_type: $('#consignee_type').val(),
-            consignee: $('#consignee').val(), 
-            consignee_address: $('#consignee_address').val(),  
-            consignee_telephone: $('#consignee_telephone').val(),  
-            consignee_country: $('#consignee_country').val(),
-            province: province,
-            city: city, 
-            district: district, 
-            pro_amount: $('#pro_amount').val(),  
-            pro_remark: $('#pro_remark').val(),  
-            note: $('#note').val(),
-            pay_no: $('#pay_no').val(),
-            pay_channel: $('#pay_channel').val(),
-            pay_platform: $('#pay_platform').val(), 
-            payer_account: $('#payer_account').val(),  
-            payer_name: $('#payer_name').val(),  
-            payer_email: $('#payer_email').val(),  
-            payer_phone: $('#payer_phone').val(),  
-            is_pay_pass: $('#is_pay_pass').val(),
-            pass_pay_no: $('#pass_pay_no').val(),
-            pay_code: $('#pay_code').val(),
-            pay_name: $('#pay_name').val(),
-            status: $('#status').val()==''?'未上报':$('#status').val(),
-            cargo_list: cargo_items_array,
-            count_list:salesOrder.buildCountDetail()
-        };
+        var order = {};
+        order = buildOrder();
+        order.province = province;
+        order.city = city;
+        order.district = district;
+        order.cargo_list = salesOrder.buildCargoDetail();
+        order.count_list = salesOrder.buildCountDetail();
 
         var status = $('#status').val();
         //异步向后台提交数据
@@ -143,13 +142,13 @@ $(document).ready(function() {
     $('#submitDingDanBtn').click(function(){
     	$('#submitDingDanBtn').attr('disabled',true);
     	$.post('/salesOrder/submitDingDan', {order_id:$("#order_id").val()}, function(data){
-    		if(data!=null){
-    			var message = $(data.orders).attr('message');
-    			if(message == '订单写入成功'){
-    				$.scojs_message(message , $.scojs_message.TYPE_OK);
-    				$('#status').val(message);
+    		if(data.STATUS != null){
+    			var status = data.STATUS;
+    			if(status == '消息接受成功!'){
+    				$.scojs_message(status , $.scojs_message.TYPE_OK);
+    				$('#status').val(status);
     			}else{
-    				$.scojs_message(message , $.scojs_message.TYPE_FALSE);
+    				$.scojs_message(status , $.scojs_message.TYPE_FALSE);
     			}	
     		}else{
     			$.scojs_message('上报失败', $.scojs_message.TYPE_FALSE);

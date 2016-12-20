@@ -58,6 +58,7 @@ public class SalesOrderController extends Controller {
     public void create() {
         //构造支付url时需要服务器名字,达到动态改UAT, PROD的效果
         setAttr("serverName", EedaConfig.sysProp.getProperty("allinpayServer"));
+        System.out.println(EedaConfig.sysProp.getProperty("allinpayCallbackServer"));
         
         //构造支付url时需要服务器名字,达到动态改UAT, PROD的效果
         setAttr("allinpayServer", EedaConfig.sysProp.getProperty("allinpayServer"));
@@ -98,6 +99,7 @@ public class SalesOrderController extends Controller {
    			
    			//需后台处理的字段
    			salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("IDQHDF"));
+   			salesOrder.set("logistics_no", OrderNoGenerator.getNextOrderNo("IYQHDF"));
    			salesOrder.set("create_by", user.getLong("id"));
    			salesOrder.set("create_stamp", new Date());
    			salesOrder.set("office_id", office_id);
@@ -140,28 +142,28 @@ public class SalesOrderController extends Controller {
     		logisticsOrder.set("create_stamp", new Date());
     		
     		//预填值
-    		logisticsOrder.set("country_code", "142");
+    		logisticsOrder.set("country_code", "142");//----
     		logisticsOrder.set("shipper_country", "142");
     		logisticsOrder.set("shipper_city", "440305");
     		logisticsOrder.set("shipper", "深圳前海德丰投资发展有限公司");
     		logisticsOrder.set("shipper_address", "深圳前海湾保税港区W6仓");
     		logisticsOrder.set("shipper_telephone", "075586968661");
-    		logisticsOrder.set("traf_mode", "4");
-    		logisticsOrder.set("ship_name", "汽车");
-    		logisticsOrder.set("customs_code", "5349");
-    		logisticsOrder.set("ciq_code", "471800");
-    		logisticsOrder.set("port_code", "5349");
+    		logisticsOrder.set("traf_mode", "4");//----
+    		logisticsOrder.set("ship_name", "汽车");//----
+    		logisticsOrder.set("customs_code", "5349");//----
+    		logisticsOrder.set("ciq_code", "471800");//----
+    		logisticsOrder.set("port_code", "5349");//----
     		logisticsOrder.set("decl_code", "5349");
-    		logisticsOrder.set("supervision_code", "5349");
-    		logisticsOrder.set("ems_no", "I440366006516001");
+    		logisticsOrder.set("supervision_code", "5349");//---
+    		logisticsOrder.set("ems_no", "I440366006516001");//---
     		logisticsOrder.set("trade_mode", "1210");
     		logisticsOrder.set("destination_port", "5349");
     		logisticsOrder.set("ps_type", "2");
-    		logisticsOrder.set("trans_mode", "1");
+    		logisticsOrder.set("trans_mode", "1");//---
     		logisticsOrder.set("cut_mode", "1");
-    		logisticsOrder.set("wrap_type", "CT");
-    		logisticsOrder.set("freight", "0");
-    		logisticsOrder.set("insure_fee", "0");
+    		logisticsOrder.set("wrap_type", "CT");//---
+    		logisticsOrder.set("freight", "0");  //--
+    		logisticsOrder.set("insure_fee", "0"); //--
     		logisticsOrder.set("parcel_info", order_no);
     		logisticsOrder.set("ie_date", new Date());
     		logisticsOrder.set("deliver_date",  new Date());
@@ -402,7 +404,8 @@ public class SalesOrderController extends Controller {
     	String jsonMsg=setOrderMsg(order_id);
     	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
 
-		String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/order_create.action";
+		//String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/order_create.action";
+		String urlStr="http://test.szedi.cn:7088/ceb/tgt/service/order_createBc.action";
 		System.out.println("上报Url: "+urlStr);
 		
 		paramsMap.put("jsonMsg", jsonMsg);
@@ -413,25 +416,23 @@ public class SalesOrderController extends Controller {
 		//String returnMsg = InUtil.getResult(urlStr, PostData);
 		System.out.println("结果"+returnMsg);
 		Gson gson = new Gson();  
-        Map<String, ?> dto= gson.fromJson(returnMsg, HashMap.class);  
-        List<Map<String, String>> orders = (ArrayList<Map<String, String>>)dto.get("orders");
-        String status = orders.get(0).get("message");
-        if("订单写入成功".equals(status)){
-        	SalesOrder salesOrder = SalesOrder.dao.findById(order_id);
-        	salesOrder.set("status", status).update();
-        }
+        Map<String, ?> dto= gson.fromJson("{"+returnMsg+"}", HashMap.class);  
+        Map<String, String> orders = (Map<String, String>)dto.get("cebJsonMsg");
+        String status = orders.get("message");
+        SalesOrder salesOrder = SalesOrder.dao.findById(order_id);
+        salesOrder.set("status", status).update();
         CustomJob.operationLog("salesOrder", jsonMsg, order_id, "submitDingDan", LoginUserController.getLoginUserId(this).toString());
         
-		renderJson(returnMsg);
+        Record re = new Record();
+        re.set("status", status);
+		renderJson(re);
     }
     
     public static String setOrderMsg(String order_id) {
     	String orgCode="349779838";//接口企业代码
-    	
-    	
     	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
         paramsMap.put("orgcode", orgCode);
-        paramsMap.put("appkey", "defeng");
+        paramsMap.put("appkey", "QHDF");
         String appsecret = MD5Util.encodeByMD5("888888");
         paramsMap.put("appsecret", appsecret);
         String timestamp = "" + (System.currentTimeMillis() / 1000);
@@ -451,9 +452,10 @@ public class SalesOrderController extends Controller {
 	
 		List<DingDanDto> orderList=new ArrayList<DingDanDto>();
 		orderList.add(order);
-//		orderList.add(order1);
 
 		requestMap.put("total_count", orderList.size());
+		requestMap.put("notify_url", EedaConfig.sysProp.getProperty("allinpayCallbackServer")+"/orderReturn/orderResultRecv");//回调地址
+		System.out.println("回调地址："+EedaConfig.sysProp.getProperty("allinpayCallbackServer")+"/orderReturn/orderResultRecv");
 		requestMap.put("orders", orderList);
 		
 		Gson gson1 = new Gson(); 
@@ -497,5 +499,12 @@ public class SalesOrderController extends Controller {
     	
     	renderJson(list);
     }
+    
+    
+    public void orderResultRecv(){
+		String resultMsg = getPara("cebJsonMsg");
+		System.out.println(resultMsg);
+	}
+    
 
 }

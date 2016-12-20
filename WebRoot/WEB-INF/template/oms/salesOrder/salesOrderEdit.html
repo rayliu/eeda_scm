@@ -1,3 +1,4 @@
+
 <%layout("/yh/layout.html"){%>
 	<link href="/yh/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/yh/css/ui/jquery-ui.css">
@@ -20,27 +21,28 @@
 							<%include("/yh/component/form/inputField.html", { id:'order_no',
 							label:'订单号', value:order.ORDER_NO!'', disabled: 'disabled' }){}%></div>
 						<div class="col-lg-4">
-							<%include("/yh/component/form/inputField.html", { id:'order_no',
-							label:'外部电商订单号', value:order.REF_ORDER_NO!'', disabled: 'disabled'
+							<%include("/yh/component/form/inputField.html", { id:'ref_order_no',
+							label:'外部电商订单号', value:order.REF_ORDER_NO!'',required:'required'
 							}){}%></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputCustomCompanyField.html", {
 							id:'custom_id', label:'报关企业', required:'required',
 							value:order.CUSTOM_ID!'9', display_value: custom.shop_name!'深圳前海德丰投资发展有限公司' }){}
 							%></div>
+						
 					</div>
 		
 					<div class="row">
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'freight',
-							label:'订单商品运费(元)', required:'required', value:order.freight!'0' }){}%>
+							label:'运杂费(元)', required:'required', value:order.freight!'0' }){}%>
 						</div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'goods_value',
-							label:'订单商品货款(税后)', required:'required', value:order.goods_value!''
+							label:'订单商品货款(税前)', required:'required', value:order.goods_value!''
 							}){} %></div>
 						<div class="col-lg-4">
-							<input id="pay_currency" type="hidden" value="156">
+							<!-- <input id="pay_currency" type="hidden" value="156">
 							<div class="form-group">
 							    <label class="search-label">币制</label>
 							    <select id="currency" name="currency" 
@@ -48,9 +50,13 @@
 							    	class="form-control search-control" >
 					                    <option value='142'>人民币</option>
 							    </select>
-							</div>
-							
-						</div>
+							</div> -->
+							<%include("/yh/component/form/inputField.html", { id:'actural_paid',
+							label:'实际支付金额（元）', required:'required', value:order.actural_paid!''
+							}){} %></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'wh_org_code',
+							label:'企业组织机构代码（仓储企业）', value:order.wh_org_code!'',required:'required' }){}%></div>
 					</div>
 					
 					<div class="row">
@@ -59,10 +65,10 @@
 						</div>
 					</div>
 					<div class="row">
-						<div class="col-lg-4">
-							<!-- <%include("/yh/component/form/inputField.html", {
+						<!-- <div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
 							id:'consignee_type', label:'收货人证件类型', required:'required',
-							value:order.consignee_type!'' }){}%> -->
+							value:order.consignee_type!'' }){}%>
 							<div class="form-group">
 							    <label class="search-label">收货人证件类型</label>
 							    <select id="consignee_type" name="consignee_type" 
@@ -72,18 +78,15 @@
 					                    <option value='2' <%if(order.consignee_type!''=='2'){ %>selected<%}%>>其它</option>
 							    </select>
 							</div>
-						</div>
-						<div class="col-lg-4">
+						</div> -->
+						<!-- <div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", {
-							id:'consignee_id', label:'收货人证件号', required:'required',
-							value:order.consignee_id!'' }){}%></div>
+							id:'consignee_id', label:'收货人证件号',
+							value:order.consignee_id!'' }){}%></div> -->
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'consignee',
 							label:'收货人名称', required:'required', value:order.consignee!'' }){}%>
 						</div>
-					</div>
-					
-					<div class="row">
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", {
 							id:'consignee_telephone', label:'收货人电话', required:'required',
@@ -92,12 +95,29 @@
 							<%include("/yh/component/form/inputField.html", {
 							id:'consignee_address', label:'收件人地址', required:'required',
 							value:order.consignee_address!'' }){}%></div>
+					</div>
+					<div class="row">
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'buyer_regno',
+							label:'订购人注册号', required:'required', value:order.buyer_regno!'' }){}%>
+						</div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'buyer_name',
+							label:'订购人姓名', required:'required', value:order.buyer_name!'' }){}%>
+						</div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'buyer_id_number',
+							label:'订购人身份证号', required:'required', value:order.buyer_id_number!'' }){}%>
+						</div>
+					</div>
+					
+				<!-- 	<div class="row">
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputCountryField.html", {
 							id:'consignee_country', label:'收货人地址(国)',
 							value:order.consignee_country!,
 							display_value: country_name! }){}%></div>
-					</div>
+					</div> -->
 		
 					<div class="row">
 						<div class="col-lg-4">
@@ -106,7 +126,7 @@
 							display_value:pro_ci_dis!'' ,required:'required' }){}%></div>
 					</div>
 					
-					<div class="row">
+		<!-- 			<div class="row">
 						<div class="col-lg-12">
 							<h3>优惠信息</h3>
 						</div>
@@ -120,7 +140,7 @@
 							<%include("/yh/component/form/inputField.html", { id:'pro_remark',
 							label:'优惠信息说明', required:'required', value:order.pro_remark!'无'
 							}){}%></div>
-					</div>
+					</div> -->
 					
 					<div class="row">
 						<div class="col-lg-12">
@@ -134,12 +154,37 @@
 								label:'原始支付单交易编号', value:order.pay_no!'', disabled: 'disabled'
 							}){}%></div>
 						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'pay_time',
+								label:'支付时间', value:order.pay_time!'', disabled: 'disabled'
+							}){}%></div>
+						<!-- <div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", {
 							id:'payer_account', label:'支付人账号ID', 
-							value:order.payer_account!'' }){}%></div>
-						
+							value:order.payer_account!'' }){}%></div> -->
+					    <div class="col-lg-4">
+							<div class="form-group">
+							    <label class="search-label">是否已完成支付申报</label>
+							    <select id="is_pay_pass" name="is_pay_pass_name" 
+							    	field_type='list'
+							    	class="form-control search-control" >
+							    		<option value='0' <%if(order.is_pay_pass!''=='0'){ %>selected<%}%>>否</option>
+					                    <option value='1' <%if(order.is_pay_pass!''=='1'){ %>selected<%}%>>是</option>
+					                    
+							    </select>
+							</div>
+						</div>
+						<!-- <div class="col-lg-4">
+							<div class="form-group">
+							    <label class="search-label">是否已完成订单申报 </label>
+							    <select id="is_order_pass" name="is_order_pass_name" 
+							    	field_type='list'
+							    	class="form-control search-control" >
+							    		<option value='0' <%if(order.is_order_pass!''=='0'){ %>selected<%}%>>否</option>
+					                    <option value='1' <%if(order.is_order_pass!''=='1'){ %>selected<%}%>>是</option>
+							    </select>
+							</div>
+						</div> -->
 					</div>
-					
 					<div class="row">
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'payer_name',
@@ -156,7 +201,7 @@
 					</div>
 					
 					<div class="row">
-						<div class="col-lg-4">
+						<!-- <div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'pay_code',
 							label:'支付企业的海关备案编码', value:order.pay_code!''
 							}){}%></div>
@@ -165,26 +210,47 @@
 							label:'支付企业的海关备案名称', value:order.pay_name!''
 							}){}%>
 						</div>
+						</div> -->
+						
 						<div class="col-lg-4">
-							<div class="form-group">
-							    <label class="search-label">支付方式</label>
-							    <select id="pay_channel" name="pay_channel" 
-							    	field_type='list'
-							    	class="form-control search-control" >
-					                    <option value='01' <%if(order.pay_channel!''=='01'){ %>selected<%}%>>网上支付</option>
-					                    <option value='02' <%if(order.pay_channel!''=='02'){ %>selected<%}%>>手机WAP支付</option>
-					                    <option value='03' <%if(order.pay_channel!''=='03'){ %>selected<%}%>>线下POS支付</option>
-					                    <option value='04' <%if(order.pay_channel!''=='04'){ %>selected<%}%>>手机APP支付</option>
-					                    <option value='05' <%if(order.pay_channel!''=='05'){ %>selected<%}%>>预付卡支付</option>
-					                    <option value='06' <%if(order.pay_channel!''=='06'){ %>selected<%}%>>便捷付POS支付</option>
-					                    <option value='07' <%if(order.pay_channel!''=='07'){ %>selected<%}%>>其他支付渠道</option>
-					                    <option value='08' <%if(order.pay_channel!''=='08'){ %>selected<%}%>>新版预付卡支付</option>
-							    </select>
-							</div>
+							<%include("/yh/component/form/inputField.html", { id:'shop_no',
+							label:'店铺代码', value:order.shop_no!'' }){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'batch_numbers',
+								label:'商品批次号', value:order.batch_numbers!'' }){}%></div>
+						<div class="col-lg-4">
+						    <label class="search-label">支付渠道</label>
+						    <select id="pay_channel" name="pay_channel"
+						    	class="form-control search-control" >
+				                    <option value='01' <%if(order.pay_channel!''=='01'){ %>selected<%}%>>网上支付</option>
+				                    <option value='02' <%if(order.pay_channel!''=='02'){ %>selected<%}%>>手机WAP支付</option>
+				                    <option value='03' <%if(order.pay_channel!''=='03'){ %>selected<%}%>>线下POS支付</option>
+				                    <option value='04' <%if(order.pay_channel!''=='04'){ %>selected<%}%>>手机APP支付</option>
+				                    <option value='05' <%if(order.pay_channel!''=='05'){ %>selected<%}%>>预付卡支付</option>
+				                    <option value='06' <%if(order.pay_channel!''=='06'){ %>selected<%}%>>便捷付POS支付</option>
+				                    <option value='07' <%if(order.pay_channel!''=='07'){ %>selected<%}%>>其他支付渠道</option>
+				                    <option value='08' <%if(order.pay_channel!''=='08'){ %>selected<%}%>>新版预付卡支付</option>
+						    </select>
 						</div>
+						
+					</div>
+					<div class = 'row'>
+						<div class="col-lg-4">
+						    <label class="search-label">支付通关模式</label>
+						    <select id="pay_type" name="pay_type_name" required
+						    	class="form-control search-control" >
+				                    <option value='PQB' <%if(order.pay_type!''=='PQB'){ %>selected<%}%>>PQB：钱宝</option>
+				                    <option value='PYJF' <%if(order.pay_type!''=='PYJF'){ %>selected<%}%>>PYJF：易极付</option>
+				                    <option value='PTL' <%if(order.pay_type!'PTL'=='PTL'){ %>selected<%}%>>PTL：通联</option>
+				                    <option value='PGH' <%if(order.pay_type!''=='PGH'){ %>selected<%}%>>PGH：工行</option>
+						    </select>
+						</div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'pay_transaction_id',
+								label:'支付交易编号', value:order.pay_transaction_id!'' }){}%></div>
 					</div>
 					
-					<div class="row">
+					<!-- <div class="row">
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'pass_pay_no',
 							label:'支付通关申报编号', value:order.pass_pay_no!'' }){}%></div>
@@ -192,21 +258,202 @@
 							<%include("/yh/component/form/inputField.html", {
 							id:'pay_platform', label:'支付平台代码', value:order.pay_platform!''
 							}){}%></div>
+						
+					</div> -->
+					<div class="row">
+						<div class="col-lg-12">
+							<h3>运单信息</h3>
+						</div>
+					</div>
+					<div class="row">
 						<div class="col-lg-4">
-							<!-- <%include("/yh/component/form/inputField.html", { id:'is_pay_pass',
-							label:'是否已完成支付通关（1/0）', value:order.is_pay_pass!'' }){}%> -->
+							<%include("/yh/component/form/inputField.html", { id:'logistics_no',
+							label:'运单号', value:order.logistics_no!'',disabled:'disabled' }){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'cop_no',
+							label:'企业内部标识单证的编号', value:order.cop_no!'',required:'required' }){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'assure_code',
+							label:'担保企业编号', value:order.assure_code!'',required:'required' }){}%></div>
+					</div>
+					
+					<div class="row">
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'sign_company',
+							label:'承运企业海关备案号', value:order.sign_company!'',required:'required' }){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'sign_company_name',
+							label:'承运企业名称', value:order.sign_company_name!'',required:'required' }){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'ems_no',
+							label:'电商账册编号', value:order.ems_no!'I440366006516001'}){}%></div>
+						<!-- /.col-lg-4 -->
+					</div>
+					
+
+					<div class="row">
+						<!--  第行  -->
+						<div class="col-lg-4">
+						    <label class="search-label">运输方式</label>
+						    <select id="traf_mode" name="traf_mode_name"
+						    	class="form-control search-control" >
+						    		<option></option>
+				                    <option value='0' <%if(order.traf_mode!''=='0'){ %>selected<%}%>>0-非保税区</option>
+				                    <option value='1' <%if(order.traf_mode!''=='1'){ %>selected<%}%>>1-监管仓库</option>
+				                    <option value='2' <%if(order.traf_mode!''=='2'){ %>selected<%}%>>2-水路运输</option>
+				                    <option value='3' <%if(order.traf_mode!''=='3'){ %>selected<%}%>>3-铁路运输</option>
+				                    <option value='4' <%if(order.traf_mode!'4'=='4'){ %>selected<%}%>>4-公路运输</option>
+				                    <option value='5' <%if(order.traf_mode!''=='5'){ %>selected<%}%>>5-航空运输</option>
+				                    <option value='6' <%if(order.traf_mode!''=='6'){ %>selected<%}%>>6-邮件运输</option>
+				                    <option value='7' <%if(order.traf_mode!''=='7'){ %>selected<%}%>>7-保税区</option>
+				                    <option value='8' <%if(order.traf_mode!''=='8'){ %>selected<%}%>>8-保税仓库</option>
+				                    <option value='9' <%if(order.traf_mode!''=='9'){ %>selected<%}%>>9-其它运输</option>
+				                    <option value='H' <%if(order.traf_mode!''=='H'){ %>selected<%}%>>H-边境特殊海关作业区</option>
+				                    <option value='T' <%if(order.traf_mode!''=='T'){ %>selected<%}%>>T-综合实验区</option>
+				                    <option value='W' <%if(order.traf_mode!''=='W'){ %>selected<%}%>>W-物流中心</option>
+				                    <option value='X' <%if(order.traf_mode!''=='X'){ %>selected<%}%>>X-物流园区</option>
+				                    <option value='Y' <%if(order.traf_mode!''=='Y'){ %>selected<%}%>>Y-保税港区</option>
+				                    <option value='Z' <%if(order.traf_mode!''=='Z'){ %>selected<%}%>>Z-出口加工区</option>
+						    </select>
+						</div>
+							<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'traf_no',
+							label:'运输工具编号', value:order.traf_no!''}){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'ship_name',
+							label:'运输工具名称', value:order.ship_name!'汽车',required:'required' }){}%></div>
+					</div>
+					<!-- /.row-->
+		
+					<div class="row">
+						<!--  第行  -->
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'insure_fee',
+							label:'保价费', value:order.insure_fee!'0' ,required:'required'}){}%></div>
+						<!-- /.col-lg-4 -->
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'weight',
+							label:'毛重（Kg）', value:order.weight!'',required:'required' }){}%></div>
+						<!-- /.col-lg-4 -->
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'net_weight',
+							label:'净重（Kg）', value:order.net_weight!'',required:'required'}){}%></div>
+						<!-- /.col-lg-4 -->
+					</div>
+					<!-- /.row-->
+		
+					<div class="row">
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'goods_info',
+							label:'主要货物信息', value:order.goods_info!'',required:'required' }){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'pack_no',
+							label:'包裹数', value:order.pack_no!'' ,required:'required'}){}%></div>
+						<!-- <div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'parcel_info',
+							label:'包裹单信息（快递）', value:order.parcel_info!'',required:'required' }){}%></div> -->
+					</div>
+					<!-- /.row-->
+		
+					<div class="row">
+					    <div class="col-lg-4">
+							<%include("/yh/component/form/dateInputField.html", { id:'ie_date',
+							label:'进口日期', value:order.ie_date!''}){}%></div>
+						<!-- /.col-lg-4 -->
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'ciq_code',
+							label:'主管检验检疫机构代码', value:order.ciq_code!'471800',required:'required' }){}%></div>
+						<!-- /.col-lg-4 -->
+						<div class="col-lg-4">
+							<label class="search-label">进出口岸代码  <span style='color:red; display:initial;'>*</span></label>
+							<select id="port_code" name="port_code" required
+						    	class="form-control search-control" >
+						    		<option></option>
+				                    <option value='5349' <%if(order.port_code!'5349'=='5349'){ %>selected<%}%>>5349-深圳前海湾保税港区</option>
+						    </select>
+					    </div>
+						<!-- /.col-lg-4 -->
+					</div>
+					<!-- /.row-->
+		
+					<div class="row">
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'supervision_code', label:'监管场所代码',
+							value:order.supervision_code!'5349'}){}%></div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/dateInputField.html", {
+							id:'decl_time', label:'申报日期',
+							value:order.decl_time!'' ,required:'required'}){}%></div>
+						<div class="col-lg-4">
 							<div class="form-group">
-							    <label class="search-label">是否已完成支付通关</label>
-							    <select id="is_pay_pass" name="is_pay_pass_name" 
-							    	field_type='list'
+							    <label class="search-label">起运国 <span style='color:red; display:initial;'>*</span></label>
+							    <select id="country_code" name="country_code" required
 							    	class="form-control search-control" >
-							    		<option value='0' <%if(order.is_pay_pass!''=='0'){ %>selected<%}%>>否</option>
-					                    <option value='1' <%if(order.is_pay_pass!''=='1'){ %>selected<%}%>>是</option>
-					                    
+							    		<option></option>
+					                	<option value='142' <%if(order.country_code!'142'=='142'){ %>selected<%}%>>142-中国</option>
 							    </select>
 							</div>
 						</div>
 					</div>
+					<!-- /.row-->
+		
+					<div class="row">
+						<div class="col-lg-4">
+							<label class="search-label" >主管海关代码 <span style='color:red; display:initial;'>*</span></label>
+							<select id="customs_code" name="customs_code" required
+						    	class="form-control search-control" >
+						    	    <option></option>
+				                    <option value='5349' <%if(order.customs_code!'5349'=='5349'){ %>selected<%}%>>5349-前海港区</option>
+						    </select>
+					    </div>
+						<!-- <div class="col-lg-4">
+							<%include("/yh/component/form/dateInputField.html", {
+							id:'deliver_date', label:'出区日期', value:order.deliver_date!'' }){}%>
+						</div> -->
+						<div class="col-lg-4">
+							<label class="search-label" >业务模式代码 <span style='color:red; display:initial;'>*</span></label>
+							<select id="business_mode" name="business_mode" required
+						    	class="form-control search-control" >
+						    	    <option></option>
+				                    <option value='1' <%if(order.business_mode!'1'=='1'){ %>selected<%}%>>1-直购进口</option>
+				                    <option value='2' <%if(order.business_mode!''=='2'){ %>selected<%}%>>2-保税进口</option>
+						    </select>
+					    </div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'voyage_no',
+							label:'航班航次号', value:order.voyage_no!'' }){}%></div>
+					</div>
+		
+					<div class="row">
+						<div class="col-lg-4">
+							<label class="search-label">贸易方式 <span style='color:red; display:initial;'>*</span></label>
+							<select id="trade_mode" name="trade_mode" required
+						    	class="form-control search-control" >
+						    		<option></option>
+				                    <option value='9610' <%if(order.trade_mode!''=='9610'){ %>selected<%}%>>9610-直购进口</option>
+				                    <option value='1210' <%if(order.trade_mode!''=='1210'){ %>selected<%}%>>1210-保税进口</option>
+						    </select>
+						</div>
+						<div class="col-lg-4">
+							<label class="search-label">包装种类 <span style='color:red; display:initial;'>*</span></label>
+							<select id="wrap_type" name="wrap_type" required
+						    	class="form-control search-control" >
+						    		<option></option>
+				                    <option value='1' <%if(order.wrap_type!''=='1'){ %>selected<%}%>>1-木箱</option>
+				                    <option value='2' <%if(order.wrap_type!'2'=='2'){ %>selected<%}%>>2-纸板箱</option>
+				                    <option value='3' <%if(order.wrap_type!''=='3'){ %>selected<%}%>>3-桶装</option>
+				                    <option value='4' <%if(order.wrap_type!''=='4'){ %>selected<%}%>>4-散装</option>
+				                    <option value='5' <%if(order.wrap_type!''=='5'){ %>selected<%}%>>5-托盘</option>
+				                    <option value='6' <%if(order.wrap_type!''=='6'){ %>selected<%}%>>6-包</option>
+				                    <option value='7' <%if(order.wrap_type!''=='7'){ %>selected<%}%>>7-其它</option>
+						    </select>
+						</div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'bill_no', label:'提运单号', value:order.bill_no!''}){}%></div>
+					</div>
+		
 					
 					<div class="row">
 						<div class="col-lg-12">
@@ -224,7 +471,7 @@
 							disabled: 'disabled' }){}%></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'status',
-							label:'状态', value:order.status!'', disabled: 'disabled' }){}%>
+							label:'状态', value:order.status!'未上报', disabled: 'disabled' }){}%>
 						</div>
 					</div>
 		            <div class="row">
@@ -251,6 +498,15 @@
 							<%include("/yh/component/form/inputField.html", { id:
 							'bill_cus_status', label: '海关清单状态', value: order.bill_cus_status!'', disabled: 'disabled' }){}%>
 						</div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'logistics_ciq_status',
+							label:'运单国检状态', value:order.logistics_ciq_status!'', disabled:'disabled' }){}%></div>
+						<!-- /.col-lg-4 -->
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", {
+							id:'logistics_cus_status', label:'运单海关状态', value:order.logistics_cus_status!'', disabled:
+							'disabled' }){}%></div>
+						
 					</div>
 					<div class="row">
 						<div class="col-lg-4">
@@ -290,10 +546,14 @@
 				                    <%include("/yh/component/form/detailTable.html", 
 				                        {
 				                            id:'cargo_table', 
-				                            headers:['',  '货品名称', '产品描述','企业商品货号<span style="color:red";>*</span>', '海关正面清单货号', '数量<span style="color:red";>*</span>', '计量单位<span style="color:red";>*</span>',
-				                             '单价<span style="color:red";>*</span>', '总价（税前）<span style="color:red";>*</span>', 
-				                             '税率<span style="color:red";>*</span>', '总价（税后）<span style="color:red";>*</span>', '是否赠品<span style="color:red";>*</span>', '币制代码<span style="color:red";>*</span>'],
-				                            field_list:['','item_name','item_desc' ,'item_no', 'cus_item_no', 'qty', 'unit', 'price', 'total','tax_rate','after_tax_total', 'gift_flag', 'currency'],
+				                            style:'width:1800px',
+				                            headers:['',  '货品名称', '产品描述','企业商品货号<span style="color:red">*</span>', '数量<span style="color:red">*</span>', '计量单位<span style="color:red">*</span>',
+				                             '单价<span style="color:red">*</span>', '总价（税前）<span style="color:red">*</span>', 
+				                             '税率<span style="color:red">*</span>', '总价（税后）<span style="color:red">*</span>','税号(10位)<span style="color:red";>*</span>', '币制<span style="color:red">*</span>',
+				                             'g_model<span style="color:red">*</span>', 'ciq_gmodel<span style="color:red">*</span>'
+				                             ],
+				                            field_list:['','item_name','item_desc' ,'item_no', 'qty', 'unit', 'price', 'total',
+				                            'tax_rate','after_tax_total','gcode', 'currency','g_model','ciq_gmodel'],
 				                            value_list: itemList![]
 				                        }){} %>
 				                </div>
