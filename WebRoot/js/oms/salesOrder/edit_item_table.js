@@ -143,6 +143,47 @@ $(document).ready(function() {
                      return str;
                 }
             },
+            { "data": "QTY1" ,
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="qty1" value="'+data+'" class="form-control calculate" required/>';
+                }
+            },
+            { "data": "UNIT1","width": "60px",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='122';
+                    var str= '<select class="form-control search-control" name="unit1">'
+             	   	   +'<option></option>'
+             	   	   +'<option value="006" '+ (data=='006'?'selected':'') +'>套</option>'
+ 	                   +'<option value="007" '+ (data=='007'?'selected':'') +'>个</option>'
+ 	                   +'<option value="008" '+ (data=='008'?'selected':'') +'>只</option>'
+ 	                   +'<option value="011" '+ (data=='011'?'selected':'') +'>件</option>'
+ 	                   +'<option value="012" '+ (data=='012'?'selected':'') +'>支</option>'
+ 	                   +'<option value="014" '+ (data=='014'?'selected':'') +'>根</option>'
+ 	                   +'<option value="015" '+ (data=='015'?'selected':'') +'>条</option>'
+ 	                   +'<option value="017" '+ (data=='017'?'selected':'') +'>块</option>'
+ 	                   +'<option value="018" '+ (data=='018'?'selected':'') +'>卷</option>'
+ 	                   +'<option value="020" '+ (data=='020'?'selected':'') +'>片</option>'
+ 	                   +'<option value="034" '+ (data=='034'?'selected':'') +'>千克</option>'
+ 	                   +'<option value="035" '+ (data=='035'?'selected':'') +'>克</option>'
+ 	                   +'<option value="064" '+ (data=='064'?'selected':'') +'>吨</option>'
+ 	                   +'<option value="069" '+ (data=='069'?'selected':'') +'>斤</option>'
+ 	                   +'<option value="083" '+ (data=='083'?'selected':'') +'>毫升</option>'
+ 	                   +'<option value="094" '+ (data=='094'?'selected':'') +'>箱</option>'
+ 	                   +'<option value="096" '+ (data=='096'?'selected':'') +'>罐</option>'
+ 	                   +'<option value="097" '+ (data=='097'?'selected':'') +'>桶</option>'
+ 	                   +'<option value="099" '+ (data=='099'?'selected':'') +'>包</option>'
+ 	                   +'<option value="108" '+ (data=='108'?'selected':'') +'>枚</option>'
+ 	                   +'<option value="110" '+ (data=='110'?'selected':'') +'>袋</option>'
+ 	                   +'<option value="111" '+ (data=='111'?'selected':'') +'>粒</option>'
+ 	                   +'<option value="112" '+ (data=='112'?'selected':'') +'>盒</option>'
+ 	                   +'<option value="114" '+ (data=='114'?'selected':'') +'>瓶</option>'
+	                   +'</select>';
+                     return str;
+                }
+            },
             { "data": "PRICE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
@@ -171,13 +212,7 @@ $(document).ready(function() {
                    return '<input type="text" name="after_tax_total" value="'+data+'" class="form-control calculate" required/>';
                 }
             },
-            { "data": "GCODE",
-                "render": function ( data, type, full, meta ) {
-                    if(!data)
-                        data='0';
-                   return '<input type="text" name="gcode" value="'+data+'" class="form-control" required/>';
-                }
-            },
+           
             { "data": "CURRENCY","width": "60px",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
@@ -196,6 +231,20 @@ $(document).ready(function() {
                     return str;
                 }
             },
+            { "data": "COUNTRY",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='0';
+                   return '<input type="text" name="country" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "GCODE",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='0';
+                   return '<input type="text" name="gcode" value="'+data+'" class="form-control" required/>';
+                }
+            },
             { "data": "G_MODEL",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
@@ -203,11 +252,25 @@ $(document).ready(function() {
                    return '<input type="text" name="g_model" value="'+data+'" class="form-control" required/>';
                 }
             },
+            { "data": "CIQ_GNO",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                   return '<input type="text" name="CIQ_GNO" value="'+data+'" class="form-control" required/>';
+                }
+            },
             { "data": "CIQ_GMODEL",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
                         data='';
-                   return '<input type="text" name="ciq_gmodel" value="'+data+'" class="form-control" required/>';
+                   return '<input type="text" name="CIQ_GMODEL" value="'+data+'" class="form-control" required/>';
+                }
+            },
+            { "data": "BRAND",
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='无';
+                   return '<input type="text" name="BRAND" value="'+data+'" class="form-control" required/>';
                 }
             }
         ]

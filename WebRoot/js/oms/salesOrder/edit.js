@@ -91,6 +91,13 @@ $(document).ready(function() {
             return;
         } 
         
+        if($('#trade_mode').val()=='9610'){
+        	if($('#voyage_no').val().trim()=='' || $('#bill_no').val().trim()==''){
+        		$.scojs_message('贸易方式为直购进口“9610”时，[航班航次号]不能为空,[提运单号]不能为空"' , $.scojs_message.TYPE_ERROR);
+                return;
+        	}
+        }
+        
         $(this).attr('disabled', true);
         //分解收货人省市区的地址编码
         var pro_ci_dis = $('#pro_ci_dis').val();
@@ -126,7 +133,6 @@ $(document).ready(function() {
                 
                 //刷新明细表
                 salesOrder.refleshItemTable(order.ID);
-
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);
@@ -142,11 +148,20 @@ $(document).ready(function() {
     $('#submitDingDanBtn').click(function(){
     	$('#submitDingDanBtn').attr('disabled',true);
     	$.post('/salesOrder/submitDingDan', {order_id:$("#order_id").val()}, function(data){
-    		if(data.STATUS != null){
-    			var status = data.STATUS;
+    		if(data != null){
+    			var status = data.SUBMIT_STATUS;
     			if(status == '消息接受成功!'){
     				$.scojs_message(status , $.scojs_message.TYPE_OK);
     				$('#status').val(status);
+    				
+    				setTimeout(function(){
+    	            			$.post('/salesOrder/querySubMsg', {order_id:order_id}, function(data){
+    	            				if(data){
+    	            					$.scojs_message(data.ERROR_MSG, $.scojs_message.TYPE_ERROR);
+    	            				}
+    	            			});
+    	            		}
+    	            		,2000);
     			}else{
     				$.scojs_message(status , $.scojs_message.TYPE_FALSE);
     			}	

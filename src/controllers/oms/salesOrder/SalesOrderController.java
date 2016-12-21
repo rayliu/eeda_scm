@@ -418,13 +418,13 @@ public class SalesOrderController extends Controller {
 		Gson gson = new Gson();  
         Map<String, ?> dto= gson.fromJson("{"+returnMsg+"}", HashMap.class);  
         Map<String, String> orders = (Map<String, String>)dto.get("cebJsonMsg");
-        String status = orders.get("message");
+        String submit_status = orders.get("message");
         SalesOrder salesOrder = SalesOrder.dao.findById(order_id);
-        salesOrder.set("status", status).update();
+        salesOrder.set("submit_status", submit_status).update();
         CustomJob.operationLog("salesOrder", jsonMsg, order_id, "submitDingDan", LoginUserController.getLoginUserId(this).toString());
         
         Record re = new Record();
-        re.set("status", status);
+        re.set("submit_status", submit_status);
 		renderJson(re);
     }
     
@@ -454,7 +454,7 @@ public class SalesOrderController extends Controller {
 		orderList.add(order);
 
 		requestMap.put("total_count", orderList.size());
-		requestMap.put("notify_url", EedaConfig.sysProp.getProperty("allinpayCallbackServer")+"/orderReturn/orderResultRecv");//回调地址
+		requestMap.put("notify_url", "http://"+EedaConfig.sysProp.getProperty("allinpayCallbackServer")+"/orderReturn/orderResultRecv");//回调地址
 		System.out.println("回调地址："+EedaConfig.sysProp.getProperty("allinpayCallbackServer")+"/orderReturn/orderResultRecv");
 		requestMap.put("orders", orderList);
 		
@@ -501,9 +501,12 @@ public class SalesOrderController extends Controller {
     }
     
     
-    public void orderResultRecv(){
-		String resultMsg = getPara("cebJsonMsg");
-		System.out.println(resultMsg);
+    public void querySubMsg(){
+    	
+		String order_id = getPara("order_id");
+		SalesOrder sor = SalesOrder.dao.findById(order_id);
+		
+		renderJson(sor);
 	}
     
 

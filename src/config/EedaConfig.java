@@ -97,7 +97,7 @@ import controllers.oms.loadOrder.LoadOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
 import controllers.oms.moveOrder.MoveOrderController;
 import controllers.oms.orderStatus.OrderStatusController;
-import controllers.oms.salesOrder.OrderReturn;
+import controllers.oms.salesOrder.OrderReturnController;
 import controllers.oms.salesOrder.SalesOrderController;
 import controllers.oms.waveOrder.WaveOrderController;
 import controllers.profile.AccountController;
@@ -233,7 +233,7 @@ public class EedaConfig extends JFinalConfig {
 		 me.add("/customInventory", CustomInventoryController.class, contentPath);
 		 
 		 //回调接口
-		 me.add("/orderReturn", OrderReturn.class, contentPath);
+		 me.add("/orderReturn", OrderReturnController.class, contentPath);
 		 
 	}
 

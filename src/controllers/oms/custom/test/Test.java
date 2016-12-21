@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
+import com.jfinal.plugin.activerecord.Record;
 
 import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.custom.dto.DingDanGoodsDto;
@@ -28,10 +30,13 @@ public class Test {
     private static String orgCode="349779838";
     
     public static void main(String[] args) {
-		createOrder("df_order_002");
+		//createOrder("df_order_002");
 		//createLogOrder("df_order_002", "df_log_order_002");
 		
-		//queryOrder("df_order_002");
+		//queryOrder("df_order_002");Map<String, String> queryParas
+		Map<String, String> map=new HashMap<String, String>();
+		map.put("cebJsonMsg", "fdfdfdf");
+		String returnMsg = EedaHttpKit.post("http://yd2demo.eeda123.com/orderReturn/orderResultRecv", map,"fdfdfdf",map);
 	}
     
     
@@ -341,10 +346,6 @@ public class Test {
         System.out.println("结果"+returnMsg);
     }
 	
-	public void orderResultRecv(){
-		//String resultMsg = getPara("cebJsonMsg");
-		//System.out.println(resultMsg);
-	}
-	
+
     
 }

@@ -56,7 +56,7 @@
 							}){} %></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'wh_org_code',
-							label:'企业组织机构代码（仓储企业）', value:order.wh_org_code!'',required:'required' }){}%></div>
+							label:'企业组织机构代码（仓储企业）', value:order.wh_org_code!'440300349779838',required:'required' }){}%></div>
 					</div>
 					
 					<div class="row">
@@ -274,7 +274,7 @@
 							label:'企业内部标识单证的编号', value:order.cop_no!'',required:'required' }){}%></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'assure_code',
-							label:'担保企业编号', value:order.assure_code!'',required:'required' }){}%></div>
+							label:'担保企业编号', value:order.assure_code!'440300349779838',required:'required' }){}%></div>
 					</div>
 					
 					<div class="row">
@@ -388,7 +388,7 @@
 						<div class="col-lg-4">
 							<div class="form-group">
 							    <label class="search-label">起运国 <span style='color:red; display:initial;'>*</span></label>
-							    <select id="country_code" name="country_code" required
+							    <select id="country_code" name="country_code" required disabled
 							    	class="form-control search-control" >
 							    		<option></option>
 					                	<option value='142' <%if(order.country_code!'142'=='142'){ %>selected<%}%>>142-中国</option>
@@ -416,8 +416,8 @@
 							<select id="business_mode" name="business_mode" required
 						    	class="form-control search-control" >
 						    	    <option></option>
-				                    <option value='1' <%if(order.business_mode!'1'=='1'){ %>selected<%}%>>1-直购进口</option>
-				                    <option value='2' <%if(order.business_mode!''=='2'){ %>selected<%}%>>2-保税进口</option>
+				                    <option value='1' <%if(order.business_mode!''=='1'){ %>selected<%}%>>1-直购进口</option>
+				                    <option value='2' <%if(order.business_mode!'2'=='2'){ %>selected<%}%>>2-保税进口</option>
 						    </select>
 					    </div>
 						<div class="col-lg-4">
@@ -426,15 +426,6 @@
 					</div>
 		
 					<div class="row">
-						<div class="col-lg-4">
-							<label class="search-label">贸易方式 <span style='color:red; display:initial;'>*</span></label>
-							<select id="trade_mode" name="trade_mode" required
-						    	class="form-control search-control" >
-						    		<option></option>
-				                    <option value='9610' <%if(order.trade_mode!''=='9610'){ %>selected<%}%>>9610-直购进口</option>
-				                    <option value='1210' <%if(order.trade_mode!''=='1210'){ %>selected<%}%>>1210-保税进口</option>
-						    </select>
-						</div>
 						<div class="col-lg-4">
 							<label class="search-label">包装种类 <span style='color:red; display:initial;'>*</span></label>
 							<select id="wrap_type" name="wrap_type" required
@@ -447,6 +438,15 @@
 				                    <option value='5' <%if(order.wrap_type!''=='5'){ %>selected<%}%>>5-托盘</option>
 				                    <option value='6' <%if(order.wrap_type!''=='6'){ %>selected<%}%>>6-包</option>
 				                    <option value='7' <%if(order.wrap_type!''=='7'){ %>selected<%}%>>7-其它</option>
+						    </select>
+						</div>
+						<div class="col-lg-4">
+							<label class="search-label">贸易方式 <span style='color:red; display:initial;'>*</span></label>
+							<select id="trade_mode" name="trade_mode" required
+						    	class="form-control search-control" >
+						    		<option></option>
+				                    <option value='9610' <%if(order.trade_mode!''=='9610'){ %>selected<%}%>>9610-直购进口</option>
+				                    <option value='1210' <%if(order.trade_mode!'1210'=='1210'){ %>selected<%}%>>1210-保税进口</option>
 						    </select>
 						</div>
 						<div class="col-lg-4">
@@ -546,14 +546,18 @@
 				                    <%include("/yh/component/form/detailTable.html", 
 				                        {
 				                            id:'cargo_table', 
-				                            style:'width:1800px',
-				                            headers:['',  '货品名称', '产品描述','企业商品货号<span style="color:red">*</span>', '数量<span style="color:red">*</span>', '计量单位<span style="color:red">*</span>',
+				                            style:'width:2500px',
+				                            headers:['',  '货品名称', '产品描述','企业商品货号<span style="color:red">*</span>', 
+				                             '数量<span style="color:red">*</span>', '计量单位<span style="color:red">*</span>',
+				                             '法定计量单位的数量<span style="color:red">*</span>', '法定计量单位<span style="color:red">*</span>',
 				                             '单价<span style="color:red">*</span>', '总价（税前）<span style="color:red">*</span>', 
-				                             '税率<span style="color:red">*</span>', '总价（税后）<span style="color:red">*</span>','税号(10位)<span style="color:red";>*</span>', '币制<span style="color:red">*</span>',
-				                             'g_model<span style="color:red">*</span>', 'ciq_gmodel<span style="color:red">*</span>'
+				                             '税率<span style="color:red">*</span>', '总价（税后）<span style="color:red">*</span>', '币制<span style="color:red">*</span>',
+				                             '国家代码<span style="color:red">*</span>','税号(10位)<span style="color:red";>*</span>',
+				                             '(品牌，规格，型号等)<span style="color:red">*</span>','检验检疫商品备案号',
+				                             '检验检疫商品规格型号<span style="color:red">*</span>','品牌<span style="color:red">*</span>'
 				                             ],
-				                            field_list:['','item_name','item_desc' ,'item_no', 'qty', 'unit', 'price', 'total',
-				                            'tax_rate','after_tax_total','gcode', 'currency','g_model','ciq_gmodel'],
+				                            field_list:['','item_name','item_desc' ,'item_no', 'qty', 'unit', 'qty1','unit1','price', 'total',
+				                            'tax_rate','after_tax_total', 'currency','country','gcode','g_model','ciq_gno','ciq_gmodel','brand'],
 				                            value_list: itemList![]
 				                        }){} %>
 				                </div>
