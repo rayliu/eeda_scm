@@ -1,0 +1,72 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" >
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta http-equiv="Content-Language" content="zh-CN"/>
+<title>创建单据</title>
+<script src="/yh/js/jquery-1.10.2.js" type="text/javascript"></script>
+</head>
+<body BGCOLOR='#FFFFFF' TEXT='#000000' LINK='#0000FF' VLINK='#0000FF' ALINK='#FF0000'>
+<center>
+	<form id='payForm' name="form" action="http://orderdev.yundasys.com:10110/cus_order/order_interface/interface_receive_order__mailno.php" method="post" style="display: block;">
+		<order>
+			<order_serial_no>DD123456</order_serial_no>
+			<khddh>AAA565656</khddh>
+			<nbckh>569565</nbckh>
+			<order_type>mommon</order_type>
+			<!-- 发货方信息 -->
+			<sender>
+				<name>kevin</name>
+				<company>yida</company>
+				<city>广东省，珠海市，香洲区</city>
+				<address>广东省珠海市香洲区XX路XX号</address>
+				<postcode>519000</postcode>
+				<phone>13750035264</phone>
+				<mobile>13750035264</mobile>
+				<branch></branch>
+			</sender>
+			
+			<!-- 收货方信息 -->
+			<receiver>
+				<name>jason</name>
+				<company>abc</company>
+				<city>广东省，珠海市，香洲区</city>
+				<address>广东省珠海市香洲区XX路XX号</address>
+				<postcode>519000</postcode>
+				<phone>13750035247</phone>
+				<mobile>13750035247</mobile>
+				<branch></branch>
+			</receiver>
+			
+			<!-- 商品信息 -->
+			<weight>1</weight>
+			<size>1,1,1</size>
+			<value>10</value>
+			<collection_value></collection_value>
+			
+			<items>
+				<item>
+					<name>衣服</name>
+					<number>1</number>
+					<remark>黑色</remark>
+				</item>
+			</items>
+			
+			<remark></remark>
+			<cus_area1></cus_area1>
+			<cus_area2></cus_area2>
+			<callback_id>abcd123456123456</callback_id>
+			<wave_no>abcd123456123456</wave_no>
+		</order>
+		<input type="submit" value="提交"/>
+	</form>
+	<!--================= post 方式提交支付请求 end =====================-->
+	</center>
+<script type="text/javascript">
+	$(document).ready(function() {
+		//$('#payForm').submit();
+	});
+</script>
+</BODY>
+</HTML>
