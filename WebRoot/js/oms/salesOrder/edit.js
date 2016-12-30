@@ -152,12 +152,18 @@ $(document).ready(function() {
     			var status = data.SUBMIT_STATUS;
     			if(status == '消息接受成功!'){
     				$.scojs_message(status , $.scojs_message.TYPE_OK);
-    				$('#status').val(status);
-    				
     				setTimeout(function(){
     	            			$.post('/salesOrder/querySubMsg', {order_id:order_id}, function(data){
     	            				if(data){
-    	            					$.scojs_message(data.ERROR_MSG, $.scojs_message.TYPE_ERROR);
+    	            					if(data.ERROR_MSG!='直购订单写入成功'){
+        	            					$.scojs_message(data.ERROR_MSG, $.scojs_message.TYPE_ERROR);
+        	            					$('#submitDingDanBtn').attr('disabled',false);
+        	            				}else{
+        	            					$.scojs_message(data.ERROR_MSG, $.scojs_message.TYPE_OK);
+        	            					$('#status').val("已上报");
+        	            				}
+        	            				$('#submit_status').val(data.SUBMIT_STATUS);
+        	            				$('#error_msg').val(data.ERROR_MSG);
     	            				}
     	            			});
     	            		}
@@ -207,6 +213,11 @@ $(document).ready(function() {
     	})	
     }
     
+    $('#buyer_id_number').on('input',function(){
+    	var value = $(this).val();
+    	$('#buyer_regno').val(value);
+    });
+    
     //按钮控制
     var order_id = $("#order_id").val();
     var status = $("#status").val();
@@ -221,8 +232,9 @@ $(document).ready(function() {
     		}else{
     			$('#submitDingDanBtn').attr('disabled',false);
     		}
-    	}else{
-    		$('#goYunDanBtn').attr('disabled',false);
+    	}
+    	if($("#log_id").val() != ''){
+    		$("#goYunDanBtn").show();
     	}
     }
     

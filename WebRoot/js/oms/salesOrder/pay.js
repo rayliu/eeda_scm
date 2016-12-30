@@ -9,7 +9,7 @@ $(document).ready(function() {
     	}
     	
     	var item = salesOrder.buildCargoDetail();
-    	var amount = Math.round(parseFloat($('#goods_value').val())*100);
+    	var amount = Math.round(parseFloat($('#actural_paid').val())*100);
         var allinpayServer = salesOrder.allinpayServer;
         var callbackServer = salesOrder.allinpayCallbackServer;
         var formObj = {

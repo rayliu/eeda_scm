@@ -81,6 +81,13 @@ $(document).ready(function() {
                 	return '<button type="button" class="delete btn btn-default btn-xs">删除</button> ';
                 }
             },
+            { "data": "BAR_CODE", 
+                "render": function ( data, type, full, meta ) {
+                    if(!data)
+                        data='';
+                    return '<input type="text" name="bar_code" value="'+data+'" class="form-control"/>';
+                }
+            },
             { "data": "ITEM_NAME", 
                 "render": function ( data, type, full, meta ) {
                     if(!data)
@@ -234,14 +241,14 @@ $(document).ready(function() {
             { "data": "COUNTRY",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='0';
+                        data='142';
                    return '<input type="text" name="country" value="'+data+'" class="form-control" required/>';
                 }
             },
             { "data": "GCODE",
                 "render": function ( data, type, full, meta ) {
                     if(!data)
-                        data='0';
+                        data='';
                    return '<input type="text" name="gcode" value="'+data+'" class="form-control" required/>';
                 }
             },

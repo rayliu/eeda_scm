@@ -13,6 +13,7 @@
             </div>
             <input id="order_id" type="hidden" name="order_id" value="${order.id!''}"/>
             <input id="log_id" type="hidden" name="log_id" value="${logOrder.id!''}"/>
+            <input id="pay_currency" type="hidden" value="156">
 			<form id="orderForm">
 				<div class="form-group">
 					<div class="row">
@@ -42,8 +43,8 @@
 							label:'订单商品货款(税前)', required:'required', value:order.goods_value!''
 							}){} %></div>
 						<div class="col-lg-4">
-							<!-- <input id="pay_currency" type="hidden" value="156">
-							<div class="form-group">
+							
+							<!-- <div class="form-group">
 							    <label class="search-label">币制</label>
 							    <select id="currency" name="currency" 
 							    	field_type='list'
@@ -56,7 +57,7 @@
 							}){} %></div>
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'wh_org_code',
-							label:'企业组织机构代码（仓储企业）', value:order.wh_org_code!'440300349779838',required:'required' }){}%></div>
+							label:'企业组织机构代码（仓储企业）', value:order.wh_org_code!'349779838',required:'required' }){}%></div>
 					</div>
 					
 					<div class="row">
@@ -157,22 +158,11 @@
 							<%include("/yh/component/form/inputField.html", { id:'pay_time',
 								label:'支付时间', value:order.pay_time!'', disabled: 'disabled'
 							}){}%></div>
-						<!-- <div class="col-lg-4">
+						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", {
 							id:'payer_account', label:'支付人账号ID', 
-							value:order.payer_account!'' }){}%></div> -->
-					    <div class="col-lg-4">
-							<div class="form-group">
-							    <label class="search-label">是否已完成支付申报</label>
-							    <select id="is_pay_pass" name="is_pay_pass_name" 
-							    	field_type='list'
-							    	class="form-control search-control" >
-							    		<option value='0' <%if(order.is_pay_pass!''=='0'){ %>selected<%}%>>否</option>
-					                    <option value='1' <%if(order.is_pay_pass!''=='1'){ %>selected<%}%>>是</option>
-					                    
-							    </select>
-							</div>
-						</div>
+							value:order.payer_account!'' }){}%></div>
+					    
 						<!-- <div class="col-lg-4">
 							<div class="form-group">
 							    <label class="search-label">是否已完成订单申报 </label>
@@ -248,6 +238,18 @@
 						<div class="col-lg-4">
 							<%include("/yh/component/form/inputField.html", { id:'pay_transaction_id',
 								label:'支付交易编号', value:order.pay_transaction_id!'' }){}%></div>
+					    <div class="col-lg-4">
+							<div class="form-group">
+							    <label class="search-label">是否已完成支付申报</label>
+							    <select id="is_pay_pass" name="is_pay_pass_name" 
+							    	field_type='list'
+							    	class="form-control search-control" >
+							    		<option value='0' <%if(order.is_pay_pass!''=='0'){ %>selected<%}%>>否</option>
+					                    <option value='1' <%if(order.is_pay_pass!''=='1'){ %>selected<%}%>>是</option>
+					                    
+							    </select>
+							</div>
+						</div>
 					</div>
 					
 					<!-- <div class="row">
@@ -381,10 +383,10 @@
 							<%include("/yh/component/form/inputField.html", {
 							id:'supervision_code', label:'监管场所代码',
 							value:order.supervision_code!'5349'}){}%></div>
-						<div class="col-lg-4">
+						<!-- <div class="col-lg-4">
 							<%include("/yh/component/form/dateInputField.html", {
 							id:'decl_time', label:'申报日期',
-							value:order.decl_time!'' ,required:'required'}){}%></div>
+							value:order.decl_time!'' ,required:'required'}){}%></div> -->
 						<div class="col-lg-4">
 							<div class="form-group">
 							    <label class="search-label">起运国 <span style='color:red; display:initial;'>*</span></label>
@@ -473,7 +475,17 @@
 							<%include("/yh/component/form/inputField.html", { id:'status',
 							label:'状态', value:order.status!'未上报', disabled: 'disabled' }){}%>
 						</div>
+						<div class="col-lg-4">
+							<%include("/yh/component/form/inputField.html", { id:'submit_status',
+							label:'上报状态', value:order.submit_status!'', disabled: 'disabled' }){}%>
+						</div>
 					</div>
+					<div class="row">
+						<div class="col-lg-6">
+		                 <label>上报提示</label>
+		                 <textarea id='error_msg' class="form-control" rows="3" name="error_msg" disabled>${order.error_msg!''}</textarea>
+		            	</div>
+		            </div>
 		            <div class="row">
 						<div class="col-lg-12">
 							<h3>报关状态信息</h3>
@@ -509,7 +521,7 @@
 						
 					</div>
 					<div class="row">
-						<div class="col-lg-4">
+						<div class="col-lg-6">
 		                 <label>海关清单说明</label>
 		                 <textarea id='bill_cus_result' class="form-control" rows="3" name="bill_cus_result" disabled>${order.bill_cus_result!''}</textarea>
 		            	</div>
@@ -547,7 +559,7 @@
 				                        {
 				                            id:'cargo_table', 
 				                            style:'width:2500px',
-				                            headers:['',  '货品名称', '产品描述','企业商品货号<span style="color:red">*</span>', 
+				                            headers:['', '商品条码<span style="color:red">*</span>', '货品名称', '产品描述','企业商品货号<span style="color:red">*</span>', 
 				                             '数量<span style="color:red">*</span>', '计量单位<span style="color:red">*</span>',
 				                             '法定计量单位的数量<span style="color:red">*</span>', '法定计量单位<span style="color:red">*</span>',
 				                             '单价<span style="color:red">*</span>', '总价（税前）<span style="color:red">*</span>', 
@@ -556,7 +568,7 @@
 				                             '(品牌，规格，型号等)<span style="color:red">*</span>','检验检疫商品备案号',
 				                             '检验检疫商品规格型号<span style="color:red">*</span>','品牌<span style="color:red">*</span>'
 				                             ],
-				                            field_list:['','item_name','item_desc' ,'item_no', 'qty', 'unit', 'qty1','unit1','price', 'total',
+				                            field_list:['','bar_code','item_name','item_desc' ,'item_no', 'qty', 'unit', 'qty1','unit1','price', 'total',
 				                            'tax_rate','after_tax_total', 'currency','country','gcode','g_model','ciq_gno','ciq_gmodel','brand'],
 				                            value_list: itemList![]
 				                        }){} %>
@@ -723,7 +735,7 @@
                 <%}%>
                     <a id='payBtn' class="btn  btn-primary" disabled>支付</a>
                     <a id='submitDingDanBtn' class="btn  btn-primary" disabled >上报订单</a>
-                    <a id='goYunDanBtn' class="btn  btn-primary" disabled >前往运单</a>
+                    <a id='goYunDanBtn' class="btn  btn-primary" style="display:none" >前往运单</a>
                      <button id="printBtn" type="button" class="btn  btn-primary" data-toggle="modal"  data-target=".bs-example-modal-sm">打印</button>
                     <a class="btn  btn-default" href="/salesOrder">返回</a>
                 </div>

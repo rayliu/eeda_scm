@@ -16,7 +16,7 @@ $(document).ready(function() {
             },
             { "data": "SHOP_NAME"},
             { "data": "CONSIGNEE"}, 
-            { "data": "GOODS_VALUE",'visible':false}, 
+            { "data": "ACTURAL_PAID"}, 
             { "data": "STATUS",
             	"render": function ( data, type, full, meta ) {
             		var msg = '';
