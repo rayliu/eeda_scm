@@ -26,6 +26,7 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
@@ -35,6 +36,7 @@ import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.importOrder.CheckOrder;
 import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
+import controllers.util.IdcardUtil;
 import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
 
@@ -147,186 +149,205 @@ public class SalesOrderService {
     
     public Record checkOrder(Map<String, ?> soDto){
     	Record r = new Record();
-    	String msg = "";
+    	r.set("code", "00");
+    	String errorMsg = "";
     	
-    	String goods_value = soDto.get("goods_value").toString();
-    	String consignee = soDto.get("consignee").toString();
-    	String consignee_id = soDto.get("consignee_id").toString();
-    	String consignee_address = soDto.get("consignee_address").toString();
-    	String consignee_telephone = soDto.get("consignee_telephone").toString();
-    	String province = soDto.get("province").toString();
-    	String city = soDto.get("city").toString();
-    	String district = soDto.get("district").toString();
-    	String netwt = soDto.get("netwt").toString();
-    	String weight = soDto.get("weight").toString();
-    	String freight = soDto.get("freight").toString();
-    	String express_no = soDto.get("express_no").toString();
-    	
-    	
+    	String ref_order_no = soDto.get("ref_order_no").toString()==null?null:soDto.get("ref_order_no").toString().trim();
+		//String freight = soDto.get("freight").toString()==null?null:soDto.get("freight").toString().trim(); //运杂费
+		String consignee = soDto.get("consignee").toString()==null?null:soDto.get("consignee").toString().trim();
+		String consignee_telephone = soDto.get("consignee_telephone").toString()==null?null:soDto.get("consignee_telephone").toString().trim();
+		String consignee_address = soDto.get("consignee_address").toString()==null?null:soDto.get("consignee_address").toString().trim();
+		
+		//String buyer_regno = soDto.get("buyer_regno").toString()==null?null:soDto.get("buyer_regno").toString().trim();//订购人注册号
+		String buyer_name = soDto.get("buyer_name").toString()==null?null:soDto.get("buyer_name").toString().trim();
+		String buyer_id_number = soDto.get("buyer_id_number").toString()==null?null:soDto.get("buyer_id_number").toString().trim();
+		
+		String cop_no = soDto.get("cop_no").toString()==null?null:soDto.get("cop_no").toString().trim();
+		//String insure_fee = soDto.get("insure_fee").toString()==null?null:soDto.get("insure_fee").toString().trim();//保价费
+		String weight = soDto.get("weight").toString()==null?null:soDto.get("weight").toString().trim(); 
+		String net_weight = soDto.get("net_weight").toString()==null?null:soDto.get("net_weight").toString().trim();
+		
+		String goods_info = soDto.get("goods_info").toString()==null?null:soDto.get("goods_info").toString().trim(); 
+		String pack_no = soDto.get("pack_no").toString()==null?null:soDto.get("pack_no").toString().trim();  
+		String wrap_type = soDto.get("wrap_type").toString()==null?null:soDto.get("wrap_type").toString().trim(); 
+		
+		String province = soDto.get("province").toString()==null?null:soDto.get("province").toString().trim(); 
+		String city = soDto.get("city").toString()==null?null:soDto.get("city").toString().trim(); 
+		String district = soDto.get("district").toString()==null?null:soDto.get("district").toString().trim();
+
     	//明细表
     	List<Map<String, String>> itemLists = (ArrayList<Map<String, String>>)soDto.get("goods");
 		for(Map<String, String> itemList:itemLists){
-			String action = itemList.get("action");
-			String bar_code = itemList.get("bar_code");
-			String item_no = itemList.get("item_no");
-			String unit = itemList.get("unit");
-			String item_name = itemList.get("item_name");
-			String currency = itemList.get("currency");
-			String tax_rate = itemList.get("tax_rate");
-			String qty = itemList.get("qty");
-			String price = itemList.get("price");
+			String bar_code = itemList.get("bar_code")==null?null:itemList.get("bar_code").trim();
+			String item_name = itemList.get("item_name")==null?null:itemList.get("item_name").trim();
+			String item_no = itemList.get("item_no")==null?null:itemList.get("item_no").trim();
+			String qty = itemList.get("qty")==null?null:itemList.get("qty").trim();
+			String unit = itemList.get("unit")==null?null:itemList.get("unit").trim();
+			String qty1 = itemList.get("qty1")==null?null:itemList.get("qty1").trim();
+			String unit1 = itemList.get("unit1")==null?null:itemList.get("unit1").trim();
+			String price = itemList.get("price")==null?null:itemList.get("price").trim(); 
+			String tax_rate = itemList.get("tax_rate")==null?null:itemList.get("tax_rate").trim(); 
+			String gcode = itemList.get("gcode")==null?null:itemList.get("gcode").trim(); 
+			String g_model = itemList.get("g_model")==null?null:itemList.get("g_model").trim(); 
+			String ciq_gno = itemList.get("ciq_gno")==null?null:itemList.get("ciq_gno").trim();
+			String ciq_gmodel = itemList.get("ciq_gmodel")==null?null:itemList.get("ciq_gmodel").trim();
+			
+			if(StringUtils.isNotEmpty(bar_code)){
+				if(!CheckOrder.checkUpc(bar_code)){
+					errorMsg += ("【商品条码】("+bar_code+")有误，系统产品信息不存在此upc;");
+				}
+			}else{
+				errorMsg += ("【商品条码】不能为空;");
+			}
 			
 			if(StringUtils.isEmpty(item_name)){
-				msg += "【商品名称】不能为空；";
+				errorMsg += ("【商品名称】不能为空;");
+			}
+			
+			if(StringUtils.isEmpty(item_no)){
+				errorMsg += ("【商品货号】不能为空;");
 			}
 			
 			if(StringUtils.isNotEmpty(qty)){
 				if(!CheckOrder.checkDouble(qty)){
-					msg += "【商品数量】("+qty+")格式类型有误";
+					errorMsg += ("【商品数量】("+qty+")格式类型有误;");
 				}
 			}else{
-				msg += "【商品数量】不能为空；";
+				errorMsg += ("【商品数量】不能为空;");
 			}
 			
-			if(StringUtils.isNotEmpty(currency)){
-				if(!CheckOrder.checkDouble(currency)){
-					msg += "【币制】("+qty+")格式类型有误；";
+			if(StringUtils.isNotEmpty(qty1)){
+				if(!CheckOrder.checkDouble(qty1)){
+					errorMsg += ("【法定计量单位数量】("+qty1+")格式类型有误;");
 				}
 			}else{
-				msg += "【商品数量】不能为空；";
+				errorMsg += ("【法定计量单位数量】不能为空;");
 			}
 			
 			if(StringUtils.isNotEmpty(unit)){
-				if(!CheckOrder.checkUnitCode(unit)){
-					msg += "【单位】("+unit+")有误，系统不存在此单位编码，请参照标准报关单位编码填写；";
+				if(!CheckOrder.checkUnit(unit)){
+					errorMsg += ("【单位】("+unit+")有误，系统不存在此单位名称，请联系管理员维护;");
 				}
 			}else{
-				msg += "【商品数量】不能为空；";
+				errorMsg += ("【单位】不能为空;");
+			}
+			
+			if(StringUtils.isNotEmpty(unit1)){
+				if(!CheckOrder.checkUnit(unit1)){
+					errorMsg += ("【法定计量单位】("+unit1+")有误，系统不存在此单位名称，请联系管理员维护;");
+				}
+			}else{
+				errorMsg += ("【法定计量单位】不能为空;");
 			}
 			
 			if(StringUtils.isNotEmpty(price)){
 				if(!CheckOrder.checkDouble(price)){
-					msg +=  "【单价】("+price+")格式类型有误；";
+					errorMsg += ("【单价】("+price+")格式类型有误;");
 				}
 			}else{
-				msg += "【单价】不能为空；";
+				errorMsg += ("【单价】不能为空;");
 			}
 			
-			if(StringUtils.isNotEmpty(bar_code)){
-				if(!CheckOrder.checkUpc(bar_code)){
-					msg += "【商品条码（UPC）】("+bar_code+")有误，系统产品信息不存在此upc；";
-				}
-			}else{
-				msg += "【商品条码(UPC)】不能为空；";
-			}
-			
-			//【税率】和【含税总价】不能同时为空
-			if(StringUtils.isNotEmpty(goods_value)){
-				if(!CheckOrder.checkDouble(goods_value)){
-					msg += "【含税总价】("+goods_value+")格式类型有误；";
-				}
-			}else if(StringUtils.isNotEmpty(tax_rate)){
+			if(StringUtils.isNotEmpty(tax_rate)){
 				if(!CheckOrder.checkDouble(tax_rate)){
-					msg += "【税率】("+tax_rate+")格式类型有误；";
+					errorMsg += ("【税率】("+tax_rate+")格式类型有误;");
 				}
-			}else{
-				msg += "【税率】和【含税总价】不能同时为空；";
 			}
 			
-			if(StringUtils.isEmpty(item_no)){
-				msg += "【商品货号】不能为空；";
+			if(StringUtils.isEmpty(gcode)){
+				errorMsg += ("【十位税号】不能为空;");
 			}
 			
-			if(StringUtils.isNotEmpty(bar_code) && StringUtils.isNotEmpty(item_name)){
-				if(!checkBarFromName(bar_code,item_name)){
-					msg += "【商品条码】和【商品名称】不匹配；";
-				}
-				
+			if(StringUtils.isEmpty(g_model)){
+				errorMsg += ("【品牌规格型号等】不能为空;");
 			}
 			
+			if(StringUtils.isEmpty(ciq_gno)){
+				errorMsg += ("【检验检疫商品备案号】不能为空;");
+			}
+			
+			if(StringUtils.isEmpty(ciq_gmodel)){
+				errorMsg += ("【检验检疫商品规格型号】不能为空;");
+			}
 			
 		}
 		
-		
-		if(StringUtils.isNotEmpty(netwt)){
-			if(!CheckOrder.checkDouble(netwt)){
-				msg += "【净重】("+netwt+")格式类型有误；";
-			}
-		}
-		
-		if(StringUtils.isNotEmpty(weight)){
-			if(!CheckOrder.checkDouble(weight)){
-				msg += "【毛重】("+weight+")格式类型有误；";
-			}
-		}
-		
-		if(StringUtils.isNotEmpty(freight)){
-			if(!CheckOrder.checkDouble(freight)){
-				msg += "【运费】("+freight+")格式类型有误；";
-			}
-		}
-		
-		//省
-		if(StringUtils.isNotEmpty(province)){
-			if(!checkCode(province)){
-				msg += "【省级】("+province+")行政编码有误；";
+		if(StringUtils.isNotEmpty(ref_order_no)){
+			if(!CheckOrder.checkRefOrderNo(ref_order_no)){
+				errorMsg += ("此【订单编号】("+ref_order_no+")已存在，请核实是否有重复导入;");
 			}
 		}else{
-			msg += "【省级】不能为空";
+			errorMsg += ("【订单编号】不能为空;>");
 		}
-		
-		//市
-		if(StringUtils.isNotEmpty(city)){
-			if(!checkCode(city)){
-				msg += "【市级】("+city+")行政编码有误；";
-			}
-		}else{
-			msg += "【市级】不能为空";
-		}
-		
-		//区
-		if(StringUtils.isNotEmpty(district)){
-			if(!checkCode(district)){
-				msg += "【区级】("+freight+")行政编码有误；";
-			}
-		}else{
-			msg += "【区级】不能为空";
-		}
-		
-		//省市区总
-		if(StringUtils.isNotEmpty(province) && StringUtils.isNotEmpty(city) && StringUtils.isNotEmpty(district)){
-			String value = province+"#"+city+"#"+district;
-			if(!checkAllCode(value)){
-				msg += "【省市区级】不存在上下级关系，请参考标准城市编码；";
-			}
-		}
-		
-		if(StringUtils.isEmpty(consignee_address)){
-			msg += "【收货人详细地址】不能为空；";
-		}
-		
 		
 		if(StringUtils.isEmpty(consignee)){
-			msg += "【收货人姓名】不能为空；";
+			errorMsg += ("【收货人姓名】不能为空;");
 		}
 		if(StringUtils.isEmpty(consignee_telephone)){
-			msg += "【收货人电话】不能为空；";			
+			errorMsg += ("【收货人电话】不能为空;");			
 		}
 		if(StringUtils.isEmpty(consignee_address)){
-			msg += "【收货人详细地址】不能为空；";
-		}
-		if(StringUtils.isEmpty(consignee_id)){
-			msg += "【身份证号码】不能为空；";
-		}
-		if(StringUtils.isNotEmpty(express_no)){
-			if(!checkExpressNo(express_no)){
-				msg += "【快递单号】已存在；";
-			}
+			errorMsg += ("【收货人地址】不能为空;");
 		}
 		
-		if(StringUtils.isNotEmpty(msg)){
+		if(StringUtils.isEmpty(buyer_name)){
+			errorMsg += ("【订购人姓名】不能为空;");			
+		}
+		if(StringUtils.isNotEmpty(buyer_id_number)){
+			if(!IdcardUtil.isIdcard(buyer_id_number))
+				errorMsg += ("【订购人身份证号】不是合法的身份证号码;");
+		}else{
+			errorMsg += ("【订购人身份证号】不能为空;");
+		}
+		
+		if(StringUtils.isEmpty(cop_no)){
+			errorMsg += ("【企业内部标识单证编号】不能为空;");			
+		}
+
+		if(StringUtils.isNotEmpty(weight)){
+			if(!CheckOrder.checkDouble(weight)){
+				errorMsg += ("【毛重】("+weight+")格式类型有误;");
+			}
+		}else{
+			errorMsg += ("【毛重】不能为空;");	
+		}
+		
+		if(StringUtils.isNotEmpty(net_weight)){
+			if(!CheckOrder.checkDouble(net_weight)){
+				errorMsg += ("【净重】("+net_weight+")格式类型有误;");
+			}
+		}else{
+			errorMsg += ("【净重】不能为空;");	
+		}
+		
+		if(StringUtils.isEmpty(goods_info)){
+			errorMsg += ("【主要货物信息】不能为空;");			
+		}
+		
+		if(StringUtils.isNotEmpty(pack_no)){
+			if(!CheckOrder.checkDouble(pack_no)){
+				errorMsg += ("【包裹数】("+pack_no+")格式类型有误;");
+			}
+		}else{
+			errorMsg += ("【包裹数】不能为空;");	
+		}
+		
+		if(StringUtils.isEmpty(wrap_type)){
+			errorMsg += ("【包装种类】不能为空;");			
+		}
+		
+		if(StringUtils.isNotEmpty(province)&&StringUtils.isNotEmpty(city)&&StringUtils.isNotEmpty(district)){
+			String value = province+"#"+city+"#"+district;
+			if(!CheckOrder.checkCode(value)){
+				errorMsg += ("【地区编码】("+value+")格式类型有误;");
+			}
+		}else{
+			errorMsg += ("【地区编码】不能不全或为空;");	
+		}
+		
+		if(StringUtils.isNotEmpty(errorMsg)){
 			r.set("code", "6");
-			r.set("msg", msg);
+			r.set("msg", errorMsg);
 		}
     	return r;
     }
@@ -334,6 +355,8 @@ public class SalesOrderService {
     @Before(Tx.class)
     public void saveSo() throws InstantiationException, IllegalAccessException{
         String orderJsonStr = controller.getPara("order");
+        //Record re = Db.findFirst("select * from customize_field where order_type = 'testJson'");
+		//String orderJsonStr = re.getStr("field_code");
         
         if(orderJsonStr==null){
             orderJsonStr = ApiController.getRequestPayload(controller.getRequest());
@@ -356,7 +379,7 @@ public class SalesOrderService {
         if("0".equals(configR.getStr("code"))){
         	office_id = configR.getLong("office_id");
         	Record errorR = checkOrder(soDto);
-        	if(errorR!=null){
+        	if(!"00".equals(errorR.getStr("code"))){
             	controller.renderJson(errorR);
                 return;// 注意这里一定要返回,否则会继续往下执行
         	}
@@ -367,22 +390,41 @@ public class SalesOrderService {
         
         
         UserLogin ul = UserLogin.dao.findFirst("select * from user_login where user_name = ?","interface@defeng.com");
-        SalesOrder salesOrder = new SalesOrder();
 
+        SalesOrder salesOrder = new SalesOrder();
+        DbUtils.setModelValues(soDto, salesOrder);
         //需后台处理的字段
-        salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("IDQHDF"));   
+        salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("IDQHDF")); 
+        salesOrder.set("logistics_no", OrderNoGenerator.getNextOrderNo("IYQHDF"));
         salesOrder.set("custom_id", 9);  //深圳前海德丰投资发展有限公司
         salesOrder.set("status", "未上报");  //状态
-        salesOrder.set("currency", 142);  //币制
-        salesOrder.set("consignee_type", 1);  //证件类型
-        salesOrder.set("consignee_country", 142);//国
-        salesOrder.set("pro_remark", "无");//优惠说明
-        salesOrder.set("pay_channel", "01");//优惠说明
+        salesOrder.set("is_pay_pass","0");  //是否已完成申报
+        salesOrder.set("pay_channel", "01");//支付渠道
+        salesOrder.set("pay_type", "PTL");//支付渠道
+        salesOrder.set("assure_code", "440300349779838");// 担保企业编号
+        salesOrder.set("ems_no", "I440366006516001"); //电商账册编号
+        salesOrder.set("traf_mode", 4); //运输方式
+        salesOrder.set("ship_name", "汽车"); //运输工具名称
+        salesOrder.set("ciq_code","471800"); //主管检验检疫机构代码
+        salesOrder.set("supervision_code","5349"); //进出口岸代码
+        salesOrder.set("country_code", "142");  //起运国
+        salesOrder.set("customs_code","5349"); //主管海关代码 
+        salesOrder.set("business_mode","2"); //业务模式代码 *
+        salesOrder.set("trade_mode","1210"); //贸易方式 
+        salesOrder.set("sign_company","ISDFIJPMRSDIP001"); //承运企业海关备案号 
+        salesOrder.set("sign_company_name","德邦物流"); //承运企业名称 
+        salesOrder.set("port_code","5349"); //进出口岸代码
+        salesOrder.set("ie_date",new Date()); //进口日期
+        salesOrder.set("wh_org_code","349779838"); //企业组织机构代码（仓储企业）
+        salesOrder.set("freight", 0);  //运杂费
+        salesOrder.set("insure_fee", 0); //保价费
+        String buyer_id_number = soDto.get("buyer_id_number").toString().trim();
+        salesOrder.set("buyer_regno", buyer_id_number); //订购人注册号(默认为身份证号)
+		
         salesOrder.set("create_stamp", new Date());  //操作时间
         salesOrder.set("create_by", ul.getLong("id"));  //操作人
         salesOrder.set("note", "接口数据");  //备注
         salesOrder.set("office_id", office_id);
-        DbUtils.setModelValues(soDto, salesOrder);
 
         salesOrder.save();
         String id = salesOrder.getLong("id").toString();
@@ -390,45 +432,64 @@ public class SalesOrderService {
     	//明细表
     	List<Map<String, String>> itemLists = (ArrayList<Map<String, String>>)soDto.get("goods");
     	String cargo_name = null;
-		for(Map<String, String> itemList:itemLists){
-			String action = itemList.get("action");
-			String bar_code = itemList.get("bar_code");
-			String item_no = itemList.get("item_no");
-			String unit = itemList.get("unit");
-			String item_name = itemList.get("item_name");
-			String currency = itemList.get("currency");
-			String tax_rate = itemList.get("tax_rate");
-			String qty = itemList.get("qty");
-			String price = itemList.get("price");
-			
+		for(Map<String, String> itemList:itemLists){		
+			String bar_code = itemList.get("bar_code")==null?null:itemList.get("bar_code").trim();
+			String item_name = itemList.get("item_name")==null?null:itemList.get("item_name").trim();
+			String item_no = itemList.get("item_no")==null?null:itemList.get("item_no").trim();
+			String qty = itemList.get("qty")==null?null:itemList.get("qty").trim();
+			String unit = itemList.get("unit")==null?null:itemList.get("unit").trim();
+			String qty1 = itemList.get("qty1")==null?null:itemList.get("qty1").trim();
+			String unit1 = itemList.get("unit1")==null?null:itemList.get("unit1").trim();
+			String price = itemList.get("price")==null?null:itemList.get("price").trim(); 
+			String tax_rate = itemList.get("tax_rate")==null?null:itemList.get("tax_rate").trim(); 
+			String gcode = itemList.get("gcode")==null?null:itemList.get("gcode").trim(); 
+			String g_model = itemList.get("g_model")==null?null:itemList.get("g_model").trim(); 
+			String ciq_gno = itemList.get("ciq_gno")==null?null:itemList.get("ciq_gno").trim();
+			String ciq_gmodel = itemList.get("ciq_gmodel")==null?null:itemList.get("ciq_gmodel").trim();
+			//子表数据保存
 			SalesOrderGoods sog = new SalesOrderGoods();
-			sog.set("bar_code", bar_code);   //条码
-			sog.set("item_name", cargo_name);//名称
+			if(StringUtils.isNotEmpty(bar_code)){
+				sog.set("bar_code", bar_code);   //条码
+			}
+			
+			sog.set("item_name", item_name);//名称
 			sog.set("item_no", item_no); //商品货号
 			sog.set("qty", qty);   //数量
-			sog.set("unit",unit);   //单位
+			sog.set("qty1", qty1);   //数量
+			if(StringUtils.isNotEmpty(unit)){
+				Unit unitRec = Unit.dao.findFirst("select * from unit where name = ?",unit);
+				if(unitRec!=null)
+					sog.set("unit", unitRec.getStr("code"));   //单位
+			}
+			if(StringUtils.isNotEmpty(unit1)){
+				Unit unitRec = Unit.dao.findFirst("select * from unit where name = ?",unit1);
+				if(unitRec!=null)
+					sog.set("unit1", unitRec.getStr("code"));   //单位
+			}
 			sog.set("price", price);   //单位
+			sog.set("tax_rate", tax_rate);   //税率
+			sog.set("gcode", gcode);   //税号
+			sog.set("g_model", g_model);   //(品牌规格型号等)
+			sog.set("ciq_gno", ciq_gno);   //检验检疫商品备案号
+			sog.set("ciq_gmodel", ciq_gmodel);   //检验检疫商品规格型号
 			
 			if(StringUtils.isNotEmpty(price)&&StringUtils.isNotEmpty(qty)){
 				DecimalFormat df = new DecimalFormat("#.00");
 				String total = df.format(Double.parseDouble(price)*Double.parseDouble(qty));
-				sog.set("total", total);   //总价
-			}
-			if(StringUtils.isNotEmpty(tax_rate)){
-				sog.set("tax_rate", tax_rate);   //税率
+				sog.set("total", CheckOrder.changeNum(Double.parseDouble(total)));   //总价
+				salesOrder.set("goods_value", CheckOrder.changeNum(Double.parseDouble(total))).update();  
 			}
 			
+			
 			if(StringUtils.isNotEmpty(price)&&StringUtils.isNotEmpty(qty)&&StringUtils.isNotEmpty(tax_rate)){
-				DecimalFormat df = new DecimalFormat("#.00");
 				String tax_total = CheckOrder.changeNum(Double.parseDouble(price)*Double.parseDouble(qty)*(Double.parseDouble(tax_rate)+1));
-				
 				sog.set("after_tax_total", CheckOrder.changeNum(Double.parseDouble(tax_total)));   //税后总价
-				if(salesOrder.getDouble("goods_value")==0){
-					salesOrder.set("goods_value", CheckOrder.changeNum(Double.parseDouble(tax_total))).update();   //税后总价
-				}
+				salesOrder.set("actural_paid", CheckOrder.changeNum(Double.parseDouble(tax_total))).update();   //税后总价
 			}
-			sog.set("order_id",id);
-			sog.set("currency",142);
+			sog.set("order_id",salesOrder.get("id"));
+			sog.set("currency","142");
+			sog.set("country","142");
+			sog.set("brand","无");
 			sog.save();
 		}
 		
@@ -439,94 +500,18 @@ public class SalesOrderService {
         log.set("time_stamp", new Date());
         log.save();
 			
-		//创建对应运单
-	    String log_id = createLogOrder(id,soDto,cargo_name,ul);
 		
 		String orgCode = soDto.get("org_code").toString();
         DingDanDto returnSoDto= DingDanBuilder.buildDingDanDto(id, orgCode);
         Record r = new Record();
-       
-        if(StringUtils.isNotEmpty(log_id)){
-        	r.set("code", "0");
-        	r.set("msg", "请求已成功处理!");
-        } else{
-        	r.set("code", "-1");
-        	r.set("msg", "请求创建运单失败!");
-        }
+        r.set("code", "0");
+        r.set("msg", "已生成订单!");
+
         r.set("data", returnSoDto);
         controller.renderJson(r);
     }
 
-  
-   //自动生成运输单
-    @Before(Tx.class)
-    public String createLogOrder(String sales_order_id,Map<String, ?> soDto,String cargo_name,UserLogin ul){
-    	String express_no = soDto.get("express_no").toString().trim();
-    	String netwt = soDto.get("netwt").toString().trim();
-		String weight = soDto.get("weight").toString().trim();
-		String freight = soDto.get("freight").toString().trim();
-		
-		
-    	LogisticsOrder logisticsOrder = null;
-    	if(StringUtils.isNotEmpty(sales_order_id)){
-    		String order_no = OrderNoGenerator.getNextOrderNo("YD");
-    		logisticsOrder = new LogisticsOrder();
-        	logisticsOrder.set("log_no", order_no);
-        	logisticsOrder.set("status","暂存");
-    		logisticsOrder.set("create_by", ul.getLong("id"));
-    		logisticsOrder.set("create_stamp", new Date());
-    		
-    		//预填值gln368
-    		logisticsOrder.set("country_code", "142");
-    		logisticsOrder.set("shipper_country", "142");
-    		logisticsOrder.set("shipper_city", "440305");
-    		logisticsOrder.set("shipper", "深圳前海德丰投资发展有限公司");
-    		logisticsOrder.set("shipper_address", "深圳前海湾保税港区W6仓");
-    		logisticsOrder.set("shipper_telephone", "075586968661");
-    		logisticsOrder.set("traf_mode", "4");
-    		logisticsOrder.set("pack_no", 1);
-    		logisticsOrder.set("ship_name", "汽车");
-    		logisticsOrder.set("customs_code", "5349");
-    		logisticsOrder.set("ciq_code", "471800");
-    		logisticsOrder.set("port_code", "5349");
-    		logisticsOrder.set("decl_code", "5349");
-    		logisticsOrder.set("supervision_code", "5349");
-    		logisticsOrder.set("ems_no", "I440366006516001");
-    		logisticsOrder.set("trade_mode", "1210");
-    		logisticsOrder.set("destination_port", "5349");
-    		logisticsOrder.set("ps_type", "2");
-    		logisticsOrder.set("trans_mode", "1");
-    		logisticsOrder.set("cut_mode", "1");
-    		logisticsOrder.set("wrap_type", "CT");
-    		logisticsOrder.set("ie_date", new Date());
-    		logisticsOrder.set("deliver_date",  new Date());
-    		if(StringUtils.isNotEmpty(cargo_name)){
-    			logisticsOrder.set("goods_info", cargo_name); 
-			}
-    		if(StringUtils.isNotEmpty(freight)){
-    			logisticsOrder.set("freight", freight);  //运费
-			}
-    		logisticsOrder.set("insure_fee", "0");
-    		if(StringUtils.isNotEmpty(express_no)){
-    			logisticsOrder.set("parcel_info",express_no );
-    		}
-    		if(StringUtils.isNotEmpty(netwt)){
-    			logisticsOrder.set("netwt",netwt );
-    		}
-    		if(StringUtils.isNotEmpty(weight)){
-    			logisticsOrder.set("weight",weight );
-    		}
-    		if(StringUtils.isNotEmpty(sales_order_id)){
-        		logisticsOrder.set("sales_order_id",sales_order_id);
-        	}
-    		
-    		logisticsOrder.save();
-    	}
-		return logisticsOrder.getLong("id").toString();
-    }
-    
-    
-    
+ 
     public void querySo(){
         String orderJsonStr = controller.getPara("orderQuery");//form 提交
 
@@ -592,15 +577,12 @@ public class SalesOrderService {
         if(so !=null){
             DingDanDto soDto= DingDanBuilder.buildDingDanDto(so.getLong("id").toString(), "");
             
-            LogisticsOrder lo = LogisticsOrder.dao.findFirst("select * from logistics_order where sales_order_id = ?",so.getLong("id"));
             String logistics_ciq_status = null;
             String logistics_cus_status = null;
             String log_status = null;
-            if(lo != null){
-            	log_status = lo.getStr("status");
-            	logistics_ciq_status = lo.getStr("logistics_ciq_status");
-            	logistics_cus_status = lo.getStr("logistics_cus_status");
-            }
+            log_status = so.getStr("status");
+            logistics_ciq_status = so.getStr("logistics_ciq_status");
+            logistics_cus_status = so.getStr("logistics_cus_status");
             
             String status = so.getStr("status");
             String order_cus_status = so.getStr("order_cus_status");

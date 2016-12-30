@@ -33,6 +33,7 @@ import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
 import config.EedaConfig;
+import controllers.api.service.SalesOrderService;
 import controllers.oms.custom.dto.DingDanBuilder;
 import controllers.oms.custom.dto.DingDanDto;
 import controllers.profile.LoginUserController;
@@ -51,7 +52,10 @@ public class SalesOrderController extends Controller {
 	Subject currentUser = SecurityUtils.getSubject();
 
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
-	public void index() {
+	public void index() throws InstantiationException, IllegalAccessException {
+		//SalesOrderService s = new SalesOrderService(this);
+		//redirect("/api/saveSo?order="+jsonValue);
+		//s.saveSo();
 		render("/oms/salesOrder/salesOrderList.html");
 	}
 	
@@ -90,7 +94,7 @@ public class SalesOrderController extends Controller {
    			salesOrder.set("update_stamp", new Date());
    			salesOrder.update();
    			
-   			log_id = createLogOrder(id,"update");
+   			//log_id = createLogOrder(id,"update");
    			
    			CustomJob.operationLog("salesOrder", jsonStr, id, "update", LoginUserController.getLoginUserId(this).toString());
    		} else {
@@ -107,7 +111,7 @@ public class SalesOrderController extends Controller {
    			
    			//生成对应的运输单
    			id = salesOrder.getLong("id").toString();
-   			log_id = createLogOrder(id,"create");
+   			//log_id = createLogOrder(id,"create");
    			
    			CustomJob.operationLog("salesOrder", jsonStr, id, "create", LoginUserController.getLoginUserId(this).toString());
    		}
@@ -400,6 +404,8 @@ public class SalesOrderController extends Controller {
     public void submitDingDan(){
     	
     	String order_id = getPara("order_id");
+    	SalesOrder sor = SalesOrder.dao.findById(order_id);
+    	sor.set("decl_time",new Date()).update();
     	
     	String jsonMsg=setOrderMsg(order_id);
     	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
