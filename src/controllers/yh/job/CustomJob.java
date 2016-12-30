@@ -30,29 +30,29 @@ public class CustomJob implements Runnable {
 	@Override
 	@Before(Tx.class)
 	public void run() {
-	    logger.debug("更新单据状态开始.....");
-	    
-	    if(isRunning){
-	        logger.debug("last job still running, skip job.");
-	        return;
-	    }
-	    isRunning = true;
-	    List<Record> record = Db.find("select * from sales_order where "
-	    		+ " (ifnull(order_cus_status,'') != '接收成功' "
-	    		+ " or ifnull(order_ciq_status,'') != '接收成功'"
-	    		+ " or ifnull(bill_cus_status,'') != '审批通过'"
-	    		+ " or ifnull(pay_status,'') != '接收成功')"
-	    		+ " and status != '未上报' order by id desc");
-	    for(Record re : record){
-	        //如果数据更新报错，继续下一条
-	    	try {
-                orderProcess(re);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } 
-	    }
-	    isRunning= false;
-	    logger.debug("更新单据状态结束");
+//	    logger.debug("更新单据状态开始.....");
+//	    
+//	    if(isRunning){
+//	        logger.debug("last job still running, skip job.");
+//	        return;
+//	    }
+//	    isRunning = true;
+//	    List<Record> record = Db.find("select * from sales_order where "
+//	    		+ " (ifnull(order_cus_status,'') != '接收成功' "
+//	    		+ " or ifnull(order_ciq_status,'') != '接收成功'"
+//	    		+ " or ifnull(bill_cus_status,'') != '审批通过'"
+//	    		+ " or ifnull(pay_status,'') != '接收成功')"
+//	    		+ " and status != '未上报' order by id desc");
+//	    for(Record re : record){
+//	        //如果数据更新报错，继续下一条
+//	    	try {
+//                orderProcess(re);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            } 
+//	    }
+//	    isRunning= false;
+//	    logger.debug("更新单据状态结束");
 	}
 
     private void orderProcess(Record re) {

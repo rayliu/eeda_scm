@@ -48,8 +48,13 @@ public class DingDanBuilder {
 		
 		order.setPay_no(salesOrder.getStr("pay_no"));
 		
-		String pay_time = salesOrder.getDate("pay_time").toString();
-		order.setPay_time(pay_time.substring(0, pay_time.length()-2));   //支付时间
+		if(salesOrder.getDate("pay_time") != null){
+			String pay_time = salesOrder.getDate("pay_time").toString();
+			order.setPay_time(pay_time.substring(0, pay_time.length()-2));   //支付时间
+		}else{
+			order.setPay_time("");
+		}
+		
 		order.setPay_type(salesOrder.getStr("pay_type"));   //支付渠道        
 		order.setPay_channel(salesOrder.getStr("pay_channel"));  //支付渠道(可空)
 		order.setShop_no(salesOrder.getStr("shop_no"));  //店铺代码（可空）
@@ -69,11 +74,24 @@ public class DingDanBuilder {
 		order.setSign_company(salesOrder.getStr("sign_company"));//承运企业海关备案号
 		order.setSign_company_name(salesOrder.getStr("sign_company_name")); //承运企业名称
 		order.setEms_no(salesOrder.getStr("ems_no"));//电商账册编号（空）
-		order.setDecl_time(salesOrder.getDate("decl_time").toString()); // 申报日期（yyy-mm-dd）
+		if(salesOrder.getDate("decl_time") != null){
+			String decl_time = salesOrder.getDate("decl_time").toString();
+			order.setDecl_time(decl_time);  // 申报日期（yyy-mm-dd）
+		}else{
+			order.setDecl_time("");
+		}
+		
+		if(salesOrder.getDate("ie_date") != null){
+			String ie_date = salesOrder.getDate("ie_date").toString();
+			order.setIe_date(ie_date);  //进口日期（yyy-mm-dd）（空）
+		}else{
+			order.setIe_date("");
+		}
+		
+		//order.setDecl_time(salesOrder.getDate("decl_time").toString());
 		order.setCustoms_code(salesOrder.getStr("customs_code"));//主管海关代码
 		order.setCiq_code(salesOrder.getStr("ciq_code"));//主管检验疫机构代码
 		order.setPort_code(salesOrder.getStr("port_code"));//口岸海关代码
-		order.setIe_date(salesOrder.getDate("ie_date").toString());//进口日期（yyy-mm-dd）（空）
 		order.setTrade_mode(salesOrder.getStr("trade_mode"));//贸易方式
 		order.setBusiness_mode(salesOrder.getStr("business_mode"));//业务模式代码
 		order.setTraf_mode(salesOrder.getStr("traf_mode"));//运输方式
@@ -114,6 +132,7 @@ public class DingDanBuilder {
             DingDanGoodsDto goods=new DingDanGoodsDto();  
             goods.setCurrency(item.getStr("currency"));
     		goods.setItem_no(item.getStr("item_no"));
+    		goods.setItem_name(item.getStr("item_name"));
     		goods.setQty(item.getLong("qty"));
     		goods.setQty1(item.getLong("qty1"));
     		goods.setUnit(item.getStr("unit"));
