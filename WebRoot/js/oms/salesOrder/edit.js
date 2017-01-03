@@ -182,6 +182,13 @@ $(document).ready(function() {
     	var log_id = $("#log_id").val();
     	window.open("/logisticsOrder/edit?id="+log_id);
     });
+    
+    
+    //前往直购入库单
+    $('#goStorageInBtn').click(function(){
+    	var log_id = $("#log_id").val();
+    	window.open("/storageInOrder/create?order_id="+$("#order_id").val());
+    });
 
     
     //通过报关企业获取内容

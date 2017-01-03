@@ -410,8 +410,8 @@ public class SalesOrderController extends Controller {
     	String jsonMsg=setOrderMsg(order_id);
     	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
 
-		//String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/order_create.action";
-		String urlStr="http://test.szedi.cn:7088/ceb/tgt/service/order_createBc.action";
+		String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/order_create.action";
+		//String urlStr="http://test.szedi.cn:7088/ceb/tgt/service/order_createBc.action";
 		System.out.println("上报Url: "+urlStr);
 		
 		paramsMap.put("jsonMsg", jsonMsg);
@@ -460,8 +460,7 @@ public class SalesOrderController extends Controller {
 		orderList.add(order);
 
 		requestMap.put("total_count", orderList.size());
-		requestMap.put("notify_url", "http://"+EedaConfig.sysProp.getProperty("allinpayCallbackServer")+"/orderReturn/orderResultRecv");//回调地址
-		System.out.println("回调地址："+EedaConfig.sysProp.getProperty("allinpayCallbackServer")+"/orderReturn/orderResultRecv");
+		requestMap.put("notify_url", "http://"+EedaConfig.sysProp.getProperty("callbackServer")+"/orderReturn/orderResultRecv");//回调地址
 		requestMap.put("orders", orderList);
 		
 		Gson gson1 = new Gson(); 

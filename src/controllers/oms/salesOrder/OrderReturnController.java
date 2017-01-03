@@ -7,12 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import models.ReturnStatus;
+
 import org.apache.commons.lang.StringUtils;
 
 import com.google.gson.Gson;
 import com.jfinal.core.Controller;
 import com.jfinal.log.Logger;
 import com.jfinal.plugin.activerecord.Db;
+import com.jfinal.plugin.activerecord.Record;
 
 import controllers.api.ApiController;
 
@@ -55,6 +58,33 @@ public class OrderReturnController extends Controller {
 	    renderText("success");
 	}
 	
+	
+	public void storageInResultRecv() throws UnsupportedEncodingException{
+		String resultMsg = getPara("cebJsonMsg");//www-form-urlencoded/
+		if (resultMsg == null) {//raw 提交
+			resultMsg = ApiController.getRequestPayload(getRequest());
+			resultMsg = URLDecoder.decode(resultMsg,"UTF-8");
+			resultMsg= resultMsg.substring(11, resultMsg.length());
+        }
+		
+		System.out.println("returnValue:"+resultMsg);
+	    Db.update("update customize_field set field_code = ? where order_type = 'returnMassge'",resultMsg);
+	    
+	    if(StringUtils.isNotEmpty(resultMsg)){
+	    	Gson gson = new Gson(); 
+	    	Map<String, ?> dto= gson.fromJson(resultMsg, HashMap.class);  
+	    	String code = (String)dto.get("code");
+	    	String message = (String)dto.get("message");
+	    	String cop_no = (String)dto.get("cop_no");
+	    	if("00".equals(code)){
+	    		if(StringUtils.isNotEmpty(cop_no)){
+	    			Db.update("update storage_in_order set status='已上报',error_msg = ? where cop_no = ?",message,cop_no);
+	    		}
+	    	}
+	    }
+	    renderText("success");
+	}
+	
 	public void orderStatusRecv() throws UnsupportedEncodingException{
 		String resultMsg = getPara("cebJsonMsg");//www-form-urlencoded/
 		if (resultMsg == null) {//raw 提交
@@ -79,6 +109,28 @@ public class OrderReturnController extends Controller {
 	    	String return_time = (String)dto.get("return_time");   //操纵时间
 	    	
 	    	System.out.println("回调状态的运输单号："+logistics_no);
+	    	Record salesRe = Db.findFirst("select * from sales_order where logistics_no = ?",logistics_no);
+	    	long order_id = salesRe.getLong("id");
+	    	ReturnStatus returnRe = ReturnStatus.dao.findFirst("select * from return_status where ceb_report = ? and order_id = ?",ceb_report,order_id);
+
+	    	if(returnRe == null){
+	    		ReturnStatus rs = new ReturnStatus();
+	    		rs.set("ceb_report", ceb_report);
+	    		rs.set("org_code",org_code );
+	    		rs.set("logistics_no",logistics_no );
+	    		rs.set("cop_no", cop_no);
+	    		rs.set("bill_no", bill_no);
+	    		rs.set("return_status", return_status);
+	    		rs.set("return_info", return_info);
+	    		rs.set("return_time", return_time);
+	    		rs.save();
+	    		
+	    	}else{
+	    		returnRe.set("return_status",return_status);
+	    		returnRe.set("return_info", return_info);
+	    		returnRe.set("return_time", return_time);
+	    		returnRe.update();
+	    	}
 	    	
 	    }
 	    renderText("success");
