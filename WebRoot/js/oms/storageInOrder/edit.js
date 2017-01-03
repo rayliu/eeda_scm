@@ -14,49 +14,8 @@ $(document).ready(function() {
     	rules:{
     		country_code_name:{
     			rangelength:[3,3]
-    		},
-    		shipper_country_name:{
-    			rangelength:[3,3]
-    		},
-    		shipper_city_name:{
-    			rangelength:[6,6]
-    		},
-    		customs_code_name:{
-    			rangelength:[4,4]
-    		},
-    		ciq_code_name:{
-    			rangelength:[6,6]
-    		},
-    		ie_date_name:{
-    			dateISO:true
-    		},
-    		freight_name:{
-    			number:true
-    		},
-    		insure_fee_name:{
-    			number:true
-    		},
-    		weight_name:{
-    			number:true
-    		},
-    		netwt_name:{
-    			number:true
-    		},
-    		pack_no_name:{
-    			digits:true
-    		},
-    		shipper_telephone_name:{
-    			isPhone:true
     		}
     	}
-    	
-    	/*messages: {
-    		rangelength: $.validator.format("长度必须为{0}位字符"),
-    		country_code_name: "长度必须为3位字符",
-    		shipper_country_name: "长度必须为3位字符",
-    		shipper_city_name: "长度必须为6位字符",
-    		customs_code_name: "长度必须为4位字符"
-    	}*/
     });
     
     $.extend($.validator.messages, {
@@ -88,27 +47,20 @@ $(document).ready(function() {
         
         $(this).attr('disabled', true);
         //分解收货人省市区的地址编码
-        var cargo_items_array = itemOrder.buildCargoDetail();
         var order = buildOrder();
         order.id = $('#order_id').val();
-        order.cargo_list = cargo_items_array
+        order.order_id = $('#sales_order_id').val();
 
         //异步向后台提交数据
-        $.post('/logisticsOrder/save', {params:JSON.stringify(order)}, function(data){
+        $.post('/storageInOrder/save', {params:JSON.stringify(order)}, function(data){
             var order = data;
             if(order.ID>0){
-            	$("#creator_name").val(data.CREATE_BY_NAME);	
-                $("#create_stamp").val(order.CREATE_STAMP);
-                $("#order_id").val(order.ID);
-                $("#log_no").val(order.LOG_NO);
-
-                //韵达快递下单
-                if(order.MAIL_NO!='' && order.MAIL_NO!=null)
-                	$("#parcel_info").val(order.MAIL_NO);
-                
-                eeda.contactUrl("edit?id",order.ID);
                 $.scojs_message('保存成功', $.scojs_message.TYPE_OK);
                 $('#saveBtn').attr('disabled', false);
+                $('#submitBtn').attr('disabled', false);
+                eeda.contactUrl("edit?id",order.ID);
+                $('#order_id').val(order.ID);
+                $('#status').val(order.STATUS);
             }else{
                 $.scojs_message('保存失败', $.scojs_message.TYPE_ERROR);
                 $('#saveBtn').attr('disabled', false);
@@ -121,14 +73,32 @@ $(document).ready(function() {
     
 
     
-    //上报运单
+    //上报
     $('#submitBtn').click(function(){
-    	 $.post('/logisticsOrder/submitYunDan', {order_id:$("#order_id").val()}, function(data){
+    	 $.post('/storageInOrder/submitOrder', {order_id:$("#order_id").val()}, function(data){
     		 if(data!=null){
-     			var message = $(data.logistics).attr('message');
-     			if(message == '运单写入成功'){
+    			 var code = data.code;
+     			var message = data.message;
+     			if(code == '100'){
      				$.scojs_message(message , $.scojs_message.TYPE_OK);
-     				$('#status').val(message);
+     				$('#submit_status').val(message);
+     				
+     				setTimeout(function(){
+            			$.post('/storageInOrder/querySubMsg', {order_id:$("#order_id").val()}, function(data){
+            				if(data){
+            					if(data.ERROR_MSG!='直购订单写入成功'){
+	            					$.scojs_message(data.ERROR_MSG, $.scojs_message.TYPE_ERROR);
+	            					$('#submitDingDanBtn').attr('disabled',false);
+	            				}else{
+	            					$.scojs_message(data.ERROR_MSG, $.scojs_message.TYPE_OK);
+	            					$('#status').val("已上报");
+	            				}
+	            				$('#submit_status').val(data.SUBMIT_STATUS);
+	            				$('#error_msg').val(data.ERROR_MSG);
+            				}
+            			});
+            		}
+            		,2000);
      			}else{
      				$.scojs_message(message , $.scojs_message.TYPE_FALSE);
      			}	
@@ -137,6 +107,7 @@ $(document).ready(function() {
      		}
     	 })
     });
+
      
     //通过报关企业获取内容
     $('#custom_id_input').on('blur',function(){
@@ -167,15 +138,17 @@ $(document).ready(function() {
     	})	
     }
     
+    
+    
     //按钮控制
     var order_id = $("#order_id").val();
     var status = $("#status").val();
     if(order_id == ''){
     	 $('#saveBtn').attr('disabled',false);
     }else{
-    	if(status=='未上报' || status=='暂存'){
+    	if(status=='未上报'){
     		$('#saveBtn').attr('disabled',false);
-			$('#submitBtn').attr('disabled',false);
+    		$('#submitBtn').attr('disabled',false);
     	}
     }
     

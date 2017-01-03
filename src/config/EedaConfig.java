@@ -15,8 +15,10 @@ import models.ModuleRole;
 import models.Office;
 import models.Party;
 import models.Permission;
+import models.ReturnStatus;
 import models.Role;
 import models.RolePermission;
+import models.StorageInOrder;
 import models.UserCustomer;
 import models.UserLogin;
 import models.UserOffice;
@@ -99,7 +101,7 @@ import controllers.oms.moveOrder.MoveOrderController;
 import controllers.oms.orderStatus.OrderStatusController;
 import controllers.oms.salesOrder.OrderReturnController;
 import controllers.oms.salesOrder.SalesOrderController;
-import controllers.oms.storageInOrder.StorageInController;
+import controllers.oms.storageInOrder.StorageInOrderController;
 import controllers.oms.waveOrder.WaveOrderController;
 import controllers.profile.AccountController;
 import controllers.profile.CustomCompanyController;
@@ -235,7 +237,7 @@ public class EedaConfig extends JFinalConfig {
 		 
 		 //回调接口
 		 me.add("/orderReturn", OrderReturnController.class, contentPath);
-		 me.add("/storageIn", StorageInController.class, contentPath);
+		 me.add("/storageInOrder", StorageInOrderController.class, contentPath);
 		 
 	}
 
@@ -328,6 +330,8 @@ public class EedaConfig extends JFinalConfig {
         arp.addMapping("custom_gate_in_order", CustomGateInOrder.class);
         arp.addMapping("custom_gate_in_item", CustomGateInItem.class);
         arp.addMapping("custom_inventory", CustomInventory.class);
+        arp.addMapping("return_status", ReturnStatus.class);
+        arp.addMapping("storage_in_order", StorageInOrder.class);
     }
 
     private void initDBconnector() {

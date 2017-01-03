@@ -12,9 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import models.StorageInOrder;
 import models.UserLogin;
 import models.eeda.oms.LogisticsOrder;
 import models.eeda.oms.SalesOrder;
+import models.eeda.oms.SalesOrderGoods;
 import models.eeda.profile.CustomCompany;
 import net.sf.json.xml.XMLSerializer;
 
@@ -32,6 +34,11 @@ import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
+import config.EedaConfig;
+import controllers.oms.custom.dto.DingDanBuilder;
+import controllers.oms.custom.dto.DingDanDto;
+import controllers.oms.custom.dto.DingDanGoodsDto;
+import controllers.oms.custom.dto.StorageInDto;
 import controllers.oms.custom.dto.YunDanDto;
 import controllers.oms.yunda.DataSecurity;
 import controllers.oms.yunda.Item;
@@ -50,9 +57,9 @@ import controllers.yh.job.CustomJob;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
-public class StorageInController extends Controller {
+public class StorageInOrderController extends Controller {
 
-	private Logger logger = Logger.getLogger(StorageInController.class);
+	private Logger logger = Logger.getLogger(StorageInOrderController.class);
 	Subject currentUser = SecurityUtils.getSubject();
 	private static String orgCode="349779838";
 //	@RequiresPermissions(value = { PermissionConstant.PERMISSION_TO_LIST })
@@ -61,77 +68,62 @@ public class StorageInController extends Controller {
 	} 
 	
     public void create() {
+    	String order_id = getPara("order_id");
+    	Record re = Db.findFirst("select * from storage_in_order where order_id = ?",order_id);
+    	if(re == null){
+    		SalesOrder sor = SalesOrder.dao.findById(order_id);
+        	setAttr("salesOrder", sor);
+        	//获取报关企业信息
+        	CustomCompany custom = CustomCompany.dao.findById(sor.getLong("custom_id"));
+        	setAttr("custom", custom);
+    	}else{
+    		setAttr("order", re);
+    	}
+    	
         render("/oms/storageInOrder/edit.html");
     } 
     
     @Before(Tx.class)
    	public void save() throws Exception {		
    		String jsonStr=getPara("params");
-   		String msg = null;
-   		String mail_no =null;
-       	
+   		
        	Gson gson = new Gson();  
         Map<String, ?> dto= gson.fromJson(jsonStr, HashMap.class);  
             
-        LogisticsOrder logisticsOrder = new LogisticsOrder();
+        StorageInOrder order = new StorageInOrder();
    		String id = (String) dto.get("id");
    		
    		UserLogin user = LoginUserController.getLoginUser(this);
    		
    		if (StringUtils.isNotEmpty(id)) {
    			//update
-   			logisticsOrder = LogisticsOrder.dao.findById(id);
-   			DbUtils.setModelValues(dto, logisticsOrder);
+   			order = StorageInOrder.dao.findById(id);
+   			DbUtils.setModelValues(dto, order);
    			
    			//需后台处理的字段
-   			logisticsOrder.set("update_by", user.getLong("id"));
-   			logisticsOrder.set("update_stamp", new Date());
-   			
-   			//韵达下单
-//   			String xml = null;
-//   			String parcel_info = logisticsOrder.getStr("parcel_info");
-//   			if(!"YD".equals(parcel_info.substring(0, 2))){
-//   				xml = createYunda(dto , "update"); 
-//   			}else{
-//   				xml = createYunda(dto, "create"); 
-//   			} 
-//   	        String js = (JaxbUtil.xmltoJson(xml)).toString();
-//   	        System.out.println(js);
-//   	        Map<String, Map> xmlJson= gson.fromJson(js, HashMap.class);  
-//   	        Map responses = xmlJson.get("response");
-//   	        
-//   	        msg = responses.get("msg").toString();
-//   	        System.out.println("韵达快递单号："+msg);
-//   	        
-//   	        if("YD".equals(parcel_info.substring(0, 2))){
-//   	        	mail_no =  responses.get("mail_no").toString();
-//   	        	logisticsOrder.set("parcel_info",mail_no);
-//   	   	        
-//   	        }
+   			order.set("update_by", user.getLong("id"));
+   			order.set("update_stamp", new Date());
    	        
-   			logisticsOrder.update();
-   			CustomJob.operationLog("logisticsOrder", jsonStr, id, "update", LoginUserController.getLoginUserId(this).toString());
+   			order.update();
+   			CustomJob.operationLog("storageInOrder", jsonStr, id, "update", LoginUserController.getLoginUserId(this).toString());
    		} else {
    			//create 
-   			DbUtils.setModelValues(dto, logisticsOrder);
+   			DbUtils.setModelValues(dto, order);
    			
    			//需后台处理的字段
-   			logisticsOrder.set("log_no", OrderNoGenerator.getNextOrderNo("IYQHDF"));
-   			logisticsOrder.set("create_by", user.getLong("id"));
-   			logisticsOrder.set("create_stamp", new Date());
-   			logisticsOrder.save();
+   			order.set("create_by", user.getLong("id"));
+   			order.set("create_stamp", new Date());
+   			order.save();
    			
-   			id = logisticsOrder.getLong("id").toString();
-   			CustomJob.operationLog("logisticsOrder", jsonStr, id, "create", LoginUserController.getLoginUserId(this).toString());
+   			id = order.getLong("id").toString();
+   			CustomJob.operationLog("storageInOrder", jsonStr, id, "create", LoginUserController.getLoginUserId(this).toString());
    		}
    		
-   		long create_by = logisticsOrder.getLong("create_by");
+   		long create_by = order.getLong("create_by");
    		String user_name = LoginUserController.getUserNameById(create_by);
 
-   		Record r = logisticsOrder.toRecord();
+   		Record r = order.toRecord();
    		r.set("create_by_name", user_name);
-   		r.set("msg",msg);
-   		r.set("mail_no",mail_no);
 
    		renderJson(r);
    	}
@@ -267,44 +259,15 @@ public class StorageInController extends Controller {
     @Before(Tx.class)
     public void edit() {
     	String id = getPara("id");
-    	LogisticsOrder logisticsOrder = LogisticsOrder.dao.findById(id);
-    	setAttr("order", logisticsOrder);
-    	
-    	//订单ID
-    	SalesOrder salesOrder = SalesOrder.dao.findById(logisticsOrder.getLong("sales_order_id"));
-    	setAttr("salesOrder", salesOrder);
-    	if(salesOrder != null){
-    		long sales_order_id = logisticsOrder.getLong("sales_order_id");
-    		long custom_id = salesOrder.getLong("custom_id");
-    		
-    		//获取明细表信息
-        	setAttr("itemList", getSalesOrderGoods(sales_order_id));
-        	
-        	//获取报关企业信息
-        	CustomCompany custom = CustomCompany.dao.findById(custom_id);
-        	setAttr("custom", custom);
-
-        	//收货人地址
-        	String district = salesOrder.getStr("district");
-        	String province = salesOrder.getStr("province");
-        	String city = salesOrder.getStr("city");
-        	Record re = Db.findFirst("select get_loc_full_name(?) address",district);
-        	setAttr("sales_pro_ci_dis_name", re.get("address"));
-        	String sales_pro_ci_dis = province+"-"+city+"-"+district;
-        	setAttr("sales_pro_ci_dis", sales_pro_ci_dis);
-    	}
-    	
-    	//收货城市
-    	String shipper_city = logisticsOrder.getStr("shipper_city");
-    	Record re = Db.findFirst("select get_loc_full_name(?) address",shipper_city);
-    	setAttr("shipper_city_name", re.get("address"));
+    	StorageInOrder order = StorageInOrder.dao.findById(id);
+    	setAttr("order", order);
     	
     	//用户信息
-    	long create_by = logisticsOrder.getLong("create_by");
+    	long create_by = order.getLong("create_by");
     	UserLogin user = UserLogin.dao.findById(create_by);
     	setAttr("user", user);
     	
-        render("/oms/logisticsOrder/logisticsOrderEdit.html");
+        render("/oms/storageInOrder/edit.html");
     }
  
     public void list() {
@@ -351,11 +314,12 @@ public class StorageInController extends Controller {
     	renderJson(customCompany);
     }
 
-    public void submitYunDan(){
+    public void submitOrder(){
     	 String order_id = getPara("order_id");
-    	 String jsonMsg=setLogMsg(order_id);
+    	 String jsonMsg=setStorageInMsg(order_id);
          TreeMap<String, String> paramsMap = new TreeMap<String, String>();
-         String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/logistics_create.action";
+         //String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/logistics_create.action";
+         String urlStr=EedaConfig.sysProp.getProperty("szediUrl")+"/tgt/service/logistics_createStorageIn.action";
          paramsMap.put("jsonMsg", jsonMsg);
          String PostData = "";
          PostData = paramsMap.toString().substring(1);
@@ -363,94 +327,73 @@ public class StorageInController extends Controller {
          String returnMsg = EedaHttpKit.post(urlStr, PostData);
          //String returnMsg = InUtil.getResult(urlStr, PostData);
          System.out.println("结果"+returnMsg);
-         CustomJob.operationLog("logisticsOrder", jsonMsg, order_id, "submitYunDan", LoginUserController.getLoginUserId(this).toString());
-         renderJson(returnMsg);
+         CustomJob.operationLog("storageInOrder", jsonMsg, order_id, "submitStorgeIn", LoginUserController.getLoginUserId(this).toString());
+         Gson gson = new Gson();  
+         Map<String, ?> dto= gson.fromJson("{"+returnMsg+"}", HashMap.class);  
+         Map<String, String> orders = (Map<String, String>)dto.get("cebJsonMsg");
+         String submit_status = orders.get("message");
+         StorageInOrder sio = StorageInOrder.dao.findById(order_id);
+         sio.set("submit_status", submit_status).update();
+         
+         renderJson(orders);
     }
     
-  //YunDan
-  	public static String setLogMsg(String order_id) {
-  		TreeMap<String, String> paramsMap = new TreeMap<String, String>();
-  		paramsMap.put("orgcode", orgCode);
-  		paramsMap.put("appkey", "defeng");
-  		String appsecret = MD5Util.encodeByMD5("888888");
-  		paramsMap.put("appsecret", appsecret);
-  		String timestamp = "" + (System.currentTimeMillis() / 1000);
-  		paramsMap.put("timestamp", timestamp);
+    //StorageIn
+  	public static String setStorageInMsg(String order_id) {
+  		String orgCode="349779838";//接口企业代码
+    	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
+        paramsMap.put("orgcode", orgCode);
+        paramsMap.put("appkey", "QHDF");
+        String appsecret = MD5Util.encodeByMD5("888888");
+        paramsMap.put("appsecret", appsecret);
+        String timestamp = "" + (System.currentTimeMillis() / 1000);
+        paramsMap.put("timestamp", timestamp);
+        String sign = MD5Util.encodeByMD5(paramsMap + appsecret);
+		paramsMap.put("sign", sign);
+		Map<Object, Object> requestMap = new LinkedHashMap<Object, Object>();
+		
+		Gson gson = new Gson(); 
+		requestMap.put("postHead", gson.toJson(paramsMap));
+		
+		StorageInDto order = buildStorageInDto(order_id, orgCode);
 
-  		String sign = MD5Util.encodeByMD5(paramsMap + appsecret);// 888888
-
-  		System.out.println("参数:" + paramsMap + appsecret);
-  		paramsMap.put("sign", sign);
-
-  		Map<Object, Object> requestMap = new LinkedHashMap<Object, Object>();
-
-  		Gson gson = new Gson();
-  		requestMap.put("postHead", gson.toJson(paramsMap));
-
-  		
-  		LogisticsOrder logisticsOrder = LogisticsOrder.dao.findById(order_id);
-  		long sales_order_id = logisticsOrder.getLong("sales_order_id");
-  		SalesOrder salesOrder = SalesOrder.dao.findById(sales_order_id);
-  		//YunDan  order 业务数据
-  		YunDanDto log = new YunDanDto();
-  		log.setOrg_code(orgCode);
-  		log.setOrder_no(salesOrder.getStr("order_no"));
-  		log.setCurrency(salesOrder.getStr("currency"));// 默认人民币
-  		log.setConsignee(salesOrder.getStr("consignee"));
-  		log.setConsignee_address(salesOrder.getStr("consignee_address"));
-  		log.setConsignee_telephone(salesOrder.getStr("consignee_telephone"));
-  		log.setConsignee_country(salesOrder.getStr("consignee_country"));
-  		log.setConsignee_type(salesOrder.getStr("consignee_type"));
-  		log.setConsignee_id(salesOrder.getStr("consignee_id"));
-  		log.setProvince(salesOrder.getStr("province"));
-  		log.setCity(salesOrder.getStr("city"));
-  		log.setDistrict(salesOrder.getStr("district"));
-  		
-  		log.setReport_pay_no(logisticsOrder.getStr("report_pay_no"));
-  		log.setWeight(logisticsOrder.getDouble("weight"));
-  		log.setNetwt(logisticsOrder.getDouble("netwt"));
-  		log.setLog_no(logisticsOrder.getStr("log_no"));
-  		log.setCountry_code(logisticsOrder.getStr("country_code"));
-  		log.setShipper(logisticsOrder.getStr("shipper"));
-  		log.setShipper_country(logisticsOrder.getStr("shipper_country"));
-  		log.setShipper_city(logisticsOrder.getStr("shipper_city"));
-  		log.setShipper_telephone(logisticsOrder.getStr("shipper_telephone"));
-  		log.setShipper_address(logisticsOrder.getStr("shipper_address"));
-  		log.setTraf_mode(logisticsOrder.getStr("traf_mode"));
-  		log.setShip_name(logisticsOrder.getStr("ship_name"));
-  		log.setPack_no(logisticsOrder.getInt("pack_no"));
-  		log.setGoods_info(logisticsOrder.getStr("goods_info"));
-  		log.setCustoms_code(logisticsOrder.getStr("customs_code"));
-  		log.setCiq_code(logisticsOrder.getStr("ciq_code"));
-  		log.setParcel_info(logisticsOrder.getStr("parcel_info"));
-  		
-  		log.setPort_code(logisticsOrder.getStr("port_code"));
-  		log.setDecl_code(logisticsOrder.getStr("decl_code"));
-  		log.setSupervision_code(logisticsOrder.getStr("supervision_code"));
-  		log.setEms_no(logisticsOrder.getStr("ems_no"));
-  		log.setTrade_mode(logisticsOrder.getStr("trade_mode"));
-  		log.setDestination_port(logisticsOrder.getStr("destination_port"));
-  		log.setPs_type(logisticsOrder.getStr("ps_type"));
-  		log.setTrans_mode(logisticsOrder.getStr("trans_mode"));
-  		log.setCut_mode(logisticsOrder.getStr("cut_mode"));
-  		log.setWrap_type(logisticsOrder.getStr("wrap_type"));
-  		
-  		String ie_date = logisticsOrder.getDate("ie_date").toString();
-  		log.setIe_date(ie_date.substring(0, ie_date.length()-2));
-
-  		
-  		List<YunDanDto> orderList=new ArrayList<YunDanDto>();
-  		orderList.add(log);
-//  	orderList.add(log1);
-
-  		requestMap.put("total_count", orderList.size());
-  		requestMap.put("logistics", orderList);
-  		
-  		Gson gson1 = new Gson();
-  		String jsonMsg = gson1.toJson(requestMap);
-  		
-  		System.out.println("参数:"+ jsonMsg);
-  		return jsonMsg;
+		//requestMap.put("total_count", orderList.size());
+		requestMap.put("notify_url", "http://"+EedaConfig.sysProp.getProperty("callbackServer")+"/orderReturn/storageInResultRecv");
+		requestMap.put("storage", order);
+		
+		Gson gson1 = new Gson(); 
+		String jsonMsg = gson1.toJson(requestMap);
+		return jsonMsg;
   	}
+  	
+  	
+  	 public static StorageInDto buildStorageInDto(String order_id, String orgCode){
+	  		StorageInOrder sio = StorageInOrder.dao.findById(order_id);
+	  		//YunDan  order 业务数据
+	  		StorageInDto sid = new StorageInDto();
+	  		sid.setOrg_code(sio.getStr("org_code"));
+	  		sid.setCustoms_code(sio.getStr("customs_code"));
+	  		sid.setCop_no(sio.getStr("cop_no"));
+	  		sid.setOperator_code(sio.getStr("operator_code"));
+	  		sid.setOperator_name(sio.getStr("operator_name"));
+	  		sid.setTraf_mode(sio.getStr("traf_mode"));
+	  		sid.setTraf_no(sio.getStr("traf_no"));
+	  		sid.setVoyage_no(sio.getStr("voyage_no"));
+	  		sid.setBill_no(sio.getStr("bill_no"));
+	  		sid.setLogistics_code(sio.getStr("logistics_code"));
+	  		sid.setLogistics_name(sio.getStr("logistics_name"));
+	  		sid.setUnload_location(sio.getStr("unload_location"));
+	  		sid.setNote(sio.getStr("note"));
+	  		sid.setLogistics_nos(sio.getStr("logistics_nos"));
+
+	  		return sid;
+     }
+  	 
+  	 public void querySubMsg(){
+ 		String order_id = getPara("order_id");
+ 		StorageInOrder sor = StorageInOrder.dao.findById(order_id);
+ 		
+ 		renderJson(sor);
+ 	}
 
 }
