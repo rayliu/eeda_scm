@@ -1,0 +1,1 @@
+package models;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class StorageInOrder extends Model<StorageInOrder> {	public static final StorageInOrder dao = new StorageInOrder();}
