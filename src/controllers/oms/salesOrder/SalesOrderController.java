@@ -273,13 +273,18 @@ public class SalesOrderController extends Controller {
         		+ " (select logistics_ciq_status from logistics_order where sales_order_id = sor.id ) logistics_ciq_status,"
         		+ " (select logistics_cus_status from logistics_order where sales_order_id = sor.id ) logistics_cus_status,"
         		+ " (select status from logistics_order where sales_order_id = sor.id ) log_status,"
-    			+ "  c.shop_name ";
+    			+ " c.shop_name ";
+//    			+ " GROUP_CONCAT(CONCAT(rs.ceb_report,'-',rs.return_status,'-',rs.return_info,'-',rs.return_time) SEPARATOR '<br>') return_status,"
+//    			+ " GROUP_CONCAT(rs.ceb_report SEPARATOR '<br>') return_type,"
+//    			+ " GROUP_CONCAT(rs.return_status SEPARATOR '<br>') return_code,"
+//    			+ " GROUP_CONCAT(rs.return_info SEPARATOR '<br>') return_info,"
+//    			+ " GROUP_CONCAT(rs.return_time SEPARATOR '<br>') return_time";
         
         String sqlTotal = "select count(1) total "+sql ;
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
         
-        List<Record> BillingOrders = Db.find(coulmns + sql+" order by sor.create_stamp desc " +sLimit);
+        List<Record> BillingOrders = Db.find(coulmns + sql+" group by sor.id order by sor.create_stamp desc " +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
@@ -389,6 +394,7 @@ public class SalesOrderController extends Controller {
             condition += " and sor.create_stamp between '"+create_stamp_begin_time+"' and '"+create_stamp_end_time+"'";
     	}
     	String sql = " from sales_order sor  "
+    			+ " LEFT JOIN return_status rs on rs.order_id = sor.id"
                 + "  left join custom_company c on c.id = sor.custom_id"
                 + "  left join user_login u on u.id = sor.create_by"
                 + condition;
@@ -410,7 +416,7 @@ public class SalesOrderController extends Controller {
     	String jsonMsg=setOrderMsg(order_id);
     	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
 
-		String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/order_create.action";
+		String urlStr=PropKit.use("app_config.txt").get("szediUrl")+"/tgt/service/order_createBc.action";
 		//String urlStr="http://test.szedi.cn:7088/ceb/tgt/service/order_createBc.action";
 		System.out.println("上报Url: "+urlStr);
 		
@@ -438,9 +444,10 @@ public class SalesOrderController extends Controller {
     	String orgCode="349779838";//接口企业代码
     	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
         paramsMap.put("orgcode", orgCode);
-        paramsMap.put("appkey", "QHDF");
-        String appsecret = MD5Util.encodeByMD5("888888");
-        paramsMap.put("appsecret", appsecret);
+        paramsMap.put("appkey", "qhdf");
+        String appsecret = MD5Util.encodeByMD5("888888");//测试
+        //paramsMap.put("appsecret", appsecret);
+        paramsMap.put("appsecret", "21218cca77804d2ba1922c33e0151105");  //正式
         String timestamp = "" + (System.currentTimeMillis() / 1000);
         paramsMap.put("timestamp", timestamp);
 

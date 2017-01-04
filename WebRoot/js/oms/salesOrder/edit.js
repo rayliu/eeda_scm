@@ -225,6 +225,15 @@ $(document).ready(function() {
     	$('#buyer_regno').val(value);
     });
     
+    $('#trade_mode').on('change',function(){
+    	var value = $(this).val();
+    	if(value=='9610'){
+    		$('#goStorageInBtn').show();		
+    	}else{
+    		$('#goStorageInBtn').hide();		
+    	}
+    });
+    
     //按钮控制
     var order_id = $("#order_id").val();
     var status = $("#status").val();
@@ -243,7 +252,12 @@ $(document).ready(function() {
     	if($("#log_id").val() != ''){
     		$("#goYunDanBtn").show();
     	}
+    	if($('#trade_mode').val()=='9610'){
+    		$('#goStorageInBtn').show();	
+    	}
     }
+    
+    
     
   
 } );
