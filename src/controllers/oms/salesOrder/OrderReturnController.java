@@ -119,7 +119,7 @@ public class OrderReturnController extends Controller {
 	    	if(StringUtils.isNotEmpty(logistics_no)){
 	    		salesRe = SalesOrder.dao.findFirst("select * from sales_order where logistics_no = ?",logistics_no);
 	    	}else if(StringUtils.isNotEmpty(cop_no)){
-	    		salesRe = SalesOrder.findFirst("select * from sales_order where cop_no = ?",cop_no);
+	    		salesRe = SalesOrder.dao.findFirst("select * from sales_order where cop_no = ?",cop_no);
 	    	}
 	    	
 	    	if(salesRe != null){
