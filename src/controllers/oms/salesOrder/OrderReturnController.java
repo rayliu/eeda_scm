@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 import models.ReturnStatus;
+import models.eeda.oms.SalesOrder;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -114,36 +115,46 @@ public class OrderReturnController extends Controller {
 	    	String return_time = (String)dto.get("return_time");   //操纵时间
 	    	
 	    	System.out.println("回调状态的运输单号："+logistics_no);
-	    	Record salesRe = null;
+	    	SalesOrder salesRe = null;
 	    	if(StringUtils.isNotEmpty(logistics_no)){
 	    		salesRe = Db.findFirst("select * from sales_order where logistics_no = ?",logistics_no);
 	    	}else if(StringUtils.isNotEmpty(cop_no)){
 	    		salesRe = Db.findFirst("select * from sales_order where cop_no = ?",cop_no);
 	    	}
 	    	
-	    	long order_id = salesRe.getLong("id");
-	    	ReturnStatus returnRe = ReturnStatus.dao.findFirst("select * from return_status where ceb_report = ? and order_id = ?",ceb_report,order_id);
-
-	    	if(returnRe == null){
-	    		ReturnStatus rs = new ReturnStatus();
-	    		rs.set("order_id", order_id);
-	    		rs.set("ceb_report", ceb_report);
-	    		rs.set("org_code",org_code );
-	    		rs.set("logistics_no",logistics_no );
-	    		rs.set("cop_no", cop_no);
-	    		rs.set("bill_no", bill_no);
-	    		rs.set("return_status", return_status);
-	    		rs.set("return_info", return_info);
-	    		rs.set("return_time", return_time);
-	    		rs.save();
+	    	if(salesRe != null){
+	    		long order_id = salesRe.getLong("id");
 	    		
-	    	}else{
-	    		returnRe.set("return_status",return_status);
-	    		returnRe.set("return_info", return_info);
-	    		returnRe.set("return_time", return_time);
-	    		returnRe.update();
+	    		salesRe.set("ceb_report", ceb_report);
+	    		salesRe.set("return_status", return_status);
+	    		salesRe.set("return_info", return_info);
+	    		salesRe.set("return_time", return_time);
+	    		salesRe.update();
+	    		//Db.update("update sales_order set ceb_report = ?,return_status = ?,return_info = ?,return_time = ? where id = ?",ceb_report,return_status,return_info,return_time,order_id);
+	    		System.out.println("成功更新转态到订单："+order_id);
+	    		
+		    	ReturnStatus returnRe = ReturnStatus.dao.findFirst("select * from return_status where ceb_report = ? and order_id = ?",ceb_report,order_id);
+
+		    	if(returnRe == null){
+		    		ReturnStatus rs = new ReturnStatus();
+		    		rs.set("order_id", order_id);
+		    		rs.set("ceb_report", ceb_report);
+		    		rs.set("org_code",org_code );
+		    		rs.set("logistics_no",logistics_no );
+		    		rs.set("cop_no", cop_no);
+		    		rs.set("bill_no", bill_no);
+		    		rs.set("return_status", return_status);
+		    		rs.set("return_info", return_info);
+		    		rs.set("return_time", return_time);
+		    		rs.save();
+		    		
+		    	}else{
+		    		returnRe.set("return_status",return_status);
+		    		returnRe.set("return_info", return_info);
+		    		returnRe.set("return_time", return_time);
+		    		returnRe.update();
+		    	}
 	    	}
-	    	
 	    }
 	    renderText("success");
 	}
