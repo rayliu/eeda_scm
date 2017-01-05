@@ -443,9 +443,7 @@ public class SalesOrderController extends Controller {
     	TreeMap<String, String> paramsMap = new TreeMap<String, String>();
         paramsMap.put("orgcode", orgCode);
         paramsMap.put("appkey", "qhdf");
-        //String appsecret = MD5Util.encodeByMD5("888888");//测试
-        
-        String appsecret = "21218cca77804d2ba1922c33e0151105"; //正式
+        String appsecret = MD5Util.encodeByMD5("888888");
         paramsMap.put("appsecret", appsecret);
         String timestamp = "" + (System.currentTimeMillis() / 1000);
         paramsMap.put("timestamp", timestamp);

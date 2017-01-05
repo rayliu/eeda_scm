@@ -354,13 +354,14 @@ public class SalesOrderService {
     
     @Before(Tx.class)
     public void saveSo() throws InstantiationException, IllegalAccessException{
-        String orderJsonStr = controller.getPara("order");
-        //Record re = Db.findFirst("select * from customize_field where order_type = 'testJson'");
-		//String orderJsonStr = re.getStr("field_code");
+        //String orderJsonStr = controller.getPara("order");
+        Record re = Db.findFirst("select * from customize_field where order_type = 'testJson'");
+		String orderJsonStr = re.getStr("field_code");
         
         if(orderJsonStr==null){
             orderJsonStr = ApiController.getRequestPayload(controller.getRequest());
         }
+        System.out.println("接收的数据："+orderJsonStr);
         
         if(orderJsonStr==null){
             Record r = new Record();
