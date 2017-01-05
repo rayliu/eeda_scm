@@ -1,5 +1,5 @@
-
 package controllers.oms.salesOrder;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -117,9 +117,9 @@ public class OrderReturnController extends Controller {
 	    	System.out.println("回调状态的运输单号："+logistics_no);
 	    	SalesOrder salesRe = null;
 	    	if(StringUtils.isNotEmpty(logistics_no)){
-	    		salesRe = Db.findFirst("select * from sales_order where logistics_no = ?",logistics_no);
+	    		salesRe = SalesOrder.dao.findFirst("select * from sales_order where logistics_no = ?",logistics_no);
 	    	}else if(StringUtils.isNotEmpty(cop_no)){
-	    		salesRe = Db.findFirst("select * from sales_order where cop_no = ?",cop_no);
+	    		salesRe = SalesOrder.findFirst("select * from sales_order where cop_no = ?",cop_no);
 	    	}
 	    	
 	    	if(salesRe != null){
