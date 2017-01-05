@@ -15,7 +15,7 @@ $(document).ready(function() {
                     return "<a href='/salesOrder/edit?id="+full.ID+"'>"+data+"</a>";
                 }
             },
-            { "data": "SHOP_NAME"},
+            { "data": "GOODS_INFO"},
             { "data": "CONSIGNEE"}, 
             { "data": "ACTURAL_PAID"}, 
             { "data": "STATUS",
