@@ -1,0 +1,1 @@
+package models;import com.jfinal.plugin.activerecord.Model;@SuppressWarnings("serial")public class ReturnStatus extends Model<ReturnStatus> {	public static final ReturnStatus dao = new ReturnStatus();}
