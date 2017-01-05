@@ -284,7 +284,7 @@ public class SalesOrderController extends Controller {
         Record rec = Db.findFirst(sqlTotal);
         logger.debug("total records:" + rec.getLong("total"));
         
-        List<Record> BillingOrders = Db.find(coulmns + sql+" group by sor.id order by sor.create_stamp desc " +sLimit);
+        List<Record> BillingOrders = Db.find(coulmns + sql+" order by sor.create_stamp desc " +sLimit);
         Map BillingOrderListMap = new HashMap();
         BillingOrderListMap.put("sEcho", pageIndex);
         BillingOrderListMap.put("iTotalRecords", rec.getLong("total"));
@@ -394,7 +394,6 @@ public class SalesOrderController extends Controller {
             condition += " and sor.create_stamp between '"+create_stamp_begin_time+"' and '"+create_stamp_end_time+"'";
     	}
     	String sql = " from sales_order sor  "
-    			+ " LEFT JOIN return_status rs on rs.order_id = sor.id"
                 + "  left join custom_company c on c.id = sor.custom_id"
                 + "  left join user_login u on u.id = sor.create_by"
                 + condition;
