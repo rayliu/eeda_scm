@@ -1,6 +1,8 @@
 package controllers.api.service;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
+import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -152,28 +154,28 @@ public class SalesOrderService {
     	r.set("code", "00");
     	String errorMsg = "";
     	
-    	String ref_order_no = soDto.get("ref_order_no").toString()==null?null:soDto.get("ref_order_no").toString().trim();
+    	String order_no = soDto.get("order_no")==null?null:soDto.get("order_no").toString().trim();
 		//String freight = soDto.get("freight").toString()==null?null:soDto.get("freight").toString().trim(); //运杂费
-		String consignee = soDto.get("consignee").toString()==null?null:soDto.get("consignee").toString().trim();
-		String consignee_telephone = soDto.get("consignee_telephone").toString()==null?null:soDto.get("consignee_telephone").toString().trim();
-		String consignee_address = soDto.get("consignee_address").toString()==null?null:soDto.get("consignee_address").toString().trim();
+		String consignee = soDto.get("consignee")==null?null:soDto.get("consignee").toString().trim();
+		String consignee_telephone = soDto.get("consignee_telephone")==null?null:soDto.get("consignee_telephone").toString().trim();
+		String consignee_address = soDto.get("consignee_address")==null?null:soDto.get("consignee_address").toString().trim();
 		
 		//String buyer_regno = soDto.get("buyer_regno").toString()==null?null:soDto.get("buyer_regno").toString().trim();//订购人注册号
-		String buyer_name = soDto.get("buyer_name").toString()==null?null:soDto.get("buyer_name").toString().trim();
-		String buyer_id_number = soDto.get("buyer_id_number").toString()==null?null:soDto.get("buyer_id_number").toString().trim();
+		String buyer_name = soDto.get("buyer_name")==null?null:soDto.get("buyer_name").toString().trim();
+		String buyer_id_number = soDto.get("buyer_id_number")==null?null:soDto.get("buyer_id_number").toString().trim();
 		
-		String cop_no = soDto.get("cop_no").toString()==null?null:soDto.get("cop_no").toString().trim();
+		String cop_no = soDto.get("cop_no")==null?null:soDto.get("cop_no").toString().trim();
 		//String insure_fee = soDto.get("insure_fee").toString()==null?null:soDto.get("insure_fee").toString().trim();//保价费
-		String weight = soDto.get("weight").toString()==null?null:soDto.get("weight").toString().trim(); 
-		String net_weight = soDto.get("net_weight").toString()==null?null:soDto.get("net_weight").toString().trim();
+		String weight = soDto.get("weight")==null?null:soDto.get("weight").toString().trim(); 
+		String net_weight = soDto.get("net_weight")==null?null:soDto.get("net_weight").toString().trim();
 		
-		String goods_info = soDto.get("goods_info").toString()==null?null:soDto.get("goods_info").toString().trim(); 
-		String pack_no = soDto.get("pack_no").toString()==null?null:soDto.get("pack_no").toString().trim();  
-		String wrap_type = soDto.get("wrap_type").toString()==null?null:soDto.get("wrap_type").toString().trim(); 
+		String goods_info = soDto.get("goods_info")==null?null:soDto.get("goods_info").toString().trim(); 
+		String pack_no = soDto.get("pack_no")==null?null:soDto.get("pack_no").toString().trim();  
+		String wrap_type = soDto.get("wrap_type")==null?null:soDto.get("wrap_type").toString().trim(); 
 		
-		String province = soDto.get("province").toString()==null?null:soDto.get("province").toString().trim(); 
-		String city = soDto.get("city").toString()==null?null:soDto.get("city").toString().trim(); 
-		String district = soDto.get("district").toString()==null?null:soDto.get("district").toString().trim();
+		//String province = soDto.get("province")==null?null:soDto.get("province").toString().trim(); 
+		//String city = soDto.get("city")==null?null:soDto.get("city").toString().trim(); 
+		//String district = soDto.get("district")==null?null:soDto.get("district").toString().trim();
 
     	//明细表
     	List<Map<String, String>> itemLists = (ArrayList<Map<String, String>>)soDto.get("goods");
@@ -272,9 +274,9 @@ public class SalesOrderService {
 			
 		}
 		
-		if(StringUtils.isNotEmpty(ref_order_no)){
-			if(!CheckOrder.checkRefOrderNo(ref_order_no)){
-				errorMsg += ("此【订单编号】("+ref_order_no+")已存在，请核实是否有重复导入;");
+		if(StringUtils.isNotEmpty(order_no)){
+			if(!CheckOrder.checkRefOrderNo(order_no)){
+				errorMsg += ("此【订单编号】("+order_no+")已存在，请核实是否有重复导入;");
 			}
 		}else{
 			errorMsg += ("【订单编号】不能为空;>");
@@ -288,6 +290,11 @@ public class SalesOrderService {
 		}
 		if(StringUtils.isEmpty(consignee_address)){
 			errorMsg += ("【收货人地址】不能为空;");
+		}else{
+			String addressCode = CheckOrder.changeAddres(consignee_address);
+			if(!checkCode(addressCode)){
+				errorMsg += ("【收货人详细地址】("+consignee_address+")有误,请检测录入的省市区地址是否正确,注意：请按照【xx省 xx市 xx区/县 xxxxx】格式填写地址，省市区中间必须以空格隔开;");
+			}
 		}
 		
 		if(StringUtils.isEmpty(buyer_name)){
@@ -336,15 +343,6 @@ public class SalesOrderService {
 			errorMsg += ("【包装种类】不能为空;");			
 		}
 		
-		if(StringUtils.isNotEmpty(province)&&StringUtils.isNotEmpty(city)&&StringUtils.isNotEmpty(district)){
-			String value = province+"#"+city+"#"+district;
-			if(!CheckOrder.checkCode(value)){
-				errorMsg += ("【地区编码】("+value+")格式类型有误;");
-			}
-		}else{
-			errorMsg += ("【地区编码】不能不全或为空;");	
-		}
-		
 		if(StringUtils.isNotEmpty(errorMsg)){
 			r.set("code", "6");
 			r.set("msg", errorMsg);
@@ -354,13 +352,22 @@ public class SalesOrderService {
     
     @Before(Tx.class)
     public void saveSo() throws InstantiationException, IllegalAccessException{
-        //String orderJsonStr = controller.getPara("order");
-        Record re = Db.findFirst("select * from customize_field where order_type = 'testJson'");
-		String orderJsonStr = re.getStr("field_code");
+        String orderJsonStr = controller.getPara("order");
+        //Record re = Db.findFirst("select * from customize_field where order_type = 'testJson'");
+		//String orderJsonStr = re.getStr("field_code");
         
         if(orderJsonStr==null){
             orderJsonStr = ApiController.getRequestPayload(controller.getRequest());
         }
+        
+        
+        try {
+			orderJsonStr = URLDecoder.decode(orderJsonStr,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        
         System.out.println("接收的数据："+orderJsonStr);
         
         if(orderJsonStr==null){
@@ -394,9 +401,10 @@ public class SalesOrderService {
 
         SalesOrder salesOrder = new SalesOrder();
         DbUtils.setModelValues(soDto, salesOrder);
+        String order_no = soDto.get("order_no").toString().trim();
         //需后台处理的字段
-        salesOrder.set("order_no", OrderNoGenerator.getNextOrderNo("IDQHDF")); 
-        salesOrder.set("logistics_no", OrderNoGenerator.getNextOrderNo("IYQHDF"));
+        salesOrder.set("ref_order_no", OrderNoGenerator.getNextOrderNo("IDQHDF")); 
+        salesOrder.set("logistics_no", "IYQHDF"+CheckOrder.getDouble(order_no));
         salesOrder.set("custom_id", 9);  //深圳前海德丰投资发展有限公司
         salesOrder.set("status", "未上报");  //状态
         salesOrder.set("is_pay_pass","0");  //是否已完成申报
@@ -421,6 +429,18 @@ public class SalesOrderService {
         salesOrder.set("insure_fee", 0); //保价费
         String buyer_id_number = soDto.get("buyer_id_number").toString().trim();
         salesOrder.set("buyer_regno", buyer_id_number); //订购人注册号(默认为身份证号)
+        
+        String consignee_address = soDto.get("consignee_address").toString().trim();
+        if(StringUtils.isNotEmpty(consignee_address)){
+			String addressCode = CheckOrder.changeAddres(consignee_address);
+			String[] values = addressCode.split("#");
+			String province = values[0];//省
+			String city = values[1];//市
+			String qv = values[2];//区
+			salesOrder.set("province", province);
+			salesOrder.set("city", city);
+			salesOrder.set("district", qv);
+		}
 		
         salesOrder.set("create_stamp", new Date());  //操作时间
         salesOrder.set("create_by", ul.getLong("id"));  //操作人
@@ -534,12 +554,12 @@ public class SalesOrderService {
         Map<String, ?> itemDto = new Gson().fromJson(orderJsonStr, HashMap.class);
         
         // 校验sign
-        String ref_order_no = itemDto.get("ref_order_no").toString();
+        String order_no = itemDto.get("order_no").toString();
         String appkey = itemDto.get("appkey").toString();
         String salt = itemDto.get("salt").toString();
         String sign = itemDto.get("sign").toString();
         
-        String paraStr = "ref_order_no="+ref_order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
+        String paraStr = "order_no="+order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
         logger.debug("paraStr=" + paraStr);
         int signIndex = paraStr.indexOf("sign");
         if (signIndex == -1) {
@@ -574,45 +594,49 @@ public class SalesOrderService {
             return;// 注意这里一定要返回,否则会继续往下执行
         }
         
-        SalesOrder so = SalesOrder.dao.findFirst("select * from sales_order where ref_order_no = ?", ref_order_no);
+        SalesOrder so = SalesOrder.dao.findFirst("select * from sales_order where order_no = ?", order_no);
         if(so !=null){
             DingDanDto soDto= DingDanBuilder.buildDingDanDto(so.getLong("id").toString(), "");
             
-            String logistics_ciq_status = null;
-            String logistics_cus_status = null;
-            String log_status = null;
-            log_status = so.getStr("status");
-            logistics_ciq_status = so.getStr("logistics_ciq_status");
-            logistics_cus_status = so.getStr("logistics_cus_status");
-            
+            String ceb_report = so.getStr("ceb_report");
+            String return_status = so.getStr("return_status");
+            String return_info = so.getStr("return_info");
+            String return_time = so.getStr("return_time");
+            String logistics_no = so.getStr("logistics_no");
+            String cop_no = so.getStr("cop_no");
+            String bill_no = so.getStr("bill_no");
             String status = so.getStr("status");
-            String order_cus_status = so.getStr("order_cus_status");
-            String order_ciq_status = so.getStr("order_ciq_status");
-            String pay_status = so.getStr("pay_status");
-            String bill_cus_status = so.getStr("bill_cus_status");
-            String bill_cus_result = so.getStr("bill_cus_result");
+            String pay_no = so.getStr("pay_no");
+            String pay_time = so.getDate("pay_time").toString();
+            
             
             Record r = new Record();
             r.set("code", "0");
             r.set("status",status);
-            r.set("order_cus_status",order_cus_status);
-            r.set("order_ciq_status",order_ciq_status);
-            r.set("pay_status",pay_status);
-            r.set("bill_cus_status",bill_cus_status);
-            r.set("bill_cus_result",bill_cus_result);
+            r.set("ceb_report",ceb_report);
+            r.set("return_status",return_status);
+            r.set("return_info",return_info);
+            r.set("return_time",return_time);
+            r.set("logistics_no",logistics_no);
+            r.set("cop_no",cop_no);
+            r.set("bill_no",bill_no);
+            r.set("org_code","349779838");
             
-            //运单
-            r.set("log_status",log_status);
-            r.set("logistics_ciq_status",logistics_ciq_status);
-            r.set("logistics_cus_status",logistics_cus_status);
-
+            if(StringUtils.isNotEmpty(pay_no)){
+            	r.set("pay_status","已付款");
+            	r.set("pay_time", pay_time);
+            }else{
+            	r.set("pay_status","未付款");
+            	r.set("pay_time", "");
+            }
+            
             r.set("msg", "请求已成功处理!");
             r.set("data", soDto);
             controller.renderJson(r);            
         }else{
             Record r = new Record();
             r.set("code", "1");
-            r.set("msg", "订单号码:"+ref_order_no+"不存在!");
+            r.set("msg", "订单号码:"+order_no+"不存在!");
             controller.renderJson(r);
         }
     }

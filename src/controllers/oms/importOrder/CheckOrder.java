@@ -349,7 +349,7 @@ public class CheckOrder extends Controller {
 		String cityCode = null;
 		String qvCode = null;
 		
-		if(valueArra.length>=4){
+		if(valueArra.length>=3){
 			String province = valueArra[0];
 		    String city = valueArra[1];
 		    String qv = valueArra[2];
