@@ -539,6 +539,13 @@ public class SalesOrderService {
         if (orderJsonStr == null) {//raw 提交
             orderJsonStr = ApiController.getRequestPayload(controller.getRequest());
         }
+        
+        try {
+			orderJsonStr = URLDecoder.decode(orderJsonStr,"UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         ApiController.saveLog("api_so_query_post", orderJsonStr);
         
