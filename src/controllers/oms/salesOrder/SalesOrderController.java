@@ -55,6 +55,7 @@ public class SalesOrderController extends Controller {
 	public void index() throws InstantiationException, IllegalAccessException {
 		//SalesOrderService s = new SalesOrderService(this);
 		//s.saveSo();
+		//s.querySo();
 		render("/oms/salesOrder/salesOrderList.html");
 	}
 	

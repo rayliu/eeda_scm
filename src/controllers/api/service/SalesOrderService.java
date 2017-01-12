@@ -117,12 +117,12 @@ public class SalesOrderService {
     	// 校验sign
     	Record r = new Record();
     	r.set("code", "0");
-    	String ref_order_no = soDto.get("ref_order_no").toString();
-        String appkey = soDto.get("appkey").toString();
+    	String order_no = (String)soDto.get("order_no");
+        String appkey = (String)soDto.get("appkey");
         String salt = new BigDecimal((Double) soDto.get("salt")).toString();
-        String sign = soDto.get("sign").toString();
+        String sign = (String)soDto.get("sign");
         
-        String paraStr = "ref_order_no="+ref_order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
+        String paraStr = "order_no="+order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
         logger.debug("paraStr=" + paraStr);
         int signIndex = paraStr.indexOf("sign");
         if (signIndex == -1) {
@@ -137,10 +137,10 @@ public class SalesOrderService {
             r.set("msg", "请求中appkey不正确!");
         }else{
         	Long office_id=party.getLong("office_id");//属于哪个公司的
-            SalesOrder sCheck = SalesOrder.dao.findFirst("select * from sales_order where ref_order_no=? and office_id=?", ref_order_no, office_id);
+            SalesOrder sCheck = SalesOrder.dao.findFirst("select * from sales_order where order_no=? and office_id=?", order_no, office_id);
             if (sCheck != null) {
                 r.set("code", "5");
-                r.set("msg", "ref_order_no:"+ref_order_no+"已存在!");
+                r.set("msg", "order_no:"+order_no+"已存在!");
             }else{
                 r.set("office_id", office_id);
             }
@@ -292,7 +292,7 @@ public class SalesOrderService {
 			errorMsg += ("【收货人地址】不能为空;");
 		}else{
 			String addressCode = CheckOrder.changeAddres(consignee_address);
-			if(!checkCode(addressCode)){
+			if(!checkAllCode(addressCode)){
 				errorMsg += ("【收货人详细地址】("+consignee_address+")有误,请检测录入的省市区地址是否正确,注意：请按照【xx省 xx市 xx区/县 xxxxx】格式填写地址，省市区中间必须以空格隔开;");
 			}
 		}
@@ -353,13 +353,14 @@ public class SalesOrderService {
     @Before(Tx.class)
     public void saveSo() throws InstantiationException, IllegalAccessException{
         String orderJsonStr = controller.getPara("order");
-        //Record re = Db.findFirst("select * from customize_field where order_type = 'testJson'");
-		//String orderJsonStr = re.getStr("field_code");
+      
         
         if(orderJsonStr==null){
             orderJsonStr = ApiController.getRequestPayload(controller.getRequest());
         }
         
+        //Record re = Db.findFirst("select * from customize_field where order_type = 'testJson'");
+		//orderJsonStr = re.getStr("field_code");
         
         try {
 			orderJsonStr = URLDecoder.decode(orderJsonStr,"UTF-8");
@@ -540,6 +541,9 @@ public class SalesOrderService {
             orderJsonStr = ApiController.getRequestPayload(controller.getRequest());
         }
         
+        //Record re = Db.findFirst("select * from customize_field where order_type = 'testQuery'");
+		//orderJsonStr = re.getStr("field_code");
+        
         try {
 			orderJsonStr = URLDecoder.decode(orderJsonStr,"UTF-8");
 		} catch (UnsupportedEncodingException e) {
@@ -614,7 +618,11 @@ public class SalesOrderService {
             String bill_no = so.getStr("bill_no");
             String status = so.getStr("status");
             String pay_no = so.getStr("pay_no");
-            String pay_time = so.getDate("pay_time").toString();
+            String pay_time = "";
+            if(so.getDate("pay_time")!=null){
+            	pay_time = so.getDate("pay_time").toString();
+            }
+            
             
             
             Record r = new Record();
