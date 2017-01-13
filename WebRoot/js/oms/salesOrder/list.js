@@ -142,36 +142,36 @@ $(document).ready(function() {
     });
     
     var showType = function(value){
-    	if(value=='ceb312'){
+    	if(value=='CEB312'){
     		value= '（海关）订单回执';
-    	}else if(value=='ceb512'){
+    	}else if(value=='CEB512'){
     		value= '（海关）运单回执';
-    	}else if(value=='ceb514'){
+    	}else if(value=='CEB514'){
     		value= '（海关）运单回执状态（签收单）回执';
-    	}else if(value=='ceb622'){
+    	}else if(value=='CEB622'){
     		value= '（海关）清单回执';
-    	}else if(value=='ceb624'){
+    	}else if(value=='CEB624'){
     		value= '（海关）撤销单回执';
-    	}else if(value=='ceb816'){
+    	}else if(value=='CEB816'){
     		value= '（海关）税单回执';
-    	}else if(value=='ceb712'){
+    	}else if(value=='CEB712'){
     		value= '（海关）入库明细回执';
-    	}else if(value=='ceb901'){
+    	}else if(value=='CEB901'){
     		value= '（海关）核放单';
-    	}else if(value=='ceb301'){  //国检
+    	}else if(value=='CEB301'){  //国检
     		value= '（国检）订单回执';
-    	}else if(value=='ceb501'){  //国检
+    	}else if(value=='CEB501'){  //国检
     		value= '（国检）运单回执';
-    	}else if(value=='ceb801'){  //国检
+    	}else if(value=='CEB801'){  //国检
     		value= '（国检）出区申报单回执';
-    	}else if(value=='ceb902'){  //国检
+    	}else if(value=='CEB902'){  //国检
     		value= '（国检）核放单';
     	}
     	return value;
     }
     
     var showStatus = function(type,value){
-    	if(type=='ceb301' || type=='ceb501' ||type=='ceb801' ||type=='ceb902'){
+    	if(type=='CEB301' || type=='CEB501' ||type=='CEB801' ||type=='CEB902'){
     		if(value == '30'){
         		value = '已接收(0)';
         	}else if(value == '31'){
