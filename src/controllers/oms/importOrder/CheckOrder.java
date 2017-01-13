@@ -901,9 +901,9 @@ public class CheckOrder extends Controller {
 				so.set("is_pay_pass","0");  //是否已完成申报
 				so.set("pay_channel", "01");//支付渠道
 				so.set("pay_type", "PTL");//支付渠道
-				so.set("assure_code", "440300349779838");// 担保企业编号
+				so.set("assure_code", "4403660065");// 担保企业编号
 				so.set("ems_no", "I440366006516001"); //电商账册编号
-				so.set("traf_mode", 4); //运输方式
+				so.set("traf_mode", "Y"); //运输方式
 				so.set("ship_name", "汽车"); //运输工具名称
 				so.set("ciq_code","471800"); //主管检验检疫机构代码
 				so.set("supervision_code","5349"); //进出口岸代码
