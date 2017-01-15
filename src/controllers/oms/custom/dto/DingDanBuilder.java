@@ -133,8 +133,8 @@ public class DingDanBuilder {
             goods.setCurrency(item.getStr("currency"));
     		goods.setItem_no(item.getStr("item_no"));
     		goods.setItem_name(item.getStr("item_name"));
-    		goods.setQty(item.getLong("qty"));
-    		goods.setQty1(item.getLong("qty1"));
+    		goods.setQty(item.getDouble("qty"));
+    		goods.setQty1(item.getDouble("qty1"));
     		goods.setUnit(item.getStr("unit"));
     		goods.setUnit1(item.getStr("unit1"));
     		goods.setPrice(item.getDouble("price"));
