@@ -28,7 +28,6 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
-import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
@@ -36,7 +35,6 @@ import controllers.api.ApiController;
 import controllers.oms.custom.dto.DingDanBuilder;
 import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.importOrder.CheckOrder;
-import controllers.profile.LoginUserController;
 import controllers.util.DbUtils;
 import controllers.util.IdcardUtil;
 import controllers.util.MD5Util;
@@ -117,12 +115,14 @@ public class SalesOrderService {
     	// 校验sign
     	Record r = new Record();
     	r.set("code", "0");
-    	String order_no = (String)soDto.get("order_no");
-        String appkey = (String)soDto.get("appkey");
+        String appkey = (String)soDto.get("appkey");//账号
+        String appsecret = (String)soDto.get("appsecret");//密码
+        String order_no = (String)soDto.get("order_no");
+        
         String salt = new BigDecimal((Double) soDto.get("salt")).toString();
         String sign = (String)soDto.get("sign");
         
-        String paraStr = "order_no="+order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
+        String paraStr = "&appkey="+appkey+"&salt="+salt+"&sign="+sign;
         logger.debug("paraStr=" + paraStr);
         int signIndex = paraStr.indexOf("sign");
         if (signIndex == -1) {
@@ -130,21 +130,23 @@ public class SalesOrderService {
             r.set("msg", "请求中sign不存在!");
         }
         
-        //appkey
-        Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
-        if (party == null) {
-            r.set("code", "2");
-            r.set("msg", "请求中appkey不正确!");
+        UserLogin user = UserLogin.dao.findFirst("select * from user_login u where u.user_name=? and password=?", appkey,appsecret);
+        if(user == null){
+        	r.set("code", "5");
+            r.set("msg", "用户名或密码不正确!");
         }else{
-        	Long office_id=party.getLong("office_id");//属于哪个公司的
-            SalesOrder sCheck = SalesOrder.dao.findFirst("select * from sales_order where order_no=? and office_id=?", order_no, office_id);
+        	Long office_id = user.getLong("office_id");//属于哪个公司的
+        	Long user_id = user.getLong("id");//用户id
+        	SalesOrder sCheck = SalesOrder.dao.findFirst("select * from sales_order where order_no=? and office_id=?", order_no, office_id);
             if (sCheck != null) {
                 r.set("code", "5");
                 r.set("msg", "order_no:"+order_no+"已存在!");
             }else{
                 r.set("office_id", office_id);
+                r.set("user_id", user_id);
             }
         }
+        
         return r;
     }
     
@@ -172,6 +174,7 @@ public class SalesOrderService {
 		String goods_info = soDto.get("goods_info")==null?null:soDto.get("goods_info").toString().trim(); 
 		String pack_no = soDto.get("pack_no")==null?null:soDto.get("pack_no").toString().trim();  
 		String wrap_type = soDto.get("wrap_type")==null?null:soDto.get("wrap_type").toString().trim(); 
+		String ie_date = soDto.get("ie_date")==null?null:soDto.get("ie_date").toString().trim(); //出口日期
 		
 		//String province = soDto.get("province")==null?null:soDto.get("province").toString().trim(); 
 		//String city = soDto.get("city")==null?null:soDto.get("city").toString().trim(); 
@@ -343,6 +346,12 @@ public class SalesOrderService {
 			errorMsg += ("【包装种类】不能为空;");			
 		}
 		
+		if(StringUtils.isNotEmpty(ie_date)){
+			if(!CheckOrder.checkDate(ie_date)){
+				errorMsg += ("【进口日期】("+ie_date+")格式类型有误,请输入正确的日期格式（yyyy-MM-dd或yyyy/MM/dd）;");
+			}
+		}
+		
 		if(StringUtils.isNotEmpty(errorMsg)){
 			r.set("code", "6");
 			r.set("msg", errorMsg);
@@ -353,8 +362,7 @@ public class SalesOrderService {
     @Before(Tx.class)
     public void saveSo() throws InstantiationException, IllegalAccessException{
         String orderJsonStr = controller.getPara("order");
-      
-        
+
         if(orderJsonStr==null){
             orderJsonStr = ApiController.getRequestPayload(controller.getRequest());
         }
@@ -383,10 +391,12 @@ public class SalesOrderService {
         //开始生成so
         Map<String, ?> soDto= new Gson().fromJson(orderJsonStr, HashMap.class);
         Long office_id = null;
+        Long user_id = null;
         //数据校验
         Record configR = checkConfig(soDto);
         if("0".equals(configR.getStr("code"))){
         	office_id = configR.getLong("office_id");
+        	user_id = configR.getLong("user_id");
         	Record errorR = checkOrder(soDto);
         	if(!"00".equals(errorR.getStr("code"))){
             	controller.renderJson(errorR);
@@ -397,9 +407,6 @@ public class SalesOrderService {
             return;// 注意这里一定要返回,否则会继续往下执行
         }
         
-        
-        UserLogin ul = UserLogin.dao.findFirst("select * from user_login where user_name = ?","interface@defeng.com");
-
         SalesOrder salesOrder = new SalesOrder();
         DbUtils.setModelValues(soDto, salesOrder);
         String order_no = soDto.get("order_no").toString().trim();
@@ -421,15 +428,27 @@ public class SalesOrderService {
         salesOrder.set("customs_code","5349"); //主管海关代码 
         salesOrder.set("business_mode","2"); //业务模式代码 *
         salesOrder.set("trade_mode","1210"); //贸易方式 
-        salesOrder.set("sign_company","ISDFIJPMRSDIP001"); //承运企业海关备案号 
-        salesOrder.set("sign_company_name","德邦物流"); //承运企业名称 
+        salesOrder.set("sign_company","4403660065"); //承运企业海关备案号 
+        salesOrder.set("sign_company_name","深圳前海德丰投资发展有限公司"); //承运企业名称 
         salesOrder.set("port_code","5349"); //进出口岸代码
         salesOrder.set("ie_date",new Date()); //进口日期
         salesOrder.set("wh_org_code","349779838"); //企业组织机构代码（仓储企业）
         salesOrder.set("freight", 0);  //运杂费
         salesOrder.set("insure_fee", 0); //保价费
+        
         String buyer_id_number = soDto.get("buyer_id_number").toString().trim();
         salesOrder.set("buyer_regno", buyer_id_number); //订购人注册号(默认为身份证号)
+        
+        String ie_date = (String)soDto.get("buyer_id_number");
+        if(StringUtils.isNotEmpty(ie_date)){
+        	salesOrder.set("ie_date",ie_date); //进口日期
+        }
+        
+        String note = (String)soDto.get("note");
+        if(StringUtils.isNotEmpty(note)){
+        	salesOrder.set("note",note); //备注
+        }
+        
         
         String consignee_address = soDto.get("consignee_address").toString().trim();
         if(StringUtils.isNotEmpty(consignee_address)){
@@ -444,8 +463,7 @@ public class SalesOrderService {
 		}
 		
         salesOrder.set("create_stamp", new Date());  //操作时间
-        salesOrder.set("create_by", ul.getLong("id"));  //操作人
-        salesOrder.set("note", "接口数据");  //备注
+        salesOrder.set("create_by", user_id);  //操作人
         salesOrder.set("office_id", office_id);
 
         salesOrder.save();
@@ -468,6 +486,7 @@ public class SalesOrderService {
 			String g_model = itemList.get("g_model")==null?null:itemList.get("g_model").trim(); 
 			String ciq_gno = itemList.get("ciq_gno")==null?null:itemList.get("ciq_gno").trim();
 			String ciq_gmodel = itemList.get("ciq_gmodel")==null?null:itemList.get("ciq_gmodel").trim();
+			String brand = itemList.get("brand")==null?null:itemList.get("brand").trim();
 			//子表数据保存
 			SalesOrderGoods sog = new SalesOrderGoods();
 			if(StringUtils.isNotEmpty(bar_code)){
@@ -494,6 +513,7 @@ public class SalesOrderService {
 			sog.set("g_model", g_model);   //(品牌规格型号等)
 			sog.set("ciq_gno", ciq_gno);   //检验检疫商品备案号
 			sog.set("ciq_gmodel", ciq_gmodel);   //检验检疫商品规格型号
+			sog.set("brand", brand);   //品牌
 			
 			if(StringUtils.isNotEmpty(price)&&StringUtils.isNotEmpty(qty)){
 				DecimalFormat df = new DecimalFormat("#.00");
@@ -511,7 +531,6 @@ public class SalesOrderService {
 			sog.set("order_id",salesOrder.get("id"));
 			sog.set("currency","142");
 			sog.set("country","142");
-			sog.set("brand","无");
 			sog.save();
 		}
 		

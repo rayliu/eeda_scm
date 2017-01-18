@@ -2,50 +2,28 @@ package controllers.oms.importOrder;
 
 import interceptor.SetAttrLoginUserInterceptor;
 
-import java.io.File;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 
-import jxl.NumberCell;
 import models.Location;
-import models.Office;
-import models.Party;
-import models.TransferOrder;
-import models.TransferOrderItem;
-import models.TransferOrderItemDetail;
-import models.TransferOrderMilestone;
-import models.UserLogin;
-import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateOutOrder;
 import models.eeda.oms.GateOutOrderItem;
-import models.eeda.oms.InspectionOrder;
-import models.eeda.oms.InspectionOrderItem;
-import models.eeda.oms.Inventory;
 import models.eeda.oms.LogisticsOrder;
-import models.eeda.oms.MoveOrder;
-import models.eeda.oms.MoveOrderItem;
 import models.eeda.oms.SalesOrder;
 import models.eeda.oms.SalesOrderGoods;
-import models.eeda.oms.WaveOrderItem;
-import models.eeda.profile.CustomCompany;
 import models.eeda.profile.Product;
 import models.eeda.profile.Unit;
-import models.eeda.profile.Warehouse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -53,25 +31,15 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.subject.Subject;
 
-import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
 import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.DbKit;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
-import com.jfinal.upload.UploadFile;
 
-import controllers.oms.custom.dto.DingDanDto;
-import controllers.oms.custom.dto.DingDanGoodsDto;
-import controllers.profile.LoginUserController;
-import controllers.util.DbUtils;
-import controllers.util.EedaHttpKit;
 import controllers.util.IdcardUtil;
-import controllers.util.MD5Util;
 import controllers.util.OrderNoGenerator;
-import controllers.util.ReaderXLS;
-import controllers.util.ReaderXlSX;
 
 @RequiresAuthentication
 @Before(SetAttrLoginUserInterceptor.class)
@@ -189,9 +157,11 @@ public class CheckOrder extends Controller {
 		for (int i = 0;i<value.length();i++){    
 		   if (!Character.isDigit(value.charAt(i))){  
 			   number = value.substring(i+1,value.length());  
-		   }  
+		   }else{
+			   return number==null?value:number;
+		   }
 	    }  
-	    return number;
+	    return number==null?value:number;
 	}
 	
 	/**
@@ -288,7 +258,7 @@ public class CheckOrder extends Controller {
 	 * @param value
 	 * @return
 	 */
-	public boolean checkDate(String dateValue) {    
+	public static boolean checkDate(String dateValue) {    
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");  
         try{  
             Date date = (Date)formatter.parse(dateValue);   
@@ -805,9 +775,7 @@ public class CheckOrder extends Controller {
 					errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【包装种类】不能为空<br/><br/>");			
 				}
 				
-				if(StringUtils.isEmpty(ie_date)){
-					errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【进口日期】不能为空<br/><br/>");			
-				}else{
+				if(StringUtils.isNotEmpty(ie_date)){
 					if(!checkDate(ie_date)){
 						errorMsg += ("数据校验至第" + (rowNumber+1) + "行时出现异常:【进口日期】("+ie_date+")格式类型有误,请输入正确的日期格式（yyyy-MM-dd或yyyy/MM/dd）<br/><br/>");
 					}
@@ -939,7 +907,9 @@ public class CheckOrder extends Controller {
 				so.set("goods_info", goods_info); //主要货物信息
 				so.set("pack_no", pack_no); //包裹数
 				so.set("wrap_type", wrap_type); //包装种类
-				so.set("ie_date", ie_date); //进口日期
+				if(StringUtils.isNotEmpty(ie_date)){
+					so.set("ie_date", ie_date); //进口日期
+				}
 				so.set("note", note); //备注
 				
 				if(StringUtils.isNotEmpty(consignee_address)){
