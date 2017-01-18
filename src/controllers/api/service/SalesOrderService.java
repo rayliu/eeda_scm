@@ -28,6 +28,7 @@ import org.apache.log4j.Logger;
 import com.google.gson.Gson;
 import com.jfinal.aop.Before;
 import com.jfinal.core.Controller;
+import com.jfinal.plugin.activerecord.Db;
 import com.jfinal.plugin.activerecord.Record;
 import com.jfinal.plugin.activerecord.tx.Tx;
 
@@ -130,6 +131,7 @@ public class SalesOrderService {
             r.set("msg", "请求中sign不存在!");
         }
         
+        appsecret =  MD5Util.encode("SHA1",appsecret);
         UserLogin user = UserLogin.dao.findFirst("select * from user_login u where u.user_name=? and password=?", appkey,appsecret);
         if(user == null){
         	r.set("code", "5");
@@ -439,7 +441,7 @@ public class SalesOrderService {
         String buyer_id_number = soDto.get("buyer_id_number").toString().trim();
         salesOrder.set("buyer_regno", buyer_id_number); //订购人注册号(默认为身份证号)
         
-        String ie_date = (String)soDto.get("buyer_id_number");
+        String ie_date = (String)soDto.get("ie_date");
         if(StringUtils.isNotEmpty(ie_date)){
         	salesOrder.set("ie_date",ie_date); //进口日期
         }
@@ -472,6 +474,7 @@ public class SalesOrderService {
     	//明细表
     	List<Map<String, String>> itemLists = (ArrayList<Map<String, String>>)soDto.get("goods");
     	String cargo_name = null;
+    	double total_paid = 0;
 		for(Map<String, String> itemList:itemLists){		
 			String bar_code = itemList.get("bar_code")==null?null:itemList.get("bar_code").trim();
 			String item_name = itemList.get("item_name")==null?null:itemList.get("item_name").trim();
@@ -526,7 +529,9 @@ public class SalesOrderService {
 			if(StringUtils.isNotEmpty(price)&&StringUtils.isNotEmpty(qty)&&StringUtils.isNotEmpty(tax_rate)){
 				String tax_total = CheckOrder.changeNum(Double.parseDouble(price)*Double.parseDouble(qty)*(Double.parseDouble(tax_rate)+1));
 				sog.set("after_tax_total", CheckOrder.changeNum(Double.parseDouble(tax_total)));   //税后总价
-				salesOrder.set("actural_paid", CheckOrder.changeNum(Double.parseDouble(tax_total))).update();   //税后总价
+				
+				total_paid += Double.parseDouble(tax_total);
+				salesOrder.set("actural_paid", total_paid).update();   //税后总价
 			}
 			sog.set("order_id",salesOrder.get("id"));
 			sog.set("currency","142");
@@ -547,7 +552,7 @@ public class SalesOrderService {
         Record r = new Record();
         r.set("code", "0");
         r.set("msg", "已生成订单!");
-
+        System.out.println("已生成订单:"+order_no);
         r.set("data", returnSoDto);
         controller.renderJson(r);
     }
@@ -583,48 +588,39 @@ public class SalesOrderService {
         // 这里将json字符串转化成javabean对象
         Map<String, ?> itemDto = new Gson().fromJson(orderJsonStr, HashMap.class);
         
-        // 校验sign
-        String order_no = itemDto.get("order_no").toString();
-        String appkey = itemDto.get("appkey").toString();
-        String salt = itemDto.get("salt").toString();
-        String sign = itemDto.get("sign").toString();
-        
-        String paraStr = "order_no="+order_no+"&appkey="+appkey+"&salt="+salt+"&sign="+sign;
-        logger.debug("paraStr=" + paraStr);
-        int signIndex = paraStr.indexOf("sign");
-        if (signIndex == -1) {
-            Record r = new Record();
-            r.set("code", "2");
-            r.set("msg", "请求中sign不存在!");
-            controller.renderJson(r);
-            return;// 注意这里一定要返回,否则会继续往下执行
-        }
-        
-        //appkey
-        Party party = Party.dao.findFirst("select * from party where type=? and appkey=?", Party.PARTY_TYPE_CUSTOMER, appkey);
-        if (party == null) {
-            Record r = new Record();
-            r.set("code", "2");
-            r.set("msg", "请求中appkey不正确!");
-            controller.renderJson(r);
-            return;// 注意这里一定要返回,否则会继续往下执行
-        }
-        String org_code=party.getStr("org_code");
-        
-        String paraStrNoSign = paraStr.substring(0, signIndex - 1);
-        logger.debug("paraStrNoSign=" + paraStrNoSign);
+        String appkey = (String)itemDto.get("appkey");//账号
+        String appsecret = (String)itemDto.get("appsecret");//密码
+        String order_no = (String)itemDto.get("order_no");
+        String salt = (String)itemDto.get("salt").toString();
+        String sign = (String)itemDto.get("sign");
 
-        String serverSign = MD5Util.encodeByMD5(paraStrNoSign).toUpperCase();
-        logger.debug("serverSign=" + serverSign);
-        if (!sign.equals(serverSign)) {
-            Record r = new Record();
-            r.set("code", "3");
-            r.set("msg", "请求中sign不正确!");
+        appsecret =  MD5Util.encode("SHA1",appsecret);
+        UserLogin user = UserLogin.dao.findFirst("select * from user_login u where u.user_name=? and password=?", appkey,appsecret);
+        if(user == null){
+        	Record r = new Record();
+        	r.set("code", "5");
+            r.set("msg", "用户名或密码不正确!");
             controller.renderJson(r);
             return;// 注意这里一定要返回,否则会继续往下执行
         }
         
-        SalesOrder so = SalesOrder.dao.findFirst("select * from sales_order where order_no = ?", order_no);
+//        String paraStr = "&appkey="+appkey+"&salt="+salt+"&sign="+sign;
+//        logger.debug("paraStr=" + paraStr);
+//        int signIndex = paraStr.indexOf("sign");
+//        String paraStrNoSign = paraStr.substring(0, signIndex - 1);
+//        logger.debug("paraStrNoSign=" + paraStrNoSign);
+//
+//        String serverSign = MD5Util.encodeByMD5(paraStrNoSign).toUpperCase();
+//        logger.debug("serverSign=" + serverSign);
+//        if (!sign.equals(serverSign)) {
+//            Record r = new Record();
+//            r.set("code", "3");
+//            r.set("msg", "请求中sign不正确!");
+//            controller.renderJson(r);
+//            return;// 注意这里一定要返回,否则会继续往下执行
+//        }
+        
+        SalesOrder so = SalesOrder.dao.findFirst("select * from sales_order where order_no = ? and office_id = ?", order_no,user.getLong("office_id") );
         if(so !=null){
             DingDanDto soDto= DingDanBuilder.buildDingDanDto(so.getLong("id").toString(), "");
             
@@ -666,6 +662,7 @@ public class SalesOrderService {
             
             r.set("msg", "请求已成功处理!");
             r.set("data", soDto);
+            System.out.println("查询成功"+order_no);
             controller.renderJson(r);            
         }else{
             Record r = new Record();
@@ -673,5 +670,6 @@ public class SalesOrderService {
             r.set("msg", "订单号码:"+order_no+"不存在!");
             controller.renderJson(r);
         }
+        
     }
 }

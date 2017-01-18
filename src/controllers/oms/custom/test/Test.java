@@ -13,6 +13,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.jfinal.plugin.activerecord.Record;
 
+import controllers.api.service.SalesOrderService;
 import controllers.oms.custom.dto.DingDanDto;
 import controllers.oms.custom.dto.DingDanGoodsDto;
 import controllers.oms.custom.dto.QueryBillDto;
@@ -39,11 +40,13 @@ public class Test {
 		//Map<String, String> map=new HashMap<String, String>();
 		//map.put("cebJsonMsg", "fdfdfdf");
 		//String returnMsg = EedaHttpKit.post("http://yd2demo.eeda123.com/orderReturn/orderResultRecv", map,"fdfdfdf",map);
+//    	SalesOrderService s = new SalesOrderService(this);
+//    			//s.saveSo();
+//    	s.querySo();
 		
-		
-		String aa = "returnValue:cebJsonMsg%3D%7B%22code%22%3A%2200%22%2C%22message%22%3A%22%E8%AE%A2%E5%8D%95%E5%86%99%E5%85%A5%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8%E6%88%90%E5%8A%9F%21%22%2C%22orders%22%3A%5B%7B%22message%22%3A%22%E4%BB%93%E5%82%A8%E4%BC%81%E4%B8%9A%E4%B8%8D%E5%AD%98%E5%9C%A8%EF%BC%8C%E4%BB%93%E5%82%A8%E4%BC%81%E4%B8%9A%E7%9A%84%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84%E4%BB%A3%E7%A0%81%E9%94%99%E8%AF%AF%EF%BC%81%22%2C%22logistics_no%22%3A%22IYQHDF2016122200004%22%2C%22wh_org_code%22%3A%22440300349779838%22%2C%22org_code%22%3A%22349779838%22%2C%22code%22%3A%2201%22%2C%22order_no%22%3A%22IDQHDF2016122200004%22%7D%5D%7D";
-		aa = URLDecoder.decode(aa,"UTF-8");
-		System.out.println(aa);
+//		String aa = "returnValue:cebJsonMsg%3D%7B%22code%22%3A%2200%22%2C%22message%22%3A%22%E8%AE%A2%E5%8D%95%E5%86%99%E5%85%A5%E6%8E%A5%E5%8F%A3%E8%B0%83%E7%94%A8%E6%88%90%E5%8A%9F%21%22%2C%22orders%22%3A%5B%7B%22message%22%3A%22%E4%BB%93%E5%82%A8%E4%BC%81%E4%B8%9A%E4%B8%8D%E5%AD%98%E5%9C%A8%EF%BC%8C%E4%BB%93%E5%82%A8%E4%BC%81%E4%B8%9A%E7%9A%84%E7%BB%84%E7%BB%87%E6%9C%BA%E6%9E%84%E4%BB%A3%E7%A0%81%E9%94%99%E8%AF%AF%EF%BC%81%22%2C%22logistics_no%22%3A%22IYQHDF2016122200004%22%2C%22wh_org_code%22%3A%22440300349779838%22%2C%22org_code%22%3A%22349779838%22%2C%22code%22%3A%2201%22%2C%22order_no%22%3A%22IDQHDF2016122200004%22%7D%5D%7D";
+//		aa = URLDecoder.decode(aa,"UTF-8");
+//		System.out.println(aa);
     
     
     }
