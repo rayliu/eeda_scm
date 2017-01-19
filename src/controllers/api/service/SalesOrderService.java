@@ -132,7 +132,7 @@ public class SalesOrderService {
         }
         
         appsecret =  MD5Util.encode("SHA1",appsecret);
-        UserLogin user = UserLogin.dao.findFirst("select * from user_login u where u.user_name=? and password=?", appkey,appsecret);
+        UserLogin user = UserLogin.dao.findFirst("select * from user_login u where u.user_name=? and u.password=? and ifnull(u.is_stop,0) != 1", appkey,appsecret);
         if(user == null){
         	r.set("code", "5");
             r.set("msg", "用户名或密码不正确!");
@@ -595,7 +595,7 @@ public class SalesOrderService {
         String sign = (String)itemDto.get("sign");
 
         appsecret =  MD5Util.encode("SHA1",appsecret);
-        UserLogin user = UserLogin.dao.findFirst("select * from user_login u where u.user_name=? and password=?", appkey,appsecret);
+        UserLogin user = UserLogin.dao.findFirst("select * from user_login u where u.user_name=? and u.password=? and ifnull(u.is_stop,0) != 1", appkey,appsecret);
         if(user == null){
         	Record r = new Record();
         	r.set("code", "5");
