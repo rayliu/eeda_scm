@@ -114,7 +114,7 @@ public class OrderReturnController extends Controller {
 	    	String return_info = (String)dto.get("return_info");    //状态 说明
 	    	String return_time = (String)dto.get("return_time");   //操纵时间
 	    	
-	    	System.out.println("回调状态的运输单号："+logistics_no);
+	    	System.out.println("return logistic_no："+logistics_no);
 	    	SalesOrder salesRe = null;
 	    	if(StringUtils.isNotEmpty(logistics_no)){
 	    		salesRe = SalesOrder.dao.findFirst("select * from sales_order where logistics_no = ?",logistics_no);
@@ -125,13 +125,8 @@ public class OrderReturnController extends Controller {
 	    	if(salesRe != null){
 	    		long order_id = salesRe.getLong("id");
 	    		
-	    		salesRe.set("ceb_report", ceb_report);
-	    		salesRe.set("return_status", return_status);
-	    		salesRe.set("return_info", return_info);
-	    		salesRe.set("return_time", return_time);
-	    		salesRe.update();
 	    		//Db.update("update sales_order set ceb_report = ?,return_status = ?,return_info = ?,return_time = ? where id = ?",ceb_report,return_status,return_info,return_time,order_id);
-	    		System.out.println("成功更新转态到订单："+order_id);
+	    		System.out.println("update status successful："+order_id);
 	    		
 		    	ReturnStatus returnRe = ReturnStatus.dao.findFirst("select * from return_status where ceb_report = ? and order_id = ?",ceb_report,order_id);
 
@@ -147,12 +142,40 @@ public class OrderReturnController extends Controller {
 		    		rs.set("return_info", return_info);
 		    		rs.set("return_time", return_time);
 		    		rs.save();
-		    		
 		    	}else{
 		    		returnRe.set("return_status",return_status);
 		    		returnRe.set("return_info", return_info);
 		    		returnRe.set("return_time", return_time);
 		    		returnRe.update();
+		    	}
+		    	
+		    	//更新订单状态
+		    	List<Record> res  = Db.find("select * from return_status where order_id = ?",order_id);
+	    		
+	    		if(res.size() == 0){
+	    			salesRe.set("ceb_report", ceb_report);
+    	    		salesRe.set("return_status", return_status);
+    	    		salesRe.set("return_info", return_info);
+    	    		salesRe.set("return_time", return_time);
+    	    		salesRe.update();
+    	    		System.out.println("first update salesorder status successful!!!");
+	    		}else{
+	    			for(Record re : res){
+		    			String  oldReturn_time= re.getStr("return_time");
+		    			if(Double.parseDouble(return_time)>Double.parseDouble(oldReturn_time)){
+		    				salesRe.set("ceb_report", ceb_report);
+		    	    		salesRe.set("return_status", return_status);
+		    	    		salesRe.set("return_info", return_info);
+		    	    		salesRe.set("return_time", return_time);
+		    	    		salesRe.update();
+		    	    		System.out.println("update salesorder status successful!!!");
+		    			}
+		    		}
+	    		}
+	    		
+	    		if("34".equals(return_status) && "[Code:2600;Desc:放行]".equals(return_info)){
+		    		salesRe.set("is_order_pass", "1");
+		    		salesRe.update();
 		    	}
 	    	}
 	    }
