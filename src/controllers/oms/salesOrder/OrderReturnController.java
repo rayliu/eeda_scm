@@ -100,7 +100,7 @@ public class OrderReturnController extends Controller {
         }
 		
 		System.out.println("returnStatusValue:"+resultMsg);
-	    Db.update("update customize_field set field_code = ? where order_type = 'returnStatusMassge'",resultMsg);
+	    //Db.update("update customize_field set field_code = ? where order_type = 'returnStatusMassge'",resultMsg);
 	    
 	    if(StringUtils.isNotEmpty(resultMsg)){
 	    	Gson gson = new Gson(); 
