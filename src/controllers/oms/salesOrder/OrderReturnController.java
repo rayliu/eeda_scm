@@ -3,6 +3,7 @@ package controllers.oms.salesOrder;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,11 +142,13 @@ public class OrderReturnController extends Controller {
 		    		rs.set("return_status", return_status);
 		    		rs.set("return_info", return_info);
 		    		rs.set("return_time", return_time);
+		    		rs.set("create_stamp", new Date());
 		    		rs.save();
 		    	}else{
 		    		returnRe.set("return_status",return_status);
 		    		returnRe.set("return_info", return_info);
 		    		returnRe.set("return_time", return_time);
+		    		returnRe.set("update_stamp", new Date());
 		    		returnRe.update();
 		    	}
 		    	
@@ -173,7 +176,7 @@ public class OrderReturnController extends Controller {
 		    		}
 	    		}
 	    		
-	    		if("34".equals(return_status) && "[Code:2600;Desc:放行]".equals(return_info)){
+	    		if("[Code:2600;Desc:放行]".equals(return_info) && "34".equals(return_status)){
 		    		salesRe.set("is_order_pass", "1");
 		    		salesRe.update();
 		    	}
