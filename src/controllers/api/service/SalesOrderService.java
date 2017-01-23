@@ -481,7 +481,7 @@ public class SalesOrderService {
 			String unit = itemList.get("unit")==null?null:itemList.get("unit").trim();
 			String qty1 = itemList.get("qty1")==null?null:itemList.get("qty1").trim();
 			String unit1 = itemList.get("unit1")==null?null:itemList.get("unit1").trim();
-			String price = itemList.get("price")==null?null:(String)itemList.get("price"); 
+			String price = itemList.get("price")==null?null:itemList.get("price").toString(); 
 			String tax_rate = itemList.get("tax_rate")==null?null:itemList.get("tax_rate").trim(); 
 			String gcode = itemList.get("gcode")==null?null:itemList.get("gcode").trim(); 
 			String g_model = itemList.get("g_model")==null?null:itemList.get("g_model").trim(); 
