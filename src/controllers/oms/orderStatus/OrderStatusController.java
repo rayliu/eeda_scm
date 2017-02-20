@@ -144,6 +144,11 @@ public class OrderStatusController extends Controller {
         System.out.println("参数:"+ jsonMsg);
         return jsonMsg;
     }
+    
+    //电商订单状态发生变化时, 调用第3方系统的API, 通知变化
+    public void onLineOrderNotifyCallback(){
+    	renderText("success");
+    }
 
 
 }
