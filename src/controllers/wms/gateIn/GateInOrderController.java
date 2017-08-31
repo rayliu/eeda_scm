@@ -1,4 +1,4 @@
-package controllers.oms.gateInOrder;
+package controllers.wms.gateIn;
 
 import interceptor.SetAttrLoginUserInterceptor;
 

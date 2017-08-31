@@ -24,6 +24,8 @@ import models.UserLogin;
 import models.UserOffice;
 import models.UserRole;
 import models.eeda.OrderActionLog;
+import models.eeda.oms.CustomGateInItem;
+import models.eeda.oms.CustomGateInOrder;
 import models.eeda.oms.CustomInventory;
 import models.eeda.oms.GateInOrder;
 import models.eeda.oms.GateInOrderItem;
@@ -43,8 +45,6 @@ import models.eeda.oms.SalesOrderCount;
 import models.eeda.oms.SalesOrderGoods;
 import models.eeda.oms.WaveOrder;
 import models.eeda.oms.WaveOrderItem;
-import models.eeda.oms.CustomGateInOrder;
-import models.eeda.oms.CustomGateInItem;
 import models.eeda.profile.Country;
 import models.eeda.profile.CustomCompany;
 import models.eeda.profile.LogisticsCustomCompany;
@@ -55,7 +55,6 @@ import models.eeda.profile.Unit;
 import models.eeda.profile.Warehouse;
 import models.eeda.profile.WarehouseShelves;
 import models.yh.profile.Contact;
-import models.yh.profile.CustomizeField;
 import models.yh.profile.OfficeCofig;
 import models.yh.profile.Route;
 
@@ -85,24 +84,16 @@ import controllers.HomeController;
 import controllers.api.ApiController;
 import controllers.eeda.ModuleController;
 import controllers.eeda.report.ReportController;
-import controllers.oms.allinpay.AllinpayController;
-import controllers.oms.check.CheckController;
+import controllers.mobile.MobileController;
 import controllers.oms.customGateInOrder.CustomGateInOrderController;
 import controllers.oms.customGateInOrder.CustomInventoryController;
-import controllers.oms.gateInOrder.GateInOrderController;
-import controllers.oms.gateOutOrder.GateOutOrderController;
 import controllers.oms.importOrder.ImportOrder;
-import controllers.oms.inspectionOrder.InspectionOrderController;
-import controllers.oms.inventory.InventoryController;
-import controllers.oms.inventoryOrder.InventoryOrderController;
 import controllers.oms.loadOrder.LoadOrderController;
 import controllers.oms.logisticsOrder.LogisticsOrderController;
-import controllers.oms.moveOrder.MoveOrderController;
 import controllers.oms.orderStatus.OrderStatusController;
 import controllers.oms.salesOrder.OrderReturnController;
 import controllers.oms.salesOrder.SalesOrderController;
 import controllers.oms.storageInOrder.StorageInOrderController;
-import controllers.oms.waveOrder.WaveOrderController;
 import controllers.profile.AccountController;
 import controllers.profile.CustomCompanyController;
 import controllers.profile.LogisticsCustomCompanyController;
@@ -110,7 +101,16 @@ import controllers.profile.PrivilegeController;
 import controllers.profile.UnitController;
 import controllers.profile.WarehouseController;
 import controllers.profile.WarehouseShelvesController;
-import controllers.wms.MobileController;
+import controllers.wms.allinpay.AllinpayController;
+import controllers.wms.check.CheckController;
+import controllers.wms.gateIn.GateInController;
+import controllers.wms.gateIn.GateInOrderController;
+import controllers.wms.gateOutOrder.GateOutOrderController;
+import controllers.wms.inspectionOrder.InspectionOrderController;
+import controllers.wms.inventory.InventoryController;
+import controllers.wms.inventoryOrder.InventoryOrderController;
+import controllers.wms.moveOrder.MoveOrderController;
+import controllers.wms.waveOrder.WaveOrderController;
 import controllers.yh.arap.AccountAuditLogController;
 
 public class EedaConfig extends JFinalConfig {
@@ -213,6 +213,7 @@ public class EedaConfig extends JFinalConfig {
 		me.add("/logisticsOrder", LogisticsOrderController.class, contentPath);
 		me.add("/salesOrder", SalesOrderController.class, contentPath);
 		me.add("/gateInOrder", GateInOrderController.class, contentPath);
+		me.add("/gateIn", GateInController.class, contentPath);
 		me.add("/inspectionOrder", InspectionOrderController.class, contentPath);
 		me.add("/allinpay", AllinpayController.class, contentPath);
 		me.add("/api", ApiController.class, contentPath);
@@ -247,8 +248,8 @@ public class EedaConfig extends JFinalConfig {
     	me.add(new ShiroPlugin(routes));
     	
     	//job启动
-    	SchedulerPlugin sp = new SchedulerPlugin("job.properties");
-        me.add(sp);
+//    	SchedulerPlugin sp = new SchedulerPlugin("job.properties");
+//        me.add(sp);
     	
         mailUser = getProperty("mail_user_name");
         mailPwd = getProperty("mail_pwd");
